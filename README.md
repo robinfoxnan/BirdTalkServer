@@ -1,10 +1,27 @@
-# BirdTalk
+# BirdTalk 飞鸟聊天
+
+**English**
+
 BirdTalk is an open source IM server which is safe and free.
 
+Vision: Our aim is to develop an in-depth design document for an instant messaging (IM) tool, with the goal of making secondary development more convenient.
 
+While there are numerous IM tools available, the issue of security remains a concern. Often, there is a need to embed a chat service within our own products, yet there is currently no satisfactory solution available.
 
-理念：做一款详细设计文档的IM通信工具，让二次开发更容易。
+Hence, we intend to embark on developing a new solution from scratch.
 
-现有的即时通信工具其实也是出于大厂垄断状态：要么完全私有不开放协议，要么仅仅开放客户端；真正开源的IM软件有些有没有文档，当功能无法完全满足时候无法更改，从头开发一个就是无意义的重复造轮子。
-这个项目目标是首先开放基础设计文档：包括设计理念和服务端处理逻辑，通信协议以及存储设计的说明，这样二次开发者可以了解从哪里入手更改；
-其次就是开放服务端源码以及客户端源码，普通用户可以上手架设自己的IM服务器；
+The primary objective of this project is to publicly release a foundational design document, encompassing design philosophies, server-side processing logic, communication protocols, and storage design details. This will empower secondary developers to understand where to begin customization.
+
+Additionally, we will open-source both the server-side and client-side code, enabling regular users to effortlessly set up their own IM servers.
+
+**中文**
+
+愿景： 我们旨在打造一款详细设计文档的即时通讯（IM）工具，旨在使二次开发更加便捷。
+
+虽然目前市面上已有不少IM工具，然而其安全性却一直是备受质疑的问题。在许多情况下，我们需要在自己的产品中内置聊天服务，但目前尚未有令人满意的解决方案。
+
+因此，我们决定重新构思并开发一个全新的解决方案。
+
+本项目的首要目标是公开基础设计文档，其中包括设计理念、服务端处理逻辑、通信协议以及存储设计的详细说明，以便二次开发者了解从何处入手进行定制修改。
+
+其次，我们将开放服务端源代码和客户端源代码，以便普通用户能够轻松搭建自己的IM服务器。
