@@ -14,6 +14,12 @@ The primary objective of this project is to publicly release a foundational desi
 
 Additionally, we will open-source both the server-side and client-side code, enabling regular users to effortlessly set up their own IM servers.
 
+
+
+E-MAIL: 390017268@QQ.COM
+
+
+
 **中文**
 
 愿景： 我们旨在打造一款详细设计文档的即时通讯（IM）工具，旨在使二次开发更加便捷。
@@ -25,3 +31,14 @@ Additionally, we will open-source both the server-side and client-side code, ena
 本项目的首要目标是公开基础设计文档，其中包括设计理念、服务端处理逻辑、通信协议以及存储设计的详细说明，以便二次开发者了解从何处入手进行定制修改。
 
 其次，我们将开放服务端源代码和客户端源代码，以便普通用户能够轻松搭建自己的IM服务器。
+
+
+
+合作联系 QQ&WX: 390017268 
+
+如果愿意请我喝杯咖啡，将十分感谢。
+
+![](./doc/image/pay.jpg)
+
+
+
