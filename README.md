@@ -38,7 +38,7 @@ E-MAIL: 390017268@QQ.COM
 
 如果愿意请我喝杯咖啡，将十分感谢。
 
-![](./doc/image/pay.jpg)
+<img src="(doc/image/pay.jpg" alt="Payment Image" width="300" height="300" />
 
 
 
