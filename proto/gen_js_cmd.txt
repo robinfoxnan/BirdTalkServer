@@ -1,0 +1,8 @@
+.\protoc.exe --proto_path=. user.proto msg.proto --js_out=import_style=commonjs:. --grpc-web_out=import_style=commonjs,mode=grpcwebtext:.
+
+
+.\protoc.exe --proto_path=. user.proto msg.proto --js_out=import_style=es6:. --grpc-web_out=import_style=es6,mode=grpcwebtext:.
+
+// 浏览器用的
+.\protoc.exe --proto_path=. user.proto msg.proto --js_out=import_style=typescript:../server/js/model
+

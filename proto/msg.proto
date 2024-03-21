@@ -1,0 +1,213 @@
+syntax = "proto3";
+import "user.proto";
+package model;
+option go_package = "server/pbmodel";
+//option go_package = "client/pbmodel";
+// protoc -I. --go_out=../ --go-grpc_out=../ msg.proto
+// protoc --plugin="protoc-gen-ts=" --js_out="import_style=commonjs,binary:." --ts_out=. user.proto
+
+
+// 服务定义
+service MsgService {
+  rpc ClientEvent (Msg) returns (Msg);
+}
+
+
+// 通用所有消息类型的定义
+enum ComMsgType {
+  MsgTUnused = 0;        // 未使用的消息类型
+  MsgTHello = 1;         // 用于握手的消息
+  MsgTHeartBeat = 2;     // 用于保持连接的心跳消息
+
+  MsgTError = 3;         // 用于传递错误信息的消息
+  MsgTKeyExchange = 4;   // DH密钥交换的消息
+
+  MsgTChatMsg = 5;       // 聊天消息
+  MsgTUpload = 6;        // 上传文件的消息
+  MsgTDownload = 7;      // 下载文件的消息，文件操作分为带内和带外，这里是小文件可以这样操作
+  MsgTChatMsgReply = 8;
+  MsgTUploadReply = 9;
+  MsgTDownloadReply = 10;
+  MsgTQuery = 11;
+
+  // 用户与群组消息一共是6大类，
+  MsgTUserOp = 12;       // 所有用户相关操作的消息
+  MsgTUserOpRet = 13;
+  MsgTFriendOp = 14;
+  MsgTFriendOpRet = 15;
+  MsgTGroupOp = 16;      // 所有群组相关的操作
+  MsgTGroupOpRet = 17;
+
+}
+
+
+message MsgHello {
+  string clientId = 1;      // 客户端标识，用于区分不同客户端
+  string version = 2;       // 客户端或协议的版本信息
+  string platform = 3;      // 客户端运行的平台信息（例如：iOS、Android、Windows等）
+  // 其他可能的字段，取决于你的需求
+  string stage = 5;         // 状态数据, clienthello, serverhello,
+  map<string, string> params = 6;  // redirect->ip:port, dht
+}
+
+message MsgHeartBeat{
+  int64 tm = 1;
+  int64 userId = 2;
+}
+
+
+// 消息优先级
+enum MsgPriority {
+  LOW = 0;
+  NORMAL = 1;
+  HIGH = 2;
+  // 其他优先级...
+}
+
+// 消息状态
+enum ChatMsgStatus {
+  SENDING = 0;
+  SENT = 1;       // 已经发送完成
+  FAILED = 2;     // 失败
+  DELIVERED = 3;   // 送达
+  READ = 4;        // 已读
+  DELETED = 5;     // 已经删除
+  // 其他状态...
+}
+
+enum ChatMsgType {
+  TEXT = 0;
+  IMAGE = 1;
+  VOICE = 2;
+  VIDEO = 3;
+  FILE = 4;
+  DELETE = 5; // 删除之前的消息
+
+  // 其他类型...
+}
+
+enum EncryptType{
+  PLAIN = 0;
+  CUSTOM = 1;
+}
+
+
+
+// 聊天存储的基本信息
+message MsgChat {
+  int64 msgId = 1;                // 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
+  int64 userId = 2;               // 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+
+  int64 fromId = 3;              // 发送消息的用户 ID
+  int64 toId = 4;                // 接收消息的用户 ID（对方的用户 ID）
+
+  int64 tm = 5;                   // 消息的时间戳
+
+  string devId = 6;               // 多设备登录时的设备 ID
+  string sendId = 7;              // 用于确认消息的发送 ID
+
+  ChatMsgType msgType = 8;        // 消息类型，建议使用枚举
+  bytes data = 9;                 // 消息的内容，可以使用 bytes 存储二进制数据或文本数据
+
+  MsgPriority priority = 10;      // 消息的优先级，建议使用枚举
+  int64 refMessageId = 11;        // 引用的消息 ID，如果有的话
+
+  ChatMsgStatus status = 12;      // 消息状态，建议使用枚举
+  int32 sendReply = 13;           // 发送消息的回执状态
+  int32 recvReply = 14;           // 接收消息的回执状态
+  int32 readReply = 15;           // 已读状态的回执
+
+  EncryptType encType = 16;       // 加密类型
+  string chatType = 17;           // p2p, group, system
+}
+
+// 消息确认，上传下载的确认
+message MsgChatReply {
+  int64 msgId = 1;      // 要确认的消息ID
+  string sendId = 2;
+  bool sendOk = 3;         // 确认是否成功
+  bool recvOk = 4;
+  bool readOk = 5;
+  string extraMsg = 6;
+  int64 userId = 7;        // 应答应该发送给谁
+}
+
+// 登录后查询离线消息，或者查询某些超时的送达和已读
+// 向服务器上报自己当前的消息的位置，请求后续的部分
+message MsgChatQuery{
+    int64 userId = 1;               // 用于存储的clusterKey
+    int64 toId = 2;                 // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
+    int64 tm = 3;
+    string chatType = 4;           // p2p, group
+    bool stateOnly = 5;            // 仅仅查询状态，不要聊天数据
+
+}
+
+// 上传文件的消息
+message MsgUploadReq {
+  string fileName = 1;      // 上传的文件名
+  int64 fileSize = 2;       // 上传的文件大小
+  bytes fileData = 3;       // 上传的文件数据
+
+  string hashType = 4;      // 文件哈希算法类型（例如：MD5、SHA-256等）
+  bytes hashCode = 5;       // 文件哈希值
+  string fileType = 6;      // 文件类型（例如：文本、图像、视频等）
+  string sendId = 7;        // 用于确认消息的发送 ID
+}
+
+// 上传文件的响应消息
+message MsgUploadReply {
+  string fileName = 1;    // 上传文件的名称，用于标识文件
+  string sendId = 2;      // 用于确认消息的发送 ID
+  string uuidName = 3;    // 服务器生成的文件唯一标识，例如存储在服务器上的文件名
+  string result = 4;      // 上传结果或状态信息
+}
+
+// 下载文件的请求消息
+message MsgDownloadReq {
+  string sendId = 1;        // 用于确认消息的发送 ID
+  string fileName = 2;      // 要下载的文件名
+  int64  offset = 3;        // 下载的文件偏移量，如果不需要分片下载，可以忽略
+}
+
+// 下载文件的响应消息
+message MsgDownloadReply {
+  string sendId = 1;        // 用于确认消息的发送 ID
+  string fileName = 2;      // 要下载的文件名
+  string realName = 3;      // 实际保存在服务器上的文件名或标识符
+  string fileType = 4;      // 文件类型（例如：文本、图像、视频等）
+
+  string hashType = 5;      // 文件哈希算法类型，表示计算文件哈希值所使用的算法（MD5、SHA-256等）
+  bytes hashCode = 6;       // 文件哈希值，用于验证文件完整性
+  bytes data = 7;           // 下载的文件数据
+  int64 size = 8;           // 文件总大小
+  int64 offset = 9;         // 下载的文件偏移量，如果不需要分片下载，可以忽略
+}
+
+// 所有的消息都用
+message Msg {
+  int32 version = 1;            // 协议版本号
+  ComMsgType msgType = 2;        // 通用消息类型
+
+  oneof message {
+
+    MsgHello hello = 3;           // Hello消息
+    MsgHeartBeat heartBeat = 4;   // 心跳消息
+    MsgChat chatData = 5;         // 聊天消息
+    MsgChatReply chatReply = 6;   // 聊天回复消息
+    MsgDownloadReq downloadReq = 7;     // 下载请求消息
+    MsgDownloadReply downloadReply = 8; // 下载回复消息
+    MsgUploadReq uploadReq = 9;         // 上传请求消息
+    MsgUploadReply uploadReply = 10;    // 上传回复消息
+
+    UserOpReq userOp = 11;             // 用户操作请求消息
+    UserOpResult userOpRet = 12;       // 用户操作结果消息
+    FriendOpReq friendOp = 13;         // 好友操作请求消息
+    FriendOpResult friendOpRet = 14;   // 好友操作结果消息
+    GroupOpReq groupOp = 15;           // 群组操作请求消息
+    GroupOpResult groupOpRet = 16;     // 群组操作结果消息
+  }
+
+  int64 tm = 20;   // 时间戳
+}
+

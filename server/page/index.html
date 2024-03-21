@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/google-protobuf@latest/google-protobuf.js"></script>
+    -->
+    <script src="./js/google-protobuf.js"></script>
+    <script src="./js/model/userinfo.js"></script>
+    <script src="./js/model/useroperationtype.js"></script>
+    <script src="./js/model/useropreq.js"></script>
+    <script src="./js/model/useropresult.js"></script>
+
+    <script src="./js/model/commsgtype.js"></script>
+    <script src="./js/model/msghello.js"></script>
+    <script src="./js/model/msgheartbeat.js"></script>
+    <script src="./js/model/msg.js"></script>
+
+
+
+
+
+
+</head>
+<body>
+<div>
+    连接地址：<input type="text" id="urlInput" style="width: 400px; height: 30px;" value="wss://127.0.0.1/ws?code=plain">
+    <button onclick="connectWebSocket()">连接</button>
+</div>
+
+<br>
+<div>
+    文本消息：<textarea id="msgInput" style="width: 400px; height: 80px; resize: none;">it is a test message.</textarea>
+
+    <button onclick="sendMessage()">发送</button>
+</div>
+
+<br>
+<div>
+    接收到的消息：<br><textarea id="receiveMsg" rows="20" cols="150"></textarea>
+</div>
+
+<div>
+    <button onclick="sendHelloMessage()">1.hello</button>
+</div>
+
+<div>
+    <button onclick="sendheartMessage()">2.心跳</button>
+</div>
+
+<div>
+    <button onclick="sendRegisterMessage()">3.申请注册</button>
+</div>
+
+<div>
+    <button onclick="sendcodeMessage()">4.发送注册验证码</button>
+</div>
+
+<div>
+    <button onclick="sendLoginPwdMessage()">5.1 用户密码登录</button>
+</div>
+
+<div>
+    <button onclick="sendLoginEmailMessage()">5.2 邮件登录</button>
+    <button onclick="sendLoginCodeMessage()">5.3 发送登录验证码</button>
+</div>
+
+<div>
+    <button onclick="sendUserInfoMessage()">6.1 设置用户基础信息</button>
+    <button onclick="sendUserInfoCodeMessage()">6.2 重新绑定邮箱</button>
+</div>
+
+<script>
+    var webSocket;
+
+    function connectWebSocket() {
+        var url = document.getElementById("urlInput").value;
+        try {
+            webSocket = new WebSocket(url);
+        } catch (e) {
+            console.log(e);
+        }
+
+        webSocket.onerror = function (event) {
+            console.log('连接错误');
+            console.log(event);
+            showMessage('建立错误');
+            showMessage(event);
+        };
+
+        // 与 WebSocket 建立连接
+        webSocket.onopen = function (event) {
+            console.log('建立连接');
+            console.log(event);
+            showMessage('建立连接');
+        };
+
+        // 接收服务端发送的消息
+        webSocket.onmessage = function (event) {
+            console.log(event);
+            var receiveMsgTextarea = document.getElementById("receiveMsg");
+            receiveMsgTextarea.value += event.data + "\n";
+        };
+    }
+
+    function showMessage(str){
+        var receiveMsgTextarea = document.getElementById("receiveMsg");
+        receiveMsgTextarea.value += str + "\n";
+    }
+
+    function sendMessage() {
+        var msgInput = document.getElementById("msgInput");
+        var msg = msgInput.value;
+        // 发送消息
+        webSocket.send(msg);
+        //msgInput.value = ""; // 清空输入框
+
+
+    }
+
+    // 1.hello包
+    function sendHelloMessage(){
+        // 子消息
+        const hello = new proto.model.MsgHello();
+        hello.setClientid("uuid")  //js权限低，这里可以使用一个UUID，执行本地存储，每次都带着，用于服务端区分设备
+        hello.setVersion("1.0")
+        hello.setPlatform("web")
+        hello.setStage("clienthello")
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTHELLO);
+        msg.setVersion(1);
+        msg.setHello(hello);
+
+        // 序列化测试
+
+        showMessage(msg.toString()) // 字符串表示
+        const binMsg = msg.serializeBinary();
+        showMessage(binMsg)
+        //var jsonStr =  JSON.stringify(msg);
+        //showMessage(jsonStr);
+        webSocket.send(binMsg);
+    }
+
+    // 2 心跳包
+    function sendheartMessage(){
+        const heart = new proto.model.MsgHeartBeat();
+        heart.setUserid(1);
+        const timestamp = new Date().getTime();
+        heart.setTm(timestamp);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setVersion(1);
+        msg.setMsgtype(proto.model.ComMsgType.MSGTHEARTBEAT);
+
+        msg.setHeartbeat(heart)
+
+        // 序列化测试
+
+        showMessage(msg.toString()) // 字符串表示
+        const binMsg = msg.serializeBinary();
+        showMessage(binMsg)
+        //var jsonStr =  JSON.stringify(msg);
+        //showMessage(jsonStr);
+        webSocket.send(binMsg);
+    }
+
+
+    // 3注册申请
+    function sendRegisterMessage() {
+        showMessage("注册申请的消息")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUsername("robin");
+        userInfo.setUserid(0);
+        userInfo.setEmail("390017268@qq.com");
+        const paramsMap = userInfo.getParamsMap();
+        paramsMap.set("pwd", "12345678");
+        paramsMap.set("regtype", "pwd");   // pwd, email,phone
+
+
+        // 注册用户
+        const regOpReq = new proto.model.UserOpReq();
+        regOpReq.setOperation(proto.model.UserOperationType.REGISTERUSER);
+        regOpReq.setUser(userInfo)
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
+        msg.setVersion(1);
+        msg.setUserop(regOpReq)
+
+        showMessage(msg.toLocaleString());
+        const binMsg = msg.serializeBinary();
+        showMessage(binMsg);
+        webSocket.send(binMsg);
+
+        //
+        // const deserializedPerson = UserInfo.deserializeBinary(bytes);
+        // console.log(deserializedPerson.toString());
+    }
+
+    // 4. 发送验证码，所有发送验证码的都是一样的，服务端跟踪当前
+    function sendcodeMessage() {
+        showMessage("发送验证消息")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(1001);
+        const paramsMap = userInfo.getParamsMap();
+        paramsMap.set("code", "12345");
+        paramsMap.set("regtype", "email");   // pwd, email,phone
+
+
+        // 注册用户
+        const regOpReq = new proto.model.UserOpReq();
+        regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
+        regOpReq.setUser(userInfo);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
+        msg.setVersion(1);
+        msg.setUserop(regOpReq)
+
+        showMessage(msg.toLocaleString());
+        const binMsg = msg.serializeBinary();
+        showMessage(binMsg);
+        webSocket.send(binMsg);
+
+        //
+        // const deserializedPerson = UserInfo.deserializeBinary(bytes);
+        // console.log(deserializedPerson.toString());
+    }
+
+    // 5.1 用户密码登录
+    function sendLoginPwdMessage(){
+
+    }
+
+    // 5.2
+    function sendLoginEmailMessage(){
+        
+    }
+
+    // 5.3
+    function sendLoginCodeMessage(){
+
+    }
+
+
+</script>
+</body>
+</html>

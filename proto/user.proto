@@ -1,0 +1,135 @@
+syntax = "proto3";
+package model;
+option go_package = "server/pbmodel";
+//option go_package = "client/pbmodel";
+// protoc -I. --go_out=../ --go-grpc_out=../ user.proto
+
+
+// 用户相关的消息分为3类：User Friend Group，每一类都有请求和应答，一共是6大类消息
+// 用户信息消息
+message UserInfo {
+  int64 userId = 1;        // 注册时候全局分配的
+  string userName = 2;     // 用户名
+  string nickName = 3;     // 昵称
+  string email = 4;        // 邮箱
+  string phone = 5;        // 手机号
+  string gender = 6;       // 性别
+  int32 age = 7;           // 年龄
+  string region = 8;       // 地区
+  string icon = 9;         // 头像
+  map<string, string> params = 10;  // 其他参数，使用map存储比如，title, pwd, sid, icon
+}
+
+
+// 用户和好友操作类型枚举
+enum UserOperationType {
+  UserNoneAction = 0;
+  RegisterUser = 1;
+  UnregisterUser = 2;
+  DisableUser = 3;
+  RecoverUser = 4;
+  SetUserInfo = 5;
+  RealNameVerification = 6;
+  Login = 7;
+  Logout = 8;
+  FindUser = 9;
+  AddFriend = 10;
+  ApproveFriend = 11;
+  RemoveFriend = 12;
+  BlockFriend = 13;
+  UnBlockFriend = 14;
+  SetFriendPermission = 15;
+}
+
+// 用户操作请求消息
+message UserOpReq {
+  UserOperationType operation = 1;     // 操作类型，例如：注册用户、注销、禁用、恢复、设置信息、实名验证、登录、退出、查找用户
+  UserInfo user = 2;        // 涉及的用户信息
+  map<string, string> params = 3;  // 比如申请好友的附加消息
+}
+
+// 用户操作结果消息
+message UserOpResult {
+  UserOperationType operation = 1;            // 操作类型
+  string result = 2;               // "ok" "fail"
+  repeated UserInfo users = 3;     // 涉及的用户信息列表，使用repeated表示多个用户
+  map<string, string> params = 4;
+}
+
+// 好友操作请求消息
+message FriendOpReq {
+  UserOperationType operation = 1;           // 操作类型，例如：申请好友、同意好友、删除好友、屏蔽好友
+  UserInfo user = 2;              // 涉及的用户信息，例如在申请好友时，表示被申请加为好友的用户
+  map<string, string> params = 4;
+}
+
+// 好友操作结果消息
+message FriendOpResult {
+  UserOperationType operation = 1;            // 操作类型
+  string result = 2;               // "ok" "fail"
+  UserInfo user = 3;               // 消息发起者
+  UserInfo users = 4;              // 涉及的用户信息列表，使用repeated表示多个用户
+  map<string, string> params = 5;
+}
+
+// 群组成员的信息
+message GroupMember {
+  int64 userId = 1;
+  string nick = 2;
+  string icon = 3;
+  string role = 4;              // 角色信息，例如：管理员、普通成员等
+  int64  groupId = 5;
+  map<string, string> params = 6;  // 其他参数，例如：成员特殊属性等
+}
+
+// 群组信息
+message GroupInfo {
+  int64 groupId = 1;            // 注册时全局分配的群组ID
+  repeated string tags = 2;     // 群组标签
+  string groupName = 3;         // 群组名称
+  string groupType = 4;         // 群组类型，例如：群聊、广播频道等
+  map<string, string> params = 5;  // 其他参数，例如：是否公开、验证方法、验证口令等
+}
+
+// 群组操作类型枚举
+enum GroupOperationType {
+  GroupNoneAction = 0;
+  GroupCreate = 1;            // 创建群组
+  GroupDissolve = 2;          // 解散群组
+  GroupSetInfo = 3;           // 设置群组本身的各种信息
+  GroupKickMember = 4;        // 踢人
+  GroupInviteRequest = 5;     // 邀请人请求
+  GroupInviteAnswer = 6;      // 邀请后处理结果
+  GroupJoinRequest = 7;       // 加入请求
+  GroupJoinAnswer = 8;        // 加入请求的处理，同意、拒绝、问题
+  GroupQuit = 9;              // 退出群组
+
+  GroupAddAdmin = 10;          // 增加管理员
+  GroupDelAdmin = 11;          // 删除管理员
+  GroupTransferOwner = 12;     // 转让群主
+  // 可以根据需要添加其他群组操作
+  GroupSetMemberInfo = 13;    // 设置自己在群中的信息
+  GroupSearch = 14;
+  GroupSearchRet = 15;
+
+}
+
+
+// 群组操作请求消息
+message GroupOpReq {
+  GroupOperationType operation = 1;  // 群组操作类型: 创建群，解散群，设置信息；踢人，邀请人请求，加入请求，请求结果，增加管理员，转让群主
+  GroupMember ReqMem = 2;        // 申请人，便于转发
+  GroupInfo group = 3;           // 涉及的群组信息
+  repeated GroupMember members = 4;  // 涉及的群组成员信息列表
+  map<string, string> params = 5;
+}
+
+message GroupOpResult{
+  GroupOperationType operation = 1;
+  GroupMember ReqMem = 2;
+  string result = 3;
+  string detail = 4;
+  GroupInfo group = 5;
+  repeated GroupMember members = 6;  // 涉及的群组成员信息列表
+  map<string, string> params = 7;
+}
