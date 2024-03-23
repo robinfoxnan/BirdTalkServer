@@ -32,6 +32,7 @@ enum UserOperationType {
   RealNameVerification = 6;
   Login = 7;
   Logout = 8;
+
   FindUser = 9;
   AddFriend = 10;
   ApproveFriend = 11;
@@ -39,6 +40,7 @@ enum UserOperationType {
   BlockFriend = 13;
   UnBlockFriend = 14;
   SetFriendPermission = 15;
+  SetFriendMemo = 16;
 }
 
 // 用户操作请求消息
@@ -109,9 +111,8 @@ enum GroupOperationType {
   GroupTransferOwner = 12;     // 转让群主
   // 可以根据需要添加其他群组操作
   GroupSetMemberInfo = 13;    // 设置自己在群中的信息
-  GroupSearch = 14;
-  GroupSearchRet = 15;
-
+  GroupSearch = 14;           // 搜素群组
+  GroupSearchMember = 15;     // 人员过多时候，不能全部同步到客户端，需要搜索或者分页
 }
 
 

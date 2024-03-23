@@ -40,14 +40,36 @@ enum ComMsgType {
 
 }
 
-
+// 首先需要同步客户端的基础信息，服务端应答各种信息
 message MsgHello {
   string clientId = 1;      // 客户端标识，用于区分不同客户端
   string version = 2;       // 客户端或协议的版本信息
   string platform = 3;      // 客户端运行的平台信息（例如：iOS、Android、Windows等）
   // 其他可能的字段，取决于你的需求
   string stage = 5;         // 状态数据, clienthello, serverhello,
-  map<string, string> params = 6;  // redirect->ip:port, dht
+  int64  keyPrint = 6;      // 对称密钥指纹，用于SID
+  int64  rsaPrint = 7;      // 自己的公钥指纹
+  map<string, string> params = 8;  // redirect->ip:port, dht
+}
+
+
+// DL秘钥交换的信息
+// 1. 发起端(客户端使用对方RSA公钥加密临时秘钥给对方)，同时传递的还有秘钥对公钥
+// 2. 服务端将，使用临时秘钥加密秘钥对公钥，算法为ChaCha20, aes256, twofish128
+// 3. 客户将此时双方已经可以计算出共享密钥；用共享密钥加密临时秘钥，并根据加密算法生成秘钥，计算HASH,取8节作为指纹，
+// 4. 服务端计算共享密钥，用共享密钥加密临时秘钥，并计算MD5，校验；
+// 5， 如果校验成功，应答OK，如果失败应答FAIL
+message MsgKeyExchange {
+  int64 keyPrint = 1;
+  int64 rsaPrint = 2;
+  int32 stage = 3;   // 当前处于状态机
+
+  bytes tempKey = 4;  // 临时秘钥，需要RSA加密
+  bytes pubKey = 5;   // 临时公钥，需要RSA加密
+
+  string encType = 6;      // plain, rsa加密，对阵加密类型
+  string status = 7;       // ok, fail
+  string detail = 8;       // 错误信息
 }
 
 message MsgHeartBeat{
@@ -82,13 +104,19 @@ enum ChatMsgType {
   VIDEO = 3;
   FILE = 4;
   DELETE = 5; // 删除之前的消息
+  KEY = 6;    // 会话秘钥协商
+
 
   // 其他类型...
 }
 
+// 私聊的加密方式
 enum EncryptType{
   PLAIN = 0;
   CUSTOM = 1;
+  CHACHA20 = 2;
+  TWOFISH = 3;
+  AES = 4;
 }
 
 
@@ -119,6 +147,7 @@ message MsgChat {
 
   EncryptType encType = 16;       // 加密类型
   string chatType = 17;           // p2p, group, system
+  int64 keyPrint = 18;
 }
 
 // 消息确认，上传下载的确认
@@ -134,13 +163,21 @@ message MsgChatReply {
 
 // 登录后查询离线消息，或者查询某些超时的送达和已读
 // 向服务器上报自己当前的消息的位置，请求后续的部分
+// 可能会答应一组消息，也可能应答一组应答，还可能是搜索结果
 message MsgChatQuery{
     int64 userId = 1;               // 用于存储的clusterKey
     int64 toId = 2;                 // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
     int64 tm = 3;
     string chatType = 4;           // p2p, group
-    bool stateOnly = 5;            // 仅仅查询状态，不要聊天数据
+    string queryType = 5;          // data, reply, tag
+    map<string, string> params = 6;
+}
 
+message MsgChatQueryResult{
+  int64 userId = 1;               // 发起人
+  int64 toId = 2;                 // 群号
+  repeated MsgChat chatDataList = 3;
+  repeated MsgChatReply chatReplyList = 4;
 }
 
 // 上传文件的消息
@@ -187,27 +224,53 @@ message MsgDownloadReply {
 // 所有的消息都用
 message Msg {
   int32 version = 1;            // 协议版本号
-  ComMsgType msgType = 2;        // 通用消息类型
+  int64 keyPrint = 2;           // 0是不加密，非0是加密
+  int64 tm = 3;                  // 时间戳
+  ComMsgType msgType = 4;        // 通用消息类型
 
   oneof message {
+    bytes cipher = 5;             // 密文，需要解密后，二次解码
+    MsgKeyExchange keyEx = 6;     // 秘钥协商
+    MsgHello hello = 7;           // Hello消息
+    MsgHeartBeat heartBeat = 8;   // 心跳消息
+    MsgChat chatData = 9;         // 聊天消息
+    MsgChatReply chatReply = 10;   // 聊天回复消息
+    MsgDownloadReq downloadReq = 11;     // 下载请求消息
+    MsgDownloadReply downloadReply = 12; // 下载回复消息
+    MsgUploadReq uploadReq = 13;         // 上传请求消息
+    MsgUploadReply uploadReply = 14;    // 上传回复消息
+    MsgChatQuery chatQuery = 15;        // 查询离线数据，查询状态，关键字搜索
+    MsgChatQueryResult chatQueryResult = 16;
 
-    MsgHello hello = 3;           // Hello消息
-    MsgHeartBeat heartBeat = 4;   // 心跳消息
-    MsgChat chatData = 5;         // 聊天消息
-    MsgChatReply chatReply = 6;   // 聊天回复消息
-    MsgDownloadReq downloadReq = 7;     // 下载请求消息
-    MsgDownloadReply downloadReply = 8; // 下载回复消息
-    MsgUploadReq uploadReq = 9;         // 上传请求消息
-    MsgUploadReply uploadReply = 10;    // 上传回复消息
-
-    UserOpReq userOp = 11;             // 用户操作请求消息
-    UserOpResult userOpRet = 12;       // 用户操作结果消息
-    FriendOpReq friendOp = 13;         // 好友操作请求消息
-    FriendOpResult friendOpRet = 14;   // 好友操作结果消息
-    GroupOpReq groupOp = 15;           // 群组操作请求消息
-    GroupOpResult groupOpRet = 16;     // 群组操作结果消息
+    UserOpReq userOp = 17;             // 用户操作请求消息
+    UserOpResult userOpRet = 18;       // 用户操作结果消息
+    FriendOpReq friendOp = 19;         // 好友操作请求消息
+    FriendOpResult friendOpRet = 20;   // 好友操作结果消息
+    GroupOpReq groupOp = 21;           // 群组操作请求消息
+    GroupOpResult groupOpRet = 22;     // 群组操作结果消息
   }
+}
 
-  int64 tm = 20;   // 时间戳
+// 用于解密后的明文进行反序列化
+message MsgPlain{
+  oneof message {
+    MsgHello hello = 7;           // Hello消息
+    MsgHeartBeat heartBeat = 8;   // 心跳消息
+    MsgChat chatData = 9;         // 聊天消息
+    MsgChatReply chatReply = 10;   // 聊天回复消息
+    MsgDownloadReq downloadReq = 11;     // 下载请求消息
+    MsgDownloadReply downloadReply = 12; // 下载回复消息
+    MsgUploadReq uploadReq = 13;         // 上传请求消息
+    MsgUploadReply uploadReply = 14;    // 上传回复消息
+    MsgChatQuery chatQuery = 15;        // 查询离线数据，查询状态，关键字搜索
+    MsgChatQueryResult chatQueryResult = 16;
+
+    UserOpReq userOp = 17;             // 用户操作请求消息
+    UserOpResult userOpRet = 18;       // 用户操作结果消息
+    FriendOpReq friendOp = 19;         // 好友操作请求消息
+    FriendOpResult friendOpRet = 20;   // 好友操作结果消息
+    GroupOpReq groupOp = 21;           // 群组操作请求消息
+    GroupOpResult groupOpRet = 22;     // 群组操作结果消息
+  }
 }
 
