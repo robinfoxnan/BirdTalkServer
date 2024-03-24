@@ -90,7 +90,8 @@ proto.model.MsgChat.toObject = function(includeInstance, msg) {
     recvreply: jspb.Message.getFieldWithDefault(msg, 14, 0),
     readreply: jspb.Message.getFieldWithDefault(msg, 15, 0),
     enctype: jspb.Message.getFieldWithDefault(msg, 16, 0),
-    chattype: jspb.Message.getFieldWithDefault(msg, 17, "")
+    chattype: jspb.Message.getFieldWithDefault(msg, 17, ""),
+    keyprint: jspb.Message.getFieldWithDefault(msg, 18, 0)
   };
 
   if (includeInstance) {
@@ -194,6 +195,10 @@ proto.model.MsgChat.deserializeBinaryFromReader = function(msg, reader) {
     case 17:
       var value = /** @type {string} */ (reader.readString());
       msg.setChattype(value);
+      break;
+    case 18:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setKeyprint(value);
       break;
     default:
       reader.skipField();
@@ -340,6 +345,13 @@ proto.model.MsgChat.serializeBinaryToWriter = function(message, writer) {
   if (f.length > 0) {
     writer.writeString(
       17,
+      f
+    );
+  }
+  f = message.getKeyprint();
+  if (f !== 0) {
+    writer.writeInt64(
+      18,
       f
     );
   }
@@ -673,6 +685,24 @@ proto.model.MsgChat.prototype.getChattype = function() {
  */
 proto.model.MsgChat.prototype.setChattype = function(value) {
   return jspb.Message.setProto3StringField(this, 17, value);
+};
+
+
+/**
+ * optional int64 keyPrint = 18;
+ * @return {number}
+ */
+proto.model.MsgChat.prototype.getKeyprint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 18, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgChat} returns this
+ */
+proto.model.MsgChat.prototype.setKeyprint = function(value) {
+  return jspb.Message.setProto3IntField(this, 18, value);
 };
 
 

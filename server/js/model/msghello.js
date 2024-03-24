@@ -75,6 +75,8 @@ proto.model.MsgHello.toObject = function(includeInstance, msg) {
     version: jspb.Message.getFieldWithDefault(msg, 2, ""),
     platform: jspb.Message.getFieldWithDefault(msg, 3, ""),
     stage: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    keyprint: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    rsaprint: jspb.Message.getFieldWithDefault(msg, 7, 0),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -129,6 +131,14 @@ proto.model.MsgHello.deserializeBinaryFromReader = function(msg, reader) {
       msg.setStage(value);
       break;
     case 6:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setKeyprint(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setRsaprint(value);
+      break;
+    case 8:
       var value = msg.getParamsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -191,9 +201,23 @@ proto.model.MsgHello.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getKeyprint();
+  if (f !== 0) {
+    writer.writeInt64(
+      6,
+      f
+    );
+  }
+  f = message.getRsaprint();
+  if (f !== 0) {
+    writer.writeInt64(
+      7,
+      f
+    );
+  }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(6, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(8, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -271,14 +295,50 @@ proto.model.MsgHello.prototype.setStage = function(value) {
 
 
 /**
- * map<string, string> params = 6;
+ * optional int64 keyPrint = 6;
+ * @return {number}
+ */
+proto.model.MsgHello.prototype.getKeyprint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgHello} returns this
+ */
+proto.model.MsgHello.prototype.setKeyprint = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional int64 rsaPrint = 7;
+ * @return {number}
+ */
+proto.model.MsgHello.prototype.getRsaprint = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgHello} returns this
+ */
+proto.model.MsgHello.prototype.setRsaprint = function(value) {
+  return jspb.Message.setProto3IntField(this, 7, value);
+};
+
+
+/**
+ * map<string, string> params = 8;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.MsgHello.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 6, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 8, opt_noLazyCreate,
       null));
 };
 

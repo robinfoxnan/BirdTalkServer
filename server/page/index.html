@@ -76,28 +76,33 @@
 <br>
 群组管理
 <hr/>
-<div><button onclick="sendUserLogoutMessage()">1 创建群组</button></div>
-<div><button onclick="sendUserLogoutMessage()">2 解散群组</button></div>
-<div><button onclick="sendUserLogoutMessage()">3 设置信息</button></div>
-<div><button onclick="sendUserLogoutMessage()">4 踢人</button></div>
-<div><button onclick="sendUserLogoutMessage()">5 邀请</button></div>
-<div><button onclick="sendUserLogoutMessage()">6 应答邀请（同意，拒绝）</button></div>
-<div><button onclick="sendUserLogoutMessage()">7 请求加入</button></div>
-<div><button onclick="sendUserLogoutMessage()">8 请求批复（群管理员）</button></div>
-<div><button onclick="sendUserLogoutMessage()">9 查找</button></div>
-<div><button onclick="sendUserLogoutMessage()">10 添加管理员</button></div>
-<div><button onclick="sendUserLogoutMessage()">11 删除管理员</button></div>
-<div><button onclick="sendUserLogoutMessage()">12 转让群主</button></div>
-<div><button onclick="sendUserLogoutMessage()">13 设置自身备注等信息</button></div>
-<div><button onclick="sendUserLogoutMessage()">14 搜索群 </button></div>
-<div><button onclick="sendUserLogoutMessage()">15 搜索群内成员 </button></div>
+<div><button onclick="sendCreateGroupMessage()">1 创建群组</button></div>
+<div><button onclick="sendDisGroupMessage()">2 解散群组</button></div>
+<div><button onclick="sendSetGInfoMessage()">3 设置信息</button></div>
+<div><button onclick="sendKickGUserMessage()">4 踢人</button></div>
+<div><button onclick="sendGInviteMessage()">5 邀请</button></div>
+<div><button onclick="sendInviteAnswerMessage()">6 应答邀请（同意，拒绝）</button></div>
+<div><button onclick="sendGReqMessage()">7 请求加入</button></div>
+<div><button onclick="sendGReqReplyMessage()">8 请求批复（群管理员）</button></div>
+<div><button onclick="sendFindGroupMessage()">9 查找</button></div>
+<div><button onclick="sendGAddAdminMessage()">10 添加管理员</button></div>
+<div><button onclick="sendGRemoveAdminMessage()">11 删除管理员</button></div>
+<div><button onclick="sendGChangeOwnerMessage()">12 转让群主</button></div>
+<div><button onclick="sendGUserInfoMessage()">13 设置自身备注等信息</button></div>
+<div><button onclick="sendGFindUserMessage()">14 搜索群内成员 </button></div>
+<div><button onclick="sendGFindMsgMessage()">15  搜索群内消息 </button></div>
 <br>
 私聊消息
 <hr/>
-
+<div><button onclick="sendCreateGroupMessage()">1 普通文本消息</button></div>
+<div><button onclick="sendCreateGroupMessage()">2 消息应答</button></div>
+<div><button onclick="sendCreateGroupMessage()">2 私聊消息同步</button></div>
 <br>
 群组消息
 <hr/>
+<div><button onclick="sendCreateGroupMessage()">1 普通文本消息</button></div>
+<div><button onclick="sendCreateGroupMessage()">2 消息应答</button></div>
+<div><button onclick="sendCreateGroupMessage()">2 私聊消息同步</button></div>
 
 <br>
 上传文件消息
@@ -520,6 +525,8 @@
         showMessage(binMsg);
         webSocket.send(binMsg);
     }
+    ///////////////////////////////////////////////////////////////////////////////////
+    // 好友相关操作
 
 
 </script>

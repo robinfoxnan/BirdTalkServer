@@ -15,6 +15,7 @@ goog.provide('proto.model.MsgChatQuery');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
+goog.require('jspb.Map');
 goog.require('jspb.Message');
 
 /**
@@ -74,7 +75,8 @@ proto.model.MsgChatQuery.toObject = function(includeInstance, msg) {
     toid: jspb.Message.getFieldWithDefault(msg, 2, 0),
     tm: jspb.Message.getFieldWithDefault(msg, 3, 0),
     chattype: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    stateonly: jspb.Message.getBooleanFieldWithDefault(msg, 5, false)
+    querytype: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -128,8 +130,14 @@ proto.model.MsgChatQuery.deserializeBinaryFromReader = function(msg, reader) {
       msg.setChattype(value);
       break;
     case 5:
-      var value = /** @type {boolean} */ (reader.readBool());
-      msg.setStateonly(value);
+      var value = /** @type {string} */ (reader.readString());
+      msg.setQuerytype(value);
+      break;
+    case 6:
+      var value = msg.getParamsMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
+         });
       break;
     default:
       reader.skipField();
@@ -188,12 +196,16 @@ proto.model.MsgChatQuery.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getStateonly();
-  if (f) {
-    writer.writeBool(
+  f = message.getQuerytype();
+  if (f.length > 0) {
+    writer.writeString(
       5,
       f
     );
+  }
+  f = message.getParamsMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(6, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -271,20 +283,42 @@ proto.model.MsgChatQuery.prototype.setChattype = function(value) {
 
 
 /**
- * optional bool stateOnly = 5;
- * @return {boolean}
+ * optional string queryType = 5;
+ * @return {string}
  */
-proto.model.MsgChatQuery.prototype.getStateonly = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+proto.model.MsgChatQuery.prototype.getQuerytype = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
 /**
- * @param {boolean} value
+ * @param {string} value
  * @return {!proto.model.MsgChatQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setStateonly = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 5, value);
+proto.model.MsgChatQuery.prototype.setQuerytype = function(value) {
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
+
+
+/**
+ * map<string, string> params = 6;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.model.MsgChatQuery.prototype.getParamsMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 6, opt_noLazyCreate,
+      null));
+};
+
+
+/**
+ * Clears values from the map. The map will be non-null.
+ * @return {!proto.model.MsgChatQuery} returns this
+ */
+proto.model.MsgChatQuery.prototype.clearParamsMap = function() {
+  this.getParamsMap().clear();
+  return this;};
 
 

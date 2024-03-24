@@ -22,6 +22,7 @@ proto.model.ChatMsgType = {
   VOICE: 2,
   VIDEO: 3,
   FILE: 4,
-  DELETE: 5
+  DELETE: 5,
+  KEY: 6
 };
 

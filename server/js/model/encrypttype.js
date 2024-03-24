@@ -18,6 +18,9 @@ goog.provide('proto.model.EncryptType');
  */
 proto.model.EncryptType = {
   PLAIN: 0,
-  CUSTOM: 1
+  CUSTOM: 1,
+  CHACHA20: 2,
+  TWOFISH: 3,
+  AES: 4
 };
 
