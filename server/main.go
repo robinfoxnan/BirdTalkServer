@@ -1,6 +1,7 @@
 package main
 
 import (
+	"birdtalk/server/utils"
 	"birdtalk/server/ws"
 	"crypto/tls"
 	"fmt"
@@ -46,6 +47,13 @@ func mapHTMLFiles(router *gin.Engine, dir string) {
 
 func main() {
 	router := gin.Default()
+
+	// 使用 GinLogger 中间件处理日志记录
+	router.Use(utils.GinLogger(utils.Logger))
+
+	// 使用 GinRecovery 中间件处理恢复
+	router.Use(utils.GinRecovery(utils.Logger, true))
+	
 	router.LoadHTMLGlob("page/*.html") // 加载page目录下的所有HTML文件
 	router.Static("/js", "./js")       // 设置静态文件目录
 

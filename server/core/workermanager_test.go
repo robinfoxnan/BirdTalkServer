@@ -13,9 +13,10 @@ type CustomTask struct {
 
 // 实现 Task 接口的 Run 方法，调用父类 BaseTask 的 Process 方法
 func (t *CustomTask) Process() {
-	fmt.Printf("CustomTask with additional info '%s' is running\n", t.AdditionalInfo)
+	//fmt.Printf("CustomTask with additional info '%s' is running\n", t.AdditionalInfo)
 	// 调用父类的 Process 方法
 	//t.BaseTask.Process()
+	fmt.Println("Custom task exit", t.BaseTask.Id)
 }
 
 func TestWorkers(t *testing.T) {
@@ -35,7 +36,15 @@ func TestWorkers(t *testing.T) {
 		}
 	}()
 
-	time.Sleep(time.Minute * 1)
+	time.Sleep(time.Second * 50)
+	go func() {
+		for i := 16; i < 26; i++ {
+			var t = &BaseTask{Id: int64(i)}
+			manager.AddTask(t)
+		}
+	}()
+
+	time.Sleep(time.Second * 15)
 	manager.StopAll()
 	// 等待所有工作者完成任务
 	manager.Wait()

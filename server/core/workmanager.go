@@ -34,9 +34,10 @@ type BaseTask struct {
 
 // Run 实现 Task 接口的 Run 方法
 func (t *BaseTask) Process() {
-	fmt.Printf("Task %d is running\n", t.Id)
-	time.Sleep(time.Second * 3)
+	//fmt.Printf("Task %d is running\n", t.Id)
+	time.Sleep(time.Second * 1)
 	fmt.Printf("Task %d exits\n", t.Id)
+
 }
 
 type BaseWorker struct {
@@ -53,7 +54,7 @@ func (w *BaseWorker) Init(id int64, tc chan Task, wg *sync.WaitGroup, f WorkerCl
 	w.taskChan = tc
 	w.cleanFun = f
 	w.quitChan = make(chan struct{}) // 等待退出
-	fmt.Println("init worker ", w.Id)
+	//fmt.Println("init worker ", w.Id)
 
 }
 func (w *BaseWorker) Start() {
@@ -73,7 +74,7 @@ func (w *BaseWorker) Start() {
 		select {
 		case task := <-w.taskChan: // 从taskChan接收任务
 			// 执行任务处理逻辑
-			fmt.Printf("Worker %d processing task: %#v\n", w.Id, task)
+			//fmt.Printf("Worker %d processing task: %#v\n", w.Id, task)
 			// ... 这里添加实际的任务处理代码 ...
 			task.Process()
 
