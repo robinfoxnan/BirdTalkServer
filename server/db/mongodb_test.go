@@ -190,15 +190,131 @@ func TestSetUserInfoPart(t *testing.T) {
 	setData["nickname"] = "robin"
 	setData["phone"] = "1100000"
 
-	//unsetData := []string{"params.phonepre"}
+	unsetData := []string{"params.phonepre"}
 
 	tm1 := time.Now().UnixMilli()
 	// n, err := MongoClient.UpdateUserInfoPart(10001, setData, unsetData)
-	n, err := MongoClient.UpdateUserInfoPart(10001, setData, nil)
+	n, err := MongoClient.UpdateUserInfoPart(10001, setData, unsetData)
 	tm2 := time.Now().UnixMilli()
 	fmt.Println("update count = ", n)
 	fmt.Println("cost ms = ", tm2-tm1)
 	if err != nil {
 		fmt.Println(err)
 	}
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+func TestCreateGroup(t *testing.T) {
+	connStr := "mongodb://admin:123456@127.0.0.1:27017"
+	dbName := "birdtalk"
+	err := InitMongoClient(connStr, dbName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	group := pbmodel.GroupInfo{
+		GroupId:   10006,
+		GroupType: "group", // "channel"
+		GroupName: "隐藏群",
+		Tags:      []string{"test1", "test3", "下棋"},
+		Params: map[string]string{
+			"pwd": "password123",
+			//"v":    "pri", // pub, pri
+			"code": "123456",
+		},
+	}
+
+	err = MongoClient.CreateNewGroup(&group)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func TestFindGroupByTag(t *testing.T) {
+	connStr := "mongodb://admin:123456@127.0.0.1:27017"
+	dbName := "birdtalk"
+	err := InitMongoClient(connStr, dbName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	grps, err := MongoClient.FindGroupByKeyword("test1")
+	if grps != nil {
+		for _, g := range grps {
+			b, _ := json.Marshal(g)
+			fmt.Println(string(b))
+		}
+	}
+}
+func TestFindGroupById(t *testing.T) {
+	connStr := "mongodb://admin:123456@127.0.0.1:27017"
+	dbName := "birdtalk"
+	err := InitMongoClient(connStr, dbName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	grps, err := MongoClient.FindGroupById(10005, "123456")
+	if grps != nil {
+		for _, g := range grps {
+			b, _ := json.Marshal(g)
+			fmt.Println(string(b))
+		}
+	}
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func TestSetGroupInfo(t *testing.T) {
+	connStr := "mongodb://admin:123456@127.0.0.1:27017"
+	dbName := "birdtalk"
+	err := InitMongoClient(connStr, dbName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	group := pbmodel.GroupInfo{
+		GroupId:   10002,
+		GroupType: "group", // "channel"
+		GroupName: "测试群1",
+		Tags:      []string{"越野", "徒步", "闲聊"},
+		Params: map[string]string{
+			"pwd": "password123",
+			"q":   "public",
+		},
+	}
+
+	n, err := MongoClient.UpdateGroupInfo(&group)
+	fmt.Println(n)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+}
+
+func TestSetGroupInfoPart(t *testing.T) {
+	connStr := "mongodb://admin:123456@127.0.0.1:27017"
+	dbName := "birdtalk"
+	err := InitMongoClient(connStr, dbName)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	setData := map[string]interface{}{
+		"tags": []string{"学习", "聊天", "下棋", "骑行"},
+	}
+
+	n, err := MongoClient.UpdateGroupInfoPart(10003, setData, nil)
+	fmt.Println(n)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }

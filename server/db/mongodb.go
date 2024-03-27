@@ -3,6 +3,7 @@ package db
 import (
 	"birdtalk/server/pbmodel"
 	"context"
+	"errors"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -312,4 +313,154 @@ func (me *MongoDBExporter) UpdateUserInfoPart(id int64, setData map[string]inter
 	return result.ModifiedCount, nil
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
+// ////////////////////////////////////////////////////////////////////////////////////
+// 保存新
+func (me *MongoDBExporter) CreateNewGroup(g *pbmodel.GroupInfo) error {
+
+	collection := me.db.Collection(GroupTableName)
+
+	// 将用户信息对象转换为 MongoDB 文档
+	bsonData, err := bson.Marshal(g)
+	_, err = collection.InsertOne(context.Background(), bsonData)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Group information has been saved successfully.")
+	return nil
+
+	return nil
+}
+
+// 更新群基础信息，用的不会太多
+func (me *MongoDBExporter) UpdateGroupInfo(g *pbmodel.GroupInfo) (int64, error) {
+	collection := me.db.Collection(GroupTableName)
+	filter := bson.M{"groupid": g.GroupId} // 过滤条件
+	// 现有的更新操作
+	update := bson.M{
+		"$set": bson.M{
+			"groupname": g.GroupName,
+			"grouptype": g.GroupType,
+			"grouptags": g.Tags,
+		},
+	}
+
+	// 遍历param中的字段
+	for k, v := range g.Params {
+		key := "params." + k
+		update["$set"].(bson.M)[key] = v
+	}
+
+	// "$unset" 用于删除字段
+	// 后续添加的更新字段
+	//update["$set"].(bson.M)["params.key3"] = "new_value3"
+	//update["$set"].(bson.M)["params.key4"] = "new_value4"
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		// 处理错误
+		return 0, err
+	}
+
+	fmt.Println("Matched:", result.MatchedCount, "Modified:", result.ModifiedCount)
+	return result.ModifiedCount, nil
+	return 1, nil
+}
+
+func (me *MongoDBExporter) UpdateGroupInfoPart(id int64, setData map[string]interface{}, unsetData []string) (int64, error) {
+
+	collection := me.db.Collection(GroupTableName)
+	filter := bson.M{"groupid": id} // 过滤条件
+
+	// 初始化 update 变量
+	update := bson.M{
+		"$set":   bson.M{},
+		"$unset": bson.M{},
+	}
+	for k, v := range setData {
+		update["$set"].(bson.M)[k] = v
+	}
+
+	for _, k := range unsetData {
+		update["$unset"].(bson.M)[k] = nil
+	}
+
+	result, err := collection.UpdateOne(context.Background(), filter, update)
+	if err != nil {
+		// 处理错误
+		return 0, err
+	}
+
+	fmt.Println("Matched:", result.MatchedCount, "Modified:", result.ModifiedCount)
+	return result.ModifiedCount, nil
+	return 1, nil
+}
+
+// 通过关键字直接找到
+func (me *MongoDBExporter) FindGroupById(id int64, code string) ([]pbmodel.GroupInfo, error) {
+	collection := me.db.Collection(GroupTableName)
+
+	filter := bson.M{"groupid": id}
+
+	// 执行查询
+	cursor, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var groups []pbmodel.GroupInfo
+	if err := cursor.All(context.Background(), &groups); err != nil {
+		return nil, err
+	}
+
+	if len(groups) == 0 {
+		return nil, err
+	}
+
+	// 只要不是0个，开始检查公开属性
+	g := groups[0]
+	v, ok := g.Params["v"] // 如果未设置，或者设置为公开
+	if !ok || v == "pub" {
+		return groups, nil
+	}
+
+	c, ok := g.Params["code"] // 必须存在
+	if !ok || c != code {
+		return nil, errors.New("validate code is not correct")
+	}
+
+	return groups, nil
+}
+
+// 通过名字或者TAG字段来查找
+func (me *MongoDBExporter) FindGroupByKeyword(key string) ([]pbmodel.GroupInfo, error) {
+	collection := me.db.Collection(GroupTableName)
+
+	// 构建查询条件，不区分大小写了，影响性能，精确查找
+	// bson.M{"$regex": key, "$options": "i"}
+
+	filter := bson.M{
+		"$or": []bson.M{
+			bson.M{"groupname": key}, // 精确匹配 groupname
+			bson.M{"tags": key},      // 精确匹配 tags
+		},
+		"$and": []bson.M{
+			bson.M{"params.v": bson.M{"$ne": "pri"}}, // 未设置为pri 私有
+		},
+	}
+
+	// 执行查询
+	cursor, err := collection.Find(context.Background(), filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var groups []pbmodel.GroupInfo
+	if err := cursor.All(context.Background(), &groups); err != nil {
+		return nil, err
+	}
+
+	return groups, nil
+}
