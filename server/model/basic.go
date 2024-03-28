@@ -16,87 +16,123 @@ const (
 
 type User struct {
 	pbmodel.UserInfo
-	sessionId []int64           // 多用户会话ID
-	params    map[string]string // 某些状态下的附加信息都放在这里，比如验证码
-	status    uint32
-	mu        sync.Mutex
+	SessionId []int64           // 多用户会话ID
+	Params    map[string]string // 某些状态下的附加信息都放在这里，比如验证码
+	Status    uint32
+	Mu        sync.Mutex
+
+	Following map[int64]*FriendInfo // 关注列表
+	Fans      map[int64]*FansInfo   // 粉丝列表
+	Block     map[int64]*FriendInfo
 }
 
 // New 函数用于创建一个 User 实例
 func NewUser() *User {
-	return &User{
-		UserInfo:  pbmodel.UserInfo{}, // 初始化嵌入的 UserInfo 结构体
-		sessionId: make([]int64, 0),   // 初始化 sessionId 切片
-		params:    make(map[string]string),
-		status:    0,
-		mu:        sync.Mutex{}, // 初始化互斥锁
-	}
+	userInfo := pbmodel.UserInfo{}
+	return NewUserFromInfo(&userInfo)
 }
 
 // New 函数用于创建一个 User 实例
 func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 	return &User{
-		UserInfo:  *userInfo, // 使用传入的 *pbmodel.UserInfo 参数
-		sessionId: make([]int64, 0),
-		mu:        sync.Mutex{},
+		UserInfo:  *userInfo,        // 使用传入的 *pbmodel.UserInfo 参数
+		SessionId: make([]int64, 0), // 初始化 sessionId 切片
+		Params:    make(map[string]string),
+		Status:    0,
+		Mu:        sync.Mutex{}, // 初始化互斥锁
+
+		Following: make(map[int64]*FriendInfo),
+		Block:     make(map[int64]*FriendInfo),
+		Fans:      make(map[int64]*FansInfo),
 	}
 }
 
 // 添加会话ID
 func (u *User) AddSessionID(sessionID int64) int {
-	u.mu.Lock()
-	defer u.mu.Unlock()
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
 
-	u.sessionId = append(u.sessionId, sessionID)
-	return len(u.sessionId)
+	u.SessionId = append(u.SessionId, sessionID)
+	return len(u.SessionId)
 }
 
 // 删除会话ID
 func (u *User) DeleteSessionID(sessionID int64) int {
-	u.mu.Lock()
-	defer u.mu.Unlock()
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
 
-	for i, id := range u.sessionId {
+	for i, id := range u.SessionId {
 		if id == sessionID {
 			// 将要删除的会话ID与最后一个元素交换位置，然后缩减切片长度
-			u.sessionId[i] = u.sessionId[len(u.sessionId)-1]
-			u.sessionId = u.sessionId[:len(u.sessionId)-1]
-			return len(u.sessionId)
+			u.SessionId[i] = u.SessionId[len(u.SessionId)-1]
+			u.SessionId = u.SessionId[:len(u.SessionId)-1]
+			return len(u.SessionId)
 		}
 	}
-	return len(u.sessionId)
+	return len(u.SessionId)
 }
 
 // SetStatus 设置指定状态，同时存在的一个状态
 func (u *User) SetStatus(newStatus uint32) {
-	u.mu.Lock()
-	defer u.mu.Unlock()
-	u.status |= newStatus
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Status |= newStatus
 }
 
 // ClearStatus 清除指定状态，取消某个同时存在的状态
 func (u *User) ClearStatus(statusToClear uint32) {
-	u.mu.Lock()
-	defer u.mu.Unlock()
-	u.status &= ^statusToClear
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Status &= ^statusToClear
 }
 
 // 切换到某个状态
 func (u *User) ChangeToStatus(newStatus uint32) {
-	u.mu.Lock()
-	defer u.mu.Unlock()
-	u.status = newStatus
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Status = newStatus
 }
 
 // HasStatus 检查是否包含指定状态
 func (u *User) HasStatus(checkStatus uint32) bool {
-	u.mu.Lock()
-	defer u.mu.Unlock()
-	return u.status&checkStatus == checkStatus
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	return u.Status&checkStatus == checkStatus
 }
 
-///////////////////////////////////////////////////////////////////////
+// /////////////////////////////////////////////////////////////////////
+// 保存到内存中
+type FriendInfo struct {
+	fid  int64
+	tm   int64
+	nick string
+}
 
+type FansInfo struct {
+	FriendInfo
+	Perm int32
+}
+
+// 下面2个结构对应数据库中结构
+// 关注和拉黑的表一样，没有权限一项
+type FriendStore struct {
+	Pk   int16
+	Uid1 int64
+	Uid2 int64
+	Tm   int64
+	Nick string
+}
+
+type FansStore struct {
+	FriendStore
+	Perm int32
+}
+
+// //////////////////////////////////////////////////////////////////
 type Group struct {
 	pbmodel.GroupInfo
+}
+
+func NewFans() {
+
 }

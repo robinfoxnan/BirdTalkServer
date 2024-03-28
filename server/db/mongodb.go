@@ -3,7 +3,6 @@ package db
 import (
 	"birdtalk/server/pbmodel"
 	"context"
-	"errors"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -397,7 +396,7 @@ func (me *MongoDBExporter) UpdateGroupInfoPart(id int64, setData map[string]inte
 }
 
 // 通过关键字直接找到
-func (me *MongoDBExporter) FindGroupById(id int64, code string) ([]pbmodel.GroupInfo, error) {
+func (me *MongoDBExporter) FindGroupById(id int64) ([]pbmodel.GroupInfo, error) {
 	collection := me.db.Collection(GroupTableName)
 
 	filter := bson.M{"groupid": id}
@@ -414,21 +413,21 @@ func (me *MongoDBExporter) FindGroupById(id int64, code string) ([]pbmodel.Group
 		return nil, err
 	}
 
-	if len(groups) == 0 {
-		return nil, err
-	}
-
-	// 只要不是0个，开始检查公开属性
-	g := groups[0]
-	v, ok := g.Params["v"] // 如果未设置，或者设置为公开
-	if !ok || v == "pub" {
-		return groups, nil
-	}
-
-	c, ok := g.Params["code"] // 必须存在
-	if !ok || c != code {
-		return nil, errors.New("validate code is not correct")
-	}
+	//if len(groups) == 0 {
+	//	return nil, err
+	//}
+	//
+	//// 只要不是0个，开始检查公开属性
+	//g := groups[0]
+	//v, ok := g.Params["v"] // 如果未设置，或者设置为公开
+	//if !ok || v == "pub" {
+	//	return groups, nil
+	//}
+	//
+	//c, ok := g.Params["code"] // 必须存在
+	//if !ok || c != code {
+	//	return nil, errors.New("validate code is not correct")
+	//}
 
 	return groups, nil
 }

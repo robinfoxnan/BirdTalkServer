@@ -4,6 +4,7 @@ import (
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
+	"math"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -54,4 +55,9 @@ func BytesToInt64(data []byte) (int64, error) {
 		return 0, errors.New("insufficient bytes to convert to int64")
 	}
 	return int64(binary.LittleEndian.Uint64(data[:8])), nil
+}
+
+func Int64ToInt16(i int64) int16 {
+	module := math.MaxInt16
+	return int16(i % int64(module))
 }

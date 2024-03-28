@@ -258,7 +258,7 @@ func TestFindGroupById(t *testing.T) {
 		return
 	}
 
-	grps, err := MongoClient.FindGroupById(10005, "123456")
+	grps, err := MongoClient.FindGroupById(10005)
 	if grps != nil {
 		for _, g := range grps {
 			b, _ := json.Marshal(g)
