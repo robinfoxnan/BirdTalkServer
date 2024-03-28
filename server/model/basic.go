@@ -14,6 +14,7 @@ const (
 	UserStatusValidate             // 验证状态16，
 )
 
+// 内存缓存使用的用户模型
 type User struct {
 	pbmodel.UserInfo
 	SessionId []int64           // 多用户会话ID
@@ -21,9 +22,9 @@ type User struct {
 	Status    uint32
 	Mu        sync.Mutex
 
-	Following map[int64]*FriendInfo // 关注列表
-	Fans      map[int64]*FansInfo   // 粉丝列表
-	Block     map[int64]*FriendInfo
+	Following map[int64]*FriendMemInfo // 关注列表
+	Fans      map[int64]*FriendMemInfo // 粉丝列表
+	Block     map[int64]*BlockMemInfo
 }
 
 // New 函数用于创建一个 User 实例
@@ -41,9 +42,9 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		Status:    0,
 		Mu:        sync.Mutex{}, // 初始化互斥锁
 
-		Following: make(map[int64]*FriendInfo),
-		Block:     make(map[int64]*FriendInfo),
-		Fans:      make(map[int64]*FansInfo),
+		Following: make(map[int64]*FriendMemInfo),
+		Fans:      make(map[int64]*FriendMemInfo),
+		Block:     make(map[int64]*BlockMemInfo),
 	}
 }
 
@@ -102,19 +103,19 @@ func (u *User) HasStatus(checkStatus uint32) bool {
 
 // /////////////////////////////////////////////////////////////////////
 // 保存到内存中
-type FriendInfo struct {
+type FriendMemInfo struct {
 	fid  int64
 	tm   int64
 	nick string
 }
 
-type FansInfo struct {
-	FriendInfo
+type BlockMemInfo struct {
+	FriendMemInfo
 	Perm int32
 }
 
 // 下面2个结构对应数据库中结构
-// 关注和拉黑的表一样，没有权限一项
+// 关注和粉丝的表一样，没有权限一项
 type FriendStore struct {
 	Pk   int16
 	Uid1 int64
@@ -123,16 +124,38 @@ type FriendStore struct {
 	Nick string
 }
 
-type FansStore struct {
+type BlockStore struct {
 	FriendStore
 	Perm int32
 }
 
 // //////////////////////////////////////////////////////////////////
 type Group struct {
-	pbmodel.GroupInfo
 }
 
-func NewFans() {
+const (
+	// 群主
+	GroupOwner = 1 << iota
+	// 管理员
+	GroupAdmin
+	// 普通用户
+	GroupMember
+	// 只读普通用户
+	GroupMemberReadOnly
+)
 
+// 数据库中记录群组成员的结构体
+type GroupMemberStore struct {
+	Pk   int16
+	Role int16
+	Gid  int64
+	Uid  int64
+	Tm   int64
+	Nick string
+}
+
+type UserInGStore struct {
+	Pk  int16
+	Uid int64
+	Gid int64
 }

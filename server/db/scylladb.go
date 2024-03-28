@@ -77,7 +77,7 @@ const cqlCreateKeySpaceChatData = `CREATE KEYSPACE IF NOT EXISTS  chatdata
 		}`
 
 // //////////////////////////////////////////////////////////////////////////
-const cqlCrateTableFollow = `CREATE TABLE IF NOT EXISTS chatuser.following (
+const cqlCreateTableFollow = `CREATE TABLE IF NOT EXISTS chatuser.following (
 			pk smallint,
 			uid1 bigint,
 			uid2 bigint,
@@ -86,35 +86,60 @@ const cqlCrateTableFollow = `CREATE TABLE IF NOT EXISTS chatuser.following (
 			PRIMARY KEY (pk, uid1, uid2)
 		)`
 
-const cqlCrateTableFans = `CREATE TABLE IF NOT EXISTS chatuser.fans (
+const cqlCreateTableFans = `CREATE TABLE IF NOT EXISTS chatuser.fans (
 			pk smallint,
 			uid1 bigint,
 			uid2 bigint,
 			tm bigint,
 			nick text,
-            perm int,
 			PRIMARY KEY (pk, uid1, uid2)
 		)`
 
-const cqlCrateTableBlock = `CREATE TABLE IF NOT EXISTS chatuser.block (
+const cqlCreateTableBlock = `CREATE TABLE IF NOT EXISTS chatuser.block (
 			pk smallint,
 			uid1 bigint,
 			uid2 bigint,
 			tm bigint,
 			nick text,
+			perm int,
 			PRIMARY KEY (pk, uid1, uid2)
+		)`
+
+const cqlCreateTableGroupMem = `CREATE TABLE IF NOT EXISTS chatgroup.members (
+			pk smallint,
+			role smallint,
+			gid bigint,
+			uid bigint,
+			tm bigint,
+			nick text,
+			PRIMARY KEY (pk, gid, uid)
+		)`
+
+const cqlCreateTableUinG = `CREATE TABLE IF NOT EXISTS chatgroup.uing (
+			pk smallint,
+			uid bigint,
+			gid bigint,
+			PRIMARY KEY (pk, uid, gid)
 		)`
 
 // ////////////////////////////////////////////////////////
+// 用户关系
 const FollowingTableName = "chatuser.following"
 const FansTableName = "chatuser.fans"
 const BlockTableName = "chatuser.block"
+
+// 群组关系
 const GroupMemberTableName = "chatgroup.members"
+const UserInGroupTableName = "chatgroup.uing"
+
+// 聊天消息
 const PrivateChatTableName = "chatdata.pchat"
 const GroupChatTableName = "chatdata.gchat"
 
 var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData,
-	cqlCrateTableFollow, cqlCrateTableFans, cqlCrateTableBlock}
+	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock,
+	cqlCreateTableGroupMem, cqlCreateTableUinG,
+}
 
 func (me *Scylla) Init() error {
 	for _, cql := range initCqlList {
