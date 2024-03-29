@@ -38,6 +38,8 @@ enum ComMsgType {
   MsgTGroupOp = 16;      // 所有群组相关的操作
   MsgTGroupOpRet = 17;
 
+  MsgTOther = 100;      // 转发给其他的扩展模块的
+
 }
 
 // 首先需要同步客户端的基础信息，服务端应答各种信息
@@ -106,6 +108,7 @@ enum ChatMsgType {
   DELETE = 5; // 删除之前的消息
   KEY = 6;    // 会话秘钥协商
 
+  PLUGIN = 100;
 
   // 其他类型...
 }
@@ -119,6 +122,10 @@ enum EncryptType{
   AES = 4;
 }
 
+enum ChatType{
+  PrivateChatType = 0;
+  GroupChatType = 1;
+}
 
 
 // 聊天存储的基本信息
@@ -141,13 +148,14 @@ message MsgChat {
   int64 refMessageId = 11;        // 引用的消息 ID，如果有的话
 
   ChatMsgStatus status = 12;      // 消息状态，建议使用枚举
-  int32 sendReply = 13;           // 发送消息的回执状态
-  int32 recvReply = 14;           // 接收消息的回执状态
-  int32 readReply = 15;           // 已读状态的回执
+  int64 sendReply = 13;           // 发送消息的回执状态
+  int64 recvReply = 14;           // 接收消息的回执状态
+  int64 readReply = 15;           // 已读状态的回执
 
   EncryptType encType = 16;       // 加密类型
-  string chatType = 17;           // p2p, group, system
-  int64 keyPrint = 18;
+  ChatType chatType = 17;         // p2p, group, system
+  int32 subMsgType = 18;          // 传递给插件区分代码，插件都注册为整数类型，
+  int64 keyPrint = 19;            // 秘钥指纹
 }
 
 // 消息确认，上传下载的确认
@@ -227,50 +235,53 @@ message Msg {
   int64 keyPrint = 2;           // 0是不加密，非0是加密
   int64 tm = 3;                  // 时间戳
   ComMsgType msgType = 4;        // 通用消息类型
+  int32 subType = 5;             // msgType==100时，其他类型的消息扩展模块自己定义
 
   oneof message {
-    bytes cipher = 5;             // 密文，需要解密后，二次解码
-    MsgKeyExchange keyEx = 6;     // 秘钥协商
-    MsgHello hello = 7;           // Hello消息
-    MsgHeartBeat heartBeat = 8;   // 心跳消息
-    MsgChat chatData = 9;         // 聊天消息
-    MsgChatReply chatReply = 10;   // 聊天回复消息
-    MsgDownloadReq downloadReq = 11;     // 下载请求消息
-    MsgDownloadReply downloadReply = 12; // 下载回复消息
-    MsgUploadReq uploadReq = 13;         // 上传请求消息
-    MsgUploadReply uploadReply = 14;    // 上传回复消息
-    MsgChatQuery chatQuery = 15;        // 查询离线数据，查询状态，关键字搜索
-    MsgChatQueryResult chatQueryResult = 16;
+    bytes cipher = 6;             // 密文，需要解密后，二次解码
+    MsgKeyExchange keyEx = 7;     // 秘钥协商
+    MsgHello hello = 8;           // Hello消息
+    MsgHeartBeat heartBeat = 9;   // 心跳消息
+    MsgChat chatData = 10;         // 聊天消息
+    MsgChatReply chatReply = 11;   // 聊天回复消息
+    MsgDownloadReq downloadReq = 12;     // 下载请求消息
+    MsgDownloadReply downloadReply = 13; // 下载回复消息
+    MsgUploadReq uploadReq = 14;         // 上传请求消息
+    MsgUploadReply uploadReply = 15;    // 上传回复消息
+    MsgChatQuery chatQuery = 16;        // 查询离线数据，查询状态，关键字搜索
+    MsgChatQueryResult chatQueryResult = 17;
 
-    UserOpReq userOp = 17;             // 用户操作请求消息
-    UserOpResult userOpRet = 18;       // 用户操作结果消息
-    FriendOpReq friendOp = 19;         // 好友操作请求消息
-    FriendOpResult friendOpRet = 20;   // 好友操作结果消息
-    GroupOpReq groupOp = 21;           // 群组操作请求消息
-    GroupOpResult groupOpRet = 22;     // 群组操作结果消息
+    UserOpReq userOp = 18;             // 用户操作请求消息
+    UserOpResult userOpRet = 19;       // 用户操作结果消息
+    FriendOpReq friendOp = 20;         // 好友操作请求消息
+    FriendOpResult friendOpRet = 21;   // 好友操作结果消息
+    GroupOpReq groupOp = 22;           // 群组操作请求消息
+    GroupOpResult groupOpRet = 23;     // 群组操作结果消息
+    bytes  otherTypeMsg = 24;          // msgType==100时，直接将消息分发给扩展服务，不保存
   }
 }
 
 // 用于解密后的明文进行反序列化
 message MsgPlain{
   oneof message {
-    MsgHello hello = 7;           // Hello消息
-    MsgHeartBeat heartBeat = 8;   // 心跳消息
-    MsgChat chatData = 9;         // 聊天消息
-    MsgChatReply chatReply = 10;   // 聊天回复消息
-    MsgDownloadReq downloadReq = 11;     // 下载请求消息
-    MsgDownloadReply downloadReply = 12; // 下载回复消息
-    MsgUploadReq uploadReq = 13;         // 上传请求消息
-    MsgUploadReply uploadReply = 14;    // 上传回复消息
-    MsgChatQuery chatQuery = 15;        // 查询离线数据，查询状态，关键字搜索
-    MsgChatQueryResult chatQueryResult = 16;
+    MsgHello hello = 8;           // Hello消息
+    MsgHeartBeat heartBeat = 9;   // 心跳消息
+    MsgChat chatData = 10;         // 聊天消息
+    MsgChatReply chatReply = 11;   // 聊天回复消息
+    MsgDownloadReq downloadReq = 12;     // 下载请求消息
+    MsgDownloadReply downloadReply = 13; // 下载回复消息
+    MsgUploadReq uploadReq = 14;         // 上传请求消息
+    MsgUploadReply uploadReply = 15;    // 上传回复消息
+    MsgChatQuery chatQuery = 16;        // 查询离线数据，查询状态，关键字搜索
+    MsgChatQueryResult chatQueryResult = 17;
 
-    UserOpReq userOp = 17;             // 用户操作请求消息
-    UserOpResult userOpRet = 18;       // 用户操作结果消息
-    FriendOpReq friendOp = 19;         // 好友操作请求消息
-    FriendOpResult friendOpRet = 20;   // 好友操作结果消息
-    GroupOpReq groupOp = 21;           // 群组操作请求消息
-    GroupOpResult groupOpRet = 22;     // 群组操作结果消息
+    UserOpReq userOp = 18;             // 用户操作请求消息
+    UserOpResult userOpRet = 19;       // 用户操作结果消息
+    FriendOpReq friendOp = 20;         // 好友操作请求消息
+    FriendOpResult friendOpRet = 21;   // 好友操作结果消息
+    GroupOpReq groupOp = 22;           // 群组操作请求消息
+    GroupOpResult groupOpRet = 23;     // 群组操作结果消息
+    bytes  otherTypeMsg = 24;          // msgType==100时，直接将消息分发给扩展服务，不保存
   }
 }
 

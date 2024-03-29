@@ -122,6 +122,42 @@ const cqlCreateTableUinG = `CREATE TABLE IF NOT EXISTS chatgroup.uing (
 			PRIMARY KEY (pk, uid, gid)
 		)`
 
+const cqlCreateTablePChat = `CREATE TABLE IF NOT EXISTS  chatdata.pchat (
+			pk smallint,
+			uid1 bigint, 
+			uid2 bigint,
+			id bigint,
+			usid bigint,
+			tm bigint,
+			tm1 bigint,
+			tm2 bigint,
+			io tinyint,
+			st tinyint,
+			ct tinyint,
+			mt tinyint,
+			draf blob,
+			pr  varint,
+			ref varint,
+			PRIMARY KEY (pk, uid1, tm, id)
+		)`
+
+const cqlCreateTableGChat = `CREATE TABLE IF NOT EXISTS  chatdata.gchat (
+			pk smallint,
+			gid bigint,
+			uid bigint, 
+			id bigint,
+			usid bigint,
+			tm bigint,
+			res tinyint,
+			st tinyint,
+			ct tinyint,
+			mt tinyint,
+			draf blob,
+			pr  varint,
+			ref varint,
+			PRIMARY KEY (pk, gid, tm, id)
+		)`
+
 // ////////////////////////////////////////////////////////
 // 用户关系
 const FollowingTableName = "chatuser.following"
@@ -139,6 +175,7 @@ const GroupChatTableName = "chatdata.gchat"
 var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData,
 	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock,
 	cqlCreateTableGroupMem, cqlCreateTableUinG,
+	cqlCreateTablePChat, cqlCreateTableGChat,
 }
 
 func (me *Scylla) Init() error {

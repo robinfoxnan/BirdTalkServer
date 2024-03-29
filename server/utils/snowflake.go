@@ -82,6 +82,24 @@ const (
 	sequenceMask       = -1 ^ (-1 << sequenceBits)
 )
 
+//根据给出的常量，我们可以进一步解释代码中 ID 的各个部分占用的位数：
+//
+//时间戳部分：
+//时间戳的范围是从 Epoch 开始到当前时间的毫秒数。
+//根据 timestampLeftShift 的设置，时间戳部分占用的位数为 sequenceBits + workerIDBits + datacenterIDBits，即 22 位。
+
+//数据中心 ID 部分：
+//数据中心 ID 的范围是从 0 到 maxDatacenterID。
+//根据 datacenterIDBits 的设置，数据中心 ID 部分占用的位数为 5 位。
+
+//工作节点 ID 部分：
+//工作节点 ID 的范围是从 0 到 maxWorkerID。
+//根据 workerIDBits 的设置，工作节点 ID 部分占用的位数也是 5 位。
+//序列号部分：
+//
+//序列号的范围是从 0 到 sequenceMask。
+//根据 sequenceBits 的设置，序列号部分占用的位数为 12 位。
+
 //func main() {
 //	// 创建一个Snowflake实例，传入workerID和datacenterID
 //	snowflake := NewSnowflake(1, 1)

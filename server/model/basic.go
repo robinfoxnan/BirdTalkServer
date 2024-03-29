@@ -159,3 +159,50 @@ type UserInGStore struct {
 	Uid int64
 	Gid int64
 }
+
+const (
+	DrafStateNormal = 1 << iota // 常规 1
+	DrafStateArrive             // 送达 2
+	DrafStateRead               // 已读 4
+	DrafStateDel                // 撤回 8
+
+)
+
+const ChatDataIOOut = 0
+const ChatDataIOIn = 1
+
+type PChatDataStore struct {
+	Pk   int16 `db:"pk"`
+	Uid1 int64 `db:"uid1"`
+	Uid2 int64 `db:"uid2"`
+	Id   int64 `db:"id"`
+	Usid int64 `db:"usid"`
+	Tm   int64 `db:"tm"`
+	Tm1  int64 `db:"tm1"`
+	Tm2  int64 `db:"tm2"`
+
+	Io    int8   `db:"io"`  // 0=out, 1=in
+	St    int8   `db:"st"`  // 0=normal, 1=送达,2阅读，
+	Ct    int8   `db:"ct"`  // 0=p2p_plain, 1=system, 2=p2_encrypted,
+	Mt    int8   `db:"mt"`  // 0=text, 1=pic, 2=
+	Print int64  `db:"pr"`  // 秘钥哈希的低8字节作为指纹
+	Ref   int64  `db:"ref"` // 引用
+	Draf  []byte `db:"draf"`
+}
+
+type GChatDataStore struct {
+	Pk   int16 `db:"pk"`
+	Gid  int64 `db:"gid"`
+	Uid  int64 `db:"uid"`
+	Id   int64 `db:"id"`
+	Usid int64 `db:"usid"`
+	Tm   int64 `db:"tm"`
+	Res  int8  `db:"res"` // 保留
+	St   int8  `db:"st"`  // 0=normal, 1=送达,2阅读，
+	Ct   int8  `db:"ct"`  // 0=普通，1=广播
+	Mt   int8  `db:"mt"`  // 0=text, 1=pic, 2=
+
+	Print int64  `db:"pr"`  // 秘钥哈希的低8字节作为指纹
+	Ref   int64  `db:"ref"` // 引用
+	Draf  []byte `db:"draf"`
+}
