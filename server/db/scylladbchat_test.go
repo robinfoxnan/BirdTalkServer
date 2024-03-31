@@ -10,7 +10,7 @@ import (
 
 func TestAddPMsg(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -48,7 +48,7 @@ func TestAddPMsg(t *testing.T) {
 
 func TestSetPMsgDelete(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -59,7 +59,7 @@ func TestSetPMsgDelete(t *testing.T) {
 
 func TestSetPMsgReply(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -73,7 +73,7 @@ func TestSetPMsgReply(t *testing.T) {
 
 func TestSetPMsgReply1(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -85,7 +85,7 @@ func TestSetPMsgReply1(t *testing.T) {
 
 func TestFindPChat(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -104,7 +104,7 @@ func TestFindPChat(t *testing.T) {
 // //////////////////////////////////////////////////
 func TestAddGroupMsg(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -141,7 +141,7 @@ func TestAddGroupMsg(t *testing.T) {
 
 func TestSetGroupMsgDel(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -153,7 +153,7 @@ func TestSetGroupMsgDel(t *testing.T) {
 
 func TestFindGroupmsg(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
