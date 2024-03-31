@@ -13,14 +13,14 @@ var metaPrivateChatData = table.Metadata{
 	Name:    "pchat",
 	Columns: []string{"pk", "uid1", "uid2", "id", "usid", "tm", "tm1", "tm2", "io", "st", "ct", "mt", "pr", "ref", "draf"},
 	PartKey: []string{"pk"},
-	SortKey: []string{"uid1", "tm", "id"},
+	SortKey: []string{"uid1", "id"},
 }
 
 var metaGroupChatData = table.Metadata{
 	Name:    "gchat",
 	Columns: []string{"pk", "gid", "uid", "id", "usid", "tm", "res", "st", "ct", "mt", "pr", "ref", "draf"},
 	PartKey: []string{"pk"},
-	SortKey: []string{"gid", "tm", "id"},
+	SortKey: []string{"gid", "id"},
 }
 
 // 写2次，首先是发方A，然后是收方B
@@ -53,74 +53,73 @@ func (me *Scylla) SavePChatData(msg *model.PChatDataStore, pk2 int) error {
 }
 
 // 对发送方设置回执，收方不需要设置
-func (me *Scylla) SetPChatRecvReply(pk1, pk2, uid1, uid2, tm, msgId, tm1 int64) error {
+func (me *Scylla) SetPChatRecvReply(pk1, pk2, uid1, uid2, msgId, tm1 int64) error {
 	builder := qb.Update(PrivateChatTableName)
 
 	builder.Set("tm1")
 
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("tm"), qb.Eq("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
 
 	query := builder.Query(me.session)
 	defer query.Release()
 
 	query.Consistency(gocql.One)
-	query.Bind(tm1, pk1, uid1, tm, msgId)
+	query.Bind(tm1, pk1, uid1, msgId)
 
 	err := query.Exec()
 	return err
 }
 
-func (me *Scylla) SetPChatReadReply(pk1, pk2, uid1, uid2, tm, msgId, tm2 int64) error {
+func (me *Scylla) SetPChatReadReply(pk1, pk2, uid1, uid2, msgId, tm2 int64) error {
 	builder := qb.Update(PrivateChatTableName)
 
 	builder.Set("tm2")
 
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("tm"), qb.Eq("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
 
 	query := builder.Query(me.session)
 	defer query.Release()
 
 	query.Consistency(gocql.One)
-	query.Bind(tm2, pk1, uid1, tm, msgId)
+	query.Bind(tm2, pk1, uid1, msgId)
 
 	err := query.Exec()
 	return err
 }
 
-func (me *Scylla) SetPChatRecvReadReply(pk1, pk2, uid1, uid2, tm, msgId, tm1, tm2 int64) error {
+func (me *Scylla) SetPChatRecvReadReply(pk1, pk2, uid1, uid2, msgId, tm1, tm2 int64) error {
 	builder := qb.Update(PrivateChatTableName)
 
 	builder.Set("tm1", "tm2")
 
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("tm"), qb.Eq("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
 
 	query := builder.Query(me.session)
 	defer query.Release()
 
 	query.Consistency(gocql.One)
-	query.Bind(tm1, tm2, pk1, uid1, tm, msgId)
+	query.Bind(tm1, tm2, pk1, uid1, msgId)
 
 	err := query.Exec()
 	return err
 }
 
 // 设置删除，不可逆
-func (me *Scylla) SetPChatMsgDeleted(pk1, pk2, uid1, uid2, tm, msgId int64) error {
+func (me *Scylla) SetPChatMsgDeleted(pk1, pk2, uid1, uid2, msgId int64) error {
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
 	batch.Cons = gocql.LocalOne
 
 	// 发方的DrafStateDel
 	builder1 := qb.Update(PrivateChatTableName)
-	builder1.Set("st").Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("tm"), qb.Eq("id"))
+	builder1.Set("st").Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
 	query1 := builder1.Query(me.session)
 	defer query1.Release()
-	batch.Query(query1.Statement(), model.DrafStateDel, pk1, uid1, tm, msgId)
+	batch.Query(query1.Statement(), model.DrafStateDel, pk1, uid1, msgId)
 
 	// 收方DrafStateDel
-	//builder2 := qb.Update(PrivateChatTableName).Set("st").Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
 	query2 := builder1.Query(me.session)
 	defer query2.Release()
-	batch.Query(query2.Statement(), model.DrafStateDel, pk2, uid2, tm, msgId)
+	batch.Query(query2.Statement(), model.DrafStateDel, pk2, uid2, msgId)
 
 	if err := me.session.ExecuteBatch(batch); err != nil {
 		return err
@@ -129,13 +128,13 @@ func (me *Scylla) SetPChatMsgDeleted(pk1, pk2, uid1, uid2, tm, msgId int64) erro
 }
 
 // 查找
-func (me *Scylla) FindPChatMsg(pk, uid, fromTm int64, pageSize uint) ([]model.PChatDataStore, error) {
+func (me *Scylla) FindPChatMsg(pk, uid, fromId int64, pageSize uint) ([]model.PChatDataStore, error) {
 
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Gt("tm"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Gt("id"))
 
 	builder.OrderBy("uid1", qb.ASC)
-	builder.OrderBy("tm", qb.ASC)
+	builder.OrderBy("id", qb.ASC)
 
 	builder.AllowFiltering()
 	builder.Limit(pageSize)
@@ -145,7 +144,7 @@ func (me *Scylla) FindPChatMsg(pk, uid, fromTm int64, pageSize uint) ([]model.PC
 
 	q.Consistency(gocql.One)
 
-	q.Bind(pk, uid, fromTm)
+	q.Bind(pk, uid, fromId)
 
 	var lst []model.PChatDataStore
 
@@ -170,26 +169,26 @@ func (me *Scylla) SaveGChatData(msg *model.GChatDataStore) error {
 }
 
 // 设置删除，不可逆
-func (me *Scylla) SetGChatMsgDeleted(pk, gid, tm, msgId int64) error {
+func (me *Scylla) SetGChatMsgDeleted(pk, gid, msgId int64) error {
 
 	builder := qb.Update(GroupChatTableName)
-	builder.Set("st").Where(qb.Eq("pk"), qb.Eq("gid"), qb.Eq("tm"), qb.Eq("id"))
+	builder.Set("st").Where(qb.Eq("pk"), qb.Eq("gid"), qb.Eq("id"))
 	query := builder.Query(me.session)
 	defer query.Release()
 
 	query.Consistency(gocql.One)
-	query.Bind(model.DrafStateDel, pk, gid, tm, msgId)
+	query.Bind(model.DrafStateDel, pk, gid, msgId)
 	err := query.Exec()
 	return err
 }
 
 // 查找
-func (me *Scylla) FindGChatMsg(pk, gid, fromTm int64, pageSize uint) ([]model.GChatDataStore, error) {
+func (me *Scylla) FindGChatMsg(pk, gid, fromId int64, pageSize uint) ([]model.GChatDataStore, error) {
 	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.Gt("tm"))
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.Gt("id"))
 
 	builder.OrderBy("gid", qb.ASC)
-	builder.OrderBy("tm", qb.ASC)
+	builder.OrderBy("id", qb.ASC)
 
 	builder.AllowFiltering()
 	builder.Limit(pageSize)
@@ -199,7 +198,7 @@ func (me *Scylla) FindGChatMsg(pk, gid, fromTm int64, pageSize uint) ([]model.GC
 
 	q.Consistency(gocql.One)
 
-	q.Bind(pk, gid, fromTm)
+	q.Bind(pk, gid, fromId)
 
 	var lst []model.GChatDataStore
 

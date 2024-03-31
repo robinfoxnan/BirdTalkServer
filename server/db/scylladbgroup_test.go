@@ -10,7 +10,7 @@ import (
 
 func TestAddMemToGroup(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -51,7 +51,7 @@ func TestAddMemToGroup(t *testing.T) {
 }
 
 func TestFindGroupMem(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -63,7 +63,7 @@ func TestFindGroupMem(t *testing.T) {
 }
 
 func TestUserInG(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -75,7 +75,7 @@ func TestUserInG(t *testing.T) {
 }
 
 func TestSetGroupMemberInfo(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -86,7 +86,7 @@ func TestSetGroupMemberInfo(t *testing.T) {
 }
 
 func TestDeleteGroupMember(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -96,7 +96,7 @@ func TestDeleteGroupMember(t *testing.T) {
 }
 
 func TestGroupDisovle(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -106,7 +106,7 @@ func TestGroupDisovle(t *testing.T) {
 }
 
 func TestDeleteUing(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return

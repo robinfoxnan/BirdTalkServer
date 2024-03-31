@@ -138,7 +138,7 @@ const cqlCreateTablePChat = `CREATE TABLE IF NOT EXISTS  chatdata.pchat (
 			draf blob,
 			pr  varint,
 			ref varint,
-			PRIMARY KEY (pk, uid1, tm, id)
+			PRIMARY KEY (pk, uid1, id)
 		)`
 
 const cqlCreateTableGChat = `CREATE TABLE IF NOT EXISTS  chatdata.gchat (
@@ -155,7 +155,7 @@ const cqlCreateTableGChat = `CREATE TABLE IF NOT EXISTS  chatdata.gchat (
 			draf blob,
 			pr  varint,
 			ref varint,
-			PRIMARY KEY (pk, gid, tm, id)
+			PRIMARY KEY (pk, gid, id)
 		)`
 
 // ////////////////////////////////////////////////////////

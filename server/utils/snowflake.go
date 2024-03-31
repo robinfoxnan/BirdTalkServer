@@ -56,8 +56,22 @@ func (s *Snowflake) GenerateID() int64 {
 	return id
 }
 
+// 从ID中提取时间戳
+func SnowIdtoTm(id int64) int64 {
+	tm := (id >> timestampLeftShift) + Epoch
+	return tm
+}
+
+// 将时间戳转为ID类似的结构，可以直接过滤比较，
+func TmToSnowIdLike(tm int64) int64 {
+	id := (tm - Epoch) << timestampLeftShift
+	return id
+}
+
 func (s *Snowflake) timeGen() int64 {
-	return time.Now().UnixNano() / int64(time.Millisecond)
+	//return time.Now().UnixNano() / int64(time.Millisecond)
+	// 在 Go 1.13 版本之后
+	return time.Now().UnixMilli()
 }
 
 func (s *Snowflake) tilNextMillis() int64 {

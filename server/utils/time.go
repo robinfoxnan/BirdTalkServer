@@ -4,9 +4,9 @@ import (
 	"time"
 )
 
-func UtcTm2UtcString(utcMillis int64) string {
+func TmToUtcString(utcMillis int64) string {
 	// 将毫秒时间戳转换为 time.Time 类型
-	utcTime := time.Unix(0, utcMillis*int64(time.Millisecond)).UTC()
+	utcTime := time.UnixMilli(utcMillis)
 
 	// 将时间格式化为字符串
 	timeStr := utcTime.Format("2006-01-02 15:04:05")
@@ -14,9 +14,9 @@ func UtcTm2UtcString(utcMillis int64) string {
 	//fmt.Println("UTC 时间字符串:", timeStr)
 	return timeStr
 }
-func UtcTm2LocalString(utcMillis int64) string {
+func TmToLocalString(utcMillis int64) string {
 	// 将毫秒时间戳转换为 time.Time 类型
-	utcTime := time.Unix(0, utcMillis*int64(time.Millisecond)).UTC()
+	utcTime := time.UnixMilli(utcMillis)
 
 	// 将时间转换为本地时间
 	localTime := utcTime.Local()

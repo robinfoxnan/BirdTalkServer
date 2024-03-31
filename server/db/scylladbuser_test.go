@@ -10,7 +10,7 @@ import (
 
 func TestCreateFollow(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -52,7 +52,7 @@ func TestCreateFollow(t *testing.T) {
 }
 
 func TestDeleteFollow(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -68,7 +68,7 @@ func TestDeleteFollow(t *testing.T) {
 
 func TestQueryFollow(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -85,7 +85,7 @@ func TestQueryFollow(t *testing.T) {
 }
 
 func TestCountFollowing(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -97,7 +97,7 @@ func TestCountFollowing(t *testing.T) {
 
 func TestQueryFans(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -114,7 +114,7 @@ func TestQueryFans(t *testing.T) {
 }
 
 func TestCountFans(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -125,17 +125,17 @@ func TestCountFans(t *testing.T) {
 }
 
 func TestFollowingSetNick(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	err = client.SetFollowingNick(1001, 1001, 1002, "robinfoxnan")
+	err = client.SetFollowingNick(1001, 1001, 1002, "robin")
 	fmt.Println(err)
 }
 
 func TestFansSetNick(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -147,7 +147,7 @@ func TestFansSetNick(t *testing.T) {
 // //////////////////////////////////////////////////////////////
 func TestCreateBlock(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -180,7 +180,7 @@ func TestCreateBlock(t *testing.T) {
 }
 
 func TestDeleteBlock(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -195,7 +195,7 @@ func TestDeleteBlock(t *testing.T) {
 }
 
 func TestSetBlock(t *testing.T) {
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -211,7 +211,7 @@ func TestSetBlock(t *testing.T) {
 
 func TestQueryBlock(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "123456")
 	if err != nil {
 		fmt.Println(err)
 		return
