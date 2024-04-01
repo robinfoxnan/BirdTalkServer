@@ -10,22 +10,24 @@ const BirdServerUserId = "birds_uid"
 const BirdServerGroupId = "birds_gid"
 const BirdServerNewsId = "birds_nid"
 const BirdServerCommentId = "birds_cid"
-const BirdServerUserPrefix = "bsui_%d"  // 用户基础信息以及动态信息 hash
-const BirdServerUFolPrefix = "bsufo_%d" // 关注表 set
-const BirdServerUFanPrefix = "bsufa_%d" // 粉丝表 set
-const BirdServerUBloPrefix = "bsufb_%d" // 拉黑表 hash表
-const BirdServerUserStateCh = "bsusch"  //用户状态广播频道
+const BirdServerUserPrefix = "bsui_%d"      // 用户基础信息以及动态信息 hash
+const BirdServerUFolPrefix = "bsufo_%d"     // 关注表 set
+const BirdServerUFanPrefix = "bsufa_%d"     // 粉丝表 set
+const BirdServerUBloPrefix = "bsufb_%d"     // 拉黑表 hash表
+const BirdServerUserInGPrefix = "bsuing_%d" // 用户所属群的集合
 
 const BirdServerGroupPrefix = "bsgi_%d"         // 组基础信息  hash 存储各种属性
 const BirdServerGrpUsers = "bsgu_%d"            // 组内所有成员表 hash， 每个成员包括昵称，权限，设置
 const BirdServerGrpDistribution = "bsgd_%d"     // hash, 一个群在各个服务器上登录的用户个数 服务器器号->计数
 const BirdServerGrpDistriDetail = "bsgdi_%d_%d" // 某一个群，在某个服务器上的成员列表 set
-const BirdServerGMStateCh = "bsgmsch"           //群组成员用户状态广播频道
+
+const BirdServerStateCh = "bssch"              //用户、群组、服务器状态广播频道
+const BirdServerClusterPrefix = "bscs_%d"      // 集群每个服务器状态hash
+const BirdServerCluSerStaPrefix = "bscs_state" // 集群信息hash表
 
 const BirdServerGroupMsgCache = "bsgmsg_%d" //群组数据缓存，如果1000条
-
-const MaxFriendBatchSize = 512  // 最大的批处理的个数
-const MaxFriendCacheSize = 1024 // 缓存中粉丝之类的最大数量
+const MaxFriendBatchSize = 512              // 最大的批处理的个数
+const MaxFriendCacheSize = 1024             // 缓存中粉丝之类的最大数量
 
 // 某些值必须要有的，确保初始化
 func (cli *RedisClient) initData() {
@@ -124,13 +126,6 @@ func GetUserBlockKey(id int64) string {
 	return fmt.Sprintf(BirdServerUBloPrefix, id)
 }
 
-// 用户状态广播频道
-//
-//go:inline
-func GetUserStateCHKey() string {
-	return BirdServerUserStateCh
-}
-
 // 组基础信息  hash 存储各种属性,
 //
 //go:inline
@@ -159,13 +154,6 @@ func GetGroupActiveMemsPerNodeKey(gid, nodeId int64) string {
 	return fmt.Sprintf(BirdServerGrpDistriDetail, gid, nodeId)
 }
 
-// 群组成员用户状态广播频道 "bsgmsch"
-//
-//go:inline
-func GetGroupMemStateChKey() string {
-	return BirdServerGMStateCh
-}
-
 // 群组数据缓存，如果1000条 "bsgmsg_"
 //
 //go:inline
@@ -173,7 +161,39 @@ func GetGroupMsgCacheKey(id int64) string {
 	return fmt.Sprintf(BirdServerGroupMsgCache, id)
 }
 
+//go:inline
 func GetServerField(id int64) string {
 	field := fmt.Sprintf("%d", id)
 	return field
+}
+
+// 用户所属群
+//
+//go:inline
+func GetUseringKey(id int64) string {
+
+	return fmt.Sprintf(BirdServerUserInGPrefix, id)
+}
+
+// 所有的状态广播都使用这一个频道
+//
+//go:inline
+func GetStateChKey() string {
+	return BirdServerStateCh
+}
+
+// 集群的信息表 "bscs_state"
+//
+//go:inline
+func GetClusterInfoKey() string {
+	return BirdServerCluSerStaPrefix
+}
+
+// 集群每个服务器状态hash
+// "bscs_%d"
+//
+//go:inline
+func GetClusterServerStateKey(id int64) string {
+
+	return fmt.Sprintf(BirdServerClusterPrefix, id)
 }

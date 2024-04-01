@@ -179,3 +179,22 @@ func TestUserFriends(t *testing.T) {
 	//fmt.Println(list3)
 
 }
+
+func TestUserAddGroup(t *testing.T) {
+	redisCli, err := NewRedisClient("127.0.0.1:6379", "")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	err = redisCli.SetUserJoinGroup(10002, 101)
+	err = redisCli.SetUserJoinGroup(10002, 102)
+	fmt.Println(err)
+
+	lst, err := redisCli.GetUsersInSameGroup(10001, 10002)
+	fmt.Println(lst)
+
+	lst, err = redisCli.GetUserInGroupAll(10002)
+	fmt.Println(lst)
+
+}

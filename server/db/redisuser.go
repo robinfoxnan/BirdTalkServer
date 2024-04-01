@@ -199,3 +199,68 @@ func (cli *RedisClient) GetFriendIntersect(uid int64) ([]int64, error) {
 
 	return intList, nil
 }
+
+// ////////////////////////////////////////////////////////////////////
+// 用户登录初始化加载时候使用
+func (cli *RedisClient) SetUserInGroup(uid int64, gidList []int64) error {
+	keyUserInG := GetUseringKey(uid)
+	return cli.SetIntSet(keyUserInG, gidList)
+}
+
+// 用户加入的群组个数
+func (cli *RedisClient) GetUserInGroupCount(uid int64) (int64, error) {
+	keyUserInG := GetUseringKey(uid)
+	return cli.GetSetLen(keyUserInG)
+}
+
+// 直接返回所有的群组
+func (cli *RedisClient) GetUserInGroupAll(uid int64) ([]int64, error) {
+	keyUserInG := GetUseringKey(uid)
+	return cli.GetIntSet(keyUserInG)
+}
+
+// 加入有机器人用户，可能会加入太多的群组，一般应该在应用层限制，防止过多
+func (cli *RedisClient) GetUserInGroupPage(uid, offset, pageSize int64) (uint64, []int64, error) {
+	keyUserInG := GetUseringKey(uid)
+	return cli.ScanIntSet(keyUserInG, uint64(offset), pageSize)
+}
+
+// 用户加入群组
+func (cli *RedisClient) SetUserJoinGroup(uid, gid int64) error {
+
+	keyUserInG := GetUseringKey(uid)
+	keyGroupMem := GetGroupAllMembersKey(gid)
+	// 创建事务
+	tx := cli.Db.TxPipeline()
+	// 清空集合
+	tx.SAdd(keyUserInG, gid)
+	tx.SAdd(keyGroupMem, uid)
+	// 执行事务
+	_, err := tx.Exec()
+
+	return err
+}
+
+// 用户退出群组
+func (cli *RedisClient) SetUserLeaveGroup(uid, gid int64) error {
+
+	keyUserInG := GetUseringKey(uid)
+	keyGroupMem := GetGroupAllMembersKey(gid)
+	// 创建事务
+	tx := cli.Db.TxPipeline()
+	// 清空集合
+	tx.SRem(keyUserInG, gid)
+	tx.SRem(keyGroupMem, uid)
+	// 执行事务
+	_, err := tx.Exec()
+
+	return err
+}
+
+// 求2个用户的共同的所在的群组
+func (cli *RedisClient) GetUsersInSameGroup(uid1, uid2 int64) ([]int64, error) {
+
+	key1 := GetUseringKey(uid1)
+	key2 := GetUseringKey(uid2)
+	return cli.IntersectIntSets(key1, key2)
+}

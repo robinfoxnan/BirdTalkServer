@@ -4,6 +4,7 @@ import (
 	"birdtalk/server/pbmodel"
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestGroupSave(t *testing.T) {
@@ -65,19 +66,17 @@ func TestAddActiveGroupMember(t *testing.T) {
 		return
 	}
 
-	count, err := redisCli.AddActiveGroupMembers(101, 1, []int64{10012})
-	fmt.Println("server 1 users:", count, err)
-	count, err = redisCli.AddActiveGroupMembers(101, 2, []int64{10013, 10014})
-	fmt.Println("server 2 users:", count, err)
+	//count, err := redisCli.AddActiveGroupMembers(101, 1, []int64{10012})
+	//fmt.Println("server 1 users:", count, err)
+	//count, err = redisCli.AddActiveGroupMembers(101, 2, []int64{10013, 10014})
+	//fmt.Println("server 2 users:", count, err)
 
-	//lst, err := redisCli.GetActiveGroupMembers(101, 1)
-	//fmt.Println(lst, err)
-	//
-	//lst, err = redisCli.GetActiveGroupMembers(101, 2)
-	//fmt.Println(lst, err)
-	//
-	//count, err = redisCli.GetActiveGroupMemberCount(101, 1)
-	//fmt.Println(count)
-	//countMap, err := redisCli.GetActiveGroupMemberCountList(101)
-	//fmt.Println(countMap, err)
+	tm1 := time.Now().UnixNano()
+	//count, _ := redisCli.AddActiveGroupMembersLua(101, 1, []int64{10033, 10034, 10035, 10036})
+	//count, _ := redisCli.RemoveActiveGroupMembersLua(101, 1, []int64{10033, 10034, 10035, 10036})
+	count, _ := redisCli.RemoveActiveGroupMembers(101, 1, []int64{10013, 10014})
+	//count, _ := redisCli.AddActiveGroupMembers(101, 1, []int64{10023, 10024, 10025, 10036})
+	tm2 := time.Now().UnixNano()
+
+	fmt.Println("server 1 users:", count, tm2-tm1)
 }

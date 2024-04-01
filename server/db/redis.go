@@ -29,10 +29,12 @@ type RedisClient struct {
 	Db *redis.Client
 }
 
+const dbIndex = 1
+
 // host should be like this: "10.128.5.73:6379"
 func NewRedisClient(host string, pwd string) (*RedisClient, error) {
 	cli := RedisClient{}
-	err, redisdb := initRedis(host, pwd, 1)
+	err, redisdb := initRedis(host, pwd, dbIndex)
 	if err != nil {
 		fmt.Printf("connect redis failed! err : %v\n", err)
 		return nil, err
@@ -156,6 +158,7 @@ func (cli *RedisClient) SetIntSet(key string, intArray []int64) error {
 	return nil
 }
 
+// 这里返回的是真正加入的个数，因为重复就不算在添加范围
 func (cli *RedisClient) AddIntSet(key string, intArray []int64) (int64, error) {
 	friendStrs := make([]string, len(intArray))
 	// 将 intArray 切片中的 int64 转换为字符串切片
@@ -228,8 +231,35 @@ func (cli *RedisClient) IntersectIntSets(set1, set2 string) ([]int64, error) {
 
 }
 
-/////////////////////////////////////////////////////////////////////////////////////
+// 计算元素集合中的数据个数
+func (cli *RedisClient) GetSetLen(key string) (int64, error) {
+	count, err := cli.Db.SCard(key).Result()
+	return count, err
+}
 
+// 分页获取群组等set类型的结构
+func (cli *RedisClient) ScanIntSet(key string, cursor uint64, pageSize int64) (uint64, []int64, error) {
+
+	// 使用 HSCAN 命令扫描哈希键
+	members, nextCursor, err := cli.Db.SScan(key, cursor, "", pageSize).Result()
+	if err != nil {
+		return 0, nil, err
+	}
+
+	result := make([]int64, len(members))
+	for index, member := range members {
+		//fmt.Println("Member:", member)
+		result[index], err = strconv.ParseInt(member, 10, 64)
+		if err != nil {
+			continue
+		}
+	}
+
+	return nextCursor, result, nil
+}
+
+// ///////////////////////////////////////////////////////////////////////////////////
+// 哈希表中存储int，是为了统计各个服务器上群组用户分布而使用的
 func (cli *RedisClient) SetHashKeyInt(key, field string, value int64) (bool, error) {
 	cmd := cli.Db.HSet(key, field, value)
 	return cmd.Result()
@@ -250,6 +280,8 @@ func (cli *RedisClient) GetHashKeyInt(key, field string) (int64, error) {
 	return i, err
 }
 
+// /////////////////////////////////////////////////////////////////////////////////
+// 这部分是用户的好友相关内容使用的
 // 使用脚本求2个hash的交集
 func (cli *RedisClient) GetHashIntersect(key1, key2 string) ([]string, error) {
 	// Lua 脚本代码
