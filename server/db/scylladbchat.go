@@ -127,16 +127,16 @@ func (me *Scylla) SetPChatMsgDeleted(pk1, pk2, uid1, uid2, msgId int64) error {
 	return nil
 }
 
-// 查找
-func (me *Scylla) FindPChatMsg(pk, uid, fromId int64, pageSize uint) ([]model.PChatDataStore, error) {
+// 正向查找，如果从头开始查找，那么设置为littleId = 0
+func (me *Scylla) FindPChatMsgForward(pk, uid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
 
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Gt("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))
 
 	builder.OrderBy("uid1", qb.ASC)
 	builder.OrderBy("id", qb.ASC)
 
-	builder.AllowFiltering()
+	//builder.AllowFiltering()
 	builder.Limit(pageSize)
 
 	q := builder.Query(me.session)
@@ -144,7 +144,7 @@ func (me *Scylla) FindPChatMsg(pk, uid, fromId int64, pageSize uint) ([]model.PC
 
 	q.Consistency(gocql.One)
 
-	q.Bind(pk, uid, fromId)
+	q.Bind(pk, uid, littleId)
 
 	var lst []model.PChatDataStore
 
@@ -156,7 +156,147 @@ func (me *Scylla) FindPChatMsg(pk, uid, fromId int64, pageSize uint) ([]model.PC
 	return lst, nil
 }
 
-// ///////////////////////////////////////////
+// 正序查找，设置边界范围
+func (me *Scylla) FindPChatMsgForwardBetween(pk, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+
+	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"), qb.LtOrEq("id"))
+
+	builder.OrderBy("uid1", qb.ASC)
+	builder.OrderBy("id", qb.ASC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, littleId, bigId)
+
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 从最新的数据向前倒序查若干条
+func (me *Scylla) FindPChatMsgBackward(pk, uid, pageSize uint) ([]model.PChatDataStore, error) {
+	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"))
+
+	builder.OrderBy("uid1", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid)
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 从某一点开始向之前的历史数据反向查找,即 所有小于bigId 的
+func (me *Scylla) FindPChatMsgBackwardFrom(pk, uid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"))
+
+	builder.OrderBy("uid1", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, bigId)
+
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 从当前最新开始向之前的历史数据反向查找，即 所有大于littlId 的
+func (me *Scylla) FindPChatMsgBackwardTo(pk, uid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
+	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))
+
+	builder.OrderBy("uid1", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, littleId)
+
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 向之前的历史数据反向查找
+func (me *Scylla) FindPChatMsgBackwardBetween(pk, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"), qb.GtOrEq("id"))
+
+	builder.OrderBy("uid1", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, bigId, littleId)
+
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// //////////////////////////////////////////////////////////////////////////////////////////
 // 写1次，
 func (me *Scylla) SaveGChatData(msg *model.GChatDataStore) error {
 	insertChat := qb.Insert(GroupChatTableName).Columns(metaGroupChatData.Columns...).Query(me.session).Consistency(gocql.One)
@@ -182,15 +322,15 @@ func (me *Scylla) SetGChatMsgDeleted(pk, gid, msgId int64) error {
 	return err
 }
 
-// 查找
-func (me *Scylla) FindGChatMsg(pk, gid, fromId int64, pageSize uint) ([]model.GChatDataStore, error) {
+// 正向查找
+func (me *Scylla) FindGChatMsgForward(pk, gid, littleId int64, pageSize uint) ([]model.GChatDataStore, error) {
 	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.Gt("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.GtOrEq("id"))
 
 	builder.OrderBy("gid", qb.ASC)
 	builder.OrderBy("id", qb.ASC)
 
-	builder.AllowFiltering()
+	//builder.AllowFiltering()
 	builder.Limit(pageSize)
 
 	q := builder.Query(me.session)
@@ -198,7 +338,119 @@ func (me *Scylla) FindGChatMsg(pk, gid, fromId int64, pageSize uint) ([]model.GC
 
 	q.Consistency(gocql.One)
 
-	q.Bind(pk, gid, fromId)
+	q.Bind(pk, gid, littleId)
+
+	var lst []model.GChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 正向查找，设置某个边界范围内
+func (me *Scylla) FindGChatMsgForwardBetween(pk, gid, littleId, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
+	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.GtOrEq("id"), qb.LtOrEq("id"))
+
+	builder.OrderBy("gid", qb.ASC)
+	builder.OrderBy("id", qb.ASC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, gid, littleId, bigId)
+
+	var lst []model.GChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 倒序，反向历史数据方向查找
+func (me *Scylla) FindGChatMsgBackwardFrom(pk, gid, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
+	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.LtOrEq("id"))
+
+	builder.OrderBy("gid", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, gid, bigId)
+
+	var lst []model.GChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 倒序，反向历史数据方向查找，从最新的数据开始向前加载
+func (me *Scylla) FindGChatMsgBackwardTo(pk, gid, littleId int64, pageSize uint) ([]model.GChatDataStore, error) {
+	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.GtOrEq("id"))
+
+	builder.OrderBy("gid", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, gid, littleId)
+
+	var lst []model.GChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 倒序，从bigId 向littleId方向去查找，限定一定的个数，如果无法覆盖边界，再来一次
+func (me *Scylla) FindGChatMsgBackwardBetween(pk, gid, littleId, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
+	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.LtOrEq("id"), qb.GtOrEq("id"))
+
+	builder.OrderBy("gid", qb.DESC)
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, gid, bigId, littleId)
 
 	var lst []model.GChatDataStore
 

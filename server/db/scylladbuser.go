@@ -251,3 +251,5 @@ func (me *Scylla) SetBlockPermission(pk, uid1, uid2 int64, perm int32) error {
 	err := query.Exec()
 	return err
 }
+
+//////////////////////////////////////////////////////////////////////

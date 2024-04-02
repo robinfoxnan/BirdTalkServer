@@ -90,7 +90,7 @@ func TestFindPChat(t *testing.T) {
 		fmt.Println(err)
 		return
 	}
-	lst, err := client.FindPChatMsg(1002, 1002, 693649502762045440, 100)
+	lst, err := client.FindPChatMsgForward(1002, 1002, 693649502762045440, 100)
 	for _, item := range lst {
 
 		tm := utils.SnowIdtoTm(item.Id)
@@ -151,9 +151,9 @@ func TestSetGroupMsgDel(t *testing.T) {
 	fmt.Println(err)
 }
 
-func TestFindGroupmsg(t *testing.T) {
+func TestFindGroupMsg(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -163,9 +163,9 @@ func TestFindGroupmsg(t *testing.T) {
 	//id := utils.TmToSnowIdLike(int64(tm))
 	//fmt.Println(id)
 
-	var id int64 = 693645496463527935
+	//list, err := client.FindGChatMsgBackwardTo(101, 101, 693645496463527936, 100)
+	list, err := client.FindGChatMsgBackwardBetween(101, 101, 693645496463527936, 693645558363066368, 100)
 
-	list, err := client.FindGChatMsg(101, 101, id, 100)
 	for _, item := range list {
 
 		str1 := utils.TmToLocalString(item.Tm)
@@ -173,6 +173,30 @@ func TestFindGroupmsg(t *testing.T) {
 		str2 := utils.TmToLocalString(tm)
 
 		fmt.Println(item, str1, str2)
+	}
+
+}
+
+// /////////////////////////////////////////////////////////////////
+func TestFindPChatForward(t *testing.T) {
+
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	//lst, err := client.FindPChatMsgBackwardBetween(1002, 1002, 693649502762045440, 693649529777557504, 100)
+	//lst, err := client.FindPChatMsgBackwardFrom(1002, 1002, 693649502762045440, 100)
+	//lst, err := client.FindPChatMsgBackwardTo(1002, 1002, 693649502762045440, 100)
+	//lst, err := client.FindPChatMsgBackward(1002, 1002, 3)
+
+	lst, err := client.FindPChatMsgForwardBetween(1002, 1002, 693649502762045440, 693649529777557504, 100)
+	for _, item := range lst {
+
+		tm := utils.SnowIdtoTm(item.Id)
+		str2 := utils.TmToLocalString(tm)
+		fmt.Println(item, utils.TmToLocalString(item.Tm), str2)
+		//fmt.Println(utils.UtcTm2LocalString(item.Tm1))
 	}
 
 }

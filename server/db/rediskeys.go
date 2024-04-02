@@ -182,10 +182,10 @@ func GetStateChKey() string {
 	return BirdServerStateCh
 }
 
-// 集群的信息表 "bscs_state"
+// 集群的信息表 "bscs_state", 保存各个服务器的活动时间戳
 //
 //go:inline
-func GetClusterInfoKey() string {
+func GetClusterActiveStateKey() string {
 	return BirdServerCluSerStaPrefix
 }
 
