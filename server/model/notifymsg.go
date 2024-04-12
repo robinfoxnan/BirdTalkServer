@@ -2,21 +2,33 @@ package model
 
 type NotifyType int16
 
+/*
+用户或者群组的用户改变状态时候使用广播方式通知其他的
+*/
 const (
-	add    NotifyType = iota // 0
-	remove                   // 1
-	update                   // 2
-	expire                   // 3
-	hset
-	hupdate
-	hremove
+	NotifyTypeNone         NotifyType = iota // 0
+	NotifyUserOnline                         // 1
+	NotifyUserOffline                        // 2
+	NotifyUserSetInfo                        // 3
+	NotifyUserAddFollow                      // 4
+	NotifyUserDelFollow                      // 5
+	NotifyUserPermission                     // 6
+	NotifyGroupCreate                        // 7
+	NotifyGroupDis                           // 8
+	NotifyGroupMemJoin                       // 9
+	NotifyGroupMemLeave                      // 10
+	NotifyGroupSetInfo                       // 11
+	NotifyGroupMemOnline                     // 12
+	NotifyGroupMemOffline                    // 13
+	NotifyGroupChangeAdmin                   // 14
+	NotifyGroupChangeOwner                   // 15
 )
 
 // 使用redis通道来广播，用户与群组的变化，同步到内存的缓存上
 type CacheNotifyMsg struct {
-	Key    int64      `json:"key,omitempty"` // 用户或者群的ID
-	Field  int64      `json:"field,omitempty"`
-	Value  string     `json:"value,omitempty"`
-	Action NotifyType `json:"action,omitempty"` // 消息类型
-	Type   int16      `json:"type,omitempty"`   // user 或者group
+	NType  NotifyType `json:"nt" ` // 消息类型
+	FromId int64      `json:"fromId" `
+	Action string     `json:"action" `
+	Uid    int64      `json:"uid" `
+	Gid    int64      `json:"gid" `
 }

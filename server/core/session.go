@@ -79,6 +79,25 @@ func NewSession(conn *websocket.Conn, sid, uid int64, code string) *Session {
 	return &s
 }
 
+func (sess *Session) SendMessage(msg any) bool {
+	if len(sess.send) > sendQueueLimit {
+		//logs.Err.Println("ws: outbound queue limit exceeded", sess.sid)
+		return false
+	}
+
+	//statsInc("OutgoingMessagesWebsockTotal", 1)
+	//if err := wsWrite(sess.ws, websocket.TextMessage, msg); err != nil {
+	//	if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure,
+	//		websocket.CloseNormalClosure) {
+	//		logs.Err.Println("ws: writeLoop", sess.sid, err)
+	//	}
+	//	return false
+	//}
+	sess.send <- msg
+	return true
+}
+
+// 内部函数
 func wsWrite(ws *websocket.Conn, mt int, msg any) error {
 	var bits []byte
 	if msg != nil {
@@ -96,24 +115,6 @@ func wsWrite(ws *websocket.Conn, mt int, msg any) error {
 	}
 	ws.SetWriteDeadline(time.Now().Add(writeWait))
 	return ws.WriteMessage(mt, bits)
-}
-
-func (sess *Session) SendMessage(msg any) bool {
-	if len(sess.send) > sendQueueLimit {
-		//logs.Err.Println("ws: outbound queue limit exceeded", sess.sid)
-		return false
-	}
-
-	//statsInc("OutgoingMessagesWebsockTotal", 1)
-	//if err := wsWrite(sess.ws, websocket.TextMessage, msg); err != nil {
-	//	if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure,
-	//		websocket.CloseNormalClosure) {
-	//		logs.Err.Println("ws: writeLoop", sess.sid, err)
-	//	}
-	//	return false
-	//}
-	sess.send <- msg
-	return true
 }
 
 // 写循环
@@ -251,5 +252,5 @@ Go 的垃圾回收器通过遍历可达对象图来确定对象的可达性，�
 这里保存一个指针，是用于在外部停止这个会话，比如服务需要优雅的退出。
 */
 func (s *Session) cleanUp() {
-	Globals.ss.Remove(s.Sid)
+	Globals.ss.Remove(s.Sid, s.UserID)
 }
