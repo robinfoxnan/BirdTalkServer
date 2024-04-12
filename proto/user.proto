@@ -62,16 +62,20 @@ message UserOpResult {
 message FriendOpReq {
   UserOperationType operation = 1;           // 操作类型，例如：申请好友、同意好友、删除好友、屏蔽好友
   UserInfo user = 2;              // 涉及的用户信息，例如在申请好友时，表示被申请加为好友的用户
-  map<string, string> params = 4;
+  int64 sendId = 3;               // 用户发给服务器的时候带着，主要是有可能对方离线
+  int64 msgId = 4;                // 转发给用户的时候才有
+  map<string, string> params = 5;
 }
 
 // 好友操作结果消息
 message FriendOpResult {
   UserOperationType operation = 1;            // 操作类型
-  string result = 2;               // "ok" "fail"
-  UserInfo user = 3;               // 消息发起者
-  UserInfo users = 4;              // 涉及的用户信息列表，使用repeated表示多个用户
-  map<string, string> params = 5;
+  string result = 2;                // "ok" "fail"
+  UserInfo user = 3;                // 消息发起者
+  UserInfo users = 4;               // 涉及的用户信息列表，使用repeated表示多个用户
+  int64 sendId = 5;                 // 用户发给服务器的时候带着
+  int64 msgId = 6;                  // 转发给用户的时候才有
+  map<string, string> params = 7;
 }
 
 // 群组成员的信息
@@ -115,6 +119,11 @@ enum GroupOperationType {
   GroupSearchMember = 15;     // 人员过多时候，不能全部同步到客户端，需要搜索或者分页
 }
 
+enum GroupOperationResultType{
+    GroupOperationResultNone = 0;
+    GroupOperationResultOk = 1;
+    GroupOperationResultRefuse = 2;
+}
 
 // 群组操作请求消息
 message GroupOpReq {
@@ -122,7 +131,10 @@ message GroupOpReq {
   GroupMember ReqMem = 2;        // 申请人，便于转发
   GroupInfo group = 3;           // 涉及的群组信息
   repeated GroupMember members = 4;  // 涉及的群组成员信息列表
-  map<string, string> params = 5;
+
+  int64 sendId = 6;               // 用户发给服务器的时候带着
+  int64 msgId = 7;                // 转发给用户的时候才有
+  map<string, string> params = 8;
 }
 
 message GroupOpResult{
@@ -131,6 +143,8 @@ message GroupOpResult{
   string result = 3;
   string detail = 4;
   GroupInfo group = 5;
-  repeated GroupMember members = 6;  // 涉及的群组成员信息列表
-  map<string, string> params = 7;
+  int64 sendId = 6;               // 用户发给服务器的时候带着
+  int64 msgId = 7;                // 转发给用户的时候才有
+  repeated GroupMember members = 8;  // 涉及的群组成员信息列表
+  map<string, string> params = 9;
 }

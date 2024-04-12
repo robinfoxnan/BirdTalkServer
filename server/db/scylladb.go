@@ -76,6 +76,12 @@ const cqlCreateKeySpaceChatData = `CREATE KEYSPACE IF NOT EXISTS  chatdata
 			'replication_factor': 1
 		}`
 
+const cqlCreateKeySpaceChatUserOp = `CREATE KEYSPACE IF NOT EXISTS  chatuserop
+		WITH replication = {
+			'class': 'SimpleStrategy',
+			'replication_factor': 1
+		}`
+
 // //////////////////////////////////////////////////////////////////////////
 const cqlCreateTableFollow = `CREATE TABLE IF NOT EXISTS chatuser.following (
 			pk smallint,
@@ -158,6 +164,26 @@ const cqlCreateTableGChat = `CREATE TABLE IF NOT EXISTS  chatdata.gchat (
 			PRIMARY KEY (pk, gid, id)
 		)`
 
+const cqlCreateTableUserOp = `CREATE TABLE IF NOT EXISTS  chatuserop.userop (
+			pk SMALLINT,
+			uid1 BIGINT,
+			uid2 BIGINT,
+			gid BIGINT,
+			id BIGINT,
+			usid BIGINT,
+			tm BIGINT,
+			tm1 BIGINT,
+			tm2 BIGINT,
+			io TINYINT,
+			st TINYINT,
+			cmd TINYINT,
+			ret TINYINT,
+			mask INT,
+			ref BIGINT,
+			draf BLOB,
+			PRIMARY KEY (pk, uid1, id)
+		)`
+
 // ////////////////////////////////////////////////////////
 // 用户关系
 const FollowingTableName = "chatuser.following"
@@ -172,10 +198,14 @@ const UserInGroupTableName = "chatgroup.uing"
 const PrivateChatTableName = "chatdata.pchat"
 const GroupChatTableName = "chatdata.gchat"
 
-var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData,
+// 好友申请，群申请记录
+const UserOpTableName = "chatuserop.userop"
+
+var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData, cqlCreateKeySpaceChatUserOp,
 	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock,
 	cqlCreateTableGroupMem, cqlCreateTableUinG,
 	cqlCreateTablePChat, cqlCreateTableGChat,
+	cqlCreateTableUserOp,
 }
 
 func (me *Scylla) Init() error {

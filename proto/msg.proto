@@ -115,7 +115,7 @@ message MsgChat {
   int64 tm = 5;                   // 消息的时间戳
 
   string devId = 6;               // 多设备登录时的设备 ID
-  string sendId = 7;              // 用于确认消息的发送 ID
+  int64 sendId = 7;              // 用于确认消息的发送 ID
 
   ChatMsgType msgType = 8;        // 消息类型，建议使用枚举
   bytes data = 9;                 // 消息的内容，可以使用 bytes 存储二进制数据或文本数据
@@ -132,17 +132,21 @@ message MsgChat {
   ChatType chatType = 17;         // p2p, group, system
   int32 subMsgType = 18;          // 传递给插件区分代码，插件都注册为整数类型，
   int64 keyPrint = 19;            // 秘钥指纹
+
+  map<string, string> params = 30;
 }
 
 // 消息确认，上传下载的确认
 message MsgChatReply {
   int64 msgId = 1;      // 要确认的消息ID
-  string sendId = 2;
+  int64 sendId = 2;
   bool sendOk = 3;         // 确认是否成功
   bool recvOk = 4;
   bool readOk = 5;
   string extraMsg = 6;
   int64 userId = 7;        // 应答应该发送给谁
+  int64 fromId = 8;        // 从谁那的应答
+  map<string, string> params = 30;
 }
 
 

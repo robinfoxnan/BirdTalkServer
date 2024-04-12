@@ -18,6 +18,7 @@ func mapToUserInfo(data map[string]string) (*pbmodel.UserInfo, error) {
 	return &user, err
 }
 
+// 查找用户
 func (cli *RedisClient) FindUserById(uid int64) (*pbmodel.UserInfo, error) {
 	keyName := GetUserInfoKey(uid)
 	//fmt.Println(tblName)
@@ -167,13 +168,13 @@ func (cli *RedisClient) RemoveUserFollowing(uid int64, friends []int64) error {
 	return cli.RemoveHashMapWithIntFields(keyName, friends)
 }
 
-// 设置粉丝列表
+// 粉丝列表
 func (cli *RedisClient) RemoveUserFans(uid int64, friends []int64) error {
 	keyName := GetUserFansKey(uid)
 	return cli.RemoveHashMapWithIntFields(keyName, friends)
 }
 
-// 设置拉黑列表
+// 拉黑列表
 func (cli *RedisClient) RemoveUserBlocks(uid int64, friends []int64) error {
 	keyName := GetUserBlockKey(uid)
 	return cli.RemoveHashMapWithIntFields(keyName, friends)

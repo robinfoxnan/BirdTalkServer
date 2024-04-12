@@ -52,6 +52,27 @@ func (me *Scylla) SavePChatData(msg *model.PChatDataStore, pk2 int) error {
 	return nil
 }
 
+// 系统发给A的系统通知，A作为收方，直接写一次数据库， uid2这里是系统账户号码，默认你1000以下的都是
+func (me *Scylla) SavePChatDataSystem(msg *model.PChatDataStore) error {
+	// 同时加入粉丝表
+	// 创建 Batch
+	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
+	batch.Cons = gocql.LocalOne
+
+	// 收方
+	insertFirst := qb.Insert(PrivateChatTableName).Columns(metaPrivateChatData.Columns...).Query(me.session).Consistency(gocql.One)
+	defer insertFirst.Release()
+	batch.Query(insertFirst.Statement(), msg.Pk, msg.Uid1, msg.Uid2,
+		msg.Id, msg.Usid, msg.Tm, msg.Tm1, msg.Tm2,
+		model.ChatDataIOIn, msg.St, msg.Ct, msg.Mt,
+		msg.Print, msg.Ref, msg.Draf)
+
+	if err := me.session.ExecuteBatch(batch); err != nil {
+		return err
+	}
+	return nil
+}
+
 // 对发送方设置回执，收方不需要设置
 func (me *Scylla) SetPChatRecvReply(pk1, pk2, uid1, uid2, msgId, tm1 int64) error {
 	builder := qb.Update(PrivateChatTableName)
