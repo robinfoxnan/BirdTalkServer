@@ -15,6 +15,7 @@ goog.provide('proto.model.MsgChatReply');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
+goog.require('jspb.Map');
 goog.require('jspb.Message');
 
 /**
@@ -71,12 +72,14 @@ proto.model.MsgChatReply.prototype.toObject = function(opt_includeInstance) {
 proto.model.MsgChatReply.toObject = function(includeInstance, msg) {
   var f, obj = {
     msgid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    sendid: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    sendid: jspb.Message.getFieldWithDefault(msg, 2, 0),
     sendok: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
     recvok: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
     readok: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
     extramsg: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    userid: jspb.Message.getFieldWithDefault(msg, 7, 0)
+    userid: jspb.Message.getFieldWithDefault(msg, 7, 0),
+    fromid: jspb.Message.getFieldWithDefault(msg, 8, 0),
+    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -118,7 +121,7 @@ proto.model.MsgChatReply.deserializeBinaryFromReader = function(msg, reader) {
       msg.setMsgid(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setSendid(value);
       break;
     case 3:
@@ -140,6 +143,16 @@ proto.model.MsgChatReply.deserializeBinaryFromReader = function(msg, reader) {
     case 7:
       var value = /** @type {number} */ (reader.readInt64());
       msg.setUserid(value);
+      break;
+    case 8:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setFromid(value);
+      break;
+    case 30:
+      var value = msg.getParamsMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
+         });
       break;
     default:
       reader.skipField();
@@ -178,8 +191,8 @@ proto.model.MsgChatReply.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getSendid();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt64(
       2,
       f
     );
@@ -219,6 +232,17 @@ proto.model.MsgChatReply.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getFromid();
+  if (f !== 0) {
+    writer.writeInt64(
+      8,
+      f
+    );
+  }
+  f = message.getParamsMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(30, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
 };
 
 
@@ -241,20 +265,20 @@ proto.model.MsgChatReply.prototype.setMsgid = function(value) {
 
 
 /**
- * optional string sendId = 2;
- * @return {string}
+ * optional int64 sendId = 2;
+ * @return {number}
  */
 proto.model.MsgChatReply.prototype.getSendid = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setSendid = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -346,5 +370,45 @@ proto.model.MsgChatReply.prototype.getUserid = function() {
 proto.model.MsgChatReply.prototype.setUserid = function(value) {
   return jspb.Message.setProto3IntField(this, 7, value);
 };
+
+
+/**
+ * optional int64 fromId = 8;
+ * @return {number}
+ */
+proto.model.MsgChatReply.prototype.getFromid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgChatReply} returns this
+ */
+proto.model.MsgChatReply.prototype.setFromid = function(value) {
+  return jspb.Message.setProto3IntField(this, 8, value);
+};
+
+
+/**
+ * map<string, string> params = 30;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.model.MsgChatReply.prototype.getParamsMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 30, opt_noLazyCreate,
+      null));
+};
+
+
+/**
+ * Clears values from the map. The map will be non-null.
+ * @return {!proto.model.MsgChatReply} returns this
+ */
+proto.model.MsgChatReply.prototype.clearParamsMap = function() {
+  this.getParamsMap().clear();
+  return this;};
 
 

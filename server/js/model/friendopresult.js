@@ -77,6 +77,8 @@ proto.model.FriendOpResult.toObject = function(includeInstance, msg) {
     result: jspb.Message.getFieldWithDefault(msg, 2, ""),
     user: (f = msg.getUser()) && proto.model.UserInfo.toObject(includeInstance, f),
     users: (f = msg.getUsers()) && proto.model.UserInfo.toObject(includeInstance, f),
+    sendid: jspb.Message.getFieldWithDefault(msg, 5, 0),
+    msgid: jspb.Message.getFieldWithDefault(msg, 6, 0),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -133,6 +135,14 @@ proto.model.FriendOpResult.deserializeBinaryFromReader = function(msg, reader) {
       msg.setUsers(value);
       break;
     case 5:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setSendid(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMsgid(value);
+      break;
+    case 7:
       var value = msg.getParamsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -197,9 +207,23 @@ proto.model.FriendOpResult.serializeBinaryToWriter = function(message, writer) {
       proto.model.UserInfo.serializeBinaryToWriter
     );
   }
+  f = message.getSendid();
+  if (f !== 0) {
+    writer.writeInt64(
+      5,
+      f
+    );
+  }
+  f = message.getMsgid();
+  if (f !== 0) {
+    writer.writeInt64(
+      6,
+      f
+    );
+  }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(7, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -315,14 +339,50 @@ proto.model.FriendOpResult.prototype.hasUsers = function() {
 
 
 /**
- * map<string, string> params = 5;
+ * optional int64 sendId = 5;
+ * @return {number}
+ */
+proto.model.FriendOpResult.prototype.getSendid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.FriendOpResult} returns this
+ */
+proto.model.FriendOpResult.prototype.setSendid = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
+};
+
+
+/**
+ * optional int64 msgId = 6;
+ * @return {number}
+ */
+proto.model.FriendOpResult.prototype.getMsgid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.FriendOpResult} returns this
+ */
+proto.model.FriendOpResult.prototype.setMsgid = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * map<string, string> params = 7;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.FriendOpResult.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 5, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 7, opt_noLazyCreate,
       null));
 };
 

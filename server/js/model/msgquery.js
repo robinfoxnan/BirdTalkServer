@@ -11,7 +11,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-goog.provide('proto.model.MsgChatQuery');
+goog.provide('proto.model.MsgQuery');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
@@ -30,16 +30,16 @@ goog.forwardDeclare('proto.model.QueryDataType');
  * @extends {jspb.Message}
  * @constructor
  */
-proto.model.MsgChatQuery = function(opt_data) {
+proto.model.MsgQuery = function(opt_data) {
   jspb.Message.initialize(this, opt_data, 0, -1, null, null);
 };
-goog.inherits(proto.model.MsgChatQuery, jspb.Message);
+goog.inherits(proto.model.MsgQuery, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
   /**
    * @public
    * @override
    */
-  proto.model.MsgChatQuery.displayName = 'proto.model.MsgChatQuery';
+  proto.model.MsgQuery.displayName = 'proto.model.MsgQuery';
 }
 
 
@@ -57,8 +57,8 @@ if (jspb.Message.GENERATE_TO_OBJECT) {
  *     http://goto/soy-param-migration
  * @return {!Object}
  */
-proto.model.MsgChatQuery.prototype.toObject = function(opt_includeInstance) {
-  return proto.model.MsgChatQuery.toObject(opt_includeInstance, this);
+proto.model.MsgQuery.prototype.toObject = function(opt_includeInstance) {
+  return proto.model.MsgQuery.toObject(opt_includeInstance, this);
 };
 
 
@@ -67,11 +67,11 @@ proto.model.MsgChatQuery.prototype.toObject = function(opt_includeInstance) {
  * @param {boolean|undefined} includeInstance Deprecated. Whether to include
  *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
- * @param {!proto.model.MsgChatQuery} msg The msg instance to transform.
+ * @param {!proto.model.MsgQuery} msg The msg instance to transform.
  * @return {!Object}
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.model.MsgChatQuery.toObject = function(includeInstance, msg) {
+proto.model.MsgQuery.toObject = function(includeInstance, msg) {
   var f, obj = {
     userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
     groupid: jspb.Message.getFieldWithDefault(msg, 2, 0),
@@ -95,23 +95,23 @@ proto.model.MsgChatQuery.toObject = function(includeInstance, msg) {
 /**
  * Deserializes binary data (in protobuf wire format).
  * @param {jspb.ByteSource} bytes The bytes to deserialize.
- * @return {!proto.model.MsgChatQuery}
+ * @return {!proto.model.MsgQuery}
  */
-proto.model.MsgChatQuery.deserializeBinary = function(bytes) {
+proto.model.MsgQuery.deserializeBinary = function(bytes) {
   var reader = new jspb.BinaryReader(bytes);
-  var msg = new proto.model.MsgChatQuery;
-  return proto.model.MsgChatQuery.deserializeBinaryFromReader(msg, reader);
+  var msg = new proto.model.MsgQuery;
+  return proto.model.MsgQuery.deserializeBinaryFromReader(msg, reader);
 };
 
 
 /**
  * Deserializes binary data (in protobuf wire format) from the
  * given reader into the given message object.
- * @param {!proto.model.MsgChatQuery} msg The message object to deserialize into.
+ * @param {!proto.model.MsgQuery} msg The message object to deserialize into.
  * @param {!jspb.BinaryReader} reader The BinaryReader to use.
- * @return {!proto.model.MsgChatQuery}
+ * @return {!proto.model.MsgQuery}
  */
-proto.model.MsgChatQuery.deserializeBinaryFromReader = function(msg, reader) {
+proto.model.MsgQuery.deserializeBinaryFromReader = function(msg, reader) {
   while (reader.nextField()) {
     if (reader.isEndGroup()) {
       break;
@@ -169,9 +169,9 @@ proto.model.MsgChatQuery.deserializeBinaryFromReader = function(msg, reader) {
  * Serializes the message to binary data (in protobuf wire format).
  * @return {!Uint8Array}
  */
-proto.model.MsgChatQuery.prototype.serializeBinary = function() {
+proto.model.MsgQuery.prototype.serializeBinary = function() {
   var writer = new jspb.BinaryWriter();
-  proto.model.MsgChatQuery.serializeBinaryToWriter(this, writer);
+  proto.model.MsgQuery.serializeBinaryToWriter(this, writer);
   return writer.getResultBuffer();
 };
 
@@ -179,11 +179,11 @@ proto.model.MsgChatQuery.prototype.serializeBinary = function() {
 /**
  * Serializes the given message to binary data (in protobuf wire
  * format), writing to the given BinaryWriter.
- * @param {!proto.model.MsgChatQuery} message
+ * @param {!proto.model.MsgQuery} message
  * @param {!jspb.BinaryWriter} writer
  * @suppress {unusedLocalVariables} f is only used for nested messages
  */
-proto.model.MsgChatQuery.serializeBinaryToWriter = function(message, writer) {
+proto.model.MsgQuery.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getUserid();
   if (f !== 0) {
@@ -252,16 +252,16 @@ proto.model.MsgChatQuery.serializeBinaryToWriter = function(message, writer) {
  * optional int64 userId = 1;
  * @return {number}
  */
-proto.model.MsgChatQuery.prototype.getUserid = function() {
+proto.model.MsgQuery.prototype.getUserid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setUserid = function(value) {
+proto.model.MsgQuery.prototype.setUserid = function(value) {
   return jspb.Message.setProto3IntField(this, 1, value);
 };
 
@@ -270,16 +270,16 @@ proto.model.MsgChatQuery.prototype.setUserid = function(value) {
  * optional int64 groupId = 2;
  * @return {number}
  */
-proto.model.MsgChatQuery.prototype.getGroupid = function() {
+proto.model.MsgQuery.prototype.getGroupid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setGroupid = function(value) {
+proto.model.MsgQuery.prototype.setGroupid = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
 };
 
@@ -288,16 +288,16 @@ proto.model.MsgChatQuery.prototype.setGroupid = function(value) {
  * optional int64 bigId = 3;
  * @return {number}
  */
-proto.model.MsgChatQuery.prototype.getBigid = function() {
+proto.model.MsgQuery.prototype.getBigid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setBigid = function(value) {
+proto.model.MsgQuery.prototype.setBigid = function(value) {
   return jspb.Message.setProto3IntField(this, 3, value);
 };
 
@@ -306,16 +306,16 @@ proto.model.MsgChatQuery.prototype.setBigid = function(value) {
  * optional int64 littleId = 4;
  * @return {number}
  */
-proto.model.MsgChatQuery.prototype.getLittleid = function() {
+proto.model.MsgQuery.prototype.getLittleid = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setLittleid = function(value) {
+proto.model.MsgQuery.prototype.setLittleid = function(value) {
   return jspb.Message.setProto3IntField(this, 4, value);
 };
 
@@ -324,16 +324,16 @@ proto.model.MsgChatQuery.prototype.setLittleid = function(value) {
  * optional int32 synType = 5;
  * @return {number}
  */
-proto.model.MsgChatQuery.prototype.getSyntype = function() {
+proto.model.MsgQuery.prototype.getSyntype = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setSyntype = function(value) {
+proto.model.MsgQuery.prototype.setSyntype = function(value) {
   return jspb.Message.setProto3IntField(this, 5, value);
 };
 
@@ -342,16 +342,16 @@ proto.model.MsgChatQuery.prototype.setSyntype = function(value) {
  * optional int64 tm = 6;
  * @return {number}
  */
-proto.model.MsgChatQuery.prototype.getTm = function() {
+proto.model.MsgQuery.prototype.getTm = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
 };
 
 
 /**
  * @param {number} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setTm = function(value) {
+proto.model.MsgQuery.prototype.setTm = function(value) {
   return jspb.Message.setProto3IntField(this, 6, value);
 };
 
@@ -360,16 +360,16 @@ proto.model.MsgChatQuery.prototype.setTm = function(value) {
  * optional ChatType chatType = 7;
  * @return {!proto.model.ChatType}
  */
-proto.model.MsgChatQuery.prototype.getChattype = function() {
+proto.model.MsgQuery.prototype.getChattype = function() {
   return /** @type {!proto.model.ChatType} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
 /**
  * @param {!proto.model.ChatType} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setChattype = function(value) {
+proto.model.MsgQuery.prototype.setChattype = function(value) {
   return jspb.Message.setProto3EnumField(this, 7, value);
 };
 
@@ -378,16 +378,16 @@ proto.model.MsgChatQuery.prototype.setChattype = function(value) {
  * optional QueryDataType queryType = 8;
  * @return {!proto.model.QueryDataType}
  */
-proto.model.MsgChatQuery.prototype.getQuerytype = function() {
+proto.model.MsgQuery.prototype.getQuerytype = function() {
   return /** @type {!proto.model.QueryDataType} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
 };
 
 
 /**
  * @param {!proto.model.QueryDataType} value
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.setQuerytype = function(value) {
+proto.model.MsgQuery.prototype.setQuerytype = function(value) {
   return jspb.Message.setProto3EnumField(this, 8, value);
 };
 
@@ -398,7 +398,7 @@ proto.model.MsgChatQuery.prototype.setQuerytype = function(value) {
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
-proto.model.MsgChatQuery.prototype.getParamsMap = function(opt_noLazyCreate) {
+proto.model.MsgQuery.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
       jspb.Message.getMapField(this, 9, opt_noLazyCreate,
       null));
@@ -407,9 +407,9 @@ proto.model.MsgChatQuery.prototype.getParamsMap = function(opt_noLazyCreate) {
 
 /**
  * Clears values from the map. The map will be non-null.
- * @return {!proto.model.MsgChatQuery} returns this
+ * @return {!proto.model.MsgQuery} returns this
  */
-proto.model.MsgChatQuery.prototype.clearParamsMap = function() {
+proto.model.MsgQuery.prototype.clearParamsMap = function() {
   this.getParamsMap().clear();
   return this;};
 

@@ -86,6 +86,8 @@ proto.model.GroupOpReq.toObject = function(includeInstance, msg) {
     group: (f = msg.getGroup()) && proto.model.GroupInfo.toObject(includeInstance, f),
     membersList: jspb.Message.toObjectList(msg.getMembersList(),
     proto.model.GroupMember.toObject, includeInstance),
+    sendid: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    msgid: jspb.Message.getFieldWithDefault(msg, 7, 0),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -142,7 +144,15 @@ proto.model.GroupOpReq.deserializeBinaryFromReader = function(msg, reader) {
       reader.readMessage(value,proto.model.GroupMember.deserializeBinaryFromReader);
       msg.addMembers(value);
       break;
-    case 5:
+    case 6:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setSendid(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMsgid(value);
+      break;
+    case 8:
       var value = msg.getParamsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -208,9 +218,23 @@ proto.model.GroupOpReq.serializeBinaryToWriter = function(message, writer) {
       proto.model.GroupMember.serializeBinaryToWriter
     );
   }
+  f = message.getSendid();
+  if (f !== 0) {
+    writer.writeInt64(
+      6,
+      f
+    );
+  }
+  f = message.getMsgid();
+  if (f !== 0) {
+    writer.writeInt64(
+      7,
+      f
+    );
+  }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(8, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -346,14 +370,50 @@ proto.model.GroupOpReq.prototype.clearMembersList = function() {
 
 
 /**
- * map<string, string> params = 5;
+ * optional int64 sendId = 6;
+ * @return {number}
+ */
+proto.model.GroupOpReq.prototype.getSendid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.GroupOpReq} returns this
+ */
+proto.model.GroupOpReq.prototype.setSendid = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional int64 msgId = 7;
+ * @return {number}
+ */
+proto.model.GroupOpReq.prototype.getMsgid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.GroupOpReq} returns this
+ */
+proto.model.GroupOpReq.prototype.setMsgid = function(value) {
+  return jspb.Message.setProto3IntField(this, 7, value);
+};
+
+
+/**
+ * map<string, string> params = 8;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.GroupOpReq.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 5, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 8, opt_noLazyCreate,
       null));
 };
 

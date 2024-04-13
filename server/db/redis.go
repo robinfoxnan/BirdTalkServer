@@ -7,6 +7,7 @@ import (
 	"github.com/go-redis/redis"
 	"net"
 	"strconv"
+	"sync/atomic"
 	"time"
 )
 
@@ -26,7 +27,8 @@ var RedisCli *RedisClient = nil
 var ctx = context.Background()
 
 type RedisClient struct {
-	Db *redis.Client
+	Db               *redis.Client
+	runningSubscribe int32
 }
 
 const dbIndex = 1
@@ -41,6 +43,7 @@ func NewRedisClient(host string, pwd string) (*RedisClient, error) {
 	}
 
 	cli.Db = redisdb
+	atomic.StoreInt32(&cli.runningSubscribe, 0)
 	return &cli, err
 }
 

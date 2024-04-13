@@ -93,7 +93,14 @@ func (sess *Session) SendMessage(msg any) bool {
 	//	}
 	//	return false
 	//}
-	sess.send <- msg
+
+	select {
+	case sess.send <- msg:
+		// 向通道写入数据成功
+	default:
+		// 通道已关闭
+		fmt.Println("session write channel is closed")
+	}
 	return true
 }
 
@@ -157,6 +164,8 @@ func (sess *Session) WriteLoop() {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure,
 					websocket.CloseNormalClosure) {
 					//logs.Err.Println("ws: writeLoop ping", sess.sid, err)
+				} else {
+					//
 				}
 				return
 			}
@@ -170,67 +179,9 @@ func (s *Session) StopSession(data any) {
 		// 向通道写入数据成功
 	default:
 		// 通道已关闭
-		fmt.Println("Channel is closed")
+		fmt.Println("Session close channel is closed")
 	}
 	//s.maybeScheduleClusterWriteLoop()
-}
-
-// 读循环，
-func (sess *Session) ReadLoop() {
-	defer func() {
-		sess.StopSession("stop")
-		sess.ws.Close()
-		fmt.Println("read loop end here")
-	}()
-
-	sess.ws.SetReadLimit(Globals.maxMessageSize)
-	sess.ws.SetReadDeadline(time.Now().Add(pongWait))
-	sess.ws.SetPongHandler(func(string) error {
-		sess.ws.SetReadDeadline(time.Now().Add(pongWait))
-		return nil
-	})
-
-	for {
-		// Read a ClientComMessage
-		t, raw, err := sess.ws.ReadMessage()
-		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure,
-				websocket.CloseNormalClosure) {
-				fmt.Println("ws: readLoop", sess.Sid, err)
-			}
-			fmt.Printf("ws: readLoop err, sid=%v, err=%v \n", sess.Sid, err)
-			return
-		}
-
-		if t == websocket.CloseMessage {
-			return
-		} else {
-			//statsInc("IncomingMessagesWebsockTotal", 1)
-			sess.dispatchRaw(t, raw)
-		}
-	}
-}
-
-// 读循环中分发消息
-func (s *Session) dispatchRaw(messageType int, msg []byte) {
-	switch messageType {
-	case websocket.TextMessage:
-		fmt.Println("recv text message from sid=", s.Sid, string(msg))
-		str := "recv msg:" + string(msg)
-		s.SendMessage([]byte(str))
-	case websocket.BinaryMessage:
-		fmt.Println("recv bin message from sid=", s.Sid)
-		encoder := BinEncoder{}
-		msg, err := encoder.DecodeMsg(msg)
-		if err == nil {
-			fmt.Println(msg)
-		}
-
-	case websocket.PingMessage:
-		fmt.Println("recv ping message from sid=", s.Sid)
-	case websocket.PongMessage:
-		fmt.Println("recv pong message from sid=", s.Sid)
-	}
 }
 
 // 清理资源
@@ -252,5 +203,81 @@ Go 的垃圾回收器通过遍历可达对象图来确定对象的可达性，�
 这里保存一个指针，是用于在外部停止这个会话，比如服务需要优雅的退出。
 */
 func (s *Session) cleanUp() {
-	Globals.ss.Remove(s.Sid, s.UserID)
+	Globals.ss.Remove(s.Sid)
+	// 从用户的信息中删除这个会话
+	if s.UserID != 0 {
+		user, b := Globals.uc.GetUser(s.UserID)
+		if b {
+			user.RemoveSessionID(s.UserID)
+		}
+	}
+}
+
+// 读循环，
+func (sess *Session) ReadLoop() {
+	defer func() {
+		sess.StopSession("stop")
+		sess.ws.Close()
+		fmt.Println("session read loop end here")
+	}()
+
+	sess.ws.SetReadLimit(Globals.maxMessageSize)
+	// 设置等待应答的pong
+	//sess.ws.SetPongHandler(func(string) error {
+	//	//sess.ws.SetReadDeadline(time.Now().Add(pongWait))
+	//	fmt.Println("recv a pong messsage from remote")
+	//	return nil
+	//})
+
+	for {
+		sess.ws.SetReadDeadline(time.Now().Add(pongWait))
+
+		// Read a ClientComMessage
+		t, raw, err := sess.ws.ReadMessage()
+		if err != nil {
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure,
+				websocket.CloseNormalClosure) {
+				fmt.Println("ws: readLoop", sess.Sid, err)
+			} else if e, ok := err.(*websocket.CloseError); ok && e.Code == websocket.CloseMessageTooBig {
+				// 处理超大包错误，例如忽略该消息或者进行其他处理
+				fmt.Println("Received message too big:", e)
+			} else {
+				// 其他错误情况，例如连接关闭或者其他错误，需要根据实际情况处理
+				fmt.Printf("ws: readLoop err, sid=%v, err=%v \n", sess.Sid, err)
+			}
+
+			return
+		}
+
+		if t == websocket.CloseMessage {
+			return
+		} else {
+			//statsInc("IncomingMessagesWebsockTotal", 1)
+			sess.dispatchRaw(t, raw)
+		}
+
+	}
+}
+
+// 读循环中分发消息
+func (s *Session) dispatchRaw(messageType int, rawMsg []byte) {
+	switch messageType {
+	case websocket.TextMessage:
+		fmt.Println("recv text message from sid=", s.Sid, string(rawMsg))
+		str := "recv msg:" + string(rawMsg)
+		s.SendMessage([]byte(str))
+	case websocket.BinaryMessage:
+		fmt.Println("recv bin message from sid=", s.Sid)
+		encoder := BinEncoder{}
+		msg, err := encoder.DecodeMsg(rawMsg)
+		if err == nil {
+			//fmt.Println(msg)
+			HandleCommonMsg(msg, s)
+		}
+
+	case websocket.PingMessage:
+		fmt.Println("recv ping message from sid=", s.Sid)
+	case websocket.PongMessage:
+		fmt.Println("recv pong message from sid=", s.Sid)
+	}
 }

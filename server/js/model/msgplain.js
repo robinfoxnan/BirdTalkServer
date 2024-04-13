@@ -22,13 +22,15 @@ goog.require('proto.model.FriendOpResult');
 goog.require('proto.model.GroupOpReq');
 goog.require('proto.model.GroupOpResult');
 goog.require('proto.model.MsgChat');
-goog.require('proto.model.MsgChatQuery');
-goog.require('proto.model.MsgChatQueryResult');
 goog.require('proto.model.MsgChatReply');
 goog.require('proto.model.MsgDownloadReply');
 goog.require('proto.model.MsgDownloadReq');
+goog.require('proto.model.MsgError');
 goog.require('proto.model.MsgHeartBeat');
 goog.require('proto.model.MsgHello');
+goog.require('proto.model.MsgKeyExchange');
+goog.require('proto.model.MsgQuery');
+goog.require('proto.model.MsgQueryResult');
 goog.require('proto.model.MsgUploadReply');
 goog.require('proto.model.MsgUploadReq');
 goog.require('proto.model.UserOpReq');
@@ -64,7 +66,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<!Array<number>>}
  * @const
  */
-proto.model.MsgPlain.oneofGroups_ = [[7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]];
+proto.model.MsgPlain.oneofGroups_ = [[7,8,9,10,11,12,13,14,21,22,23,24,31,32,33,34,35,36,100]];
 
 /**
  * @enum {number}
@@ -73,20 +75,23 @@ proto.model.MsgPlain.MessageCase = {
   MESSAGE_NOT_SET: 0,
   HELLO: 7,
   HEARTBEAT: 8,
-  CHATDATA: 9,
-  CHATREPLY: 10,
-  DOWNLOADREQ: 11,
-  DOWNLOADREPLY: 12,
-  UPLOADREQ: 13,
-  UPLOADREPLY: 14,
-  CHATQUERY: 15,
-  CHATQUERYRESULT: 16,
-  USEROP: 17,
-  USEROPRET: 18,
-  FRIENDOP: 19,
-  FRIENDOPRET: 20,
-  GROUPOP: 21,
-  GROUPOPRET: 22
+  ERRORMSG: 9,
+  KEYEX: 10,
+  CHATDATA: 11,
+  CHATREPLY: 12,
+  COMMONQUERY: 13,
+  COMMONQUERYRET: 14,
+  UPLOADREQ: 21,
+  DOWNLOADREQ: 22,
+  UPLOADREPLY: 23,
+  DOWNLOADREPLY: 24,
+  USEROP: 31,
+  USEROPRET: 32,
+  FRIENDOP: 33,
+  FRIENDOPRET: 34,
+  GROUPOP: 35,
+  GROUPOPRET: 36,
+  OTHERTYPEMSG: 100
 };
 
 /**
@@ -129,20 +134,23 @@ proto.model.MsgPlain.toObject = function(includeInstance, msg) {
   var f, obj = {
     hello: (f = msg.getHello()) && proto.model.MsgHello.toObject(includeInstance, f),
     heartbeat: (f = msg.getHeartbeat()) && proto.model.MsgHeartBeat.toObject(includeInstance, f),
+    errormsg: (f = msg.getErrormsg()) && proto.model.MsgError.toObject(includeInstance, f),
+    keyex: (f = msg.getKeyex()) && proto.model.MsgKeyExchange.toObject(includeInstance, f),
     chatdata: (f = msg.getChatdata()) && proto.model.MsgChat.toObject(includeInstance, f),
     chatreply: (f = msg.getChatreply()) && proto.model.MsgChatReply.toObject(includeInstance, f),
-    downloadreq: (f = msg.getDownloadreq()) && proto.model.MsgDownloadReq.toObject(includeInstance, f),
-    downloadreply: (f = msg.getDownloadreply()) && proto.model.MsgDownloadReply.toObject(includeInstance, f),
+    commonquery: (f = msg.getCommonquery()) && proto.model.MsgQuery.toObject(includeInstance, f),
+    commonqueryret: (f = msg.getCommonqueryret()) && proto.model.MsgQueryResult.toObject(includeInstance, f),
     uploadreq: (f = msg.getUploadreq()) && proto.model.MsgUploadReq.toObject(includeInstance, f),
+    downloadreq: (f = msg.getDownloadreq()) && proto.model.MsgDownloadReq.toObject(includeInstance, f),
     uploadreply: (f = msg.getUploadreply()) && proto.model.MsgUploadReply.toObject(includeInstance, f),
-    chatquery: (f = msg.getChatquery()) && proto.model.MsgChatQuery.toObject(includeInstance, f),
-    chatqueryresult: (f = msg.getChatqueryresult()) && proto.model.MsgChatQueryResult.toObject(includeInstance, f),
+    downloadreply: (f = msg.getDownloadreply()) && proto.model.MsgDownloadReply.toObject(includeInstance, f),
     userop: (f = msg.getUserop()) && proto.model.UserOpReq.toObject(includeInstance, f),
     useropret: (f = msg.getUseropret()) && proto.model.UserOpResult.toObject(includeInstance, f),
     friendop: (f = msg.getFriendop()) && proto.model.FriendOpReq.toObject(includeInstance, f),
     friendopret: (f = msg.getFriendopret()) && proto.model.FriendOpResult.toObject(includeInstance, f),
     groupop: (f = msg.getGroupop()) && proto.model.GroupOpReq.toObject(includeInstance, f),
-    groupopret: (f = msg.getGroupopret()) && proto.model.GroupOpResult.toObject(includeInstance, f)
+    groupopret: (f = msg.getGroupopret()) && proto.model.GroupOpResult.toObject(includeInstance, f),
+    othertypemsg: msg.getOthertypemsg_asB64()
   };
 
   if (includeInstance) {
@@ -190,74 +198,88 @@ proto.model.MsgPlain.deserializeBinaryFromReader = function(msg, reader) {
       msg.setHeartbeat(value);
       break;
     case 9:
+      var value = new proto.model.MsgError;
+      reader.readMessage(value,proto.model.MsgError.deserializeBinaryFromReader);
+      msg.setErrormsg(value);
+      break;
+    case 10:
+      var value = new proto.model.MsgKeyExchange;
+      reader.readMessage(value,proto.model.MsgKeyExchange.deserializeBinaryFromReader);
+      msg.setKeyex(value);
+      break;
+    case 11:
       var value = new proto.model.MsgChat;
       reader.readMessage(value,proto.model.MsgChat.deserializeBinaryFromReader);
       msg.setChatdata(value);
       break;
-    case 10:
+    case 12:
       var value = new proto.model.MsgChatReply;
       reader.readMessage(value,proto.model.MsgChatReply.deserializeBinaryFromReader);
       msg.setChatreply(value);
       break;
-    case 11:
-      var value = new proto.model.MsgDownloadReq;
-      reader.readMessage(value,proto.model.MsgDownloadReq.deserializeBinaryFromReader);
-      msg.setDownloadreq(value);
-      break;
-    case 12:
-      var value = new proto.model.MsgDownloadReply;
-      reader.readMessage(value,proto.model.MsgDownloadReply.deserializeBinaryFromReader);
-      msg.setDownloadreply(value);
-      break;
     case 13:
+      var value = new proto.model.MsgQuery;
+      reader.readMessage(value,proto.model.MsgQuery.deserializeBinaryFromReader);
+      msg.setCommonquery(value);
+      break;
+    case 14:
+      var value = new proto.model.MsgQueryResult;
+      reader.readMessage(value,proto.model.MsgQueryResult.deserializeBinaryFromReader);
+      msg.setCommonqueryret(value);
+      break;
+    case 21:
       var value = new proto.model.MsgUploadReq;
       reader.readMessage(value,proto.model.MsgUploadReq.deserializeBinaryFromReader);
       msg.setUploadreq(value);
       break;
-    case 14:
+    case 22:
+      var value = new proto.model.MsgDownloadReq;
+      reader.readMessage(value,proto.model.MsgDownloadReq.deserializeBinaryFromReader);
+      msg.setDownloadreq(value);
+      break;
+    case 23:
       var value = new proto.model.MsgUploadReply;
       reader.readMessage(value,proto.model.MsgUploadReply.deserializeBinaryFromReader);
       msg.setUploadreply(value);
       break;
-    case 15:
-      var value = new proto.model.MsgChatQuery;
-      reader.readMessage(value,proto.model.MsgChatQuery.deserializeBinaryFromReader);
-      msg.setChatquery(value);
+    case 24:
+      var value = new proto.model.MsgDownloadReply;
+      reader.readMessage(value,proto.model.MsgDownloadReply.deserializeBinaryFromReader);
+      msg.setDownloadreply(value);
       break;
-    case 16:
-      var value = new proto.model.MsgChatQueryResult;
-      reader.readMessage(value,proto.model.MsgChatQueryResult.deserializeBinaryFromReader);
-      msg.setChatqueryresult(value);
-      break;
-    case 17:
+    case 31:
       var value = new proto.model.UserOpReq;
       reader.readMessage(value,proto.model.UserOpReq.deserializeBinaryFromReader);
       msg.setUserop(value);
       break;
-    case 18:
+    case 32:
       var value = new proto.model.UserOpResult;
       reader.readMessage(value,proto.model.UserOpResult.deserializeBinaryFromReader);
       msg.setUseropret(value);
       break;
-    case 19:
+    case 33:
       var value = new proto.model.FriendOpReq;
       reader.readMessage(value,proto.model.FriendOpReq.deserializeBinaryFromReader);
       msg.setFriendop(value);
       break;
-    case 20:
+    case 34:
       var value = new proto.model.FriendOpResult;
       reader.readMessage(value,proto.model.FriendOpResult.deserializeBinaryFromReader);
       msg.setFriendopret(value);
       break;
-    case 21:
+    case 35:
       var value = new proto.model.GroupOpReq;
       reader.readMessage(value,proto.model.GroupOpReq.deserializeBinaryFromReader);
       msg.setGroupop(value);
       break;
-    case 22:
+    case 36:
       var value = new proto.model.GroupOpResult;
       reader.readMessage(value,proto.model.GroupOpResult.deserializeBinaryFromReader);
       msg.setGroupopret(value);
+      break;
+    case 100:
+      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      msg.setOthertypemsg(value);
       break;
     default:
       reader.skipField();
@@ -304,10 +326,26 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
       proto.model.MsgHeartBeat.serializeBinaryToWriter
     );
   }
-  f = message.getChatdata();
+  f = message.getErrormsg();
   if (f != null) {
     writer.writeMessage(
       9,
+      f,
+      proto.model.MsgError.serializeBinaryToWriter
+    );
+  }
+  f = message.getKeyex();
+  if (f != null) {
+    writer.writeMessage(
+      10,
+      f,
+      proto.model.MsgKeyExchange.serializeBinaryToWriter
+    );
+  }
+  f = message.getChatdata();
+  if (f != null) {
+    writer.writeMessage(
+      11,
       f,
       proto.model.MsgChat.serializeBinaryToWriter
     );
@@ -315,63 +353,63 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
   f = message.getChatreply();
   if (f != null) {
     writer.writeMessage(
-      10,
+      12,
       f,
       proto.model.MsgChatReply.serializeBinaryToWriter
     );
   }
-  f = message.getDownloadreq();
+  f = message.getCommonquery();
   if (f != null) {
     writer.writeMessage(
-      11,
+      13,
       f,
-      proto.model.MsgDownloadReq.serializeBinaryToWriter
+      proto.model.MsgQuery.serializeBinaryToWriter
     );
   }
-  f = message.getDownloadreply();
+  f = message.getCommonqueryret();
   if (f != null) {
     writer.writeMessage(
-      12,
+      14,
       f,
-      proto.model.MsgDownloadReply.serializeBinaryToWriter
+      proto.model.MsgQueryResult.serializeBinaryToWriter
     );
   }
   f = message.getUploadreq();
   if (f != null) {
     writer.writeMessage(
-      13,
+      21,
       f,
       proto.model.MsgUploadReq.serializeBinaryToWriter
+    );
+  }
+  f = message.getDownloadreq();
+  if (f != null) {
+    writer.writeMessage(
+      22,
+      f,
+      proto.model.MsgDownloadReq.serializeBinaryToWriter
     );
   }
   f = message.getUploadreply();
   if (f != null) {
     writer.writeMessage(
-      14,
+      23,
       f,
       proto.model.MsgUploadReply.serializeBinaryToWriter
     );
   }
-  f = message.getChatquery();
+  f = message.getDownloadreply();
   if (f != null) {
     writer.writeMessage(
-      15,
+      24,
       f,
-      proto.model.MsgChatQuery.serializeBinaryToWriter
-    );
-  }
-  f = message.getChatqueryresult();
-  if (f != null) {
-    writer.writeMessage(
-      16,
-      f,
-      proto.model.MsgChatQueryResult.serializeBinaryToWriter
+      proto.model.MsgDownloadReply.serializeBinaryToWriter
     );
   }
   f = message.getUserop();
   if (f != null) {
     writer.writeMessage(
-      17,
+      31,
       f,
       proto.model.UserOpReq.serializeBinaryToWriter
     );
@@ -379,7 +417,7 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
   f = message.getUseropret();
   if (f != null) {
     writer.writeMessage(
-      18,
+      32,
       f,
       proto.model.UserOpResult.serializeBinaryToWriter
     );
@@ -387,7 +425,7 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
   f = message.getFriendop();
   if (f != null) {
     writer.writeMessage(
-      19,
+      33,
       f,
       proto.model.FriendOpReq.serializeBinaryToWriter
     );
@@ -395,7 +433,7 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
   f = message.getFriendopret();
   if (f != null) {
     writer.writeMessage(
-      20,
+      34,
       f,
       proto.model.FriendOpResult.serializeBinaryToWriter
     );
@@ -403,7 +441,7 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
   f = message.getGroupop();
   if (f != null) {
     writer.writeMessage(
-      21,
+      35,
       f,
       proto.model.GroupOpReq.serializeBinaryToWriter
     );
@@ -411,9 +449,16 @@ proto.model.MsgPlain.serializeBinaryToWriter = function(message, writer) {
   f = message.getGroupopret();
   if (f != null) {
     writer.writeMessage(
-      22,
+      36,
       f,
       proto.model.GroupOpResult.serializeBinaryToWriter
+    );
+  }
+  f = /** @type {!(string|Uint8Array)} */ (jspb.Message.getField(message, 100));
+  if (f != null) {
+    writer.writeBytes(
+      100,
+      f
     );
   }
 };
@@ -494,12 +539,86 @@ proto.model.MsgPlain.prototype.hasHeartbeat = function() {
 
 
 /**
- * optional MsgChat chatData = 9;
+ * optional MsgError errorMsg = 9;
+ * @return {?proto.model.MsgError}
+ */
+proto.model.MsgPlain.prototype.getErrormsg = function() {
+  return /** @type{?proto.model.MsgError} */ (
+    jspb.Message.getWrapperField(this, proto.model.MsgError, 9));
+};
+
+
+/**
+ * @param {?proto.model.MsgError|undefined} value
+ * @return {!proto.model.MsgPlain} returns this
+*/
+proto.model.MsgPlain.prototype.setErrormsg = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 9, proto.model.MsgPlain.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.clearErrormsg = function() {
+  return this.setErrormsg(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.MsgPlain.prototype.hasErrormsg = function() {
+  return jspb.Message.getField(this, 9) != null;
+};
+
+
+/**
+ * optional MsgKeyExchange keyEx = 10;
+ * @return {?proto.model.MsgKeyExchange}
+ */
+proto.model.MsgPlain.prototype.getKeyex = function() {
+  return /** @type{?proto.model.MsgKeyExchange} */ (
+    jspb.Message.getWrapperField(this, proto.model.MsgKeyExchange, 10));
+};
+
+
+/**
+ * @param {?proto.model.MsgKeyExchange|undefined} value
+ * @return {!proto.model.MsgPlain} returns this
+*/
+proto.model.MsgPlain.prototype.setKeyex = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 10, proto.model.MsgPlain.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.clearKeyex = function() {
+  return this.setKeyex(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.MsgPlain.prototype.hasKeyex = function() {
+  return jspb.Message.getField(this, 10) != null;
+};
+
+
+/**
+ * optional MsgChat chatData = 11;
  * @return {?proto.model.MsgChat}
  */
 proto.model.MsgPlain.prototype.getChatdata = function() {
   return /** @type{?proto.model.MsgChat} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgChat, 9));
+    jspb.Message.getWrapperField(this, proto.model.MsgChat, 11));
 };
 
 
@@ -508,7 +627,7 @@ proto.model.MsgPlain.prototype.getChatdata = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setChatdata = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 9, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 11, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -526,17 +645,17 @@ proto.model.MsgPlain.prototype.clearChatdata = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasChatdata = function() {
-  return jspb.Message.getField(this, 9) != null;
+  return jspb.Message.getField(this, 11) != null;
 };
 
 
 /**
- * optional MsgChatReply chatReply = 10;
+ * optional MsgChatReply chatReply = 12;
  * @return {?proto.model.MsgChatReply}
  */
 proto.model.MsgPlain.prototype.getChatreply = function() {
   return /** @type{?proto.model.MsgChatReply} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgChatReply, 10));
+    jspb.Message.getWrapperField(this, proto.model.MsgChatReply, 12));
 };
 
 
@@ -545,7 +664,7 @@ proto.model.MsgPlain.prototype.getChatreply = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setChatreply = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 10, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 12, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -563,91 +682,91 @@ proto.model.MsgPlain.prototype.clearChatreply = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasChatreply = function() {
-  return jspb.Message.getField(this, 10) != null;
-};
-
-
-/**
- * optional MsgDownloadReq downloadReq = 11;
- * @return {?proto.model.MsgDownloadReq}
- */
-proto.model.MsgPlain.prototype.getDownloadreq = function() {
-  return /** @type{?proto.model.MsgDownloadReq} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgDownloadReq, 11));
-};
-
-
-/**
- * @param {?proto.model.MsgDownloadReq|undefined} value
- * @return {!proto.model.MsgPlain} returns this
-*/
-proto.model.MsgPlain.prototype.setDownloadreq = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 11, proto.model.MsgPlain.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.model.MsgPlain} returns this
- */
-proto.model.MsgPlain.prototype.clearDownloadreq = function() {
-  return this.setDownloadreq(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.model.MsgPlain.prototype.hasDownloadreq = function() {
-  return jspb.Message.getField(this, 11) != null;
-};
-
-
-/**
- * optional MsgDownloadReply downloadReply = 12;
- * @return {?proto.model.MsgDownloadReply}
- */
-proto.model.MsgPlain.prototype.getDownloadreply = function() {
-  return /** @type{?proto.model.MsgDownloadReply} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgDownloadReply, 12));
-};
-
-
-/**
- * @param {?proto.model.MsgDownloadReply|undefined} value
- * @return {!proto.model.MsgPlain} returns this
-*/
-proto.model.MsgPlain.prototype.setDownloadreply = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 12, proto.model.MsgPlain.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.model.MsgPlain} returns this
- */
-proto.model.MsgPlain.prototype.clearDownloadreply = function() {
-  return this.setDownloadreply(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.model.MsgPlain.prototype.hasDownloadreply = function() {
   return jspb.Message.getField(this, 12) != null;
 };
 
 
 /**
- * optional MsgUploadReq uploadReq = 13;
+ * optional MsgQuery commonQuery = 13;
+ * @return {?proto.model.MsgQuery}
+ */
+proto.model.MsgPlain.prototype.getCommonquery = function() {
+  return /** @type{?proto.model.MsgQuery} */ (
+    jspb.Message.getWrapperField(this, proto.model.MsgQuery, 13));
+};
+
+
+/**
+ * @param {?proto.model.MsgQuery|undefined} value
+ * @return {!proto.model.MsgPlain} returns this
+*/
+proto.model.MsgPlain.prototype.setCommonquery = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 13, proto.model.MsgPlain.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.clearCommonquery = function() {
+  return this.setCommonquery(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.MsgPlain.prototype.hasCommonquery = function() {
+  return jspb.Message.getField(this, 13) != null;
+};
+
+
+/**
+ * optional MsgQueryResult commonQueryRet = 14;
+ * @return {?proto.model.MsgQueryResult}
+ */
+proto.model.MsgPlain.prototype.getCommonqueryret = function() {
+  return /** @type{?proto.model.MsgQueryResult} */ (
+    jspb.Message.getWrapperField(this, proto.model.MsgQueryResult, 14));
+};
+
+
+/**
+ * @param {?proto.model.MsgQueryResult|undefined} value
+ * @return {!proto.model.MsgPlain} returns this
+*/
+proto.model.MsgPlain.prototype.setCommonqueryret = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 14, proto.model.MsgPlain.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.clearCommonqueryret = function() {
+  return this.setCommonqueryret(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.MsgPlain.prototype.hasCommonqueryret = function() {
+  return jspb.Message.getField(this, 14) != null;
+};
+
+
+/**
+ * optional MsgUploadReq uploadReq = 21;
  * @return {?proto.model.MsgUploadReq}
  */
 proto.model.MsgPlain.prototype.getUploadreq = function() {
   return /** @type{?proto.model.MsgUploadReq} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgUploadReq, 13));
+    jspb.Message.getWrapperField(this, proto.model.MsgUploadReq, 21));
 };
 
 
@@ -656,7 +775,7 @@ proto.model.MsgPlain.prototype.getUploadreq = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setUploadreq = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 13, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 21, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -674,17 +793,54 @@ proto.model.MsgPlain.prototype.clearUploadreq = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasUploadreq = function() {
-  return jspb.Message.getField(this, 13) != null;
+  return jspb.Message.getField(this, 21) != null;
 };
 
 
 /**
- * optional MsgUploadReply uploadReply = 14;
+ * optional MsgDownloadReq downloadReq = 22;
+ * @return {?proto.model.MsgDownloadReq}
+ */
+proto.model.MsgPlain.prototype.getDownloadreq = function() {
+  return /** @type{?proto.model.MsgDownloadReq} */ (
+    jspb.Message.getWrapperField(this, proto.model.MsgDownloadReq, 22));
+};
+
+
+/**
+ * @param {?proto.model.MsgDownloadReq|undefined} value
+ * @return {!proto.model.MsgPlain} returns this
+*/
+proto.model.MsgPlain.prototype.setDownloadreq = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 22, proto.model.MsgPlain.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the message field making it undefined.
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.clearDownloadreq = function() {
+  return this.setDownloadreq(undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.MsgPlain.prototype.hasDownloadreq = function() {
+  return jspb.Message.getField(this, 22) != null;
+};
+
+
+/**
+ * optional MsgUploadReply uploadReply = 23;
  * @return {?proto.model.MsgUploadReply}
  */
 proto.model.MsgPlain.prototype.getUploadreply = function() {
   return /** @type{?proto.model.MsgUploadReply} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgUploadReply, 14));
+    jspb.Message.getWrapperField(this, proto.model.MsgUploadReply, 23));
 };
 
 
@@ -693,7 +849,7 @@ proto.model.MsgPlain.prototype.getUploadreply = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setUploadreply = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 14, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 23, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -711,26 +867,26 @@ proto.model.MsgPlain.prototype.clearUploadreply = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasUploadreply = function() {
-  return jspb.Message.getField(this, 14) != null;
+  return jspb.Message.getField(this, 23) != null;
 };
 
 
 /**
- * optional MsgChatQuery chatQuery = 15;
- * @return {?proto.model.MsgChatQuery}
+ * optional MsgDownloadReply downloadReply = 24;
+ * @return {?proto.model.MsgDownloadReply}
  */
-proto.model.MsgPlain.prototype.getChatquery = function() {
-  return /** @type{?proto.model.MsgChatQuery} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgChatQuery, 15));
+proto.model.MsgPlain.prototype.getDownloadreply = function() {
+  return /** @type{?proto.model.MsgDownloadReply} */ (
+    jspb.Message.getWrapperField(this, proto.model.MsgDownloadReply, 24));
 };
 
 
 /**
- * @param {?proto.model.MsgChatQuery|undefined} value
+ * @param {?proto.model.MsgDownloadReply|undefined} value
  * @return {!proto.model.MsgPlain} returns this
 */
-proto.model.MsgPlain.prototype.setChatquery = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 15, proto.model.MsgPlain.oneofGroups_[0], value);
+proto.model.MsgPlain.prototype.setDownloadreply = function(value) {
+  return jspb.Message.setOneofWrapperField(this, 24, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -738,8 +894,8 @@ proto.model.MsgPlain.prototype.setChatquery = function(value) {
  * Clears the message field making it undefined.
  * @return {!proto.model.MsgPlain} returns this
  */
-proto.model.MsgPlain.prototype.clearChatquery = function() {
-  return this.setChatquery(undefined);
+proto.model.MsgPlain.prototype.clearDownloadreply = function() {
+  return this.setDownloadreply(undefined);
 };
 
 
@@ -747,55 +903,18 @@ proto.model.MsgPlain.prototype.clearChatquery = function() {
  * Returns whether this field is set.
  * @return {boolean}
  */
-proto.model.MsgPlain.prototype.hasChatquery = function() {
-  return jspb.Message.getField(this, 15) != null;
+proto.model.MsgPlain.prototype.hasDownloadreply = function() {
+  return jspb.Message.getField(this, 24) != null;
 };
 
 
 /**
- * optional MsgChatQueryResult chatQueryResult = 16;
- * @return {?proto.model.MsgChatQueryResult}
- */
-proto.model.MsgPlain.prototype.getChatqueryresult = function() {
-  return /** @type{?proto.model.MsgChatQueryResult} */ (
-    jspb.Message.getWrapperField(this, proto.model.MsgChatQueryResult, 16));
-};
-
-
-/**
- * @param {?proto.model.MsgChatQueryResult|undefined} value
- * @return {!proto.model.MsgPlain} returns this
-*/
-proto.model.MsgPlain.prototype.setChatqueryresult = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 16, proto.model.MsgPlain.oneofGroups_[0], value);
-};
-
-
-/**
- * Clears the message field making it undefined.
- * @return {!proto.model.MsgPlain} returns this
- */
-proto.model.MsgPlain.prototype.clearChatqueryresult = function() {
-  return this.setChatqueryresult(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.model.MsgPlain.prototype.hasChatqueryresult = function() {
-  return jspb.Message.getField(this, 16) != null;
-};
-
-
-/**
- * optional UserOpReq userOp = 17;
+ * optional UserOpReq userOp = 31;
  * @return {?proto.model.UserOpReq}
  */
 proto.model.MsgPlain.prototype.getUserop = function() {
   return /** @type{?proto.model.UserOpReq} */ (
-    jspb.Message.getWrapperField(this, proto.model.UserOpReq, 17));
+    jspb.Message.getWrapperField(this, proto.model.UserOpReq, 31));
 };
 
 
@@ -804,7 +923,7 @@ proto.model.MsgPlain.prototype.getUserop = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setUserop = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 17, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 31, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -822,17 +941,17 @@ proto.model.MsgPlain.prototype.clearUserop = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasUserop = function() {
-  return jspb.Message.getField(this, 17) != null;
+  return jspb.Message.getField(this, 31) != null;
 };
 
 
 /**
- * optional UserOpResult userOpRet = 18;
+ * optional UserOpResult userOpRet = 32;
  * @return {?proto.model.UserOpResult}
  */
 proto.model.MsgPlain.prototype.getUseropret = function() {
   return /** @type{?proto.model.UserOpResult} */ (
-    jspb.Message.getWrapperField(this, proto.model.UserOpResult, 18));
+    jspb.Message.getWrapperField(this, proto.model.UserOpResult, 32));
 };
 
 
@@ -841,7 +960,7 @@ proto.model.MsgPlain.prototype.getUseropret = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setUseropret = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 18, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 32, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -859,17 +978,17 @@ proto.model.MsgPlain.prototype.clearUseropret = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasUseropret = function() {
-  return jspb.Message.getField(this, 18) != null;
+  return jspb.Message.getField(this, 32) != null;
 };
 
 
 /**
- * optional FriendOpReq friendOp = 19;
+ * optional FriendOpReq friendOp = 33;
  * @return {?proto.model.FriendOpReq}
  */
 proto.model.MsgPlain.prototype.getFriendop = function() {
   return /** @type{?proto.model.FriendOpReq} */ (
-    jspb.Message.getWrapperField(this, proto.model.FriendOpReq, 19));
+    jspb.Message.getWrapperField(this, proto.model.FriendOpReq, 33));
 };
 
 
@@ -878,7 +997,7 @@ proto.model.MsgPlain.prototype.getFriendop = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setFriendop = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 19, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 33, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -896,17 +1015,17 @@ proto.model.MsgPlain.prototype.clearFriendop = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasFriendop = function() {
-  return jspb.Message.getField(this, 19) != null;
+  return jspb.Message.getField(this, 33) != null;
 };
 
 
 /**
- * optional FriendOpResult friendOpRet = 20;
+ * optional FriendOpResult friendOpRet = 34;
  * @return {?proto.model.FriendOpResult}
  */
 proto.model.MsgPlain.prototype.getFriendopret = function() {
   return /** @type{?proto.model.FriendOpResult} */ (
-    jspb.Message.getWrapperField(this, proto.model.FriendOpResult, 20));
+    jspb.Message.getWrapperField(this, proto.model.FriendOpResult, 34));
 };
 
 
@@ -915,7 +1034,7 @@ proto.model.MsgPlain.prototype.getFriendopret = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setFriendopret = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 20, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 34, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -933,17 +1052,17 @@ proto.model.MsgPlain.prototype.clearFriendopret = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasFriendopret = function() {
-  return jspb.Message.getField(this, 20) != null;
+  return jspb.Message.getField(this, 34) != null;
 };
 
 
 /**
- * optional GroupOpReq groupOp = 21;
+ * optional GroupOpReq groupOp = 35;
  * @return {?proto.model.GroupOpReq}
  */
 proto.model.MsgPlain.prototype.getGroupop = function() {
   return /** @type{?proto.model.GroupOpReq} */ (
-    jspb.Message.getWrapperField(this, proto.model.GroupOpReq, 21));
+    jspb.Message.getWrapperField(this, proto.model.GroupOpReq, 35));
 };
 
 
@@ -952,7 +1071,7 @@ proto.model.MsgPlain.prototype.getGroupop = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setGroupop = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 21, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 35, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -970,17 +1089,17 @@ proto.model.MsgPlain.prototype.clearGroupop = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasGroupop = function() {
-  return jspb.Message.getField(this, 21) != null;
+  return jspb.Message.getField(this, 35) != null;
 };
 
 
 /**
- * optional GroupOpResult groupOpRet = 22;
+ * optional GroupOpResult groupOpRet = 36;
  * @return {?proto.model.GroupOpResult}
  */
 proto.model.MsgPlain.prototype.getGroupopret = function() {
   return /** @type{?proto.model.GroupOpResult} */ (
-    jspb.Message.getWrapperField(this, proto.model.GroupOpResult, 22));
+    jspb.Message.getWrapperField(this, proto.model.GroupOpResult, 36));
 };
 
 
@@ -989,7 +1108,7 @@ proto.model.MsgPlain.prototype.getGroupopret = function() {
  * @return {!proto.model.MsgPlain} returns this
 */
 proto.model.MsgPlain.prototype.setGroupopret = function(value) {
-  return jspb.Message.setOneofWrapperField(this, 22, proto.model.MsgPlain.oneofGroups_[0], value);
+  return jspb.Message.setOneofWrapperField(this, 36, proto.model.MsgPlain.oneofGroups_[0], value);
 };
 
 
@@ -1007,7 +1126,67 @@ proto.model.MsgPlain.prototype.clearGroupopret = function() {
  * @return {boolean}
  */
 proto.model.MsgPlain.prototype.hasGroupopret = function() {
-  return jspb.Message.getField(this, 22) != null;
+  return jspb.Message.getField(this, 36) != null;
+};
+
+
+/**
+ * optional bytes otherTypeMsg = 100;
+ * @return {string}
+ */
+proto.model.MsgPlain.prototype.getOthertypemsg = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 100, ""));
+};
+
+
+/**
+ * optional bytes otherTypeMsg = 100;
+ * This is a type-conversion wrapper around `getOthertypemsg()`
+ * @return {string}
+ */
+proto.model.MsgPlain.prototype.getOthertypemsg_asB64 = function() {
+  return /** @type {string} */ (jspb.Message.bytesAsB64(
+      this.getOthertypemsg()));
+};
+
+
+/**
+ * optional bytes otherTypeMsg = 100;
+ * Note that Uint8Array is not supported on all browsers.
+ * @see http://caniuse.com/Uint8Array
+ * This is a type-conversion wrapper around `getOthertypemsg()`
+ * @return {!Uint8Array}
+ */
+proto.model.MsgPlain.prototype.getOthertypemsg_asU8 = function() {
+  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
+      this.getOthertypemsg()));
+};
+
+
+/**
+ * @param {!(string|Uint8Array)} value
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.setOthertypemsg = function(value) {
+  return jspb.Message.setOneofField(this, 100, proto.model.MsgPlain.oneofGroups_[0], value);
+};
+
+
+/**
+ * Clears the field making it undefined.
+ * @return {!proto.model.MsgPlain} returns this
+ */
+proto.model.MsgPlain.prototype.clearOthertypemsg = function() {
+  return jspb.Message.setOneofField(this, 100, proto.model.MsgPlain.oneofGroups_[0], undefined);
+};
+
+
+/**
+ * Returns whether this field is set.
+ * @return {boolean}
+ */
+proto.model.MsgPlain.prototype.hasOthertypemsg = function() {
+  return jspb.Message.getField(this, 100) != null;
 };
 
 

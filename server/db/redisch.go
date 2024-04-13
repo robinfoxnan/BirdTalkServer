@@ -2,10 +2,15 @@ package db
 
 import (
 	"fmt"
+	"sync/atomic"
 )
 
 // 订阅指定的频道，需要手动调用
 func (cli *RedisClient) Subscribe(channelName string, handler func(message string)) error {
+	i := atomic.LoadInt32(&cli.runningSubscribe)
+	if i == 1 {
+		return nil
+	}
 	// 创建订阅对象
 	pubSub := cli.Db.Subscribe(channelName)
 
@@ -14,7 +19,12 @@ func (cli *RedisClient) Subscribe(channelName string, handler func(message strin
 
 	// 启动一个 goroutine 处理接收到的消息
 	go func() {
-		defer pubSub.Close() // 在 goroutine 外部延迟关闭订阅对象
+		atomic.StoreInt32(&cli.runningSubscribe, 1)
+		defer func() {
+			atomic.StoreInt32(&cli.runningSubscribe, 0)
+			pubSub.Close()
+		}() // 在 goroutine 外部延迟关闭订阅对象
+
 		for msg := range ch {
 			//fmt.Printf("Received message from channel %s: %s\n", channelName, msg.Payload)
 			handler(msg.Payload) // 调用处理函数处理接收到的消息

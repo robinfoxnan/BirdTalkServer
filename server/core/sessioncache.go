@@ -29,17 +29,7 @@ func (ss *SessionCache) Has(sid int64) bool {
 	return ss.sessionMap.Has(sid)
 }
 
-func (ss *SessionCache) Remove(sid int64, uid int64) {
-
+func (ss *SessionCache) Remove(sid int64) {
 	ss.sessionMap.Remove(sid)
-
-	// 从用户的信息中删除这个会话
-	if uid != 0 {
-		user, b := Globals.uc.GetUser(uid)
-		if b {
-			user.RemoveSessionID(sid)
-		}
-	}
-
 	return
 }

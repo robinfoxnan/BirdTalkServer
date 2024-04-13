@@ -160,7 +160,7 @@ enum QueryDataType {
 // 向服务器上报自己当前的消息的位置，请求后续的部分
 // 可能会答应一组消息，也可能应答一组应答，还可能是搜索结果
 // 目前数据库还不能支持复杂的关键字搜索；
-message MsgChatQuery{
+message MsgQuery{
     int64 userId = 1;               // 用户ID
     int64 groupId = 2;              // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
     int64 bigId = 3;                // 这里是消息的范围
@@ -174,7 +174,7 @@ message MsgChatQuery{
 }
 
 // 查询的回执
-message MsgChatQueryResult{
+message MsgQueryResult{
   int64 userId = 1;               // 用于存储的clusterKey
   int64 anId = 2;                 // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
   int64 bigId = 3;                // 这里是消息的范围
@@ -246,8 +246,8 @@ enum ComMsgType {
 
   MsgTChatMsg = 11;
   MsgTChatReply = 12;
-  MsgTChatQuery = 13;         // 查询消息应该放在ChatMsg外面，
-  MsgTChatQueryResult = 14;  // 推送的消息单个发送，查询才以组发送
+  MsgTQuery = 13;         // 查询消息应该放在ChatMsg外面，
+  MsgTQueryResult = 14;  // 推送的消息单个发送，查询才以组发送
 
   MsgTUpload = 21;        // 上传文件的消息
   MsgTDownload = 22;      // 下载文件的消息，文件操作分为带内和带外，这里是小文件可以这样操作
@@ -276,8 +276,8 @@ message MsgPlain{
 
     MsgChat chatData = 11;         // 聊天消息
     MsgChatReply chatReply = 12;   // 聊天回复消息
-    MsgChatQuery chatQuery = 13;           // 请求同步消息，或者同步超时回执
-    MsgChatQueryResult chatQueryRet = 14;   // 查询结果
+    MsgQuery commonQuery = 13;           // 请求同步消息，或者同步超时回执
+    MsgQueryResult commonQueryRet = 14;   // 查询结果
 
     MsgUploadReq uploadReq = 21;         // 上传请求消息
     MsgDownloadReq downloadReq = 22;     // 下载请求消息

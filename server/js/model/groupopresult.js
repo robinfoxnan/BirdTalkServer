@@ -48,7 +48,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.model.GroupOpResult.repeatedFields_ = [6];
+proto.model.GroupOpResult.repeatedFields_ = [8];
 
 
 
@@ -86,6 +86,8 @@ proto.model.GroupOpResult.toObject = function(includeInstance, msg) {
     result: jspb.Message.getFieldWithDefault(msg, 3, ""),
     detail: jspb.Message.getFieldWithDefault(msg, 4, ""),
     group: (f = msg.getGroup()) && proto.model.GroupInfo.toObject(includeInstance, f),
+    sendid: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    msgid: jspb.Message.getFieldWithDefault(msg, 7, 0),
     membersList: jspb.Message.toObjectList(msg.getMembersList(),
     proto.model.GroupMember.toObject, includeInstance),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
@@ -148,11 +150,19 @@ proto.model.GroupOpResult.deserializeBinaryFromReader = function(msg, reader) {
       msg.setGroup(value);
       break;
     case 6:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setSendid(value);
+      break;
+    case 7:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMsgid(value);
+      break;
+    case 8:
       var value = new proto.model.GroupMember;
       reader.readMessage(value,proto.model.GroupMember.deserializeBinaryFromReader);
       msg.addMembers(value);
       break;
-    case 7:
+    case 9:
       var value = msg.getParamsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -224,17 +234,31 @@ proto.model.GroupOpResult.serializeBinaryToWriter = function(message, writer) {
       proto.model.GroupInfo.serializeBinaryToWriter
     );
   }
+  f = message.getSendid();
+  if (f !== 0) {
+    writer.writeInt64(
+      6,
+      f
+    );
+  }
+  f = message.getMsgid();
+  if (f !== 0) {
+    writer.writeInt64(
+      7,
+      f
+    );
+  }
   f = message.getMembersList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      6,
+      8,
       f,
       proto.model.GroupMember.serializeBinaryToWriter
     );
   }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(7, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(9, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -368,12 +392,48 @@ proto.model.GroupOpResult.prototype.hasGroup = function() {
 
 
 /**
- * repeated GroupMember members = 6;
+ * optional int64 sendId = 6;
+ * @return {number}
+ */
+proto.model.GroupOpResult.prototype.getSendid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.GroupOpResult} returns this
+ */
+proto.model.GroupOpResult.prototype.setSendid = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
+};
+
+
+/**
+ * optional int64 msgId = 7;
+ * @return {number}
+ */
+proto.model.GroupOpResult.prototype.getMsgid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.GroupOpResult} returns this
+ */
+proto.model.GroupOpResult.prototype.setMsgid = function(value) {
+  return jspb.Message.setProto3IntField(this, 7, value);
+};
+
+
+/**
+ * repeated GroupMember members = 8;
  * @return {!Array<!proto.model.GroupMember>}
  */
 proto.model.GroupOpResult.prototype.getMembersList = function() {
   return /** @type{!Array<!proto.model.GroupMember>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.model.GroupMember, 6));
+    jspb.Message.getRepeatedWrapperField(this, proto.model.GroupMember, 8));
 };
 
 
@@ -382,7 +442,7 @@ proto.model.GroupOpResult.prototype.getMembersList = function() {
  * @return {!proto.model.GroupOpResult} returns this
 */
 proto.model.GroupOpResult.prototype.setMembersList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 6, value);
+  return jspb.Message.setRepeatedWrapperField(this, 8, value);
 };
 
 
@@ -392,7 +452,7 @@ proto.model.GroupOpResult.prototype.setMembersList = function(value) {
  * @return {!proto.model.GroupMember}
  */
 proto.model.GroupOpResult.prototype.addMembers = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 6, opt_value, proto.model.GroupMember, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 8, opt_value, proto.model.GroupMember, opt_index);
 };
 
 
@@ -406,14 +466,14 @@ proto.model.GroupOpResult.prototype.clearMembersList = function() {
 
 
 /**
- * map<string, string> params = 7;
+ * map<string, string> params = 9;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.GroupOpResult.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 7, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 9, opt_noLazyCreate,
       null));
 };
 

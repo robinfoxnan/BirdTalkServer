@@ -1,4 +1,4 @@
-// source: msg.proto
+// source: user.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -11,19 +11,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-goog.provide('proto.model.ChatMsgType');
+goog.provide('proto.model.GroupOperationResultType');
 
 /**
  * @enum {number}
  */
-proto.model.ChatMsgType = {
-  TEXT: 0,
-  IMAGE: 1,
-  VOICE: 2,
-  VIDEO: 3,
-  FILE: 4,
-  DELETE: 5,
-  KEY: 6,
-  PLUGIN: 100
+proto.model.GroupOperationResultType = {
+  GROUPOPERATIONRESULTNONE: 0,
+  GROUPOPERATIONRESULTOK: 1,
+  GROUPOPERATIONRESULTREFUSE: 2
 };
 
