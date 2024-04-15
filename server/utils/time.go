@@ -27,3 +27,7 @@ func TmToLocalString(utcMillis int64) string {
 	//fmt.Println("本地时间字符串:", timeStr)
 	return timeStr
 }
+
+func GetTimeStamp() int64 {
+	return time.Now().UnixMilli()
+}

@@ -1,7 +1,9 @@
 package core
 
 import (
+	"birdtalk/server/pbmodel"
 	"fmt"
+	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 	"sync/atomic"
 	"time"
@@ -17,7 +19,7 @@ const (
 	pongWait = 60 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = pongWait / 2
+	pingPeriod = pongWait / 3
 )
 
 // Session 表示单个的 WebSocket 连接。一个用户可能拥有多个会话，因为每个允许多设备登录并同步。
@@ -30,8 +32,11 @@ type Session struct {
 	CountryCode string // 客户端的国家代码
 	CodeType    string // 编码支持json和protobuf
 	RemoteAddr  string // 客户端的 IP 地址。
+	Params      map[string]string
 
-	// 客户端的协议版本：((major & 0xff) << 8) | (minor & 0xff)。
+	Status uint32 // 状态码
+
+	// 客户端的协议版本
 	Ver int
 
 	// 会话起源的集群节点的引用。仅用于集群 RPC 会话。
@@ -54,7 +59,7 @@ type Session struct {
 
 // 创建新的会话
 func NewSession(conn *websocket.Conn, sid, uid int64, code string) *Session {
-	s := Session{UserID: uid, Sid: sid, ws: conn, CodeType: code}
+	s := Session{UserID: uid, Sid: sid, ws: conn, CodeType: code, Params: make(map[string]string)}
 	if sid == 0 {
 		s.Sid = Globals.snow.GenerateID()
 		i := 0
@@ -97,22 +102,37 @@ func (sess *Session) SendMessage(msg any) bool {
 	select {
 	case sess.send <- msg:
 		// 向通道写入数据成功
+		//fmt.Println("写入管道")
 	default:
 		// 通道已关闭
-		fmt.Println("session write channel is closed")
+		fmt.Println("SendMessage(): session write channel is closed")
 	}
 	return true
 }
 
 // 内部函数
-func wsWrite(ws *websocket.Conn, mt int, msg any) error {
+func wsWrite(ws *websocket.Conn, mt int, msg interface{}) error {
 	var bits []byte
+	var err error
 	if msg != nil {
-		switch msg.(type) {
+		switch v := msg.(type) {
 		case []byte:
-			bits = msg.([]byte)
+			bits = v
 		case string:
-			bits = []byte(msg.(string))
+			bits = []byte(v)
+		case *pbmodel.Msg:
+			fmt.Println(msg)
+			bits, err = proto.Marshal(v)
+			if err != nil {
+				fmt.Println("Error marshaling message:", err)
+				return err
+			}
+		case pbmodel.Msg:
+			bits, err = proto.Marshal(&v)
+			if err != nil {
+				fmt.Println("Error marshaling message:", err)
+				return err
+			}
 		default:
 			bits = []byte{}
 		}
@@ -120,8 +140,14 @@ func wsWrite(ws *websocket.Conn, mt int, msg any) error {
 	} else {
 		bits = []byte{}
 	}
+
 	ws.SetWriteDeadline(time.Now().Add(writeWait))
-	return ws.WriteMessage(mt, bits)
+
+	fmt.Println(bits)
+	err = ws.WriteMessage(mt, bits)
+	//fmt.Println("发送完毕")
+
+	return err
 }
 
 // 写循环
@@ -143,7 +169,16 @@ func (sess *Session) WriteLoop() {
 				// Channel closed.
 				return
 			}
-			wsWrite(sess.ws, websocket.TextMessage, msg)
+			switch msg.(type) {
+
+			case *pbmodel.Msg:
+				wsWrite(sess.ws, websocket.BinaryMessage, msg)
+			case pbmodel.Msg:
+				wsWrite(sess.ws, websocket.BinaryMessage, msg)
+			default:
+				wsWrite(sess.ws, websocket.TextMessage, msg)
+			}
+
 			// 这里根据消息类型处理发送
 
 		//case <-sess.bkgTimer.C:
@@ -243,9 +278,8 @@ func (sess *Session) ReadLoop() {
 				fmt.Println("Received message too big:", e)
 			} else {
 				// 其他错误情况，例如连接关闭或者其他错误，需要根据实际情况处理
-				fmt.Printf("ws: readLoop err, sid=%v, err=%v \n", sess.Sid, err)
+				fmt.Printf("ws: readLoop error, sid=%v, err=%v \n", sess.Sid, err)
 			}
-
 			return
 		}
 
@@ -253,6 +287,7 @@ func (sess *Session) ReadLoop() {
 			return
 		} else {
 			//statsInc("IncomingMessagesWebsockTotal", 1)
+
 			sess.dispatchRaw(t, raw)
 		}
 
@@ -271,7 +306,7 @@ func (s *Session) dispatchRaw(messageType int, rawMsg []byte) {
 		encoder := BinEncoder{}
 		msg, err := encoder.DecodeMsg(rawMsg)
 		if err == nil {
-			//fmt.Println(msg)
+			fmt.Println("收到消息：", msg)
 			HandleCommonMsg(msg, s)
 		}
 

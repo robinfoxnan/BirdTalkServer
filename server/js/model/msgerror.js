@@ -15,6 +15,7 @@ goog.provide('proto.model.MsgError');
 
 goog.require('jspb.BinaryReader');
 goog.require('jspb.BinaryWriter');
+goog.require('jspb.Map');
 goog.require('jspb.Message');
 
 /**
@@ -71,7 +72,8 @@ proto.model.MsgError.prototype.toObject = function(opt_includeInstance) {
 proto.model.MsgError.toObject = function(includeInstance, msg) {
   var f, obj = {
     code: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    detail: jspb.Message.getFieldWithDefault(msg, 2, "")
+    detail: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -116,6 +118,12 @@ proto.model.MsgError.deserializeBinaryFromReader = function(msg, reader) {
       var value = /** @type {string} */ (reader.readString());
       msg.setDetail(value);
       break;
+    case 9:
+      var value = msg.getParamsMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
+         });
+      break;
     default:
       reader.skipField();
       break;
@@ -159,6 +167,10 @@ proto.model.MsgError.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getParamsMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(9, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
 };
 
 
@@ -196,5 +208,27 @@ proto.model.MsgError.prototype.getDetail = function() {
 proto.model.MsgError.prototype.setDetail = function(value) {
   return jspb.Message.setProto3StringField(this, 2, value);
 };
+
+
+/**
+ * map<string, string> params = 9;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.model.MsgError.prototype.getParamsMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 9, opt_noLazyCreate,
+      null));
+};
+
+
+/**
+ * Clears values from the map. The map will be non-null.
+ * @return {!proto.model.MsgError} returns this
+ */
+proto.model.MsgError.prototype.clearParamsMap = function() {
+  this.getParamsMap().clear();
+  return this;};
 
 

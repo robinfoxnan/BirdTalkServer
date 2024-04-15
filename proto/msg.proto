@@ -18,7 +18,7 @@ service MsgService {
 // 首先需要同步客户端的基础信息，服务端应答各种信息
 message MsgHello {
   string clientId = 1;      // 客户端标识，用于区分不同客户端
-  string version = 2;       // 客户端或协议的版本信息
+  string version = 2;       // 客户端的版本信息
   string platform = 3;      // 客户端运行的平台信息（例如：iOS、Android、Windows等）
   // 其他可能的字段，取决于你的需求
   string stage = 5;         // 状态数据, clienthello, serverhello,
@@ -230,10 +230,21 @@ message MsgDownloadReply {
   int64 offset = 9;         // 下载的文件偏移量，如果不需要分片下载，可以忽略
 }
 
+// 错误消息类型
+enum ErrorMsgType{
+  ErrTNone = 0;
+  ErrTVersion = 1;
+  ErrTKeyPrint = 2;
+  ErrTRedirect = 3;
+  ErrTWrongPwd = 4;   // 密码错误
+  ErrTWrongCode = 5;  // 验证码错误
+
+}
+
 message MsgError{
   int32  code = 1;
   string detail = 2;
-
+  map<string, string> params = 9;
 }
 
 // 通用所有消息类型的定义

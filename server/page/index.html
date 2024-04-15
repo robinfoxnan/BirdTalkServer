@@ -14,6 +14,7 @@
 
     <script src="./js/model/commsgtype.js"></script>
     <script src="./js/model/msghello.js"></script>
+    <script src="./js/model/msgplain.js"></script>
     <script src="./js/model/msgheartbeat.js"></script>
     <script src="./js/model/msg.js"></script>
 
@@ -139,9 +140,28 @@
 
         // 接收服务端发送的消息
         webSocket.onmessage = function (event) {
-            console.log(event);
-            var receiveMsgTextarea = document.getElementById("receiveMsg");
-            receiveMsgTextarea.value += event.data + "\n";
+            //console.log(event);
+
+
+            showMessage("收到数据");
+            if (typeof event.data === 'string') {
+                showMessage(event.data)
+            }
+            if (event.data instanceof Blob) {
+                // 如果接收到的是二进制数据
+                var reader = new FileReader();
+                reader.onload = function () {
+                    // 读取数据完成后的回调函数
+                    var binaryData = reader.result; // 二进制数据
+                    // 在这里对二进制数据进行处理，可以将其解析为特定的格式
+                    parseData(binaryData);
+                };
+                reader.readAsArrayBuffer(event.data); // 以ArrayBuffer格式读取二进制数据
+
+            }
+
+
+
         };
     }
 
@@ -160,6 +180,61 @@
 
     }
 
+    function printByteArray(byteArray) {
+        var hexString = '';
+        for (var i = 0; i < byteArray.length; i++) {
+            var hex = (byteArray[i] & 0xff).toString(16);
+            hex = (hex.length === 1) ? '0' + hex : hex;
+            hexString += hex + ' ';
+        }
+        console.log(hexString.trim());
+    }
+
+    function parseData(binData){
+        // 获取收到的二进制数据并转换为 Uint8Array
+        var data = new Uint8Array(binData);
+        showMessage(data.length)
+        printByteArray(data)
+
+        // 解析 Msg 消息
+        var msg = proto.model.Msg.deserializeBinary(data);
+
+        // 获取 Msg 中的消息类型
+        var msgType = msg.getMsgtype();
+        var version = msg.getVersion()
+        showMessage(version)
+        showMessage(msgType)
+
+        // 根据消息类型进行相应处理
+        switch (msgType) {
+            case proto.model.ComMsgType.MSGTHELLO:
+                // 如果是 Hello 消息
+                const helloMsg = msg.getPlainmsg().getHello();
+
+                // 将 Hello 消息内容显示在页面上
+                var receiveMsgTextarea = document.getElementById("receiveMsg");
+                receiveMsgTextarea.value += "Received Hello message:\n" +
+                    "Client ID: " + helloMsg.getClientid() + "\n" +
+                    "Version: " + helloMsg.getVersion() + "\n" +
+                    "Platform: " + helloMsg.getPlatform() + "\n";
+                break;
+            case proto.model.ComMsgType.MSGTERROR:
+                // 如果是 Error 消息
+                var errorMsg = msg.getPlainmsg().getErrormsg();
+                // 将 Error 消息内容显示在页面上
+                var receiveMsgTextarea = document.getElementById("receiveMsg");
+                receiveMsgTextarea.value += "Received Error message:\n" +
+                    "Code: " + errorMsg.getCode() + "\n" +
+                    "Detail: " + errorMsg.getDetail() + "\n";
+                break;
+            default:
+                // 其他类型的消息处理
+                console.warn("Received unknown message type:", msgType);
+                break;
+        }
+    }
+
+
     // 1.hello包
     function sendHelloMessage(){
         // 子消息
@@ -169,11 +244,16 @@
         hello.setPlatform("web")
         hello.setStage("clienthello")
 
+        // 将 MsgHello 消息设置为 Msg 消息的 plainMsg 字段
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setHello(hello);
+
+
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTHELLO);
         msg.setVersion(1);
-        msg.setHello(hello);
+        msg.setPlainmsg(plainMsg);
 
         // 序列化测试
 
@@ -192,12 +272,16 @@
         const timestamp = new Date().getTime();
         heart.setTm(timestamp);
 
+
+        // const plainMsg = new proto.model.MsgPlain()
+        // plainMsg.setHeartbeat(heart)
+
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setVersion(1);
         msg.setMsgtype(proto.model.ComMsgType.MSGTHEARTBEAT);
 
-        msg.setHeartbeat(heart)
+        msg.setPlainmsg(heart)
 
         // 序列化测试
 

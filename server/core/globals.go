@@ -5,6 +5,9 @@ import (
 	"birdtalk/server/utils"
 )
 
+// 当前协议版本
+const ProtocolVersion int = 1
+
 // 全局变量
 type GlobalVars struct {
 	maxMessageSize int64 // 最大包长
