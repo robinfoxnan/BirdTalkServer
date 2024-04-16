@@ -122,15 +122,17 @@ func (k *KeyExchange) GenShareKey(remotePublicKey []byte) (int64, error) {
 
 	var err error
 	k.PublicKeyRemote = remotePublicKey
-	k.SharedKey, err = sharedSecret(curve, remotePublicKey, k.PrivateKey)
+	k.SharedKey, err = sharedSecret1(curve, remotePublicKey, k.PrivateKey)
 
 	// 计算新的对称密钥
 	switch k.EncType {
 	case "chacha20":
-		k.SharedKeyHash = calculateSHA256(k.SharedKey)
+		k.SharedKeyHash = k.SharedKey
+		//calculateSHA256(k.SharedKey)
 
 	case "aes256":
-		k.SharedKeyHash = calculateSHA256(k.SharedKey)
+		k.SharedKeyHash = k.SharedKey
+		//calculateSHA256(k.SharedKey)
 	case "twofish128":
 		k.SharedKeyHash = calculateMD5(k.SharedKey)
 	}
@@ -536,6 +538,25 @@ func sharedSecret(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) (
 	// 计算共享密钥
 	sharedKeyX, sharedKeyY := curve.ScalarMult(x, y, privateKey.Bytes())
 	sharedKey := elliptic.Marshal(curve, sharedKeyX, sharedKeyY) // 返回整个点的字节表示
+
+	return sharedKey, nil
+}
+
+func sharedSecret1(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) ([]byte, error) {
+	// 解码公钥
+	x, y := elliptic.UnmarshalCompressed(curve, publicKey)
+	if x == nil {
+		return nil, fmt.Errorf("invalid public key")
+	}
+
+	// 计算共享密钥
+	sharedKeyX, _ := curve.ScalarMult(x, y, privateKey.Bytes())
+	sharedKey := sharedKeyX.Bytes()
+
+	// 如果共享密钥长度超过32字节，截取前32个字节
+	if len(sharedKey) > 32 {
+		sharedKey = sharedKey[:32]
+	}
 
 	return sharedKey, nil
 }

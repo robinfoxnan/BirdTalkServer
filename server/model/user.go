@@ -8,7 +8,7 @@ import (
 const (
 	UserStatusNone     = 0         // 等待 HELLO 包
 	UserStatusExchange = 1 << iota // 等待秘钥交换1
-	UserReady                      // 可以继续
+	UserWaitLogin                  // 可以继续
 	UserStatusRegister             // 收到了注册申请，等待验证码2,不需要验证则继续UserReady
 	UserStatusLogin                // 收到了登录申请，需要等待验证码4,不需要验证则继续UserReady
 	UserStatusOk                   // 登录完成8

@@ -1,5 +1,6 @@
 syntax = "proto3";
 import "user.proto";
+// package com.birdfish.model;
 package model;
 option go_package = "server/pbmodel";
 //option go_package = "client/pbmodel";
@@ -238,6 +239,12 @@ enum ErrorMsgType{
   ErrTRedirect = 3;
   ErrTWrongPwd = 4;   // 密码错误
   ErrTWrongCode = 5;  // 验证码错误
+  ErrTRsaPrint = 6;   // 公钥错误
+  ErrTTempkey = 7;    // 临时秘钥设置错误
+  ErrTEncType = 8;    // 加密算法不支持
+  ErrTServerInside = 9;
+  ErrTStage = 10;   // 阶段字段设置错误
+  ErrTPublicKey = 11; // 65 字节
 
 }
 

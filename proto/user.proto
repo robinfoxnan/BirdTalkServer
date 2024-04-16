@@ -1,4 +1,5 @@
 syntax = "proto3";
+//package com.birdfish.model;
 package model;
 option go_package = "server/pbmodel";
 //option go_package = "client/pbmodel";

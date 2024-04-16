@@ -2,6 +2,7 @@ package core
 
 import (
 	"birdtalk/server/pbmodel"
+	"birdtalk/server/utils"
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
@@ -13,13 +14,13 @@ const sendQueueLimit = 128
 
 const (
 	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
+	writeWait = 1 * time.Minute
 
 	// Time allowed to read the next pong message from the peer.
 	pongWait = 60 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = pongWait / 3
+	pingPeriod = 20 * time.Second
 )
 
 // Session 表示单个的 WebSocket 连接。一个用户可能拥有多个会话，因为每个允许多设备登录并同步。
@@ -34,7 +35,8 @@ type Session struct {
 	RemoteAddr  string // 客户端的 IP 地址。
 	Params      map[string]string
 
-	Status uint32 // 状态码
+	Status uint32             // 状态码
+	KeyEx  *utils.KeyExchange // 秘钥交换
 
 	// 客户端的协议版本
 	Ver int
@@ -59,7 +61,10 @@ type Session struct {
 
 // 创建新的会话
 func NewSession(conn *websocket.Conn, sid, uid int64, code string) *Session {
-	s := Session{UserID: uid, Sid: sid, ws: conn, CodeType: code, Params: make(map[string]string)}
+	s := Session{UserID: uid, Sid: sid, ws: conn, CodeType: code,
+		Params: make(map[string]string),
+		KeyEx:  nil,
+	}
 	if sid == 0 {
 		s.Sid = Globals.snow.GenerateID()
 		i := 0
@@ -74,6 +79,8 @@ func NewSession(conn *websocket.Conn, sid, uid int64, code string) *Session {
 		if i == 5 {
 			return nil
 		}
+	} else {
+		fmt.Println("recv sid = ", sid)
 	}
 
 	s.send = make(chan any, sendQueueLimit+32) // buffered
@@ -143,7 +150,7 @@ func wsWrite(ws *websocket.Conn, mt int, msg interface{}) error {
 
 	ws.SetWriteDeadline(time.Now().Add(writeWait))
 
-	fmt.Println(bits)
+	//fmt.Println(bits)
 	err = ws.WriteMessage(mt, bits)
 	//fmt.Println("发送完毕")
 
@@ -258,11 +265,11 @@ func (sess *Session) ReadLoop() {
 
 	sess.ws.SetReadLimit(Globals.maxMessageSize)
 	// 设置等待应答的pong
-	//sess.ws.SetPongHandler(func(string) error {
-	//	//sess.ws.SetReadDeadline(time.Now().Add(pongWait))
-	//	fmt.Println("recv a pong messsage from remote")
-	//	return nil
-	//})
+	sess.ws.SetPongHandler(func(string) error {
+		sess.ws.SetReadDeadline(time.Now().Add(pongWait))
+		fmt.Println("recv a pong messsage from remote, sid=", sess.Sid)
+		return nil
+	})
 
 	for {
 		sess.ws.SetReadDeadline(time.Now().Add(pongWait))
@@ -288,6 +295,7 @@ func (sess *Session) ReadLoop() {
 		} else {
 			//statsInc("IncomingMessagesWebsockTotal", 1)
 
+			//fmt.Println("类型：", t)
 			sess.dispatchRaw(t, raw)
 		}
 

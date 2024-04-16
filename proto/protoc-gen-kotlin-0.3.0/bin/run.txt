@@ -1,0 +1,1 @@
+protoc user.proto msg.proto --pbandk_out=D:\GBuild\BirdTalkServer\proto\kotlin --plugin=protoc-gen-pbandk=D:\GBuild\BirdTalkServer\proto\protoc-gen-kotlin-0.3.0\bin\protoc-gen-kotlin.bat --proto_path=D:\GBuild\BirdTalkServer\proto

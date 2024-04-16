@@ -4,6 +4,8 @@
 // 	protoc        v3.20.1
 // source: user.proto
 
+//package com.birdfish.model;
+
 package pbmodel
 
 import (

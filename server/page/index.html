@@ -6,6 +6,8 @@
     <!--
     <script src="https://cdn.jsdelivr.net/npm/google-protobuf@latest/google-protobuf.js"></script>
     -->
+    <script src="./js/enc.js"></script>
+    <script src="./js/wsclient.js"></script>
     <script src="./js/google-protobuf.js"></script>
     <script src="./js/model/userinfo.js"></script>
     <script src="./js/model/useroperationtype.js"></script>
@@ -30,18 +32,22 @@
 <div>
     文本消息：<textarea id="msgInput" style="width: 400px; height: 80px; resize: none;">it is a test message.</textarea>
 
-    <button onclick="sendMessage()">发送</button>
+    <button onclick="testSendMessage()">发送</button>
+    <button onclick="clearText()">清空</button>
 </div>
 
 <br>
 <div>
-    接收到的消息：<br><textarea id="receiveMsg" rows="20" cols="150"></textarea>
+    接收到的消息：<br><textarea id="receiveMsg" rows="15" cols="150"></textarea>
 </div>
 
 单用户操作
 <hr/>
-<div><button onclick="sendHelloMessage()">1.hello</button></div>
-<div><button onclick="sendheartMessage()">2.心跳</button></div>
+<div><button onclick="sendHelloMessage()">1.hello</button>
+    <button onclick="sendExMessage1()">1.2 exchangeKey</button>
+    <button onclick="sendExMessage2()">1.3 exchangeKey</button>
+</div>
+<div><button onclick="sendHeart()">2.心跳</button></div>
 <div><button onclick="sendRegisterMessage()">3.申请注册</button></div>
 <div><button onclick="sendcodeMessage()">4.发送注册验证码</button></div>
 <div><button onclick="sendLoginPwdMessage()">5.1 用户密码登录</button></div>
@@ -114,71 +120,76 @@
 <hr/>
 
 <script>
-    var webSocket;
+    var client = null;
+
+    function onConnected(){
+        console.log("WebSocket connected");
+        showMessage("WebSocket connected\n");
+    }
+
+    function onDisConnected(){
+        console.log("WebSocket disconnected");
+    }
+
+    function onMessage(message){
+        console.log("Received message callback:", message);
+        showMessage(message);
+    }
+
+    function onError(error){
+        console.error("WebSocket error:", error);
+        showMessage(error);
+    }
+    function onProgress(message){
+        showMessage(message);
+    }
+
+    function clearText(){
+        const receiveMsgTextarea = document.getElementById("receiveMsg");
+        receiveMsgTextarea.value = "";
+    }
+
 
     function connectWebSocket() {
-        var url = document.getElementById("urlInput").value;
+
         try {
-            webSocket = new WebSocket(url);
+            //创建 WsClient 实例并连接 WebSocket，并传递回调函数
+            if (client === null || client === undefined || !client.isOpen()) {
+                const url = document.getElementById("urlInput").value;
+
+                client = new WsClient(
+                    "MyClient",
+                    url,
+                    onMessage,
+                    onConnected,
+                    onDisConnected,
+                    onError,
+                    onProgress
+                );
+            }
+            client.connect();
         } catch (e) {
             console.log(e);
         }
-
-        webSocket.onerror = function (event) {
-            console.log('连接错误');
-            console.log(event);
-            showMessage('建立错误');
-            showMessage(event);
-        };
-
-        // 与 WebSocket 建立连接
-        webSocket.onopen = function (event) {
-            console.log('建立连接');
-            console.log(event);
-            showMessage('建立连接');
-        };
-
-        // 接收服务端发送的消息
-        webSocket.onmessage = function (event) {
-            //console.log(event);
-
-
-            showMessage("收到数据");
-            if (typeof event.data === 'string') {
-                showMessage(event.data)
-            }
-            if (event.data instanceof Blob) {
-                // 如果接收到的是二进制数据
-                var reader = new FileReader();
-                reader.onload = function () {
-                    // 读取数据完成后的回调函数
-                    var binaryData = reader.result; // 二进制数据
-                    // 在这里对二进制数据进行处理，可以将其解析为特定的格式
-                    parseData(binaryData);
-                };
-                reader.readAsArrayBuffer(event.data); // 以ArrayBuffer格式读取二进制数据
-
-            }
-
-
-
-        };
     }
 
     function showMessage(str){
-        var receiveMsgTextarea = document.getElementById("receiveMsg");
+        const receiveMsgTextarea = document.getElementById("receiveMsg");
         receiveMsgTextarea.value += str + "\n";
     }
 
-    function sendMessage() {
-        var msgInput = document.getElementById("msgInput");
-        var msg = msgInput.value;
+    function testSendMessage() {
+        //showMessage("click")
+        const msgInput = document.getElementById("msgInput");
+        const msg = msgInput.value;
         // 发送消息
-        webSocket.send(msg);
+        if (client){
+            client.sendWs(msg)
+        }
         //msgInput.value = ""; // 清空输入框
-
-
     }
+
+
 
     function printByteArray(byteArray) {
         var hexString = '';
@@ -190,425 +201,108 @@
         console.log(hexString.trim());
     }
 
-    function parseData(binData){
-        // 获取收到的二进制数据并转换为 Uint8Array
-        var data = new Uint8Array(binData);
-        showMessage(data.length)
-        printByteArray(data)
 
-        // 解析 Msg 消息
-        var msg = proto.model.Msg.deserializeBinary(data);
-
-        // 获取 Msg 中的消息类型
-        var msgType = msg.getMsgtype();
-        var version = msg.getVersion()
-        showMessage(version)
-        showMessage(msgType)
-
-        // 根据消息类型进行相应处理
-        switch (msgType) {
-            case proto.model.ComMsgType.MSGTHELLO:
-                // 如果是 Hello 消息
-                const helloMsg = msg.getPlainmsg().getHello();
-
-                // 将 Hello 消息内容显示在页面上
-                var receiveMsgTextarea = document.getElementById("receiveMsg");
-                receiveMsgTextarea.value += "Received Hello message:\n" +
-                    "Client ID: " + helloMsg.getClientid() + "\n" +
-                    "Version: " + helloMsg.getVersion() + "\n" +
-                    "Platform: " + helloMsg.getPlatform() + "\n";
-                break;
-            case proto.model.ComMsgType.MSGTERROR:
-                // 如果是 Error 消息
-                var errorMsg = msg.getPlainmsg().getErrormsg();
-                // 将 Error 消息内容显示在页面上
-                var receiveMsgTextarea = document.getElementById("receiveMsg");
-                receiveMsgTextarea.value += "Received Error message:\n" +
-                    "Code: " + errorMsg.getCode() + "\n" +
-                    "Detail: " + errorMsg.getDetail() + "\n";
-                break;
-            default:
-                // 其他类型的消息处理
-                console.warn("Received unknown message type:", msgType);
-                break;
-        }
-    }
 
 
     // 1.hello包
     function sendHelloMessage(){
-        // 子消息
-        const hello = new proto.model.MsgHello();
-        hello.setClientid("uuid")  //js权限低，这里可以使用一个UUID，执行本地存储，每次都带着，用于服务端区分设备
-        hello.setVersion("1.0")
-        hello.setPlatform("web")
-        hello.setStage("clienthello")
-
-        // 将 MsgHello 消息设置为 Msg 消息的 plainMsg 字段
-        const plainMsg = new proto.model.MsgPlain();
-        plainMsg.setHello(hello);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTHELLO);
-        msg.setVersion(1);
-        msg.setPlainmsg(plainMsg);
-
-        // 序列化测试
-
-        showMessage(msg.toString()) // 字符串表示
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg)
-        //var jsonStr =  JSON.stringify(msg);
-        //showMessage(jsonStr);
-        webSocket.send(binMsg);
+        if (client){
+            client.sendHello();
+        }
     }
 
     // 2 心跳包
-    function sendheartMessage(){
-        const heart = new proto.model.MsgHeartBeat();
-        heart.setUserid(1);
-        const timestamp = new Date().getTime();
-        heart.setTm(timestamp);
-
-
-        // const plainMsg = new proto.model.MsgPlain()
-        // plainMsg.setHeartbeat(heart)
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setVersion(1);
-        msg.setMsgtype(proto.model.ComMsgType.MSGTHEARTBEAT);
-
-        msg.setPlainmsg(heart)
-
-        // 序列化测试
-
-        showMessage(msg.toString()) // 字符串表示
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg)
-        //var jsonStr =  JSON.stringify(msg);
-        //showMessage(jsonStr);
-        webSocket.send(binMsg);
+    function sendHeartMessage(){
+        if (client){
+            client.sendHeart();
+        }
     }
 
-
-    // 3注册申请
-    function sendRegisterMessage() {
-        showMessage("注册申请的消息")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUsername("robin");
-        userInfo.setUserid(0);
-        userInfo.setEmail("390017268@qq.com");
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("pwd", "12345678");
-        paramsMap.set("regtype", "pwd");   // pwd, email,phone
-
-
-        // 注册用户
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.REGISTERUSER);
-        regOpReq.setUser(userInfo)
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-
-        //
-        // const deserializedPerson = UserInfo.deserializeBinary(bytes);
-        // console.log(deserializedPerson.toString());
+    // 发送秘钥交换
+    function sendExMessage1(){
+        if (client){
+            client.sendExchange1();
+        }
     }
-
-    // 4. 发送验证码，所有发送验证码的都是一样的，服务端跟踪当前
-    function sendcodeMessage() {
-        showMessage("发送验证消息")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("code", "12345");
-        paramsMap.set("regtype", "email");   // pwd, email,phone
-
-
-        // 验证码
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-
-        //
-        // const deserializedPerson = UserInfo.deserializeBinary(bytes);
-        // console.log(deserializedPerson.toString());
-    }
-
-    // 5.1 用户密码登录申请
-    function sendLoginPwdMessage(){
-        showMessage("发送登录消息")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("pwd", "12345");
-        paramsMap.set("logintype", "pwd");   // uidpwd, email,phone
-
-
-        // 登录
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.LOGIN);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-
-    }
-
-    // 5.2 用户邮箱登录申请
-    function sendLoginEmailMessage(){
-        showMessage("发送登录消息")
-        const userInfo = new proto.model.UserInfo();
-        //userInfo.setUserid(1001);
-        userInfo.setEmail("390017268@qq.com")
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("logintype", "email");   // uid, email,phone
-
-
-        // 登录
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.LOGIN);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 5.3 邮箱登录验证码
-    function sendLoginCodeMessage(){
-        showMessage("发送验证码消息")
-        const userInfo = new proto.model.UserInfo();
-        //userInfo.setUserid(1001);
-        userInfo.setEmail("390017268@qq.com")
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("logintype", "email");   // uid, email,phone
-        paramsMap.set("code", "12345");
-
-
-        // 登录
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 6.1 设置用户的各种信息，如果重新设置邮箱以及手机号，则需要验证码
-    function sendUserInfoMessage(){
-        showMessage("发送用户详细消息")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        userInfo.setEmail("");
-        userInfo.setGender("male");
-        userInfo.setAge(5);
-        userInfo.setIcon("sys://1");
-        userInfo.setNickname("robinfox");
-        userInfo.setUsername("robinfoxnan");
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("title", "manager");
-        paramsMap.set("country", "china");
-
-
-        // 登录
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.SETUSERINFO);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 6.2
-    function sendUserInfoCodeMessage(){
-        showMessage("发送用户详细消息")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        userInfo.setEmail("");
-        userInfo.setGender("male");
-        userInfo.setAge(5);
-        userInfo.setIcon("sys://1");
-        userInfo.setNickname("robinfox");
-        userInfo.setUsername("robinfoxnan");
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("title", "manager");
-        paramsMap.set("country", "china");
-
-
-        // 登录
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 7.1 禁用
-    function sendUserDisableMessage(){
-        showMessage("禁用用户")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-
-        // 禁用
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.DISABLEUSER);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 7.2 解禁
-    function sendUserEnableMessage(){
-        showMessage("禁用用户")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-
-        // 解禁
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.RECOVERUSER);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 8  注销
-    function sendUserUnregMessage(){
-        showMessage("注销用户")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-
-        //
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.UNREGISTERUSER);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
-
-    // 9 退出登录
-    function sendUserLogoutMessage(){
-        showMessage("登出用户")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-
-        //
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.LOGOUT);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        showMessage(msg.toLocaleString());
-        const binMsg = msg.serializeBinary();
-        showMessage(binMsg);
-        webSocket.send(binMsg);
-    }
+    //
+    //
+    // // 3注册申请
+    // // 3. 注册申请
+    // function sendRegisterMessage(){
+    //     if (client) {
+    //         client.sendRegisterMessage(); // 调用类的成员函数
+    //     }
+    // };
+    //
+    // // 4. 发送验证码
+    // function sendCodeMessage() {
+    //     if (client) {
+    //         client.sendCodeMessage();
+    //     }
+    // };
+    //
+    // // 5.1 用户密码登录申请
+    // function sendLoginPwdMessage () {
+    //     if (client) {
+    //         client.sendLoginPwdMessage();
+    //     }
+    // };
+    //
+    // // 5.2 用户邮箱登录申请
+    // function  sendLoginEmailMessage() {
+    //     if (client) {
+    //         client.sendLoginEmailMessage();
+    //     }
+    // };
+    //
+    // // 5.3 邮箱登录验证码
+    // function sendLoginCodeMessage (){
+    //     if (client) {
+    //         client.sendLoginCodeMessage();
+    //     }
+    // };
+    //
+    // // 6.1 设置用户的各种信息
+    // function  sendUserInfoMessage (){
+    //     if (client) {
+    //         client.sendUserInfoMessage();
+    //     }
+    // };
+    //
+    // // 6.2 设置用户的各种信息验证码
+    // function  sendUserInfoCodeMessage() {
+    //     if (client) {
+    //         client.sendUserInfoCodeMessage();
+    //     }
+    // };
+    //
+    // // 7.1 禁用用户
+    // function  sendUserDisableMessage () {
+    //     if (client) {
+    //         client.sendUserDisableMessage();
+    //     }
+    // };
+    //
+    // // 7.2 解禁用户
+    // function sendUserEnableMessage (){
+    //     if (client) {
+    //         client.sendUserEnableMessage();
+    //     }
+    // };
+    //
+    // // 8. 注销用户
+    // function  sendUserUnregMessage() {
+    //     if (client) {
+    //         client.sendUserUnregMessage();
+    //     }
+    // };
+    //
+    // // 9. 退出登录
+    // function  sendUserLogoutMessage () {
+    //     if (client) {
+    //         client.sendUserLogoutMessage();
+    //     }
+    // };
     ///////////////////////////////////////////////////////////////////////////////////
     // 好友相关操作
 

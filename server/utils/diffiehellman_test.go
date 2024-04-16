@@ -125,11 +125,11 @@ func TestGenDHkey(t *testing.T) {
 	fmt.Printf("Bob's Private Key: %v\n", bobPrivateKey)
 
 	// Alice和Bob交换公钥，并计算共享密钥
-	aliceSharedSecret, err := sharedSecret(curve, bobPublicKey, alicePrivateKey)
+	aliceSharedSecret, err := sharedSecret1(curve, bobPublicKey, alicePrivateKey)
 	if err != nil {
 		panic(err)
 	}
-	bobSharedSecret, err := sharedSecret(curve, alicePublicKey, bobPrivateKey)
+	bobSharedSecret, err := sharedSecret1(curve, alicePublicKey, bobPrivateKey)
 	if err != nil {
 		panic(err)
 	}
@@ -138,6 +138,7 @@ func TestGenDHkey(t *testing.T) {
 	if !CompareBytes(aliceSharedSecret, bobSharedSecret) {
 		panic("Shared secrets do not match!")
 	}
+	fmt.Println("len = ", len(aliceSharedSecret))
 
 	//fmt.Printf("Shared Secret: %s\n", aliceSharedSecret.String())
 }
