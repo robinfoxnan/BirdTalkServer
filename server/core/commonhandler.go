@@ -250,6 +250,20 @@ func encryptDataAuto(data []byte, session *Session) ([]byte, error) {
 	case "aes-ctr":
 		return utils.EncryptAES_CTR(data, session.KeyEx.SharedKeyHash)
 	case "twofish":
+		return utils.EncryptTwofish(data, session.KeyEx.SharedKeyHash)
+	}
+
+	return nil, errors.New("not supported encrypt algorithm")
+}
+
+func decryptDataAuto(data []byte, session *Session) ([]byte, error) {
+	encType := strings.ToLower(session.KeyEx.EncType)
+	switch encType {
+	case "chacha20":
+		return utils.DecryptChaCha20(data, session.KeyEx.SharedKeyHash)
+	case "aes-ctr":
+		return utils.DecryptAES_CTR(data, session.KeyEx.SharedKeyHash)
+	case "twofish":
 		return utils.DecryptTwofish(data, session.KeyEx.SharedKeyHash)
 	}
 
@@ -300,6 +314,7 @@ func sendBackExchange2(session *Session) {
 	session.SendMessage(msg)
 }
 
+// 发送验证结果
 func sendBackExchange4(session *Session) {
 
 }
@@ -368,6 +383,26 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 		sendBackExchange2(session)
 
 	} else if stage == 3 {
+		cipher := exMsg.GetTempKey()
+		tmData, err := decryptDataAuto(cipher, session)
+		if err != nil {
+			fmt.Println("check data error", err)
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
+		}
+
+		remoteKeyPrint := exMsg.GetKeyPrint()
+
+		tmStr := string(tmData)
+		tm := strconv.FormatInt(msg.GetTm(), 10)
+		// 如果指纹不一样，或者
+		if remoteKeyPrint != session.KeyEx.SharedKeyPrint || tmStr != tm {
+			fmt.Println("check data error:", " key print or data not same")
+			fmt.Printf("tm = %v, tmstr= %v \n", tm, tmStr)
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: key print or data not same", nil, session)
+		}
+
+		// 保存指纹到redis
+
 		sendBackExchange4(session)
 	} else {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "", nil, session)

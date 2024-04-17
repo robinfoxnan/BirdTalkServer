@@ -34,6 +34,12 @@ function bytesToString(bytes) {
     return decoder.decode(bytes);
 }
 
+function getCurrentTimestamp() {
+    const timestamp = BigInt(Date.now());
+    return timestamp.toString();
+}
+
+
 async function calculateSharedSecret(privateKey, publicKey) {
     // 执行Diffie-Hellman密钥交换以计算共享密钥
     const sharedSecret = await window.crypto.subtle.deriveBits(
@@ -108,6 +114,11 @@ function loadSharedKey() {
 
 function loadSharedKeyPrint() {
     return localStorage.getItem("birdSharedKeyPrint");
+}
+
+function deleteShareKey() {
+    localStorage.removeItem("birdSharedKeyPrint");
+    localStorage.removeItem("birdSharedKey");
 }
 //////////////////////////////////////////////////////////////
 // 将字节数组转换为 int64, 取指纹
@@ -311,11 +322,14 @@ async function calculateMD5(data) {
     }
 };
 
-async function encryptAES(plaintext, key) {
+async function encryptAES_CTR(plaintext, key) {
+    // 生成随机的初始化向量（IV）
+    const iv = crypto.getRandomValues(new Uint8Array(16)); // 假设初始化向量长度为 16 字节
+
     // 使用 CryptoKey 对象创建 AES-CTR 算法对象
     const algorithm = {
         name: "AES-CTR",
-        counter: new Uint8Array(16), // 初始化计数器，必须是 16 字节
+        counter: iv, // 使用生成的随机初始化向量作为计数器
         length: 64 // 可选参数，指定计数器长度，默认为 128
     };
 
@@ -329,7 +343,12 @@ async function encryptAES(plaintext, key) {
     );
 
     // 使用 CryptoKey 对象加密数据
-    const ciphertext = await crypto.subtle.encrypt(algorithm, importedKey, plaintext);
+    const encryptedData = await crypto.subtle.encrypt(algorithm, importedKey, plaintext);
+
+    // 将随机初始化向量和加密后的数据拼接在一起
+    const ciphertext = new Uint8Array(iv.length + encryptedData.byteLength);
+    ciphertext.set(iv, 0); // 将初始化向量放在密文前面
+    ciphertext.set(new Uint8Array(encryptedData), iv.length); // 将加密后的数据放在初始化向量后面
 
     return ciphertext;
 }
@@ -372,6 +391,8 @@ class WsClient {
         this.closeCallback = closeCallback; // 连接关闭回调函数
         this.errorCallback = errorCallback; // 连接错误回调函数
         this.progressCallback = progressCallback;
+        this.shareKeyPrint = "";
+        this.shareKey = null;
     }
 
     // 连接 WebSocket
@@ -469,27 +490,10 @@ class WsClient {
         var str = "";
         switch (msgType) {
             case proto.model.ComMsgType.MSGTHELLO:
-                // 如果是 Hello 消息
-                const helloMsg = msg.getPlainmsg().getHello();
-
-                // 将 Hello 消息内容显示在页面上
-
-
-                str += "Received Hello message:\n" +
-                    "Stage: " + helloMsg.getStage() + "\n" +
-                    "Server Version: " + helloMsg.getVersion() + "\n" +
-                    "Platform: " + helloMsg.getPlatform() + "\n";
-                this.progressCallback(str);
+                this.onHello(msg);
                 break;
             case proto.model.ComMsgType.MSGTERROR:
-                // 如果是 Error 消息
-                var errorMsg = msg.getPlainmsg().getErrormsg();
-                // 将 Error 消息内容显示在页面上
-                str += "Received Error message:\n" +
-                    "Code: " + errorMsg.getCode() + "\n" +
-                    "Detail: " + errorMsg.getDetail() + "\n";
-               //this.progressCallback(str);
-                this.errorCallback(str)
+                this.onReplyError(msg);
                 break;
             case proto.model.ComMsgType.MSGTKEYEXCHANGE:
                 this.onKeyExchangeMsg(msg);
@@ -511,6 +515,32 @@ class WsClient {
         this.sendWs(binMsg);
     }
 
+    // 服务器应答错误
+    onReplyError(msg){
+        // 如果是 Error 消息
+        let str = "";
+        const errorMsg = msg.getPlainmsg().getErrormsg();
+        // 将 Error 消息内容显示在页面上
+        str += "Received Error message:\n" +
+            "Code: " + errorMsg.getCode() + "\n" +
+            "Detail: " + errorMsg.getDetail() + "\n";
+        //this.progressCallback(str);
+        this.errorCallback(str)
+    }
+    // 收到消息应答
+    async onHello(msg){
+        // 如果是 Hello 消息
+        const helloMsg = msg.getPlainmsg().getHello();
+
+        // 将 Hello 消息内容显示在页面上
+        let str = "";
+
+        str += "Received Hello message:\n" +
+            "Stage: " + helloMsg.getStage() + "\n" +
+            "Server Version: " + helloMsg.getVersion() + "\n" +
+            "Platform: " + helloMsg.getPlatform() + "\n";
+        this.progressCallback(str);
+    }
 
     // 通用消息
     async onKeyExchangeMsg(msg){
@@ -543,9 +573,11 @@ class WsClient {
             if (keyPrint === remoteKeyPrint){
                 if (checkDataStr === tm){
                     this.progressCallback("calculate share key ok, check data ok");
+                    this.shareKey = sharedSecretLocal;
+                    this.shareKeyPrint = keyPrint;
                     saveSharedKey(sharedSecretLocal);  // 保存共享密钥
                     saveShareKeyPrint(keyPrint);
-                    this.sendExchange2();              // 发送验证结果
+                    this.sendExchange3();              // 发送验证结果
 
                 }else{
                     this.progressCallback("calculate share key ok, check data fail");
@@ -558,11 +590,15 @@ class WsClient {
                 this.errorCallback("calculate share key error!!");
             }
         }else if (stage === 4){
+            // 等待服务器的应答
+            const status = keyMsg.getStatus();
 
+            if (status === "needlogin"){
+                this.progressCallback("server said that share-key is ok, but need login first.");
+            }else if (status === "waitdata") {
+                this.progressCallback("server said that share-key is ok, login is not needed.");
+            }
         }
-
-
-
 
     }
 
@@ -585,6 +621,8 @@ class WsClient {
         msg.setMsgtype(proto.model.ComMsgType.MSGTHELLO);
         msg.setVersion(1);
         msg.setPlainmsg(plainMsg);
+        const timestamp = getCurrentTimestamp();
+        msg.setTm(timestamp);
 
         this.sendObject(msg);
     }
@@ -617,20 +655,47 @@ class WsClient {
         msg.setMsgtype(proto.model.ComMsgType.MSGTKEYEXCHANGE);
         msg.setVersion(1);
         msg.setPlainmsg(plainMsg);
+        const timestamp = getCurrentTimestamp();
+        msg.setTm(timestamp);
 
         this.sendObject(msg);
     }
 
-    // 秘钥交换阶段2：把自己的计算结果告诉服务器，也将时间戳加密，告诉服务器，让服务器验证；
-    sendExchange2(){
+    // 秘钥交换阶段3：把自己的计算结果告诉服务器，也将时间戳加密，告诉服务器，让服务器验证；
+    async sendExchange3(){
 
+        const tmStr = getCurrentTimestamp();
+        console.log("时间戳=", tmStr);
+        const tmData = stringToBytes(tmStr);
+        const checkData = encryptAES_CTR(tmData, this.shareKey);
+
+
+        const exMsg = new proto.model.MsgKeyExchange();
+        exMsg.setKeyprint(this.shareKeyPrint);    // 计算过的秘钥
+        exMsg.setStage(3);       // 第3次握手
+        exMsg.setTempkey(checkData);     // 不使用RSA加密,也就没有临时秘钥
+        exMsg.setEnctype("AES-CTR");    //
+        exMsg.setStatus("ready");
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setKeyex(exMsg);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTKEYEXCHANGE);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(tmStr);
+
+        this.sendObject(msg);
     }
 
     // 2
     sendHeart(){
         const heart = new proto.model.MsgHeartBeat();
         heart.setUserid(1);
-        const timestamp = new Date().getTime();
+        const timestamp = getCurrentTimestamp();
         heart.setTm(timestamp);
 
 

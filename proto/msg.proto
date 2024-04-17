@@ -237,12 +237,13 @@ enum ErrorMsgType{
   ErrTWrongPwd = 4;   // 密码错误
   ErrTWrongCode = 5;  // 验证码错误
   ErrTRsaPrint = 6;   // 公钥错误
-  ErrTTempkey = 7;    // 临时秘钥设置错误
+  ErrTTempKey = 7;    // 临时秘钥设置错误
   ErrTEncType = 8;    // 加密算法不支持
   ErrTServerInside = 9;
   ErrTStage = 10;   // 阶段字段设置错误
   ErrTPublicKey = 11; // 65 字节
-
+  ErrTKeyConflict = 12; // 指纹碰撞
+  ErrTCheckData = 13;   // 解密后验证秘钥
 }
 
 message MsgError{

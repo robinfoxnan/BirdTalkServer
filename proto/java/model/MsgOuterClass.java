@@ -935,9 +935,9 @@ public final class MsgOuterClass {
      * 临时秘钥设置错误
      * </pre>
      *
-     * <code>ErrTTempkey = 7;</code>
+     * <code>ErrTTempKey = 7;</code>
      */
-    ErrTTempkey(7),
+    ErrTTempKey(7),
     /**
      * <pre>
      * 加密算法不支持
@@ -966,6 +966,22 @@ public final class MsgOuterClass {
      * <code>ErrTPublicKey = 11;</code>
      */
     ErrTPublicKey(11),
+    /**
+     * <pre>
+     * 指纹碰撞
+     * </pre>
+     *
+     * <code>ErrTKeyConflict = 12;</code>
+     */
+    ErrTKeyConflict(12),
+    /**
+     * <pre>
+     * 解密后验证秘钥
+     * </pre>
+     *
+     * <code>ErrTCheckData = 13;</code>
+     */
+    ErrTCheckData(13),
     UNRECOGNIZED(-1),
     ;
 
@@ -1014,9 +1030,9 @@ public final class MsgOuterClass {
      * 临时秘钥设置错误
      * </pre>
      *
-     * <code>ErrTTempkey = 7;</code>
+     * <code>ErrTTempKey = 7;</code>
      */
-    public static final int ErrTTempkey_VALUE = 7;
+    public static final int ErrTTempKey_VALUE = 7;
     /**
      * <pre>
      * 加密算法不支持
@@ -1045,6 +1061,22 @@ public final class MsgOuterClass {
      * <code>ErrTPublicKey = 11;</code>
      */
     public static final int ErrTPublicKey_VALUE = 11;
+    /**
+     * <pre>
+     * 指纹碰撞
+     * </pre>
+     *
+     * <code>ErrTKeyConflict = 12;</code>
+     */
+    public static final int ErrTKeyConflict_VALUE = 12;
+    /**
+     * <pre>
+     * 解密后验证秘钥
+     * </pre>
+     *
+     * <code>ErrTCheckData = 13;</code>
+     */
+    public static final int ErrTCheckData_VALUE = 13;
 
 
     public final int getNumber() {
@@ -1078,11 +1110,13 @@ public final class MsgOuterClass {
         case 4: return ErrTWrongPwd;
         case 5: return ErrTWrongCode;
         case 6: return ErrTRsaPrint;
-        case 7: return ErrTTempkey;
+        case 7: return ErrTTempKey;
         case 8: return ErrTEncType;
         case 9: return ErrTServerInside;
         case 10: return ErrTStage;
         case 11: return ErrTPublicKey;
+        case 12: return ErrTKeyConflict;
+        case 13: return ErrTCheckData;
         default: return null;
       }
     }
@@ -27066,12 +27100,13 @@ java.lang.String defaultValue);
       "teChatType\020\000\022\021\n\rGroupChatType\020\001*V\n\rQuery" +
       "DataType\022\025\n\021QueryDataTypeData\020\000\022\026\n\022Query" +
       "DataTypeReply\020\001\022\026\n\022QueryDataTypeByTag\020\002*" +
-      "\342\001\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
+      "\212\002\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
       "rsion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRedirec" +
       "t\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCode\020\005" +
-      "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempkey\020\007\022\017\n\013E" +
+      "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013E" +
       "rrTEncType\020\010\022\024\n\020ErrTServerInside\020\t\022\r\n\tEr" +
-      "rTStage\020\n\022\021\n\rErrTPublicKey\020\013*\366\002\n\nComMsgT" +
+      "rTStage\020\n\022\021\n\rErrTPublicKey\020\013\022\023\n\017ErrTKeyC" +
+      "onflict\020\014\022\021\n\rErrTCheckData\020\r*\366\002\n\nComMsgT" +
       "ype\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001\022\021\n\rMs" +
       "gTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgTKeyE" +
       "xchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgTChatRe" +

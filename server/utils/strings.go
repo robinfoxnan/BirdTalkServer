@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/base64"
 	"encoding/binary"
 	"encoding/hex"
 	"errors"
@@ -60,4 +61,10 @@ func BytesToInt64(data []byte) (int64, error) {
 func Int64ToInt16(i int64) int16 {
 	module := math.MaxInt16
 	return int16(i % int64(module))
+}
+
+func DecodeBase64(str string) ([]byte, error) {
+	// 解码base64字符串为字节切片
+	decodedBytes, err := base64.StdEncoding.DecodeString(str)
+	return decodedBytes, err
 }
