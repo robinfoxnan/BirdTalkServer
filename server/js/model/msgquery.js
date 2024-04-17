@@ -73,12 +73,12 @@ proto.model.MsgQuery.prototype.toObject = function(opt_includeInstance) {
  */
 proto.model.MsgQuery.toObject = function(includeInstance, msg) {
   var f, obj = {
-    userid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    groupid: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    bigid: jspb.Message.getFieldWithDefault(msg, 3, 0),
-    littleid: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    userid: jspb.Message.getFieldWithDefault(msg, 1, "0"),
+    groupid: jspb.Message.getFieldWithDefault(msg, 2, "0"),
+    bigid: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+    littleid: jspb.Message.getFieldWithDefault(msg, 4, "0"),
     syntype: jspb.Message.getFieldWithDefault(msg, 5, 0),
-    tm: jspb.Message.getFieldWithDefault(msg, 6, 0),
+    tm: jspb.Message.getFieldWithDefault(msg, 6, "0"),
     chattype: jspb.Message.getFieldWithDefault(msg, 7, 0),
     querytype: jspb.Message.getFieldWithDefault(msg, 8, 0),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
@@ -119,19 +119,19 @@ proto.model.MsgQuery.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setUserid(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setGroupid(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setBigid(value);
       break;
     case 4:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setLittleid(value);
       break;
     case 5:
@@ -139,7 +139,7 @@ proto.model.MsgQuery.deserializeBinaryFromReader = function(msg, reader) {
       msg.setSyntype(value);
       break;
     case 6:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setTm(value);
       break;
     case 7:
@@ -186,29 +186,29 @@ proto.model.MsgQuery.prototype.serializeBinary = function() {
 proto.model.MsgQuery.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getUserid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       1,
       f
     );
   }
   f = message.getGroupid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       2,
       f
     );
   }
   f = message.getBigid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       3,
       f
     );
   }
   f = message.getLittleid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       4,
       f
     );
@@ -221,8 +221,8 @@ proto.model.MsgQuery.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getTm();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       6,
       f
     );
@@ -250,73 +250,73 @@ proto.model.MsgQuery.serializeBinaryToWriter = function(message, writer) {
 
 /**
  * optional int64 userId = 1;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgQuery.prototype.getUserid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgQuery} returns this
  */
 proto.model.MsgQuery.prototype.setUserid = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringIntField(this, 1, value);
 };
 
 
 /**
  * optional int64 groupId = 2;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgQuery.prototype.getGroupid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgQuery} returns this
  */
 proto.model.MsgQuery.prototype.setGroupid = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 
 /**
  * optional int64 bigId = 3;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgQuery.prototype.getBigid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgQuery} returns this
  */
 proto.model.MsgQuery.prototype.setBigid = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
 /**
  * optional int64 littleId = 4;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgQuery.prototype.getLittleid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgQuery} returns this
  */
 proto.model.MsgQuery.prototype.setLittleid = function(value) {
-  return jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3StringIntField(this, 4, value);
 };
 
 
@@ -340,19 +340,19 @@ proto.model.MsgQuery.prototype.setSyntype = function(value) {
 
 /**
  * optional int64 tm = 6;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgQuery.prototype.getTm = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgQuery} returns this
  */
 proto.model.MsgQuery.prototype.setTm = function(value) {
-  return jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setProto3StringIntField(this, 6, value);
 };
 
 

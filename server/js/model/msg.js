@@ -100,8 +100,8 @@ proto.model.Msg.prototype.toObject = function(opt_includeInstance) {
 proto.model.Msg.toObject = function(includeInstance, msg) {
   var f, obj = {
     version: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    keyprint: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    tm: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    keyprint: jspb.Message.getFieldWithDefault(msg, 2, "0"),
+    tm: jspb.Message.getFieldWithDefault(msg, 3, "0"),
     msgtype: jspb.Message.getFieldWithDefault(msg, 4, 0),
     subtype: jspb.Message.getFieldWithDefault(msg, 5, 0),
     cipher: msg.getCipher_asB64(),
@@ -147,11 +147,11 @@ proto.model.Msg.deserializeBinaryFromReader = function(msg, reader) {
       msg.setVersion(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setKeyprint(value);
       break;
     case 3:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setTm(value);
       break;
     case 4:
@@ -208,15 +208,15 @@ proto.model.Msg.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getKeyprint();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       2,
       f
     );
   }
   f = message.getTm();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       3,
       f
     );
@@ -273,37 +273,37 @@ proto.model.Msg.prototype.setVersion = function(value) {
 
 /**
  * optional int64 keyPrint = 2;
- * @return {number}
+ * @return {string}
  */
 proto.model.Msg.prototype.getKeyprint = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.Msg} returns this
  */
 proto.model.Msg.prototype.setKeyprint = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 
 /**
  * optional int64 tm = 3;
- * @return {number}
+ * @return {string}
  */
 proto.model.Msg.prototype.getTm = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.Msg} returns this
  */
 proto.model.Msg.prototype.setTm = function(value) {
-  return jspb.Message.setProto3IntField(this, 3, value);
+  return jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 

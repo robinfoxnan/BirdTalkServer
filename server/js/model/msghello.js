@@ -75,8 +75,8 @@ proto.model.MsgHello.toObject = function(includeInstance, msg) {
     version: jspb.Message.getFieldWithDefault(msg, 2, ""),
     platform: jspb.Message.getFieldWithDefault(msg, 3, ""),
     stage: jspb.Message.getFieldWithDefault(msg, 5, ""),
-    keyprint: jspb.Message.getFieldWithDefault(msg, 6, 0),
-    rsaprint: jspb.Message.getFieldWithDefault(msg, 7, 0),
+    keyprint: jspb.Message.getFieldWithDefault(msg, 6, "0"),
+    rsaprint: jspb.Message.getFieldWithDefault(msg, 7, "0"),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -131,11 +131,11 @@ proto.model.MsgHello.deserializeBinaryFromReader = function(msg, reader) {
       msg.setStage(value);
       break;
     case 6:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setKeyprint(value);
       break;
     case 7:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setRsaprint(value);
       break;
     case 8:
@@ -202,15 +202,15 @@ proto.model.MsgHello.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getKeyprint();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       6,
       f
     );
   }
   f = message.getRsaprint();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       7,
       f
     );
@@ -296,37 +296,37 @@ proto.model.MsgHello.prototype.setStage = function(value) {
 
 /**
  * optional int64 keyPrint = 6;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgHello.prototype.getKeyprint = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgHello} returns this
  */
 proto.model.MsgHello.prototype.setKeyprint = function(value) {
-  return jspb.Message.setProto3IntField(this, 6, value);
+  return jspb.Message.setProto3StringIntField(this, 6, value);
 };
 
 
 /**
  * optional int64 rsaPrint = 7;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgHello.prototype.getRsaprint = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgHello} returns this
  */
 proto.model.MsgHello.prototype.setRsaprint = function(value) {
-  return jspb.Message.setProto3IntField(this, 7, value);
+  return jspb.Message.setProto3StringIntField(this, 7, value);
 };
 
 

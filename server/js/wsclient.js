@@ -1,3 +1,366 @@
+// 生成密钥对，并保存到全局变量中
+async function createDHPair() {
+    // 生成新的ECDH密钥对
+    const keyPair = await window.crypto.subtle.generateKey(
+        {
+            name: "ECDH",
+            namedCurve: "P-256"
+        },
+        true, // 允许导出私钥
+        ["deriveKey", "deriveBits"] // 导出私钥的权限
+    );
+    return keyPair;
+};
+
+function bufferToBase64(buffer) {
+    const binary = String.fromCharCode.apply(null, new Uint8Array(buffer));
+    return btoa(binary);
+}
+
+async function getPEMPublicKey(keyPair) {
+    const publicKeyBuffer = await crypto.subtle.exportKey("spki", keyPair.publicKey);
+    const publicKeyBase64 = bufferToBase64(publicKeyBuffer);
+    const pemKey = `-----BEGIN PUBLIC KEY-----\n${publicKeyBase64}\n-----END PUBLIC KEY-----\n`;
+    return pemKey;
+};
+
+function stringToBytes(str) {
+    const encoder = new TextEncoder();
+    return encoder.encode(str);
+};
+
+function bytesToString(bytes) {
+    const decoder = new TextDecoder();
+    return decoder.decode(bytes);
+}
+
+async function calculateSharedSecret(privateKey, publicKey) {
+    // 执行Diffie-Hellman密钥交换以计算共享密钥
+    const sharedSecret = await window.crypto.subtle.deriveBits(
+        {
+            name: "ECDH",
+            namedCurve: "P-256",
+            public: publicKey // 使用对方的公钥
+        },
+        privateKey, // 使用自己的私钥
+        256,
+    );
+    return new Uint8Array(sharedSecret);
+}
+
+function stringToArrayBuffer(str) {
+    const encoder = new TextEncoder();
+    return encoder.encode(str);
+}
+
+async function importPublicKey(pemKey) {
+
+    // 去除 PEM 头尾，并将字符串解码为 ArrayBuffer
+    const pemContents = pemKey.replace(/-----BEGIN PUBLIC KEY-----/, '').replace(/-----END PUBLIC KEY-----/, '');
+    const keyStr = pemContents.trim();
+    console.log("remote der key:", keyStr);
+    const pemArrayBuffer = Uint8Array.from(atob(keyStr), c => c.charCodeAt(0));
+    console.log("remote der key:", pemArrayBuffer)
+
+    // 将原始公钥字节数组导入为 CryptoKey 对象
+    const publicKey = await crypto.subtle.importKey(
+        "spki", // der
+        pemArrayBuffer, // 原始公钥字节数组
+        {
+            name: "ECDH", // 算法名称
+            namedCurve: "P-256" // 曲线名称
+        },
+        true, // 是否为公钥
+        [] // 公钥的用途
+    );
+    return publicKey;
+}
+
+// 保存共享密钥到本地存储
+function saveSharedKey(sharedKey) {
+    // 将 Uint8Array 转换为字符串
+    const sharedKeyString = sharedKey.join(',');
+
+    // 存储共享密钥字符串到本地存储
+    localStorage.setItem("birdSharedKey", sharedKeyString);
+}
+
+// 保存字符串
+function saveShareKeyPrint(print){
+    localStorage.setItem("birdSharedKeyPrint", print);
+}
+
+// 从本地存储加载共享密钥
+function loadSharedKey() {
+    // 从本地存储中获取共享密钥字符串
+    const sharedKeyString = localStorage.getItem("birdSharedKey");
+
+    if (sharedKeyString) {
+        // 将共享密钥字符串转换为 Uint8Array
+        const sharedKeyArray = sharedKeyString.split(',').map(Number);
+        const sharedKey = new Uint8Array(sharedKeyArray);
+        return sharedKey;
+    } else {
+        // 如果本地存储中没有共享密钥，则返回 null
+        return null;
+    }
+}
+
+function loadSharedKeyPrint() {
+    return localStorage.getItem("birdSharedKeyPrint");
+}
+//////////////////////////////////////////////////////////////
+// 将字节数组转换为 int64, 取指纹
+function bytesToInt64(data) {
+    // 检查字节数组长度是否足够
+    if (data.length < 8) {
+        throw new Error("Insufficient bytes to convert to int64");
+    }
+
+    // 将字节数组转换为 int64
+    const view = new DataView(new ArrayBuffer(8));
+    for (let i = 0; i < 8; i++) {
+        view.setUint8(i, data[i]);
+    }
+    const int64Value = view.getBigInt64(0, true); // 使用 little-endian 格式
+
+    return int64Value.toString();
+}
+
+async function encryptString(str, key){
+    // 将文本编码为 ArrayBuffer
+    const dataBuffer = new TextEncoder().encode(str);
+    return encryptBytes(dataBuffer, key)
+}
+
+async function encryptBytes(data, key) {
+    try {
+        // 生成随机的初始化向量（IV）
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+
+        // 使用 CryptoKey 对象创建 ChaCha20 算法对象
+        const algorithm = { name: "AES-GCM", iv: iv };
+
+        // 使用 CryptoKey 对象加密数据
+        const encryptedData = await crypto.subtle.encrypt(algorithm, key, dataBuffer);
+
+        // 将 IV 和加密后的数据拼接在一起
+        const result = new Uint8Array(iv.length + encryptedData.byteLength);
+        result.set(iv, 0);
+        result.set(new Uint8Array(encryptedData), iv.length);
+
+        // 返回拼接后的数据
+        return result;
+    } catch (error) {
+        console.error("Encryption failed:", error);
+        throw error;
+    }
+};
+
+// 加密整数
+async function encryptInt64(int64Value, key) {
+    // 将 int64 值转换为字节数组
+    const dataBuffer = new ArrayBuffer(8); // 64位整数字节长度为8
+    const view = new DataView(dataBuffer);
+    view.setBigInt64(0, BigInt(int64Value));
+    return encryptBytes(dataBuffer, key);
+};
+
+// 解密整数
+async function decryptInt64AES(encryptedData, key) {
+    try {
+        // 使用 CryptoKey 对象创建 AES-GCM 算法对象
+        const algorithm = { name: "AES-GCM", iv: encryptedData.slice(0, 12) };
+
+        // 使用 CryptoKey 对象解密数据
+        const decryptedData = await crypto.subtle.decrypt(algorithm, key, encryptedData.slice(12));
+
+        // 将解密后的字节数组转换回 int64 值
+        const view = new DataView(decryptedData);
+        const decryptedInt64Value = view.getBigInt64(0);
+
+        // 返回解密后的 int64 值
+        return decryptedInt64Value.toString();
+    } catch (error) {
+        console.error("Decryption failed:", error);
+        throw error;
+    }
+};
+
+async function decryptInt64(encryptedData, key) {
+    try {
+        // 使用 CryptoKey 对象创建 ChaCha20 算法对象
+        const algorithm = {
+            name: "ChaCha20",
+            iv: encryptedData.slice(0, 12) // ChaCha20 的初始向量长度为 12 字节
+        };
+
+        // 将原始密钥导入为 CryptoKey 对象
+        // 将原始密钥导入为 CryptoKey 对象
+        const importedKey = await crypto.subtle.importKey(
+            "raw", // 密钥格式为原始数据
+            key,   // 原始密钥字节数组
+            { name: "ChaCha20" }, // 使用 ChaCha20 算法
+            true, // 是否允许导出密钥
+            ["decrypt"] // 密钥用途为解密
+        );
+
+        // 使用 CryptoKey 对象解密数据
+        const decryptedData = await crypto.subtle.decrypt(algorithm, importedKey, encryptedData.slice(12));
+
+        // 将解密后的字节数组转换为 int64 值
+        const view = new DataView(decryptedData);
+        const decryptedInt64Value = view.getBigInt64(0);
+
+        // 返回解密后的 int64 值
+        return decryptedInt64Value.toString();
+    } catch (error) {
+        console.error("Decryption failed:", error);
+        throw error;
+    }
+}
+
+// 将ArrayBuffer转换为Base64字符串
+function arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+        binary += String.fromCharCode(bytes[i]);
+    }
+    return window.btoa(binary);
+};
+
+
+// 预计算的CRC32表
+const crcTable = (function () {
+    let table = new Array(256);
+    let c;
+    for (let n = 0; n < 256; n++) {
+        c = n;
+        for (let k = 0; k < 8; k++) {
+            c = ((c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1));
+        }
+        table[n] = c;
+    }
+    return table;
+})();
+
+function crc32(input) {
+    let crc = -1;
+    for (let i = 0; i < input.length; i++) {
+        const byte = input[i];
+        crc = (crc >>> 8) ^ crcTable[(crc ^ byte) & 0xFF];
+    }
+    // 返回无符号32位整数
+    return (crc ^ -1) >>> 0;
+}
+
+
+
+// 计算 SHA256 哈希
+async function calculateSHA256(data) {
+    try {
+        // 将输入数据转换为 ArrayBuffer
+        const buffer = new TextEncoder().encode(data);
+
+        // 计算 SHA-256 哈希
+        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+
+        // 将 ArrayBuffer 转换为十六进制字符串
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+        return hashHex;
+    } catch (error) {
+        console.error('SHA256 calculation error:', error);
+        throw error;
+    }
+}
+
+// Uint8Array
+async function calculateSHA256Raw(data) {
+    try {
+        // 计算 SHA-256 哈希
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        return hashBuffer;
+    } catch (error) {
+        console.error('SHA256 calculation error:', error);
+        throw error;
+    }
+}
+
+
+// 计算 MD5 哈希
+async function calculateMD5(data) {
+    try {
+        // 将输入数据转换为 ArrayBuffer
+        const buffer = new TextEncoder().encode(data);
+
+        // 计算 MD5 哈希
+        const hashBuffer = await crypto.subtle.digest('MD5', buffer);
+
+        // 将 ArrayBuffer 转换为十六进制字符串
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+
+        return hashHex;
+    } catch (error) {
+        console.error('MD5 calculation error:', error);
+        throw error;
+    }
+};
+
+async function encryptAES(plaintext, key) {
+    // 使用 CryptoKey 对象创建 AES-CTR 算法对象
+    const algorithm = {
+        name: "AES-CTR",
+        counter: new Uint8Array(16), // 初始化计数器，必须是 16 字节
+        length: 64 // 可选参数，指定计数器长度，默认为 128
+    };
+
+    // 将原始密钥导入为 CryptoKey 对象
+    const importedKey = await crypto.subtle.importKey(
+        "raw", // 密钥格式为原始数据
+        key,   // 原始密钥字节数组
+        { name: "AES-CTR", length: 256 }, // AES 密钥长度为 256 位
+        true, // 是否允许导出密钥
+        ["encrypt", "decrypt"] // 密钥用途为加密和解密
+    );
+
+    // 使用 CryptoKey 对象加密数据
+    const ciphertext = await crypto.subtle.encrypt(algorithm, importedKey, plaintext);
+
+    return ciphertext;
+}
+
+async function decryptAES_CTR(ciphertext, key) {
+    // 从密文中提取初始化向量（IV）
+    const iv = ciphertext.slice(0, 16); // 假设初始化向量长度为 16 字节
+
+    // 使用 CryptoKey 对象创建 AES-CTR 算法对象
+    const algorithm = {
+        name: "AES-CTR",
+        counter: iv, // 使用提取的初始化向量作为计数器
+        length: 64 // 可选参数，指定计数器长度，默认为 128
+    };
+
+    // 将原始密钥导入为 CryptoKey 对象
+    const importedKey = await crypto.subtle.importKey(
+        "raw", // 密钥格式为原始数据
+        key,   // 原始密钥字节数组
+        { name: "AES-CTR", length: 256 }, // AES 密钥长度为 256 位
+        true, // 是否允许导出密钥
+        ["encrypt", "decrypt"] // 密钥用途为加密和解密
+    );
+
+    // 使用 CryptoKey 对象解密数据
+    const plaintext = await crypto.subtle.decrypt(algorithm, importedKey, ciphertext.slice(16)); // 去掉头部的 IV
+
+    return plaintext;
+}
+///////////////////////////////////////////////////////////////////////////////////////
+//
 class WsClient {
     constructor(name, url, messageCallback, openCallback, closeCallback, errorCallback, progressCallback) {
         this.name = name;
@@ -129,6 +492,7 @@ class WsClient {
                 this.errorCallback(str)
                 break;
             case proto.model.ComMsgType.MSGTKEYEXCHANGE:
+                this.onKeyExchangeMsg(msg);
                 break;
 
             default:
@@ -145,6 +509,61 @@ class WsClient {
         //var jsonStr =  JSON.stringify(msg);
         //showMessage(jsonStr);
         this.sendWs(binMsg);
+    }
+
+
+    // 通用消息
+    async onKeyExchangeMsg(msg){
+        const tm  = msg.getTm();
+        console.log("tmstr=", tm);
+
+        const keyMsg = msg.getPlainmsg().getKeyex();
+        const stage = keyMsg.getStage();
+        if (stage === 2){
+            const remoteKeyPrint = keyMsg.getKeyprint();
+            console.log("remote key print=", remoteKeyPrint)
+
+            const remotePublicKeyData = keyMsg.getPubkey();
+            const remotePublicKeyStr = bytesToString(remotePublicKeyData);
+            console.log("remote public key=", remotePublicKeyStr)
+
+            const remotePublicKey = await importPublicKey(remotePublicKeyStr);
+            console.log("remote public key=", remotePublicKey)
+
+            const sharedSecretLocal = await calculateSharedSecret(this.keyPairEx.privateKey, remotePublicKey);
+            console.log("local share key=", sharedSecretLocal)
+
+            const keyPrint = bytesToInt64(sharedSecretLocal);
+            console.log("local key print is ", keyPrint)
+
+            const checkData = keyMsg.getTempkey();
+            const checkDataPlain = await decryptAES_CTR(checkData, sharedSecretLocal);
+            const checkDataStr = bytesToString(checkDataPlain);
+            console.log("decrypt data tm=", checkDataStr);
+            if (keyPrint === remoteKeyPrint){
+                if (checkDataStr === tm){
+                    this.progressCallback("calculate share key ok, check data ok");
+                    saveSharedKey(sharedSecretLocal);  // 保存共享密钥
+                    saveShareKeyPrint(keyPrint);
+                    this.sendExchange2();              // 发送验证结果
+
+                }else{
+                    this.progressCallback("calculate share key ok, check data fail");
+                    this.errorCallback("calculate share key error!!");
+                }
+
+            }else{
+                this.progressCallback("calculate share key error!!");
+                // 发送错误应答；
+                this.errorCallback("calculate share key error!!");
+            }
+        }else if (stage === 4){
+
+        }
+
+
+
+
     }
 
     // 1.0 发送hello包
@@ -173,16 +592,21 @@ class WsClient {
     // 秘钥交换阶段1: 生成公私钥对，发送公钥过去
     async sendExchange1(){
         this.keyPairEx = await createDHPair();
-        const publicKeyRaw = await getPublicKeyRaw(this.keyPairEx);
-        console.log("public key:", publicKey);
+        console.log("local key pair:", this.keyPairEx );
+
+        const publicKey = await getPEMPublicKey(this.keyPairEx);
+        console.log("local public key:", publicKey);
+
+        const publicKeyRawData = stringToBytes(publicKey);
+        console.log("local public key data:", publicKeyRawData);
 
         const exMsg = new proto.model.MsgKeyExchange();
-        exMsg.setKeyprint(0);    // 不使用临时秘钥，也没有旧秘钥
-        exMsg.setRsaprint(0);    // 不使用RSA加密
+        exMsg.setKeyprint("0");    // 不使用临时秘钥，也没有旧秘钥
+        exMsg.setRsaprint("0");    // 不使用RSA加密
         exMsg.setStage(1);       // 第一次握手
-        exMsg.setTempkey(0);     // 不使用RSA加密,也就没有临时秘钥
-        exMsg.setPubkey(new Uint8Array(publicKeyRaw)); // 公钥的明文，这里不加密
-        exMsg.setEnctype("chacha20");    // status和detail不设置
+        //exMsg.setTempkey(null);     // 不使用RSA加密,也就没有临时秘钥
+        exMsg.setPubkey(publicKeyRawData); // 公钥的明文，这里不加密
+        exMsg.setEnctype("AES-CTR");    // status和detail不设置
 
 
         const plainMsg = new proto.model.MsgPlain();
@@ -197,7 +621,7 @@ class WsClient {
         this.sendObject(msg);
     }
 
-    // 秘钥交换阶段2
+    // 秘钥交换阶段2：把自己的计算结果告诉服务器，也将时间戳加密，告诉服务器，让服务器验证；
     sendExchange2(){
 
     }

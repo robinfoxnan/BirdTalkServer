@@ -267,7 +267,7 @@ func (sess *Session) ReadLoop() {
 	// 设置等待应答的pong
 	sess.ws.SetPongHandler(func(string) error {
 		sess.ws.SetReadDeadline(time.Now().Add(pongWait))
-		fmt.Println("recv a pong messsage from remote, sid=", sess.Sid)
+		//fmt.Println("recv a pong messsage from remote, sid=", sess.Sid)
 		return nil
 	})
 

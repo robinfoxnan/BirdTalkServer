@@ -71,14 +71,14 @@ proto.model.MsgChatReply.prototype.toObject = function(opt_includeInstance) {
  */
 proto.model.MsgChatReply.toObject = function(includeInstance, msg) {
   var f, obj = {
-    msgid: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    sendid: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    msgid: jspb.Message.getFieldWithDefault(msg, 1, "0"),
+    sendid: jspb.Message.getFieldWithDefault(msg, 2, "0"),
     sendok: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
     recvok: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
     readok: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
     extramsg: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    userid: jspb.Message.getFieldWithDefault(msg, 7, 0),
-    fromid: jspb.Message.getFieldWithDefault(msg, 8, 0),
+    userid: jspb.Message.getFieldWithDefault(msg, 7, "0"),
+    fromid: jspb.Message.getFieldWithDefault(msg, 8, "0"),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -117,11 +117,11 @@ proto.model.MsgChatReply.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setMsgid(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setSendid(value);
       break;
     case 3:
@@ -141,11 +141,11 @@ proto.model.MsgChatReply.deserializeBinaryFromReader = function(msg, reader) {
       msg.setExtramsg(value);
       break;
     case 7:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setUserid(value);
       break;
     case 8:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setFromid(value);
       break;
     case 30:
@@ -184,15 +184,15 @@ proto.model.MsgChatReply.prototype.serializeBinary = function() {
 proto.model.MsgChatReply.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getMsgid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       1,
       f
     );
   }
   f = message.getSendid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       2,
       f
     );
@@ -226,15 +226,15 @@ proto.model.MsgChatReply.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getUserid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       7,
       f
     );
   }
   f = message.getFromid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       8,
       f
     );
@@ -248,37 +248,37 @@ proto.model.MsgChatReply.serializeBinaryToWriter = function(message, writer) {
 
 /**
  * optional int64 msgId = 1;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getMsgid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setMsgid = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringIntField(this, 1, value);
 };
 
 
 /**
  * optional int64 sendId = 2;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getSendid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setSendid = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 
@@ -356,37 +356,37 @@ proto.model.MsgChatReply.prototype.setExtramsg = function(value) {
 
 /**
  * optional int64 userId = 7;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getUserid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setUserid = function(value) {
-  return jspb.Message.setProto3IntField(this, 7, value);
+  return jspb.Message.setProto3StringIntField(this, 7, value);
 };
 
 
 /**
  * optional int64 fromId = 8;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getFromid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 8, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setFromid = function(value) {
-  return jspb.Message.setProto3IntField(this, 8, value);
+  return jspb.Message.setProto3StringIntField(this, 8, value);
 };
 
 

@@ -70,8 +70,8 @@ proto.model.MsgHeartBeat.prototype.toObject = function(opt_includeInstance) {
  */
 proto.model.MsgHeartBeat.toObject = function(includeInstance, msg) {
   var f, obj = {
-    tm: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    userid: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    tm: jspb.Message.getFieldWithDefault(msg, 1, "0"),
+    userid: jspb.Message.getFieldWithDefault(msg, 2, "0")
   };
 
   if (includeInstance) {
@@ -109,11 +109,11 @@ proto.model.MsgHeartBeat.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setTm(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setUserid(value);
       break;
     default:
@@ -146,15 +146,15 @@ proto.model.MsgHeartBeat.prototype.serializeBinary = function() {
 proto.model.MsgHeartBeat.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getTm();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       1,
       f
     );
   }
   f = message.getUserid();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       2,
       f
     );
@@ -164,37 +164,37 @@ proto.model.MsgHeartBeat.serializeBinaryToWriter = function(message, writer) {
 
 /**
  * optional int64 tm = 1;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgHeartBeat.prototype.getTm = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgHeartBeat} returns this
  */
 proto.model.MsgHeartBeat.prototype.setTm = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringIntField(this, 1, value);
 };
 
 
 /**
  * optional int64 userId = 2;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgHeartBeat.prototype.getUserid = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgHeartBeat} returns this
  */
 proto.model.MsgHeartBeat.prototype.setUserid = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 

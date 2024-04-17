@@ -70,8 +70,8 @@ proto.model.MsgKeyExchange.prototype.toObject = function(opt_includeInstance) {
  */
 proto.model.MsgKeyExchange.toObject = function(includeInstance, msg) {
   var f, obj = {
-    keyprint: jspb.Message.getFieldWithDefault(msg, 1, 0),
-    rsaprint: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    keyprint: jspb.Message.getFieldWithDefault(msg, 1, "0"),
+    rsaprint: jspb.Message.getFieldWithDefault(msg, 2, "0"),
     stage: jspb.Message.getFieldWithDefault(msg, 3, 0),
     tempkey: msg.getTempkey_asB64(),
     pubkey: msg.getPubkey_asB64(),
@@ -115,11 +115,11 @@ proto.model.MsgKeyExchange.deserializeBinaryFromReader = function(msg, reader) {
     var field = reader.getFieldNumber();
     switch (field) {
     case 1:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setKeyprint(value);
       break;
     case 2:
-      var value = /** @type {number} */ (reader.readInt64());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setRsaprint(value);
       break;
     case 3:
@@ -176,15 +176,15 @@ proto.model.MsgKeyExchange.prototype.serializeBinary = function() {
 proto.model.MsgKeyExchange.serializeBinaryToWriter = function(message, writer) {
   var f = undefined;
   f = message.getKeyprint();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       1,
       f
     );
   }
   f = message.getRsaprint();
-  if (f !== 0) {
-    writer.writeInt64(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       2,
       f
     );
@@ -236,37 +236,37 @@ proto.model.MsgKeyExchange.serializeBinaryToWriter = function(message, writer) {
 
 /**
  * optional int64 keyPrint = 1;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgKeyExchange.prototype.getKeyprint = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 1, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 1, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgKeyExchange} returns this
  */
 proto.model.MsgKeyExchange.prototype.setKeyprint = function(value) {
-  return jspb.Message.setProto3IntField(this, 1, value);
+  return jspb.Message.setProto3StringIntField(this, 1, value);
 };
 
 
 /**
  * optional int64 rsaPrint = 2;
- * @return {number}
+ * @return {string}
  */
 proto.model.MsgKeyExchange.prototype.getRsaprint = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, "0"));
 };
 
 
 /**
- * @param {number} value
+ * @param {string} value
  * @return {!proto.model.MsgKeyExchange} returns this
  */
 proto.model.MsgKeyExchange.prototype.setRsaprint = function(value) {
-  return jspb.Message.setProto3IntField(this, 2, value);
+  return jspb.Message.setProto3StringIntField(this, 2, value);
 };
 
 

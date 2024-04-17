@@ -1598,7 +1598,7 @@ public final class MsgOuterClass {
      * 对称密钥指纹，用于SID
      * </pre>
      *
-     * <code>int64 keyPrint = 6;</code>
+     * <code>int64 keyPrint = 6 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     long getKeyPrint();
@@ -1608,7 +1608,7 @@ public final class MsgOuterClass {
      * 自己的公钥指纹
      * </pre>
      *
-     * <code>int64 rsaPrint = 7;</code>
+     * <code>int64 rsaPrint = 7 [jstype = JS_STRING];</code>
      * @return The rsaPrint.
      */
     long getRsaPrint();
@@ -2007,7 +2007,7 @@ java.lang.String defaultValue);
      * 对称密钥指纹，用于SID
      * </pre>
      *
-     * <code>int64 keyPrint = 6;</code>
+     * <code>int64 keyPrint = 6 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     @java.lang.Override
@@ -2022,7 +2022,7 @@ java.lang.String defaultValue);
      * 自己的公钥指纹
      * </pre>
      *
-     * <code>int64 rsaPrint = 7;</code>
+     * <code>int64 rsaPrint = 7 [jstype = JS_STRING];</code>
      * @return The rsaPrint.
      */
     @java.lang.Override
@@ -2961,7 +2961,7 @@ java.lang.String defaultValue);
        * 对称密钥指纹，用于SID
        * </pre>
        *
-       * <code>int64 keyPrint = 6;</code>
+       * <code>int64 keyPrint = 6 [jstype = JS_STRING];</code>
        * @return The keyPrint.
        */
       @java.lang.Override
@@ -2973,7 +2973,7 @@ java.lang.String defaultValue);
        * 对称密钥指纹，用于SID
        * </pre>
        *
-       * <code>int64 keyPrint = 6;</code>
+       * <code>int64 keyPrint = 6 [jstype = JS_STRING];</code>
        * @param value The keyPrint to set.
        * @return This builder for chaining.
        */
@@ -2988,7 +2988,7 @@ java.lang.String defaultValue);
        * 对称密钥指纹，用于SID
        * </pre>
        *
-       * <code>int64 keyPrint = 6;</code>
+       * <code>int64 keyPrint = 6 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearKeyPrint() {
@@ -3004,7 +3004,7 @@ java.lang.String defaultValue);
        * 自己的公钥指纹
        * </pre>
        *
-       * <code>int64 rsaPrint = 7;</code>
+       * <code>int64 rsaPrint = 7 [jstype = JS_STRING];</code>
        * @return The rsaPrint.
        */
       @java.lang.Override
@@ -3016,7 +3016,7 @@ java.lang.String defaultValue);
        * 自己的公钥指纹
        * </pre>
        *
-       * <code>int64 rsaPrint = 7;</code>
+       * <code>int64 rsaPrint = 7 [jstype = JS_STRING];</code>
        * @param value The rsaPrint to set.
        * @return This builder for chaining.
        */
@@ -3031,7 +3031,7 @@ java.lang.String defaultValue);
        * 自己的公钥指纹
        * </pre>
        *
-       * <code>int64 rsaPrint = 7;</code>
+       * <code>int64 rsaPrint = 7 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearRsaPrint() {
@@ -3257,13 +3257,13 @@ java.lang.String defaultValue);
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 keyPrint = 1;</code>
+     * <code>int64 keyPrint = 1 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     long getKeyPrint();
 
     /**
-     * <code>int64 rsaPrint = 2;</code>
+     * <code>int64 rsaPrint = 2 [jstype = JS_STRING];</code>
      * @return The rsaPrint.
      */
     long getRsaPrint();
@@ -3497,7 +3497,7 @@ java.lang.String defaultValue);
     public static final int KEYPRINT_FIELD_NUMBER = 1;
     private long keyPrint_;
     /**
-     * <code>int64 keyPrint = 1;</code>
+     * <code>int64 keyPrint = 1 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     @java.lang.Override
@@ -3508,7 +3508,7 @@ java.lang.String defaultValue);
     public static final int RSAPRINT_FIELD_NUMBER = 2;
     private long rsaPrint_;
     /**
-     * <code>int64 rsaPrint = 2;</code>
+     * <code>int64 rsaPrint = 2 [jstype = JS_STRING];</code>
      * @return The rsaPrint.
      */
     @java.lang.Override
@@ -4133,7 +4133,7 @@ java.lang.String defaultValue);
 
       private long keyPrint_ ;
       /**
-       * <code>int64 keyPrint = 1;</code>
+       * <code>int64 keyPrint = 1 [jstype = JS_STRING];</code>
        * @return The keyPrint.
        */
       @java.lang.Override
@@ -4141,7 +4141,7 @@ java.lang.String defaultValue);
         return keyPrint_;
       }
       /**
-       * <code>int64 keyPrint = 1;</code>
+       * <code>int64 keyPrint = 1 [jstype = JS_STRING];</code>
        * @param value The keyPrint to set.
        * @return This builder for chaining.
        */
@@ -4152,7 +4152,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 keyPrint = 1;</code>
+       * <code>int64 keyPrint = 1 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearKeyPrint() {
@@ -4164,7 +4164,7 @@ java.lang.String defaultValue);
 
       private long rsaPrint_ ;
       /**
-       * <code>int64 rsaPrint = 2;</code>
+       * <code>int64 rsaPrint = 2 [jstype = JS_STRING];</code>
        * @return The rsaPrint.
        */
       @java.lang.Override
@@ -4172,7 +4172,7 @@ java.lang.String defaultValue);
         return rsaPrint_;
       }
       /**
-       * <code>int64 rsaPrint = 2;</code>
+       * <code>int64 rsaPrint = 2 [jstype = JS_STRING];</code>
        * @param value The rsaPrint to set.
        * @return This builder for chaining.
        */
@@ -4183,7 +4183,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 rsaPrint = 2;</code>
+       * <code>int64 rsaPrint = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearRsaPrint() {
@@ -4673,13 +4673,13 @@ java.lang.String defaultValue);
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int64 tm = 1;</code>
+     * <code>int64 tm = 1 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     long getTm();
 
     /**
-     * <code>int64 userId = 2;</code>
+     * <code>int64 userId = 2 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     long getUserId();
@@ -4776,7 +4776,7 @@ java.lang.String defaultValue);
     public static final int TM_FIELD_NUMBER = 1;
     private long tm_;
     /**
-     * <code>int64 tm = 1;</code>
+     * <code>int64 tm = 1 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     @java.lang.Override
@@ -4787,7 +4787,7 @@ java.lang.String defaultValue);
     public static final int USERID_FIELD_NUMBER = 2;
     private long userId_;
     /**
-     * <code>int64 userId = 2;</code>
+     * <code>int64 userId = 2 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     @java.lang.Override
@@ -5118,7 +5118,7 @@ java.lang.String defaultValue);
 
       private long tm_ ;
       /**
-       * <code>int64 tm = 1;</code>
+       * <code>int64 tm = 1 [jstype = JS_STRING];</code>
        * @return The tm.
        */
       @java.lang.Override
@@ -5126,7 +5126,7 @@ java.lang.String defaultValue);
         return tm_;
       }
       /**
-       * <code>int64 tm = 1;</code>
+       * <code>int64 tm = 1 [jstype = JS_STRING];</code>
        * @param value The tm to set.
        * @return This builder for chaining.
        */
@@ -5137,7 +5137,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 tm = 1;</code>
+       * <code>int64 tm = 1 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearTm() {
@@ -5149,7 +5149,7 @@ java.lang.String defaultValue);
 
       private long userId_ ;
       /**
-       * <code>int64 userId = 2;</code>
+       * <code>int64 userId = 2 [jstype = JS_STRING];</code>
        * @return The userId.
        */
       @java.lang.Override
@@ -5157,7 +5157,7 @@ java.lang.String defaultValue);
         return userId_;
       }
       /**
-       * <code>int64 userId = 2;</code>
+       * <code>int64 userId = 2 [jstype = JS_STRING];</code>
        * @param value The userId to set.
        * @return This builder for chaining.
        */
@@ -5168,7 +5168,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 userId = 2;</code>
+       * <code>int64 userId = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearUserId() {
@@ -5239,7 +5239,7 @@ java.lang.String defaultValue);
      * 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
      * </pre>
      *
-     * <code>int64 msgId = 1;</code>
+     * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
      * @return The msgId.
      */
     long getMsgId();
@@ -5249,7 +5249,7 @@ java.lang.String defaultValue);
      * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
      * </pre>
      *
-     * <code>int64 userId = 2;</code>
+     * <code>int64 userId = 2 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     long getUserId();
@@ -5259,7 +5259,7 @@ java.lang.String defaultValue);
      * 发送消息的用户 ID
      * </pre>
      *
-     * <code>int64 fromId = 3;</code>
+     * <code>int64 fromId = 3 [jstype = JS_STRING];</code>
      * @return The fromId.
      */
     long getFromId();
@@ -5269,7 +5269,7 @@ java.lang.String defaultValue);
      * 接收消息的用户 ID（对方的用户 ID）
      * </pre>
      *
-     * <code>int64 toId = 4;</code>
+     * <code>int64 toId = 4 [jstype = JS_STRING];</code>
      * @return The toId.
      */
     long getToId();
@@ -5279,7 +5279,7 @@ java.lang.String defaultValue);
      * 消息的时间戳
      * </pre>
      *
-     * <code>int64 tm = 5;</code>
+     * <code>int64 tm = 5 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     long getTm();
@@ -5309,7 +5309,7 @@ java.lang.String defaultValue);
      * 用于确认消息的发送 ID
      * </pre>
      *
-     * <code>int64 sendId = 7;</code>
+     * <code>int64 sendId = 7 [jstype = JS_STRING];</code>
      * @return The sendId.
      */
     long getSendId();
@@ -5367,7 +5367,7 @@ java.lang.String defaultValue);
      * 引用的消息 ID，如果有的话
      * </pre>
      *
-     * <code>int64 refMessageId = 11;</code>
+     * <code>int64 refMessageId = 11 [jstype = JS_STRING];</code>
      * @return The refMessageId.
      */
     long getRefMessageId();
@@ -5396,7 +5396,7 @@ java.lang.String defaultValue);
      * 发送消息的回执状态
      * </pre>
      *
-     * <code>int64 sendReply = 13;</code>
+     * <code>int64 sendReply = 13 [jstype = JS_STRING];</code>
      * @return The sendReply.
      */
     long getSendReply();
@@ -5406,7 +5406,7 @@ java.lang.String defaultValue);
      * 接收消息的回执状态
      * </pre>
      *
-     * <code>int64 recvReply = 14;</code>
+     * <code>int64 recvReply = 14 [jstype = JS_STRING];</code>
      * @return The recvReply.
      */
     long getRecvReply();
@@ -5416,7 +5416,7 @@ java.lang.String defaultValue);
      * 已读状态的回执
      * </pre>
      *
-     * <code>int64 readReply = 15;</code>
+     * <code>int64 readReply = 15 [jstype = JS_STRING];</code>
      * @return The readReply.
      */
     long getReadReply();
@@ -5474,7 +5474,7 @@ java.lang.String defaultValue);
      * 秘钥指纹
      * </pre>
      *
-     * <code>int64 keyPrint = 19;</code>
+     * <code>int64 keyPrint = 19 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     long getKeyPrint();
@@ -5739,7 +5739,7 @@ java.lang.String defaultValue);
      * 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
      * </pre>
      *
-     * <code>int64 msgId = 1;</code>
+     * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
      * @return The msgId.
      */
     @java.lang.Override
@@ -5754,7 +5754,7 @@ java.lang.String defaultValue);
      * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
      * </pre>
      *
-     * <code>int64 userId = 2;</code>
+     * <code>int64 userId = 2 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     @java.lang.Override
@@ -5769,7 +5769,7 @@ java.lang.String defaultValue);
      * 发送消息的用户 ID
      * </pre>
      *
-     * <code>int64 fromId = 3;</code>
+     * <code>int64 fromId = 3 [jstype = JS_STRING];</code>
      * @return The fromId.
      */
     @java.lang.Override
@@ -5784,7 +5784,7 @@ java.lang.String defaultValue);
      * 接收消息的用户 ID（对方的用户 ID）
      * </pre>
      *
-     * <code>int64 toId = 4;</code>
+     * <code>int64 toId = 4 [jstype = JS_STRING];</code>
      * @return The toId.
      */
     @java.lang.Override
@@ -5799,7 +5799,7 @@ java.lang.String defaultValue);
      * 消息的时间戳
      * </pre>
      *
-     * <code>int64 tm = 5;</code>
+     * <code>int64 tm = 5 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     @java.lang.Override
@@ -5860,7 +5860,7 @@ java.lang.String defaultValue);
      * 用于确认消息的发送 ID
      * </pre>
      *
-     * <code>int64 sendId = 7;</code>
+     * <code>int64 sendId = 7 [jstype = JS_STRING];</code>
      * @return The sendId.
      */
     @java.lang.Override
@@ -5944,7 +5944,7 @@ java.lang.String defaultValue);
      * 引用的消息 ID，如果有的话
      * </pre>
      *
-     * <code>int64 refMessageId = 11;</code>
+     * <code>int64 refMessageId = 11 [jstype = JS_STRING];</code>
      * @return The refMessageId.
      */
     @java.lang.Override
@@ -5986,7 +5986,7 @@ java.lang.String defaultValue);
      * 发送消息的回执状态
      * </pre>
      *
-     * <code>int64 sendReply = 13;</code>
+     * <code>int64 sendReply = 13 [jstype = JS_STRING];</code>
      * @return The sendReply.
      */
     @java.lang.Override
@@ -6001,7 +6001,7 @@ java.lang.String defaultValue);
      * 接收消息的回执状态
      * </pre>
      *
-     * <code>int64 recvReply = 14;</code>
+     * <code>int64 recvReply = 14 [jstype = JS_STRING];</code>
      * @return The recvReply.
      */
     @java.lang.Override
@@ -6016,7 +6016,7 @@ java.lang.String defaultValue);
      * 已读状态的回执
      * </pre>
      *
-     * <code>int64 readReply = 15;</code>
+     * <code>int64 readReply = 15 [jstype = JS_STRING];</code>
      * @return The readReply.
      */
     @java.lang.Override
@@ -6100,7 +6100,7 @@ java.lang.String defaultValue);
      * 秘钥指纹
      * </pre>
      *
-     * <code>int64 keyPrint = 19;</code>
+     * <code>int64 keyPrint = 19 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     @java.lang.Override
@@ -6864,7 +6864,7 @@ java.lang.String defaultValue);
        * 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
        * </pre>
        *
-       * <code>int64 msgId = 1;</code>
+       * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
        * @return The msgId.
        */
       @java.lang.Override
@@ -6876,7 +6876,7 @@ java.lang.String defaultValue);
        * 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
        * </pre>
        *
-       * <code>int64 msgId = 1;</code>
+       * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
        * @param value The msgId to set.
        * @return This builder for chaining.
        */
@@ -6891,7 +6891,7 @@ java.lang.String defaultValue);
        * 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
        * </pre>
        *
-       * <code>int64 msgId = 1;</code>
+       * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearMsgId() {
@@ -6907,7 +6907,7 @@ java.lang.String defaultValue);
        * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
        * </pre>
        *
-       * <code>int64 userId = 2;</code>
+       * <code>int64 userId = 2 [jstype = JS_STRING];</code>
        * @return The userId.
        */
       @java.lang.Override
@@ -6919,7 +6919,7 @@ java.lang.String defaultValue);
        * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
        * </pre>
        *
-       * <code>int64 userId = 2;</code>
+       * <code>int64 userId = 2 [jstype = JS_STRING];</code>
        * @param value The userId to set.
        * @return This builder for chaining.
        */
@@ -6934,7 +6934,7 @@ java.lang.String defaultValue);
        * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
        * </pre>
        *
-       * <code>int64 userId = 2;</code>
+       * <code>int64 userId = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearUserId() {
@@ -6950,7 +6950,7 @@ java.lang.String defaultValue);
        * 发送消息的用户 ID
        * </pre>
        *
-       * <code>int64 fromId = 3;</code>
+       * <code>int64 fromId = 3 [jstype = JS_STRING];</code>
        * @return The fromId.
        */
       @java.lang.Override
@@ -6962,7 +6962,7 @@ java.lang.String defaultValue);
        * 发送消息的用户 ID
        * </pre>
        *
-       * <code>int64 fromId = 3;</code>
+       * <code>int64 fromId = 3 [jstype = JS_STRING];</code>
        * @param value The fromId to set.
        * @return This builder for chaining.
        */
@@ -6977,7 +6977,7 @@ java.lang.String defaultValue);
        * 发送消息的用户 ID
        * </pre>
        *
-       * <code>int64 fromId = 3;</code>
+       * <code>int64 fromId = 3 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearFromId() {
@@ -6993,7 +6993,7 @@ java.lang.String defaultValue);
        * 接收消息的用户 ID（对方的用户 ID）
        * </pre>
        *
-       * <code>int64 toId = 4;</code>
+       * <code>int64 toId = 4 [jstype = JS_STRING];</code>
        * @return The toId.
        */
       @java.lang.Override
@@ -7005,7 +7005,7 @@ java.lang.String defaultValue);
        * 接收消息的用户 ID（对方的用户 ID）
        * </pre>
        *
-       * <code>int64 toId = 4;</code>
+       * <code>int64 toId = 4 [jstype = JS_STRING];</code>
        * @param value The toId to set.
        * @return This builder for chaining.
        */
@@ -7020,7 +7020,7 @@ java.lang.String defaultValue);
        * 接收消息的用户 ID（对方的用户 ID）
        * </pre>
        *
-       * <code>int64 toId = 4;</code>
+       * <code>int64 toId = 4 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearToId() {
@@ -7036,7 +7036,7 @@ java.lang.String defaultValue);
        * 消息的时间戳
        * </pre>
        *
-       * <code>int64 tm = 5;</code>
+       * <code>int64 tm = 5 [jstype = JS_STRING];</code>
        * @return The tm.
        */
       @java.lang.Override
@@ -7048,7 +7048,7 @@ java.lang.String defaultValue);
        * 消息的时间戳
        * </pre>
        *
-       * <code>int64 tm = 5;</code>
+       * <code>int64 tm = 5 [jstype = JS_STRING];</code>
        * @param value The tm to set.
        * @return This builder for chaining.
        */
@@ -7063,7 +7063,7 @@ java.lang.String defaultValue);
        * 消息的时间戳
        * </pre>
        *
-       * <code>int64 tm = 5;</code>
+       * <code>int64 tm = 5 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearTm() {
@@ -7175,7 +7175,7 @@ java.lang.String defaultValue);
        * 用于确认消息的发送 ID
        * </pre>
        *
-       * <code>int64 sendId = 7;</code>
+       * <code>int64 sendId = 7 [jstype = JS_STRING];</code>
        * @return The sendId.
        */
       @java.lang.Override
@@ -7187,7 +7187,7 @@ java.lang.String defaultValue);
        * 用于确认消息的发送 ID
        * </pre>
        *
-       * <code>int64 sendId = 7;</code>
+       * <code>int64 sendId = 7 [jstype = JS_STRING];</code>
        * @param value The sendId to set.
        * @return This builder for chaining.
        */
@@ -7202,7 +7202,7 @@ java.lang.String defaultValue);
        * 用于确认消息的发送 ID
        * </pre>
        *
-       * <code>int64 sendId = 7;</code>
+       * <code>int64 sendId = 7 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearSendId() {
@@ -7412,7 +7412,7 @@ java.lang.String defaultValue);
        * 引用的消息 ID，如果有的话
        * </pre>
        *
-       * <code>int64 refMessageId = 11;</code>
+       * <code>int64 refMessageId = 11 [jstype = JS_STRING];</code>
        * @return The refMessageId.
        */
       @java.lang.Override
@@ -7424,7 +7424,7 @@ java.lang.String defaultValue);
        * 引用的消息 ID，如果有的话
        * </pre>
        *
-       * <code>int64 refMessageId = 11;</code>
+       * <code>int64 refMessageId = 11 [jstype = JS_STRING];</code>
        * @param value The refMessageId to set.
        * @return This builder for chaining.
        */
@@ -7439,7 +7439,7 @@ java.lang.String defaultValue);
        * 引用的消息 ID，如果有的话
        * </pre>
        *
-       * <code>int64 refMessageId = 11;</code>
+       * <code>int64 refMessageId = 11 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearRefMessageId() {
@@ -7529,7 +7529,7 @@ java.lang.String defaultValue);
        * 发送消息的回执状态
        * </pre>
        *
-       * <code>int64 sendReply = 13;</code>
+       * <code>int64 sendReply = 13 [jstype = JS_STRING];</code>
        * @return The sendReply.
        */
       @java.lang.Override
@@ -7541,7 +7541,7 @@ java.lang.String defaultValue);
        * 发送消息的回执状态
        * </pre>
        *
-       * <code>int64 sendReply = 13;</code>
+       * <code>int64 sendReply = 13 [jstype = JS_STRING];</code>
        * @param value The sendReply to set.
        * @return This builder for chaining.
        */
@@ -7556,7 +7556,7 @@ java.lang.String defaultValue);
        * 发送消息的回执状态
        * </pre>
        *
-       * <code>int64 sendReply = 13;</code>
+       * <code>int64 sendReply = 13 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearSendReply() {
@@ -7572,7 +7572,7 @@ java.lang.String defaultValue);
        * 接收消息的回执状态
        * </pre>
        *
-       * <code>int64 recvReply = 14;</code>
+       * <code>int64 recvReply = 14 [jstype = JS_STRING];</code>
        * @return The recvReply.
        */
       @java.lang.Override
@@ -7584,7 +7584,7 @@ java.lang.String defaultValue);
        * 接收消息的回执状态
        * </pre>
        *
-       * <code>int64 recvReply = 14;</code>
+       * <code>int64 recvReply = 14 [jstype = JS_STRING];</code>
        * @param value The recvReply to set.
        * @return This builder for chaining.
        */
@@ -7599,7 +7599,7 @@ java.lang.String defaultValue);
        * 接收消息的回执状态
        * </pre>
        *
-       * <code>int64 recvReply = 14;</code>
+       * <code>int64 recvReply = 14 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearRecvReply() {
@@ -7615,7 +7615,7 @@ java.lang.String defaultValue);
        * 已读状态的回执
        * </pre>
        *
-       * <code>int64 readReply = 15;</code>
+       * <code>int64 readReply = 15 [jstype = JS_STRING];</code>
        * @return The readReply.
        */
       @java.lang.Override
@@ -7627,7 +7627,7 @@ java.lang.String defaultValue);
        * 已读状态的回执
        * </pre>
        *
-       * <code>int64 readReply = 15;</code>
+       * <code>int64 readReply = 15 [jstype = JS_STRING];</code>
        * @param value The readReply to set.
        * @return This builder for chaining.
        */
@@ -7642,7 +7642,7 @@ java.lang.String defaultValue);
        * 已读状态的回执
        * </pre>
        *
-       * <code>int64 readReply = 15;</code>
+       * <code>int64 readReply = 15 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearReadReply() {
@@ -7849,7 +7849,7 @@ java.lang.String defaultValue);
        * 秘钥指纹
        * </pre>
        *
-       * <code>int64 keyPrint = 19;</code>
+       * <code>int64 keyPrint = 19 [jstype = JS_STRING];</code>
        * @return The keyPrint.
        */
       @java.lang.Override
@@ -7861,7 +7861,7 @@ java.lang.String defaultValue);
        * 秘钥指纹
        * </pre>
        *
-       * <code>int64 keyPrint = 19;</code>
+       * <code>int64 keyPrint = 19 [jstype = JS_STRING];</code>
        * @param value The keyPrint to set.
        * @return This builder for chaining.
        */
@@ -7876,7 +7876,7 @@ java.lang.String defaultValue);
        * 秘钥指纹
        * </pre>
        *
-       * <code>int64 keyPrint = 19;</code>
+       * <code>int64 keyPrint = 19 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearKeyPrint() {
@@ -8078,13 +8078,13 @@ java.lang.String defaultValue);
      * 要确认的消息ID
      * </pre>
      *
-     * <code>int64 msgId = 1;</code>
+     * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
      * @return The msgId.
      */
     long getMsgId();
 
     /**
-     * <code>int64 sendId = 2;</code>
+     * <code>int64 sendId = 2 [jstype = JS_STRING];</code>
      * @return The sendId.
      */
     long getSendId();
@@ -8128,7 +8128,7 @@ java.lang.String defaultValue);
      * 应答应该发送给谁
      * </pre>
      *
-     * <code>int64 userId = 7;</code>
+     * <code>int64 userId = 7 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     long getUserId();
@@ -8138,7 +8138,7 @@ java.lang.String defaultValue);
      * 从谁那的应答
      * </pre>
      *
-     * <code>int64 fromId = 8;</code>
+     * <code>int64 fromId = 8 [jstype = JS_STRING];</code>
      * @return The fromId.
      */
     long getFromId();
@@ -8337,7 +8337,7 @@ java.lang.String defaultValue);
      * 要确认的消息ID
      * </pre>
      *
-     * <code>int64 msgId = 1;</code>
+     * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
      * @return The msgId.
      */
     @java.lang.Override
@@ -8348,7 +8348,7 @@ java.lang.String defaultValue);
     public static final int SENDID_FIELD_NUMBER = 2;
     private long sendId_;
     /**
-     * <code>int64 sendId = 2;</code>
+     * <code>int64 sendId = 2 [jstype = JS_STRING];</code>
      * @return The sendId.
      */
     @java.lang.Override
@@ -8438,7 +8438,7 @@ java.lang.String defaultValue);
      * 应答应该发送给谁
      * </pre>
      *
-     * <code>int64 userId = 7;</code>
+     * <code>int64 userId = 7 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     @java.lang.Override
@@ -8453,7 +8453,7 @@ java.lang.String defaultValue);
      * 从谁那的应答
      * </pre>
      *
-     * <code>int64 fromId = 8;</code>
+     * <code>int64 fromId = 8 [jstype = JS_STRING];</code>
      * @return The fromId.
      */
     @java.lang.Override
@@ -9031,7 +9031,7 @@ java.lang.String defaultValue);
        * 要确认的消息ID
        * </pre>
        *
-       * <code>int64 msgId = 1;</code>
+       * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
        * @return The msgId.
        */
       @java.lang.Override
@@ -9043,7 +9043,7 @@ java.lang.String defaultValue);
        * 要确认的消息ID
        * </pre>
        *
-       * <code>int64 msgId = 1;</code>
+       * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
        * @param value The msgId to set.
        * @return This builder for chaining.
        */
@@ -9058,7 +9058,7 @@ java.lang.String defaultValue);
        * 要确认的消息ID
        * </pre>
        *
-       * <code>int64 msgId = 1;</code>
+       * <code>int64 msgId = 1 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearMsgId() {
@@ -9070,7 +9070,7 @@ java.lang.String defaultValue);
 
       private long sendId_ ;
       /**
-       * <code>int64 sendId = 2;</code>
+       * <code>int64 sendId = 2 [jstype = JS_STRING];</code>
        * @return The sendId.
        */
       @java.lang.Override
@@ -9078,7 +9078,7 @@ java.lang.String defaultValue);
         return sendId_;
       }
       /**
-       * <code>int64 sendId = 2;</code>
+       * <code>int64 sendId = 2 [jstype = JS_STRING];</code>
        * @param value The sendId to set.
        * @return This builder for chaining.
        */
@@ -9089,7 +9089,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 sendId = 2;</code>
+       * <code>int64 sendId = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearSendId() {
@@ -9286,7 +9286,7 @@ java.lang.String defaultValue);
        * 应答应该发送给谁
        * </pre>
        *
-       * <code>int64 userId = 7;</code>
+       * <code>int64 userId = 7 [jstype = JS_STRING];</code>
        * @return The userId.
        */
       @java.lang.Override
@@ -9298,7 +9298,7 @@ java.lang.String defaultValue);
        * 应答应该发送给谁
        * </pre>
        *
-       * <code>int64 userId = 7;</code>
+       * <code>int64 userId = 7 [jstype = JS_STRING];</code>
        * @param value The userId to set.
        * @return This builder for chaining.
        */
@@ -9313,7 +9313,7 @@ java.lang.String defaultValue);
        * 应答应该发送给谁
        * </pre>
        *
-       * <code>int64 userId = 7;</code>
+       * <code>int64 userId = 7 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearUserId() {
@@ -9329,7 +9329,7 @@ java.lang.String defaultValue);
        * 从谁那的应答
        * </pre>
        *
-       * <code>int64 fromId = 8;</code>
+       * <code>int64 fromId = 8 [jstype = JS_STRING];</code>
        * @return The fromId.
        */
       @java.lang.Override
@@ -9341,7 +9341,7 @@ java.lang.String defaultValue);
        * 从谁那的应答
        * </pre>
        *
-       * <code>int64 fromId = 8;</code>
+       * <code>int64 fromId = 8 [jstype = JS_STRING];</code>
        * @param value The fromId to set.
        * @return This builder for chaining.
        */
@@ -9356,7 +9356,7 @@ java.lang.String defaultValue);
        * 从谁那的应答
        * </pre>
        *
-       * <code>int64 fromId = 8;</code>
+       * <code>int64 fromId = 8 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearFromId() {
@@ -9558,7 +9558,7 @@ java.lang.String defaultValue);
      * 用户ID
      * </pre>
      *
-     * <code>int64 userId = 1;</code>
+     * <code>int64 userId = 1 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     long getUserId();
@@ -9568,7 +9568,7 @@ java.lang.String defaultValue);
      * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
      * </pre>
      *
-     * <code>int64 groupId = 2;</code>
+     * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
      * @return The groupId.
      */
     long getGroupId();
@@ -9578,7 +9578,7 @@ java.lang.String defaultValue);
      * 这里是消息的范围
      * </pre>
      *
-     * <code>int64 bigId = 3;</code>
+     * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
      * @return The bigId.
      */
     long getBigId();
@@ -9588,7 +9588,7 @@ java.lang.String defaultValue);
      * 消息范围
      * </pre>
      *
-     * <code>int64 littleId = 4;</code>
+     * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
      * @return The littleId.
      */
     long getLittleId();
@@ -9604,7 +9604,7 @@ java.lang.String defaultValue);
     int getSynType();
 
     /**
-     * <code>int64 tm = 6;</code>
+     * <code>int64 tm = 6 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     long getTm();
@@ -9846,7 +9846,7 @@ java.lang.String defaultValue);
      * 用户ID
      * </pre>
      *
-     * <code>int64 userId = 1;</code>
+     * <code>int64 userId = 1 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     @java.lang.Override
@@ -9861,7 +9861,7 @@ java.lang.String defaultValue);
      * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
      * </pre>
      *
-     * <code>int64 groupId = 2;</code>
+     * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
      * @return The groupId.
      */
     @java.lang.Override
@@ -9876,7 +9876,7 @@ java.lang.String defaultValue);
      * 这里是消息的范围
      * </pre>
      *
-     * <code>int64 bigId = 3;</code>
+     * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
      * @return The bigId.
      */
     @java.lang.Override
@@ -9891,7 +9891,7 @@ java.lang.String defaultValue);
      * 消息范围
      * </pre>
      *
-     * <code>int64 littleId = 4;</code>
+     * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
      * @return The littleId.
      */
     @java.lang.Override
@@ -9917,7 +9917,7 @@ java.lang.String defaultValue);
     public static final int TM_FIELD_NUMBER = 6;
     private long tm_;
     /**
-     * <code>int64 tm = 6;</code>
+     * <code>int64 tm = 6 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     @java.lang.Override
@@ -10548,7 +10548,7 @@ java.lang.String defaultValue);
        * 用户ID
        * </pre>
        *
-       * <code>int64 userId = 1;</code>
+       * <code>int64 userId = 1 [jstype = JS_STRING];</code>
        * @return The userId.
        */
       @java.lang.Override
@@ -10560,7 +10560,7 @@ java.lang.String defaultValue);
        * 用户ID
        * </pre>
        *
-       * <code>int64 userId = 1;</code>
+       * <code>int64 userId = 1 [jstype = JS_STRING];</code>
        * @param value The userId to set.
        * @return This builder for chaining.
        */
@@ -10575,7 +10575,7 @@ java.lang.String defaultValue);
        * 用户ID
        * </pre>
        *
-       * <code>int64 userId = 1;</code>
+       * <code>int64 userId = 1 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearUserId() {
@@ -10591,7 +10591,7 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 groupId = 2;</code>
+       * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
        * @return The groupId.
        */
       @java.lang.Override
@@ -10603,7 +10603,7 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 groupId = 2;</code>
+       * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
        * @param value The groupId to set.
        * @return This builder for chaining.
        */
@@ -10618,7 +10618,7 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 groupId = 2;</code>
+       * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearGroupId() {
@@ -10634,7 +10634,7 @@ java.lang.String defaultValue);
        * 这里是消息的范围
        * </pre>
        *
-       * <code>int64 bigId = 3;</code>
+       * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
        * @return The bigId.
        */
       @java.lang.Override
@@ -10646,7 +10646,7 @@ java.lang.String defaultValue);
        * 这里是消息的范围
        * </pre>
        *
-       * <code>int64 bigId = 3;</code>
+       * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
        * @param value The bigId to set.
        * @return This builder for chaining.
        */
@@ -10661,7 +10661,7 @@ java.lang.String defaultValue);
        * 这里是消息的范围
        * </pre>
        *
-       * <code>int64 bigId = 3;</code>
+       * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearBigId() {
@@ -10677,7 +10677,7 @@ java.lang.String defaultValue);
        * 消息范围
        * </pre>
        *
-       * <code>int64 littleId = 4;</code>
+       * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
        * @return The littleId.
        */
       @java.lang.Override
@@ -10689,7 +10689,7 @@ java.lang.String defaultValue);
        * 消息范围
        * </pre>
        *
-       * <code>int64 littleId = 4;</code>
+       * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
        * @param value The littleId to set.
        * @return This builder for chaining.
        */
@@ -10704,7 +10704,7 @@ java.lang.String defaultValue);
        * 消息范围
        * </pre>
        *
-       * <code>int64 littleId = 4;</code>
+       * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearLittleId() {
@@ -10759,7 +10759,7 @@ java.lang.String defaultValue);
 
       private long tm_ ;
       /**
-       * <code>int64 tm = 6;</code>
+       * <code>int64 tm = 6 [jstype = JS_STRING];</code>
        * @return The tm.
        */
       @java.lang.Override
@@ -10767,7 +10767,7 @@ java.lang.String defaultValue);
         return tm_;
       }
       /**
-       * <code>int64 tm = 6;</code>
+       * <code>int64 tm = 6 [jstype = JS_STRING];</code>
        * @param value The tm to set.
        * @return This builder for chaining.
        */
@@ -10778,7 +10778,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 tm = 6;</code>
+       * <code>int64 tm = 6 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearTm() {
@@ -11128,7 +11128,7 @@ java.lang.String defaultValue);
      * 用于存储的clusterKey
      * </pre>
      *
-     * <code>int64 userId = 1;</code>
+     * <code>int64 userId = 1 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     long getUserId();
@@ -11138,7 +11138,7 @@ java.lang.String defaultValue);
      * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
      * </pre>
      *
-     * <code>int64 anId = 2;</code>
+     * <code>int64 anId = 2 [jstype = JS_STRING];</code>
      * @return The anId.
      */
     long getAnId();
@@ -11148,7 +11148,7 @@ java.lang.String defaultValue);
      * 这里是消息的范围
      * </pre>
      *
-     * <code>int64 bigId = 3;</code>
+     * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
      * @return The bigId.
      */
     long getBigId();
@@ -11158,7 +11158,7 @@ java.lang.String defaultValue);
      * 消息范围
      * </pre>
      *
-     * <code>int64 littleId = 4;</code>
+     * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
      * @return The littleId.
      */
     long getLittleId();
@@ -11174,7 +11174,7 @@ java.lang.String defaultValue);
     int getSynType();
 
     /**
-     * <code>int64 tm = 6;</code>
+     * <code>int64 tm = 6 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     long getTm();
@@ -11487,7 +11487,7 @@ java.lang.String defaultValue);
      * 用于存储的clusterKey
      * </pre>
      *
-     * <code>int64 userId = 1;</code>
+     * <code>int64 userId = 1 [jstype = JS_STRING];</code>
      * @return The userId.
      */
     @java.lang.Override
@@ -11502,7 +11502,7 @@ java.lang.String defaultValue);
      * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
      * </pre>
      *
-     * <code>int64 anId = 2;</code>
+     * <code>int64 anId = 2 [jstype = JS_STRING];</code>
      * @return The anId.
      */
     @java.lang.Override
@@ -11517,7 +11517,7 @@ java.lang.String defaultValue);
      * 这里是消息的范围
      * </pre>
      *
-     * <code>int64 bigId = 3;</code>
+     * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
      * @return The bigId.
      */
     @java.lang.Override
@@ -11532,7 +11532,7 @@ java.lang.String defaultValue);
      * 消息范围
      * </pre>
      *
-     * <code>int64 littleId = 4;</code>
+     * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
      * @return The littleId.
      */
     @java.lang.Override
@@ -11558,7 +11558,7 @@ java.lang.String defaultValue);
     public static final int TM_FIELD_NUMBER = 6;
     private long tm_;
     /**
-     * <code>int64 tm = 6;</code>
+     * <code>int64 tm = 6 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     @java.lang.Override
@@ -12376,7 +12376,7 @@ java.lang.String defaultValue);
        * 用于存储的clusterKey
        * </pre>
        *
-       * <code>int64 userId = 1;</code>
+       * <code>int64 userId = 1 [jstype = JS_STRING];</code>
        * @return The userId.
        */
       @java.lang.Override
@@ -12388,7 +12388,7 @@ java.lang.String defaultValue);
        * 用于存储的clusterKey
        * </pre>
        *
-       * <code>int64 userId = 1;</code>
+       * <code>int64 userId = 1 [jstype = JS_STRING];</code>
        * @param value The userId to set.
        * @return This builder for chaining.
        */
@@ -12403,7 +12403,7 @@ java.lang.String defaultValue);
        * 用于存储的clusterKey
        * </pre>
        *
-       * <code>int64 userId = 1;</code>
+       * <code>int64 userId = 1 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearUserId() {
@@ -12419,7 +12419,7 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 anId = 2;</code>
+       * <code>int64 anId = 2 [jstype = JS_STRING];</code>
        * @return The anId.
        */
       @java.lang.Override
@@ -12431,7 +12431,7 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 anId = 2;</code>
+       * <code>int64 anId = 2 [jstype = JS_STRING];</code>
        * @param value The anId to set.
        * @return This builder for chaining.
        */
@@ -12446,7 +12446,7 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 anId = 2;</code>
+       * <code>int64 anId = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearAnId() {
@@ -12462,7 +12462,7 @@ java.lang.String defaultValue);
        * 这里是消息的范围
        * </pre>
        *
-       * <code>int64 bigId = 3;</code>
+       * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
        * @return The bigId.
        */
       @java.lang.Override
@@ -12474,7 +12474,7 @@ java.lang.String defaultValue);
        * 这里是消息的范围
        * </pre>
        *
-       * <code>int64 bigId = 3;</code>
+       * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
        * @param value The bigId to set.
        * @return This builder for chaining.
        */
@@ -12489,7 +12489,7 @@ java.lang.String defaultValue);
        * 这里是消息的范围
        * </pre>
        *
-       * <code>int64 bigId = 3;</code>
+       * <code>int64 bigId = 3 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearBigId() {
@@ -12505,7 +12505,7 @@ java.lang.String defaultValue);
        * 消息范围
        * </pre>
        *
-       * <code>int64 littleId = 4;</code>
+       * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
        * @return The littleId.
        */
       @java.lang.Override
@@ -12517,7 +12517,7 @@ java.lang.String defaultValue);
        * 消息范围
        * </pre>
        *
-       * <code>int64 littleId = 4;</code>
+       * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
        * @param value The littleId to set.
        * @return This builder for chaining.
        */
@@ -12532,7 +12532,7 @@ java.lang.String defaultValue);
        * 消息范围
        * </pre>
        *
-       * <code>int64 littleId = 4;</code>
+       * <code>int64 littleId = 4 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearLittleId() {
@@ -12587,7 +12587,7 @@ java.lang.String defaultValue);
 
       private long tm_ ;
       /**
-       * <code>int64 tm = 6;</code>
+       * <code>int64 tm = 6 [jstype = JS_STRING];</code>
        * @return The tm.
        */
       @java.lang.Override
@@ -12595,7 +12595,7 @@ java.lang.String defaultValue);
         return tm_;
       }
       /**
-       * <code>int64 tm = 6;</code>
+       * <code>int64 tm = 6 [jstype = JS_STRING];</code>
        * @param value The tm to set.
        * @return This builder for chaining.
        */
@@ -12606,7 +12606,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>int64 tm = 6;</code>
+       * <code>int64 tm = 6 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearTm() {
@@ -25443,7 +25443,7 @@ java.lang.String defaultValue);
      * 0是不加密，非0是加密
      * </pre>
      *
-     * <code>int64 keyPrint = 2;</code>
+     * <code>int64 keyPrint = 2 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     long getKeyPrint();
@@ -25453,7 +25453,7 @@ java.lang.String defaultValue);
      * 时间戳
      * </pre>
      *
-     * <code>int64 tm = 3;</code>
+     * <code>int64 tm = 3 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     long getTm();
@@ -25727,7 +25727,7 @@ java.lang.String defaultValue);
      * 0是不加密，非0是加密
      * </pre>
      *
-     * <code>int64 keyPrint = 2;</code>
+     * <code>int64 keyPrint = 2 [jstype = JS_STRING];</code>
      * @return The keyPrint.
      */
     @java.lang.Override
@@ -25742,7 +25742,7 @@ java.lang.String defaultValue);
      * 时间戳
      * </pre>
      *
-     * <code>int64 tm = 3;</code>
+     * <code>int64 tm = 3 [jstype = JS_STRING];</code>
      * @return The tm.
      */
     @java.lang.Override
@@ -26370,7 +26370,7 @@ java.lang.String defaultValue);
        * 0是不加密，非0是加密
        * </pre>
        *
-       * <code>int64 keyPrint = 2;</code>
+       * <code>int64 keyPrint = 2 [jstype = JS_STRING];</code>
        * @return The keyPrint.
        */
       @java.lang.Override
@@ -26382,7 +26382,7 @@ java.lang.String defaultValue);
        * 0是不加密，非0是加密
        * </pre>
        *
-       * <code>int64 keyPrint = 2;</code>
+       * <code>int64 keyPrint = 2 [jstype = JS_STRING];</code>
        * @param value The keyPrint to set.
        * @return This builder for chaining.
        */
@@ -26397,7 +26397,7 @@ java.lang.String defaultValue);
        * 0是不加密，非0是加密
        * </pre>
        *
-       * <code>int64 keyPrint = 2;</code>
+       * <code>int64 keyPrint = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearKeyPrint() {
@@ -26413,7 +26413,7 @@ java.lang.String defaultValue);
        * 时间戳
        * </pre>
        *
-       * <code>int64 tm = 3;</code>
+       * <code>int64 tm = 3 [jstype = JS_STRING];</code>
        * @return The tm.
        */
       @java.lang.Override
@@ -26425,7 +26425,7 @@ java.lang.String defaultValue);
        * 时间戳
        * </pre>
        *
-       * <code>int64 tm = 3;</code>
+       * <code>int64 tm = 3 [jstype = JS_STRING];</code>
        * @param value The tm to set.
        * @return This builder for chaining.
        */
@@ -26440,7 +26440,7 @@ java.lang.String defaultValue);
        * 时间戳
        * </pre>
        *
-       * <code>int64 tm = 3;</code>
+       * <code>int64 tm = 3 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearTm() {
@@ -26966,120 +26966,124 @@ java.lang.String defaultValue);
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\tmsg.proto\022\005model\032\nuser.proto\"\316\001\n\010MsgHe" +
+      "\n\tmsg.proto\022\005model\032\nuser.proto\"\326\001\n\010MsgHe" +
       "llo\022\020\n\010clientId\030\001 \001(\t\022\017\n\007version\030\002 \001(\t\022\020" +
-      "\n\010platform\030\003 \001(\t\022\r\n\005stage\030\005 \001(\t\022\020\n\010keyPr" +
-      "int\030\006 \001(\003\022\020\n\010rsaPrint\030\007 \001(\003\022+\n\006params\030\010 " +
-      "\003(\0132\033.model.MsgHello.ParamsEntry\032-\n\013Para" +
-      "msEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"" +
-      "\225\001\n\016MsgKeyExchange\022\020\n\010keyPrint\030\001 \001(\003\022\020\n\010" +
-      "rsaPrint\030\002 \001(\003\022\r\n\005stage\030\003 \001(\005\022\017\n\007tempKey" +
-      "\030\004 \001(\014\022\016\n\006pubKey\030\005 \001(\014\022\017\n\007encType\030\006 \001(\t\022" +
-      "\016\n\006status\030\007 \001(\t\022\016\n\006detail\030\010 \001(\t\"*\n\014MsgHe" +
-      "artBeat\022\n\n\002tm\030\001 \001(\003\022\016\n\006userId\030\002 \001(\003\"\210\004\n\007" +
-      "MsgChat\022\r\n\005msgId\030\001 \001(\003\022\016\n\006userId\030\002 \001(\003\022\016" +
-      "\n\006fromId\030\003 \001(\003\022\014\n\004toId\030\004 \001(\003\022\n\n\002tm\030\005 \001(\003" +
-      "\022\r\n\005devId\030\006 \001(\t\022\016\n\006sendId\030\007 \001(\003\022#\n\007msgTy" +
-      "pe\030\010 \001(\0162\022.model.ChatMsgType\022\014\n\004data\030\t \001" +
-      "(\014\022$\n\010priority\030\n \001(\0162\022.model.MsgPriority" +
-      "\022\024\n\014refMessageId\030\013 \001(\003\022$\n\006status\030\014 \001(\0162\024" +
-      ".model.ChatMsgStatus\022\021\n\tsendReply\030\r \001(\003\022" +
-      "\021\n\trecvReply\030\016 \001(\003\022\021\n\treadReply\030\017 \001(\003\022#\n" +
-      "\007encType\030\020 \001(\0162\022.model.EncryptType\022!\n\010ch" +
-      "atType\030\021 \001(\0162\017.model.ChatType\022\022\n\nsubMsgT" +
-      "ype\030\022 \001(\005\022\020\n\010keyPrint\030\023 \001(\003\022*\n\006params\030\036 " +
-      "\003(\0132\032.model.MsgChat.ParamsEntry\032-\n\013Param" +
-      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\357" +
-      "\001\n\014MsgChatReply\022\r\n\005msgId\030\001 \001(\003\022\016\n\006sendId" +
-      "\030\002 \001(\003\022\016\n\006sendOk\030\003 \001(\010\022\016\n\006recvOk\030\004 \001(\010\022\016" +
-      "\n\006readOk\030\005 \001(\010\022\020\n\010extraMsg\030\006 \001(\t\022\016\n\006user" +
-      "Id\030\007 \001(\003\022\016\n\006fromId\030\010 \001(\003\022/\n\006params\030\036 \003(\013" +
-      "2\037.model.MsgChatReply.ParamsEntry\032-\n\013Par" +
-      "amsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001" +
-      "\"\221\002\n\010MsgQuery\022\016\n\006userId\030\001 \001(\003\022\017\n\007groupId" +
-      "\030\002 \001(\003\022\r\n\005bigId\030\003 \001(\003\022\020\n\010littleId\030\004 \001(\003\022" +
-      "\017\n\007synType\030\005 \001(\005\022\n\n\002tm\030\006 \001(\003\022!\n\010chatType" +
-      "\030\007 \001(\0162\017.model.ChatType\022\'\n\tqueryType\030\010 \001" +
-      "(\0162\024.model.QueryDataType\022+\n\006params\030\t \003(\013" +
-      "2\033.model.MsgQuery.ParamsEntry\032-\n\013ParamsE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\354\002\n" +
-      "\016MsgQueryResult\022\016\n\006userId\030\001 \001(\003\022\014\n\004anId\030" +
-      "\002 \001(\003\022\r\n\005bigId\030\003 \001(\003\022\020\n\010littleId\030\004 \001(\003\022\017" +
-      "\n\007synType\030\005 \001(\005\022\n\n\002tm\030\006 \001(\003\022!\n\010chatType\030" +
-      "\007 \001(\0162\017.model.ChatType\022\'\n\tqueryType\030\010 \001(" +
-      "\0162\024.model.QueryDataType\022$\n\014chatDataList\030" +
-      "\013 \003(\0132\016.model.MsgChat\022*\n\rchatReplyList\030\014" +
-      " \003(\0132\023.model.MsgChatReply\0221\n\006params\030\r \003(" +
-      "\0132!.model.MsgQueryResult.ParamsEntry\032-\n\013" +
-      "ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:" +
-      "\0028\001\"\212\001\n\014MsgUploadReq\022\020\n\010fileName\030\001 \001(\t\022\020" +
-      "\n\010fileSize\030\002 \001(\003\022\020\n\010fileData\030\003 \001(\014\022\020\n\010ha" +
-      "shType\030\004 \001(\t\022\020\n\010hashCode\030\005 \001(\014\022\020\n\010fileTy" +
-      "pe\030\006 \001(\t\022\016\n\006sendId\030\007 \001(\t\"T\n\016MsgUploadRep" +
-      "ly\022\020\n\010fileName\030\001 \001(\t\022\016\n\006sendId\030\002 \001(\t\022\020\n\010" +
-      "uuidName\030\003 \001(\t\022\016\n\006result\030\004 \001(\t\"B\n\016MsgDow" +
-      "nloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001" +
-      "(\t\022\016\n\006offset\030\003 \001(\003\"\250\001\n\020MsgDownloadReply\022" +
-      "\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001(\t\022\020\n\010rea" +
-      "lName\030\003 \001(\t\022\020\n\010fileType\030\004 \001(\t\022\020\n\010hashTyp" +
-      "e\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\014\022\014\n\004data\030\007 \001(\014\022" +
-      "\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\"\204\001\n\010MsgErr" +
-      "or\022\014\n\004code\030\001 \001(\005\022\016\n\006detail\030\002 \001(\t\022+\n\006para" +
-      "ms\030\t \003(\0132\033.model.MsgError.ParamsEntry\032-\n" +
+      "\n\010platform\030\003 \001(\t\022\r\n\005stage\030\005 \001(\t\022\024\n\010keyPr" +
+      "int\030\006 \001(\003B\0020\001\022\024\n\010rsaPrint\030\007 \001(\003B\0020\001\022+\n\006p" +
+      "arams\030\010 \003(\0132\033.model.MsgHello.ParamsEntry" +
+      "\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
+      "\001(\t:\0028\001\"\235\001\n\016MsgKeyExchange\022\024\n\010keyPrint\030\001" +
+      " \001(\003B\0020\001\022\024\n\010rsaPrint\030\002 \001(\003B\0020\001\022\r\n\005stage\030" +
+      "\003 \001(\005\022\017\n\007tempKey\030\004 \001(\014\022\016\n\006pubKey\030\005 \001(\014\022\017" +
+      "\n\007encType\030\006 \001(\t\022\016\n\006status\030\007 \001(\t\022\016\n\006detai" +
+      "l\030\010 \001(\t\"2\n\014MsgHeartBeat\022\016\n\002tm\030\001 \001(\003B\0020\001\022" +
+      "\022\n\006userId\030\002 \001(\003B\0020\001\"\264\004\n\007MsgChat\022\021\n\005msgId" +
+      "\030\001 \001(\003B\0020\001\022\022\n\006userId\030\002 \001(\003B\0020\001\022\022\n\006fromId" +
+      "\030\003 \001(\003B\0020\001\022\020\n\004toId\030\004 \001(\003B\0020\001\022\016\n\002tm\030\005 \001(\003" +
+      "B\0020\001\022\r\n\005devId\030\006 \001(\t\022\022\n\006sendId\030\007 \001(\003B\0020\001\022" +
+      "#\n\007msgType\030\010 \001(\0162\022.model.ChatMsgType\022\014\n\004" +
+      "data\030\t \001(\014\022$\n\010priority\030\n \001(\0162\022.model.Msg" +
+      "Priority\022\030\n\014refMessageId\030\013 \001(\003B\0020\001\022$\n\006st" +
+      "atus\030\014 \001(\0162\024.model.ChatMsgStatus\022\025\n\tsend" +
+      "Reply\030\r \001(\003B\0020\001\022\025\n\trecvReply\030\016 \001(\003B\0020\001\022\025" +
+      "\n\treadReply\030\017 \001(\003B\0020\001\022#\n\007encType\030\020 \001(\0162\022" +
+      ".model.EncryptType\022!\n\010chatType\030\021 \001(\0162\017.m" +
+      "odel.ChatType\022\022\n\nsubMsgType\030\022 \001(\005\022\024\n\010key" +
+      "Print\030\023 \001(\003B\0020\001\022*\n\006params\030\036 \003(\0132\032.model." +
+      "MsgChat.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\377\001\n\014MsgChatRe" +
+      "ply\022\021\n\005msgId\030\001 \001(\003B\0020\001\022\022\n\006sendId\030\002 \001(\003B\002" +
+      "0\001\022\016\n\006sendOk\030\003 \001(\010\022\016\n\006recvOk\030\004 \001(\010\022\016\n\006re" +
+      "adOk\030\005 \001(\010\022\020\n\010extraMsg\030\006 \001(\t\022\022\n\006userId\030\007" +
+      " \001(\003B\0020\001\022\022\n\006fromId\030\010 \001(\003B\0020\001\022/\n\006params\030\036" +
+      " \003(\0132\037.model.MsgChatReply.ParamsEntry\032-\n" +
       "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\"\233\006\n\010MsgPlain\022 \n\005hello\030\007 \001(\0132\017.model" +
-      ".MsgHelloH\000\022(\n\theartBeat\030\010 \001(\0132\023.model.M" +
-      "sgHeartBeatH\000\022#\n\010errorMsg\030\t \001(\0132\017.model." +
-      "MsgErrorH\000\022&\n\005keyEx\030\n \001(\0132\025.model.MsgKey" +
-      "ExchangeH\000\022\"\n\010chatData\030\013 \001(\0132\016.model.Msg" +
-      "ChatH\000\022(\n\tchatReply\030\014 \001(\0132\023.model.MsgCha" +
-      "tReplyH\000\022&\n\013commonQuery\030\r \001(\0132\017.model.Ms" +
-      "gQueryH\000\022/\n\016commonQueryRet\030\016 \001(\0132\025.model" +
-      ".MsgQueryResultH\000\022(\n\tuploadReq\030\025 \001(\0132\023.m" +
-      "odel.MsgUploadReqH\000\022,\n\013downloadReq\030\026 \001(\013" +
-      "2\025.model.MsgDownloadReqH\000\022,\n\013uploadReply" +
-      "\030\027 \001(\0132\025.model.MsgUploadReplyH\000\0220\n\rdownl" +
-      "oadReply\030\030 \001(\0132\027.model.MsgDownloadReplyH" +
-      "\000\022\"\n\006userOp\030\037 \001(\0132\020.model.UserOpReqH\000\022(\n" +
-      "\tuserOpRet\030  \001(\0132\023.model.UserOpResultH\000\022" +
-      "&\n\010friendOp\030! \001(\0132\022.model.FriendOpReqH\000\022" +
-      ",\n\013friendOpRet\030\" \001(\0132\025.model.FriendOpRes" +
-      "ultH\000\022$\n\007groupOp\030# \001(\0132\021.model.GroupOpRe" +
-      "qH\000\022*\n\ngroupOpRet\030$ \001(\0132\024.model.GroupOpR" +
-      "esultH\000\022\026\n\014otherTypeMsg\030d \001(\014H\000B\t\n\007messa" +
-      "ge\"\253\001\n\003Msg\022\017\n\007version\030\001 \001(\005\022\020\n\010keyPrint\030" +
-      "\002 \001(\003\022\n\n\002tm\030\003 \001(\003\022\"\n\007msgType\030\004 \001(\0162\021.mod" +
-      "el.ComMsgType\022\017\n\007subType\030\005 \001(\005\022\020\n\006cipher" +
-      "\030\013 \001(\014H\000\022#\n\010plainMsg\030\014 \001(\0132\017.model.MsgPl" +
-      "ainH\000B\t\n\007message*,\n\013MsgPriority\022\007\n\003LOW\020\000" +
-      "\022\n\n\006NORMAL\020\001\022\010\n\004HIGH\020\002*X\n\rChatMsgStatus\022" +
-      "\013\n\007SENDING\020\000\022\010\n\004SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDE" +
-      "LIVERED\020\003\022\010\n\004READ\020\004\022\013\n\007DELETED\020\005*c\n\013Chat" +
-      "MsgType\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022" +
-      "\t\n\005VIDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020" +
-      "\006\022\n\n\006PLUGIN\020d*H\n\013EncryptType\022\t\n\005PLAIN\020\000\022" +
-      "\n\n\006CUSTOM\020\001\022\014\n\010CHACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007" +
-      "\n\003AES\020\004*2\n\010ChatType\022\023\n\017PrivateChatType\020\000" +
-      "\022\021\n\rGroupChatType\020\001*V\n\rQueryDataType\022\025\n\021" +
-      "QueryDataTypeData\020\000\022\026\n\022QueryDataTypeRepl" +
-      "y\020\001\022\026\n\022QueryDataTypeByTag\020\002*\342\001\n\014ErrorMsg" +
-      "Type\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014E" +
-      "rrTKeyPrint\020\002\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTW" +
-      "rongPwd\020\004\022\021\n\rErrTWrongCode\020\005\022\020\n\014ErrTRsaP" +
-      "rint\020\006\022\017\n\013ErrTTempkey\020\007\022\017\n\013ErrTEncType\020\010" +
-      "\022\024\n\020ErrTServerInside\020\t\022\r\n\tErrTStage\020\n\022\021\n" +
-      "\rErrTPublicKey\020\013*\366\002\n\nComMsgType\022\016\n\nMsgTU" +
-      "nused\020\000\022\r\n\tMsgTHello\020\001\022\021\n\rMsgTHeartBeat\020" +
-      "\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n" +
-      "\013MsgTChatMsg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsg" +
-      "TQuery\020\r\022\023\n\017MsgTQueryResult\020\016\022\016\n\nMsgTUpl" +
-      "oad\020\025\022\020\n\014MsgTDownload\020\026\022\023\n\017MsgTUploadRep" +
-      "ly\020\027\022\025\n\021MsgTDownloadReply\020\030\022\016\n\nMsgTUserO" +
-      "p\020\037\022\021\n\rMsgTUserOpRet\020 \022\020\n\014MsgTFriendOp\020!" +
-      "\022\023\n\017MsgTFriendOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022" +
-      "\n\016MsgTGroupOpRet\020$\022\r\n\tMsgTOther\020d23\n\nMsg" +
-      "Service\022%\n\013ClientEvent\022\n.model.Msg\032\n.mod" +
-      "el.MsgB\020Z\016server/pbmodelb\006proto3"
+      ":\0028\001\"\245\002\n\010MsgQuery\022\022\n\006userId\030\001 \001(\003B\0020\001\022\023\n" +
+      "\007groupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 \001(\003B\0020\001\022\024\n" +
+      "\010littleId\030\004 \001(\003B\0020\001\022\017\n\007synType\030\005 \001(\005\022\016\n\002" +
+      "tm\030\006 \001(\003B\0020\001\022!\n\010chatType\030\007 \001(\0162\017.model.C" +
+      "hatType\022\'\n\tqueryType\030\010 \001(\0162\024.model.Query" +
+      "DataType\022+\n\006params\030\t \003(\0132\033.model.MsgQuer" +
+      "y.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\200\003\n\016MsgQueryResult\022" +
+      "\022\n\006userId\030\001 \001(\003B\0020\001\022\020\n\004anId\030\002 \001(\003B\0020\001\022\021\n" +
+      "\005bigId\030\003 \001(\003B\0020\001\022\024\n\010littleId\030\004 \001(\003B\0020\001\022\017" +
+      "\n\007synType\030\005 \001(\005\022\016\n\002tm\030\006 \001(\003B\0020\001\022!\n\010chatT" +
+      "ype\030\007 \001(\0162\017.model.ChatType\022\'\n\tqueryType\030" +
+      "\010 \001(\0162\024.model.QueryDataType\022$\n\014chatDataL" +
+      "ist\030\013 \003(\0132\016.model.MsgChat\022*\n\rchatReplyLi" +
+      "st\030\014 \003(\0132\023.model.MsgChatReply\0221\n\006params\030" +
+      "\r \003(\0132!.model.MsgQueryResult.ParamsEntry" +
+      "\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
+      "\001(\t:\0028\001\"\212\001\n\014MsgUploadReq\022\020\n\010fileName\030\001 \001" +
+      "(\t\022\020\n\010fileSize\030\002 \001(\003\022\020\n\010fileData\030\003 \001(\014\022\020" +
+      "\n\010hashType\030\004 \001(\t\022\020\n\010hashCode\030\005 \001(\014\022\020\n\010fi" +
+      "leType\030\006 \001(\t\022\016\n\006sendId\030\007 \001(\t\"T\n\016MsgUploa" +
+      "dReply\022\020\n\010fileName\030\001 \001(\t\022\016\n\006sendId\030\002 \001(\t" +
+      "\022\020\n\010uuidName\030\003 \001(\t\022\016\n\006result\030\004 \001(\t\"B\n\016Ms" +
+      "gDownloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName" +
+      "\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\250\001\n\020MsgDownloadRe" +
+      "ply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001(\t\022\020\n" +
+      "\010realName\030\003 \001(\t\022\020\n\010fileType\030\004 \001(\t\022\020\n\010has" +
+      "hType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\014\022\014\n\004data\030\007 " +
+      "\001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\"\204\001\n\010Ms" +
+      "gError\022\014\n\004code\030\001 \001(\005\022\016\n\006detail\030\002 \001(\t\022+\n\006" +
+      "params\030\t \003(\0132\033.model.MsgError.ParamsEntr" +
+      "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
+      " \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hello\030\007 \001(\0132\017.m" +
+      "odel.MsgHelloH\000\022(\n\theartBeat\030\010 \001(\0132\023.mod" +
+      "el.MsgHeartBeatH\000\022#\n\010errorMsg\030\t \001(\0132\017.mo" +
+      "del.MsgErrorH\000\022&\n\005keyEx\030\n \001(\0132\025.model.Ms" +
+      "gKeyExchangeH\000\022\"\n\010chatData\030\013 \001(\0132\016.model" +
+      ".MsgChatH\000\022(\n\tchatReply\030\014 \001(\0132\023.model.Ms" +
+      "gChatReplyH\000\022&\n\013commonQuery\030\r \001(\0132\017.mode" +
+      "l.MsgQueryH\000\022/\n\016commonQueryRet\030\016 \001(\0132\025.m" +
+      "odel.MsgQueryResultH\000\022(\n\tuploadReq\030\025 \001(\013" +
+      "2\023.model.MsgUploadReqH\000\022,\n\013downloadReq\030\026" +
+      " \001(\0132\025.model.MsgDownloadReqH\000\022,\n\013uploadR" +
+      "eply\030\027 \001(\0132\025.model.MsgUploadReplyH\000\0220\n\rd" +
+      "ownloadReply\030\030 \001(\0132\027.model.MsgDownloadRe" +
+      "plyH\000\022\"\n\006userOp\030\037 \001(\0132\020.model.UserOpReqH" +
+      "\000\022(\n\tuserOpRet\030  \001(\0132\023.model.UserOpResul" +
+      "tH\000\022&\n\010friendOp\030! \001(\0132\022.model.FriendOpRe" +
+      "qH\000\022,\n\013friendOpRet\030\" \001(\0132\025.model.FriendO" +
+      "pResultH\000\022$\n\007groupOp\030# \001(\0132\021.model.Group" +
+      "OpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132\024.model.Grou" +
+      "pOpResultH\000\022\026\n\014otherTypeMsg\030d \001(\014H\000B\t\n\007m" +
+      "essage\"\263\001\n\003Msg\022\017\n\007version\030\001 \001(\005\022\024\n\010keyPr" +
+      "int\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020\001\022\"\n\007msgType" +
+      "\030\004 \001(\0162\021.model.ComMsgType\022\017\n\007subType\030\005 \001" +
+      "(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plainMsg\030\014 \001(\0132\017" +
+      ".model.MsgPlainH\000B\t\n\007message*,\n\013MsgPrior" +
+      "ity\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004HIGH\020\002*X\n\rCh" +
+      "atMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004SENT\020\001\022\n\n\006FA" +
+      "ILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004READ\020\004\022\013\n\007DELET" +
+      "ED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020\001" +
+      "\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006DELE" +
+      "TE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n\013EncryptType" +
+      "\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010CHACHA20\020\002\022\013\n" +
+      "\007TWOFISH\020\003\022\007\n\003AES\020\004*2\n\010ChatType\022\023\n\017Priva" +
+      "teChatType\020\000\022\021\n\rGroupChatType\020\001*V\n\rQuery" +
+      "DataType\022\025\n\021QueryDataTypeData\020\000\022\026\n\022Query" +
+      "DataTypeReply\020\001\022\026\n\022QueryDataTypeByTag\020\002*" +
+      "\342\001\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
+      "rsion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRedirec" +
+      "t\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCode\020\005" +
+      "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempkey\020\007\022\017\n\013E" +
+      "rrTEncType\020\010\022\024\n\020ErrTServerInside\020\t\022\r\n\tEr" +
+      "rTStage\020\n\022\021\n\rErrTPublicKey\020\013*\366\002\n\nComMsgT" +
+      "ype\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001\022\021\n\rMs" +
+      "gTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgTKeyE" +
+      "xchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgTChatRe" +
+      "ply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQueryResult\020" +
+      "\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownload\020\026\022\023\n\017M" +
+      "sgTUploadReply\020\027\022\025\n\021MsgTDownloadReply\020\030\022" +
+      "\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpRet\020 \022\020\n\014Ms" +
+      "gTFriendOp\020!\022\023\n\017MsgTFriendOpRet\020\"\022\017\n\013Msg" +
+      "TGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\tMsgTOt" +
+      "her\020d23\n\nMsgService\022%\n\013ClientEvent\022\n.mod" +
+      "el.Msg\032\n.model.MsgB\020Z\016server/pbmodelb\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

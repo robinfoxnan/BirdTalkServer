@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // 所有消息的统一入口，这里再开始分发
@@ -242,7 +243,17 @@ func handleHeartMsg(heartHello *pbmodel.Msg, session *Session) {
 
 // 自动选择算法执行加密
 func encryptDataAuto(data []byte, session *Session) ([]byte, error) {
-	return nil, nil
+	encType := strings.ToLower(session.KeyEx.EncType)
+	switch encType {
+	case "chacha20":
+		return utils.EncryptChaCha20(data, session.KeyEx.SharedKeyHash)
+	case "aes-ctr":
+		return utils.EncryptAES_CTR(data, session.KeyEx.SharedKeyHash)
+	case "twofish":
+		return utils.DecryptTwofish(data, session.KeyEx.SharedKeyHash)
+	}
+
+	return nil, errors.New("not supported encrypt algorithm")
 }
 
 // 回复秘钥交换的阶段2
@@ -250,7 +261,7 @@ func sendBackExchange2(session *Session) {
 
 	tm := utils.GetTimeStamp()
 	tmStr := strconv.FormatInt(tm, 10)
-	checkData, err := utils.EncryptChaCha20([]byte(tmStr), session.KeyEx.SharedKeyHash)
+	checkData, err := encryptDataAuto([]byte(tmStr), session)
 	if err != nil {
 		return
 	}
@@ -265,6 +276,10 @@ func sendBackExchange2(session *Session) {
 		Status:   "ready",
 		Detail:   "reply public key and key print",
 	}
+
+	fmt.Println("local public key is:", string(session.KeyEx.PublicKey))
+	fmt.Println("share key is: ", session.KeyEx.SharedKeyHash)
+	fmt.Println("share key print is: ", session.KeyEx.SharedKeyPrint)
 
 	msgPlain := pbmodel.MsgPlain{
 		Message: &pbmodel.MsgPlain_KeyEx{
@@ -301,9 +316,10 @@ func decodeRemotePublicKey(exMsg *pbmodel.MsgKeyExchange, session *Session) ([]b
 	if rsaPrint == 0 {
 
 		publicKey := exMsg.GetPubKey()
-		if len(publicKey) != 65 {
+		fmt.Println("remote public key=", string(publicKey))
+		if len(publicKey) < 65 {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPublicKey), "", nil, session)
-			return nil, errors.New("public key len is not 65 bytes")
+			return nil, errors.New("public key len less bytes")
 		}
 		return publicKey, nil
 	}
@@ -321,7 +337,8 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 	}
 
 	exMsg := msg.GetPlainMsg().GetKeyEx()
-	fmt.Printf("收到KeyExchange %v", exMsg)
+	//fmt.Printf("收到KeyExchange %v", exMsg)
+
 	stage := exMsg.GetStage()
 	if stage == 1 { // 开始阶段
 		encType := exMsg.EncType
@@ -330,7 +347,7 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 		}
 		exChangeData, err := utils.NewKeyExchange(encType)
 		if err != nil {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "", nil, session)
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "create key pair error: "+err.Error(), nil, session)
 			return
 		}
 		session.KeyEx = exChangeData // 设置
@@ -340,10 +357,12 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 			return
 		}
 
+		exChangeData.Stage = utils.KeyExchangeStagePublicKey
 		// 计算共享密钥，并计算指纹
 		_, err = exChangeData.GenShareKey(publicKeyRemote)
 		if err != nil {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPublicKey), "", nil, session)
+			fmt.Println("calculate share key error", err)
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPublicKey), "calculate share key error: "+err.Error(), nil, session)
 			return
 		}
 		sendBackExchange2(session)

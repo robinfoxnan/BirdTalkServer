@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/md5"
 	"crypto/rand"
@@ -20,6 +21,7 @@ import (
 	"io"
 	"math/big"
 	"os"
+	"strings"
 )
 
 // 1. 发起端(客户端使用对方公钥加密临时秘钥给对方)
@@ -40,6 +42,7 @@ const (
 	KeyExchangeStageFinished  = 5
 )
 
+var algorithmList = []string{"chacha20", "twofish128", "aes-ctr"}
 var curve elliptic.Curve = elliptic.P256()
 
 // 使用椭圆曲线计算共享密钥
@@ -58,6 +61,16 @@ type KeyExchange struct {
 	SharedKeyPrint int64  // md hash 的前8个字节转为int64
 }
 
+func checkAlgorithm(enc string) bool {
+	littleEnc := strings.ToLower(enc)
+	for _, item := range algorithmList {
+		if item == littleEnc {
+			return true
+		}
+	}
+	return false
+}
+
 // "s","c"
 func NewKeyExchange(enc string) (*KeyExchange, error) {
 	keyEx := KeyExchange{Role: "c",
@@ -65,13 +78,15 @@ func NewKeyExchange(enc string) (*KeyExchange, error) {
 		SharedKey:     nil,
 		SharedKeyHash: nil,
 		Stage:         KeyExchangeStageNonce,
-		EncType:       "chacha20",
+		EncType:       enc,
 	}
-	if enc != "chacha20" && enc != "twofish128" && enc != "aes256" {
-		return nil, errors.New("enc type unknow")
-	}
-	var err error
 
+	ok := checkAlgorithm(enc)
+	if !ok {
+		return nil, errors.New("encrypt algorithm is unknown")
+	}
+
+	var err error
 	// 这里就生成了密钥对
 	keyEx.PrivateKey, keyEx.PublicKey, err = generateDHKeyPair(curve)
 	if err != nil {
@@ -122,19 +137,28 @@ func (k *KeyExchange) GenShareKey(remotePublicKey []byte) (int64, error) {
 
 	var err error
 	k.PublicKeyRemote = remotePublicKey
-	k.SharedKey, err = sharedSecret1(curve, remotePublicKey, k.PrivateKey)
+	k.SharedKey, err = sharedSecretSPKI(curve, remotePublicKey, k.PrivateKey)
+	if err != nil {
+		return 0, err
+	}
 
+	if len(k.SharedKey) < 32 {
+		return 0, errors.New("share key less than 32 bytes")
+	}
 	// 计算新的对称密钥
-	switch k.EncType {
+
+	switch strings.ToLower(k.EncType) {
 	case "chacha20":
 		k.SharedKeyHash = k.SharedKey
 		//calculateSHA256(k.SharedKey)
 
-	case "aes256":
+	case "aes-ctr":
 		k.SharedKeyHash = k.SharedKey
 		//calculateSHA256(k.SharedKey)
 	case "twofish128":
 		k.SharedKeyHash = calculateMD5(k.SharedKey)
+	default:
+		k.SharedKeyHash = k.SharedKey
 	}
 
 	// 计算共享密钥指纹，用户后续直接使用，可以用于做SessionID
@@ -361,7 +385,7 @@ func LoadRSAPrivateKeyFromPEM(filePath string) (*rsa.PrivateKey, error) {
 // 使用了CTR模式进行加密，它需要一个初始化向量（IV）。
 // 在这里，我们随机生成一个IV并将其作为密文的前16个字节。
 // 在解密时，我们将前16个字节解释为IV，并将其与密文一起传递给解密函数。
-func EncryptAES(plaintext, key []byte) ([]byte, error) {
+func EncryptAES_CTR(plaintext, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -379,7 +403,7 @@ func EncryptAES(plaintext, key []byte) ([]byte, error) {
 	return ciphertext, nil
 }
 
-func DecryptAES(ciphertext, key []byte) ([]byte, error) {
+func DecryptAES_CTR(ciphertext, key []byte) ([]byte, error) {
 	block, err := aes.NewCipher(key)
 	if err != nil {
 		return nil, err
@@ -511,6 +535,27 @@ func DecryptChaCha20(ciphertext, key []byte) ([]byte, error) {
 }
 
 // ///////////////////////////////////////////////////////////////////////
+func encodeSPKIPublicKey(publicKey *ecdsa.PublicKey) ([]byte, error) {
+
+	// 将公钥编码为 DER 格式
+	publicKeyDER, err := x509.MarshalPKIXPublicKey(publicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println("DER public key:", publicKeyDER)
+
+	// 创建一个 PEM 格式的数据块
+	publicKeyPEM := &pem.Block{
+		Type:  "PUBLIC KEY",
+		Bytes: publicKeyDER,
+	}
+
+	// 将 PEM 格式的数据块转换为字节数组
+	pemBytes := pem.EncodeToMemory(publicKeyPEM)
+
+	return pemBytes, nil
+}
 
 // generateDHKeyPair 生成椭圆曲线的密钥对
 func generateDHKeyPair(curve elliptic.Curve) (*big.Int, []byte, error) {
@@ -522,25 +567,27 @@ func generateDHKeyPair(curve elliptic.Curve) (*big.Int, []byte, error) {
 
 	// 计算公钥
 	publicKeyX, publicKeyY := curve.ScalarBaseMult(privateKey.Bytes())
-	publicKey := elliptic.MarshalCompressed(curve, publicKeyX, publicKeyY) // 使用压缩格式
+	//publicKey := elliptic.MarshalCompressed(curve, publicKeyX, publicKeyY) // 使用压缩格式
+	publicKeyCurve := ecdsa.PublicKey{Curve: curve, X: publicKeyX, Y: publicKeyY}
+	publicKeySPKI, err := encodeSPKIPublicKey(&publicKeyCurve)
 
-	return privateKey, publicKey, nil
+	return privateKey, publicKeySPKI, err
 }
 
 // sharedSecret 计算共享密钥
-func sharedSecret(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) ([]byte, error) {
-	// 解码公钥
-	x, y := elliptic.UnmarshalCompressed(curve, publicKey)
-	if x == nil {
-		return nil, fmt.Errorf("invalid public key")
-	}
-
-	// 计算共享密钥
-	sharedKeyX, sharedKeyY := curve.ScalarMult(x, y, privateKey.Bytes())
-	sharedKey := elliptic.Marshal(curve, sharedKeyX, sharedKeyY) // 返回整个点的字节表示
-
-	return sharedKey, nil
-}
+//func sharedSecret(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) ([]byte, error) {
+//	// 解码公钥
+//	x, y := elliptic.UnmarshalCompressed(curve, publicKey)
+//	if x == nil {
+//		return nil, fmt.Errorf("invalid public key")
+//	}
+//
+//	// 计算共享密钥
+//	sharedKeyX, sharedKeyY := curve.ScalarMult(x, y, privateKey.Bytes())
+//	sharedKey := elliptic.Marshal(curve, sharedKeyX, sharedKeyY) // 返回整个点的字节表示
+//
+//	return sharedKey, nil
+//}
 
 func sharedSecret1(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) ([]byte, error) {
 	// 解码公钥
@@ -559,6 +606,48 @@ func sharedSecret1(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) 
 	}
 
 	return sharedKey, nil
+}
+
+func sharedSecretSPKI(curve elliptic.Curve, publicKey []byte, privateKey *big.Int) ([]byte, error) {
+	// 解码公钥
+	publicKeySPKI, err := parsePublicKey(publicKey)
+	if err != nil {
+		return nil, err
+	}
+
+	// 计算共享密钥
+	sharedKeyX, _ := curve.ScalarMult(publicKeySPKI.X, publicKeySPKI.Y, privateKey.Bytes())
+	sharedKey := sharedKeyX.Bytes()
+
+	// 如果共享密钥长度超过32字节，截取前32个字节
+	//if len(sharedKey) > 32 {
+	//	sharedKey = sharedKey[:32]
+	//}
+
+	return sharedKey, nil
+}
+
+/*
+JavaScript 中使用 SPKI 格式导出的公钥可以在 Go 中解码和使用。
+了在 Go 中解码 JavaScript 导出的公钥，需要使用 crypto/x509 包中的函数来解析公钥。
+*/
+func parsePublicKey(publicKeyPEM []byte) (*ecdsa.PublicKey, error) {
+	// 解码 PEM 格式的公钥
+	block, _ := pem.Decode(publicKeyPEM)
+	if block == nil {
+		return nil, fmt.Errorf("failed to decode PEM block containing public key")
+	}
+	// 解析公钥
+	publicKey, err := x509.ParsePKIXPublicKey(block.Bytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse public key: %v", err)
+	}
+	// 转换为 ECDSA 公钥
+	ecdsaPublicKey, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		return nil, fmt.Errorf("failed to convert to ECDSA public key")
+	}
+	return ecdsaPublicKey, nil
 }
 
 // generateLargePrime 生成一个指定位数的大素数
