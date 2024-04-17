@@ -314,9 +314,39 @@ func sendBackExchange2(session *Session) {
 	session.SendMessage(msg)
 }
 
-// 发送验证结果
+// 通知客户端秘钥交换完毕
 func sendBackExchange4(session *Session) {
 
+	exMsg := pbmodel.MsgKeyExchange{
+		KeyPrint: session.KeyEx.SharedKeyPrint,
+		RsaPrint: 0,
+		Stage:    4,
+		TempKey:  nil, // 这里发送共享密钥使用对称算法加密时间戳的密文
+		PubKey:   nil,
+		EncType:  session.KeyEx.EncType,
+		Status:   "needlogin",
+		Detail:   "check data ok, key print ok",
+	}
+
+	msgPlain := pbmodel.MsgPlain{
+		Message: &pbmodel.MsgPlain_KeyEx{
+			KeyEx: &exMsg,
+		},
+	}
+
+	tm := utils.GetTimeStamp()
+
+	msg := pbmodel.Msg{
+		Version:  int32(ProtocolVersion),
+		KeyPrint: 0,
+		Tm:       tm,
+		MsgType:  pbmodel.ComMsgType_MsgTKeyExchange,
+		SubType:  0,
+		Message: &pbmodel.Msg_PlainMsg{
+			PlainMsg: &msgPlain,
+		},
+	}
+	session.SendMessage(msg)
 }
 
 // 3) 错误消息
@@ -399,9 +429,11 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 			fmt.Println("check data error:", " key print or data not same")
 			fmt.Printf("tm = %v, tmstr= %v \n", tm, tmStr)
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: key print or data not same", nil, session)
+			return
 		}
 
 		// 保存指纹到redis
+		fmt.Printf("check data ok! tm = %v, tmstr= %v \n", tm, tmStr)
 
 		sendBackExchange4(session)
 	} else {

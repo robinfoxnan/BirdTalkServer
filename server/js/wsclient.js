@@ -667,7 +667,7 @@ class WsClient {
         const tmStr = getCurrentTimestamp();
         console.log("时间戳=", tmStr);
         const tmData = stringToBytes(tmStr);
-        const checkData = encryptAES_CTR(tmData, this.shareKey);
+        const checkData = await encryptAES_CTR(tmData, this.shareKey);
 
 
         const exMsg = new proto.model.MsgKeyExchange();

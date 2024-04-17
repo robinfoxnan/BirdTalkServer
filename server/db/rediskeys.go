@@ -29,6 +29,9 @@ const BirdServerGroupMsgCache = "bsgmsg_%d" //群组数据缓存，如果1000条
 const MaxFriendBatchSize = 512              // 最大的批处理的个数
 const MaxFriendCacheSize = 1024             // 缓存中粉丝之类的最大数量
 
+// 秘钥存储
+const BirdServerTokenPrefix = "bsut_%d" // 秘钥的keyPrint
+
 // 某些值必须要有的，确保初始化
 func (cli *RedisClient) initData() {
 	if cli == nil {
@@ -196,4 +199,11 @@ func GetClusterActiveStateKey() string {
 func GetClusterServerStateKey(id int64) string {
 
 	return fmt.Sprintf(BirdServerClusterPrefix, id)
+}
+
+// bsut_11122222
+//
+//go:inline
+func GetUserTokenKey(id int64) string {
+	return fmt.Sprintf(BirdServerTokenPrefix, id)
 }

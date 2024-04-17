@@ -68,3 +68,10 @@ func DecodeBase64(str string) ([]byte, error) {
 	decodedBytes, err := base64.StdEncoding.DecodeString(str)
 	return decodedBytes, err
 }
+
+// go:inline
+func EncodeBase64(data []byte) string {
+	// 解码base64字符串为字节切片
+	return base64.StdEncoding.EncodeToString(data)
+
+}
