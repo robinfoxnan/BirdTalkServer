@@ -59,14 +59,14 @@ func TestAES256(t *testing.T) {
 
 	plaintext := []byte("Hello, AES!")
 
-	ciphertext, err := EncryptAES(plaintext, key)
+	ciphertext, err := EncryptAES_CTR(plaintext, key)
 	if err != nil {
 		fmt.Println("Error encrypting:", err)
 		return
 	}
 	fmt.Println("Ciphertext:", base64.StdEncoding.EncodeToString(ciphertext))
 
-	decryptedText, err := DecryptAES(ciphertext, key)
+	decryptedText, err := DecryptAES_CTR(ciphertext, key)
 	if err != nil {
 		fmt.Println("Error decrypting:", err)
 		return

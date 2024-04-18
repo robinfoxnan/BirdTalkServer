@@ -55,8 +55,9 @@ message UserOpReq {
 message UserOpResult {
   UserOperationType operation = 1;            // 操作类型
   string result = 2;               // "ok" "fail"
-  repeated UserInfo users = 3;     // 涉及的用户信息列表，使用repeated表示多个用户
-  map<string, string> params = 4;
+  string  status = 3;
+  repeated UserInfo users = 4;     // 涉及的用户信息列表，使用repeated表示多个用户
+  map<string, string> params = 5;
 }
 
 // 好友操作请求消息

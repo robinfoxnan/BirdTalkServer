@@ -8,6 +8,9 @@ import (
 
 // 保存秘钥相关内容
 func (cli *RedisClient) SaveToken(uid int64, keyEx *utils.KeyExchange) error {
+	if keyEx.SharedKeyPrint == 0 {
+		return nil
+	}
 	key := GetUserTokenKey(keyEx.SharedKeyPrint)
 
 	data := make(map[string]interface{})

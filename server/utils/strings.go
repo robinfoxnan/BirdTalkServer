@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 )
 
@@ -74,4 +75,16 @@ func EncodeBase64(data []byte) string {
 	// 解码base64字符串为字节切片
 	return base64.StdEncoding.EncodeToString(data)
 
+}
+
+// IsValidEmail 检查电子邮件地址是否合法
+func IsValidEmail(email string) bool {
+	// 使用正则表达式匹配电子邮件地址的模式
+	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+
+	// 编译正则表达式
+	reg := regexp.MustCompile(pattern)
+
+	// 使用正则表达式判断是否匹配
+	return reg.MatchString(email)
 }

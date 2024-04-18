@@ -1,6 +1,7 @@
 package core
 
 import (
+	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"fmt"
@@ -35,6 +36,8 @@ type Session struct {
 	RemoteAddr  string // 客户端的 IP 地址。
 	Params      map[string]string
 
+	TempUserInfo *pbmodel.UserInfo // 临时保存的
+
 	Status uint32             // 状态码
 	KeyEx  *utils.KeyExchange // 秘钥交换
 
@@ -59,11 +62,28 @@ type Session struct {
 	terminating int32
 }
 
+func (s *Session) SetStatus(mask uint32) {
+	s.Status = mask
+}
+
+func (s *Session) SetKeyValue(key, value string) {
+	s.Params[key] = value
+}
+
+func (s *Session) GetKeyValue(key string) string {
+	v, ok := s.Params[key]
+	if !ok {
+		return ""
+	}
+	return v
+}
+
 // 创建新的会话
 func NewSession(conn *websocket.Conn, sid, uid int64, code string) *Session {
 	s := Session{UserID: uid, Sid: sid, ws: conn, CodeType: code,
 		Params: make(map[string]string),
 		KeyEx:  nil,
+		Status: model.UserStatusNone,
 	}
 	if sid == 0 {
 		s.Sid = Globals.snow.GenerateID()

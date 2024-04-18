@@ -244,6 +244,9 @@ enum ErrorMsgType{
   ErrTPublicKey = 11; // 65 字节
   ErrTKeyConflict = 12; // 指纹碰撞
   ErrTCheckData = 13;   // 解密后验证秘钥
+  ErrTMsgContent = 14;  // 消息内容与类型不匹配
+  ErrTNotLogin = 15;   // 未登录
+  ErrTNotPermission = 16; // 权限不够
 }
 
 message MsgError{

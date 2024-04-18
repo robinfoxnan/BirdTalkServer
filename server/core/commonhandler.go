@@ -6,17 +6,36 @@ import (
 	"birdtalk/server/utils"
 	"errors"
 	"fmt"
+	"go.uber.org/zap"
 	"strconv"
-	"strings"
 )
 
 // 所有消息的统一入口，这里再开始分发
 // 用户与群组消息一共是6大类，
 func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
-	fmt.Println(msg)
+
+	//fmt.Println(msg)
+	keyPrint := msg.GetKeyPrint() // 加密指纹，明文传输需要先检查类型是否正确
+	if keyPrint == 0 {
+		msgPlain := msg.GetPlainMsg()
+		if msgPlain == nil {
+			Globals.Logger.Debug("receive wrong heart msg",
+				zap.Int64("sid", session.Sid),
+				zap.Int64("uid", session.UserID))
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "msg.plainMsg is null", nil, session)
+			return errors.New("plain msg, but msg.plainmsg pointer is null.")
+		}
+	} else { // 目前阶段不支持密文传输，后期如果支持密文，这里需要在这里解密，然后再分发
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "current version, msg.keyPrint must be 0", nil, session)
+		return errors.New("plain msg, but msg.plainmsg pointer is null.")
+	}
+
 	switch msg.MsgType {
 	case pbmodel.ComMsgType_MsgTUnused:
-		fmt.Println("recv unused type message!!")
+		//fmt.Println("recv unused type message!!")
+		Globals.Logger.Info("recv unused type message!!",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
 		break
 
 	case pbmodel.ComMsgType_MsgTHello: // 用于握手的消息
@@ -34,19 +53,31 @@ func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 	case pbmodel.ComMsgType_MsgTQuery:
 		handleCommonQuery(msg, session)
 	case pbmodel.ComMsgType_MsgTQueryResult:
-		fmt.Println("Receive error type of message ComMsgType_MsgTChatQueryResult:")
+		//fmt.Println("Receive error type of message ComMsgType_MsgTChatQueryResult:")
+		Globals.Logger.Info("Receive error type of message ComMsgType_MsgTChatQueryResult:",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
 	case pbmodel.ComMsgType_MsgTUpload:
 		handleFileUpload(msg, session)
 	case pbmodel.ComMsgType_MsgTDownload: //下载文件的消息，文件操作分为带内和带外，这里是小文件可以这样操作
 		handleFileDownload(msg, session)
 	case pbmodel.ComMsgType_MsgTUploadReply:
-		fmt.Println("Receive error type of messageComMsgType_MsgTUploadReply:")
+		//fmt.Println("Receive error type of messageComMsgType_MsgTUploadReply:")
+		Globals.Logger.Info("Receive error type of messageComMsgType_MsgTUploadReply:",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
 	case pbmodel.ComMsgType_MsgTDownloadReply:
-		fmt.Println("Receive error type of message ComMsgType_MsgTDownloadReply:")
+		//fmt.Println("Receive error type of message ComMsgType_MsgTDownloadReply:")
+		Globals.Logger.Info("Receive error type of message ComMsgType_MsgTDownloadReply:",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
 	case pbmodel.ComMsgType_MsgTUserOp: // 所有用户相关操作的消息
 		handleUserOp(msg, session)
 	case pbmodel.ComMsgType_MsgTUserOpRet:
-		fmt.Println("Receive error type of message ComMsgType_MsgTUserOpRet:")
+		//fmt.Println("Receive error type of message ComMsgType_MsgTUserOpRet:")
+		Globals.Logger.Info("Receive error type of message ComMsgType_MsgTUserOpRet:",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
 	case pbmodel.ComMsgType_MsgTFriendOp:
 		handleFriendOp(msg, session)
 	case pbmodel.ComMsgType_MsgTFriendOpRet:
@@ -62,100 +93,6 @@ func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 	return nil
 }
 
-// 检查当前客户端的协议版本号；
-func checkProtoVersion(msg *pbmodel.Msg, session *Session) bool {
-	ver := int(msg.GetVersion()) // 协议版本号
-	if ver != ProtocolVersion {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTVersion), "version is too high", nil, session)
-		return false
-	}
-	return true
-}
-
-// 检查秘钥指纹是否存在
-func checkKeyPrint(key int64) (int, string) {
-	return int(pbmodel.ErrorMsgType_ErrTKeyPrint), "should be 0"
-}
-
-// 检查是否需要重定向
-func checkNeedRedirect(session *Session) (int, string) {
-	//return int(pbmodel.ErrorMsgType_ErrTRedirect), "should redirect"
-
-	return int(pbmodel.ErrorMsgType_ErrTNone), ""
-}
-
-func sendBackErrorMsg(errCode int, detail string, params map[string]string, session *Session) {
-
-	// 创建一个 MsgError 消息
-	errorMsg := pbmodel.MsgError{
-		Code:   int32(errCode),
-		Detail: detail,
-		Params: params,
-	}
-
-	msgPlain := pbmodel.MsgPlain{
-		Message: &pbmodel.MsgPlain_ErrorMsg{
-			ErrorMsg: &errorMsg,
-		},
-	}
-
-	msg := pbmodel.Msg{
-		Version:  int32(ProtocolVersion),
-		KeyPrint: 0,
-		Tm:       utils.GetTimeStamp(),
-		MsgType:  pbmodel.ComMsgType_MsgTError,
-		SubType:  0,
-		Message: &pbmodel.Msg_PlainMsg{
-			PlainMsg: &msgPlain,
-		},
-	}
-
-	//// 序列化消息
-	//data, err := proto.Marshal(&msg)
-	//if err != nil {
-	//	fmt.Println("Error marshaling message:", err)
-	//	return
-	//}
-	//
-	//// 打印序列化后的消息
-	//fmt.Println("Serialized message:", data)
-
-	session.SendMessage(msg)
-}
-
-// 应答服务端的hello消息
-func sendBackHelloMsg(session *Session) {
-
-	hello := pbmodel.MsgHello{
-		ClientId: "",
-		Version:  "v1.0",
-		Platform: "windows",
-		Stage:    "waitlogin",
-		KeyPrint: 0,
-		RsaPrint: 0,
-		Params:   nil,
-	}
-
-	msgPlain := pbmodel.MsgPlain{
-		Message: &pbmodel.MsgPlain_Hello{
-			Hello: &hello,
-		},
-	}
-
-	msg := pbmodel.Msg{
-		Version:  int32(ProtocolVersion),
-		KeyPrint: 0,
-		Tm:       utils.GetTimeStamp(),
-		MsgType:  pbmodel.ComMsgType_MsgTHello,
-		SubType:  0,
-		Message: &pbmodel.Msg_PlainMsg{
-			PlainMsg: &msgPlain,
-		},
-	}
-
-	session.SendMessage(&msg)
-}
-
 // 1) 握手消息
 // 检查是否需要协商秘钥；检查keyprint是否存在；检查协议版本号；
 func handleHelloMsg(msg *pbmodel.Msg, session *Session) {
@@ -166,15 +103,16 @@ func handleHelloMsg(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	// 目前先不考虑这里
-	keyPrint := msg.GetKeyPrint() // 加密传输的秘钥指纹，这里应该为0
-	errCode, errStr := checkKeyPrint(keyPrint)
-	if keyPrint != 0 { // 如果设置了秘钥，那么这里需要验证秘钥正确性
-		sendBackErrorMsg(errCode, errStr, nil, session)
+	// hello 不能使用密文传输，
+	msgHello := msg.GetPlainMsg().GetHello()
+	if msgHello == nil {
+		Globals.Logger.Debug("receive wrong hello msg",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "hello msg is null", nil, session)
 		return
 	}
 
-	msgHello := msg.GetPlainMsg().GetHello()
 	session.DeviceID = msgHello.GetClientId()     // 设备唯一编号
 	session.Platf = msgHello.GetPlatform()        // "web","android"
 	session.Params["Stage"] = msgHello.GetStage() // "clienthello"
@@ -208,170 +146,48 @@ func handleHelloMsg(msg *pbmodel.Msg, session *Session) {
 	session.Status = model.UserWaitLogin
 	fmt.Println(&session)
 	sendBackHelloMsg(session)
+	session.SetStatus(model.UserWaitLogin)
 }
 
 // 2) 心跳消息
-func handleHeartMsg(heartHello *pbmodel.Msg, session *Session) {
-	ping := heartHello.GetPlainMsg().GetHeartBeat()
-	tmStr := utils.TmToLocalString(ping.Tm)
-	fmt.Printf("tm=%s, userid=%d \n", tmStr, ping.UserId)
+func handleHeartMsg(msg *pbmodel.Msg, session *Session) {
 
-	heart := pbmodel.MsgHeartBeat{
-		Tm:     utils.GetTimeStamp(),
-		UserId: session.UserID,
-	}
-
-	msgPlain := pbmodel.MsgPlain{
-		Message: &pbmodel.MsgPlain_HeartBeat{
-			HeartBeat: &heart,
-		},
-	}
-
-	msg := pbmodel.Msg{
-		Version:  int32(ProtocolVersion),
-		KeyPrint: 0,
-		Tm:       utils.GetTimeStamp(),
-		MsgType:  pbmodel.ComMsgType_MsgTHello,
-		SubType:  0,
-		Message: &pbmodel.Msg_PlainMsg{
-			PlainMsg: &msgPlain,
-		},
-	}
-
-	session.SendMessage(msg)
-}
-
-// 自动选择算法执行加密
-func encryptDataAuto(data []byte, session *Session) ([]byte, error) {
-	encType := strings.ToLower(session.KeyEx.EncType)
-	switch encType {
-	case "chacha20":
-		return utils.EncryptChaCha20(data, session.KeyEx.SharedKeyHash)
-	case "aes-ctr":
-		return utils.EncryptAES_CTR(data, session.KeyEx.SharedKeyHash)
-	case "twofish":
-		return utils.EncryptTwofish(data, session.KeyEx.SharedKeyHash)
-	}
-
-	return nil, errors.New("not supported encrypt algorithm")
-}
-
-func decryptDataAuto(data []byte, session *Session) ([]byte, error) {
-	encType := strings.ToLower(session.KeyEx.EncType)
-	switch encType {
-	case "chacha20":
-		return utils.DecryptChaCha20(data, session.KeyEx.SharedKeyHash)
-	case "aes-ctr":
-		return utils.DecryptAES_CTR(data, session.KeyEx.SharedKeyHash)
-	case "twofish":
-		return utils.DecryptTwofish(data, session.KeyEx.SharedKeyHash)
-	}
-
-	return nil, errors.New("not supported encrypt algorithm")
-}
-
-// 回复秘钥交换的阶段2
-func sendBackExchange2(session *Session) {
-
-	tm := utils.GetTimeStamp()
-	tmStr := strconv.FormatInt(tm, 10)
-	checkData, err := encryptDataAuto([]byte(tmStr), session)
-	if err != nil {
+	ping := msg.GetPlainMsg().GetHeartBeat()
+	if ping == nil {
+		Globals.Logger.Debug("receive wrong heart msg",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "heart msg ping is null", nil, session)
 		return
 	}
 
-	exMsg := pbmodel.MsgKeyExchange{
-		KeyPrint: session.KeyEx.SharedKeyPrint,
-		RsaPrint: 0,
-		Stage:    2,
-		TempKey:  checkData, // 这里发送共享密钥使用对称算法加密时间戳的密文
-		PubKey:   session.KeyEx.PublicKey,
-		EncType:  session.KeyEx.EncType,
-		Status:   "ready",
-		Detail:   "reply public key and key print",
-	}
+	tmStr := utils.TmToLocalString(ping.Tm)
+	//fmt.Printf("tm=%s, userid=%d \n", tmStr, ping.UserId)
+	Globals.Logger.Debug("receive heart beat",
+		zap.Int64("sid", session.Sid),
+		zap.Int64("uid", session.UserID),
+		zap.String("tm", tmStr))
 
-	fmt.Println("local public key is:", string(session.KeyEx.PublicKey))
-	fmt.Println("share key is: ", session.KeyEx.SharedKeyHash)
-	fmt.Println("share key print is: ", session.KeyEx.SharedKeyPrint)
-
-	msgPlain := pbmodel.MsgPlain{
-		Message: &pbmodel.MsgPlain_KeyEx{
-			KeyEx: &exMsg,
-		},
-	}
-
-	msg := pbmodel.Msg{
-		Version:  int32(ProtocolVersion),
-		KeyPrint: 0,
-		Tm:       tm,
-		MsgType:  pbmodel.ComMsgType_MsgTKeyExchange,
-		SubType:  0,
-		Message: &pbmodel.Msg_PlainMsg{
-			PlainMsg: &msgPlain,
-		},
-	}
-	session.SendMessage(msg)
-}
-
-// 通知客户端秘钥交换完毕
-func sendBackExchange4(session *Session) {
-
-	exMsg := pbmodel.MsgKeyExchange{
-		KeyPrint: session.KeyEx.SharedKeyPrint,
-		RsaPrint: 0,
-		Stage:    4,
-		TempKey:  nil, // 这里发送共享密钥使用对称算法加密时间戳的密文
-		PubKey:   nil,
-		EncType:  session.KeyEx.EncType,
-		Status:   "needlogin",
-		Detail:   "check data ok, key print ok",
-	}
-
-	msgPlain := pbmodel.MsgPlain{
-		Message: &pbmodel.MsgPlain_KeyEx{
-			KeyEx: &exMsg,
-		},
-	}
-
-	tm := utils.GetTimeStamp()
-
-	msg := pbmodel.Msg{
-		Version:  int32(ProtocolVersion),
-		KeyPrint: 0,
-		Tm:       tm,
-		MsgType:  pbmodel.ComMsgType_MsgTKeyExchange,
-		SubType:  0,
-		Message: &pbmodel.Msg_PlainMsg{
-			PlainMsg: &msgPlain,
-		},
-	}
-	session.SendMessage(msg)
+	sendBackHeartMsg(session)
 }
 
 // 3) 错误消息
 func handleErrorMsg(msg *pbmodel.Msg, session *Session) {
 	errMsg := msg.GetPlainMsg().GetErrorMsg()
-	fmt.Printf("client error = %d, detail = %s \n", errMsg.Code, errMsg.Detail)
-}
-
-// 解码对方的公钥，有可能是加密，根据rasPrint区分
-func decodeRemotePublicKey(exMsg *pbmodel.MsgKeyExchange, session *Session) ([]byte, error) {
-	rsaPrint := exMsg.GetRsaPrint()
-	if rsaPrint == 0 {
-
-		publicKey := exMsg.GetPubKey()
-		fmt.Println("remote public key=", string(publicKey))
-		if len(publicKey) < 65 {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPublicKey), "", nil, session)
-			return nil, errors.New("public key len less bytes")
-		}
-		return publicKey, nil
+	if errMsg == nil {
+		Globals.Logger.Debug("receive wrong error msg",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "error msg error part is null", nil, session)
+		return
 	}
-	// 使用RAS解码对称密钥，使用RSA解码对方公钥；
-
-	sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTRsaPrint), "", nil, session)
-	return nil, errors.New("decode remote public key error")
+	//fmt.Printf("client error = %d, detail = %s \n", errMsg.Code, errMsg.Detail)
+	Globals.Logger.Info("client report error",
+		zap.Int64("sid", session.Sid),
+		zap.Int64("uid", session.UserID),
+		zap.Int32("code", errMsg.Code),
+		zap.String("detail", errMsg.Detail),
+	)
 }
 
 // 4) 交换秘钥消息
@@ -383,12 +199,19 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 
 	exMsg := msg.GetPlainMsg().GetKeyEx()
 	//fmt.Printf("收到KeyExchange %v", exMsg)
+	if exMsg == nil {
+		Globals.Logger.Debug("receive wrong key exchange msg",
+			zap.Int64("sid", session.Sid),
+			zap.Int64("uid", session.UserID))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "key exchange part is null", nil, session)
+		return
+	}
 
 	stage := exMsg.GetStage()
 	if stage == 1 { // 开始阶段
 		encType := exMsg.EncType
 		if len(encType) == 0 {
-			encType = "chacha20"
+			encType = "AES-CTR"
 		}
 		exChangeData, err := utils.NewKeyExchange(encType)
 		if err != nil {
@@ -406,17 +229,20 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 		// 计算共享密钥，并计算指纹
 		_, err = exChangeData.GenShareKey(publicKeyRemote)
 		if err != nil {
-			fmt.Println("calculate share key error", err)
+			//fmt.Println("calculate share key error", err)
+			Globals.Logger.Info("calculate share key error: ", zap.Error(err))
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPublicKey), "calculate share key error: "+err.Error(), nil, session)
 			return
 		}
 		sendBackExchange2(session)
+		session.SetStatus(model.UserStatusExchange)
 
 	} else if stage == 3 {
 		cipher := exMsg.GetTempKey()
 		tmData, err := decryptDataAuto(cipher, session)
 		if err != nil {
-			fmt.Println("check data error", err)
+			//fmt.Println("check data error", err)
+			Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
 		}
 
@@ -426,16 +252,23 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 		tm := strconv.FormatInt(msg.GetTm(), 10)
 		// 如果指纹不一样，或者
 		if remoteKeyPrint != session.KeyEx.SharedKeyPrint || tmStr != tm {
-			fmt.Println("check data error:", " key print or data not same")
-			fmt.Printf("tm = %v, tmstr= %v \n", tm, tmStr)
+			//fmt.Println("check data error:", " key print or data not same")
+			//fmt.Printf("tm = %v, tmstr= %v \n", tm, tmStr)
+			Globals.Logger.Info("check data error: ", zap.String("tm", tm), zap.String("check tm", tmStr))
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: key print or data not same", nil, session)
 			return
 		}
 
 		// 保存指纹到redis
-		fmt.Printf("check data ok! tm = %v, tmstr= %v \n", tm, tmStr)
+		//fmt.Printf("check data ok! tm = %v, tmstr= %v \n", tm, tmStr)
+		Globals.Logger.Debug("check data ok!", zap.String("tm", tm), zap.String("check tm", tmStr))
+		err = Globals.redisCli.SaveToken(0, session.KeyEx)
+		if err != nil {
+			Globals.Logger.Error("exchange stage3 save token err.")
+		}
 
 		sendBackExchange4(session)
+		session.SetStatus(model.UserWaitLogin)
 	} else {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "", nil, session)
 		return

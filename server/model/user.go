@@ -5,14 +5,16 @@ import (
 	"sync"
 )
 
+// 最多支持32个状态
 const (
-	UserStatusNone     = 0         // 等待 HELLO 包
-	UserStatusExchange = 1 << iota // 等待秘钥交换1
-	UserWaitLogin                  // 可以继续
-	UserStatusRegister             // 收到了注册申请，等待验证码2,不需要验证则继续UserReady
-	UserStatusLogin                // 收到了登录申请，需要等待验证码4,不需要验证则继续UserReady
-	UserStatusOk                   // 登录完成8
-	UserStatusValidate             // 验证状态16，
+	UserStatusNone       = 0         // 等待 HELLO 包
+	UserStatusExchange   = 1 << iota // 等待秘钥交换1
+	UserWaitLogin                    // 可以继续
+	UserStatusRegister               // 收到了注册申请，等待验证码2,不需要验证则继续UserReady
+	UserStatusLogin                  // 收到了登录申请，需要等待验证码4,不需要验证则继续UserReady
+	UserStatusOk                     // 登录完成8
+	UserStatusValidate               // 验证状态16，
+	UserStatusChangeInfo             // 32
 )
 
 // 内存缓存使用的用户模型
@@ -26,6 +28,7 @@ type User struct {
 	Following map[int64]string // 关注列表
 	Fans      map[int64]string // 粉丝列表
 	Block     map[int64]int32  // 权限控制列表
+	Groups    map[int64]bool   // 群组
 }
 
 // New 函数用于创建一个 User 实例
@@ -40,12 +43,13 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		UserInfo:  *userInfo,        // 使用传入的 *pbmodel.UserInfo 参数
 		SessionId: make([]int64, 0), // 初始化 sessionId 切片
 		Params:    make(map[string]string),
-		Status:    0,
+		Status:    UserStatusNone,
 		Mu:        sync.Mutex{}, // 初始化互斥锁
 
 		Following: make(map[int64]string),
 		Fans:      make(map[int64]string),
 		Block:     make(map[int64]int32),
+		Groups:    make(map[int64]bool),
 	}
 }
 

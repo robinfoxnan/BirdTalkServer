@@ -50,11 +50,12 @@ type ServerConf struct {
 	HostName  string `yaml:"host_name"`
 	MsgQueLen int    `yaml:"group_msg_queue_len"`
 
-	Workers  int       `yaml:"workers"`
-	Schema   string    `yaml:"schema"`
-	CertFile string    `yaml:"cert"`
-	KeyFile  string    `yaml:"key"`
-	Email    EmailConf `yaml:"email"`
+	Workers    int       `yaml:"workers"`
+	Schema     string    `yaml:"schema"`
+	CertFile   string    `yaml:"cert"`
+	KeyFile    string    `yaml:"key"`
+	FriendMode bool      `yaml:"friend_making"`
+	Email      EmailConf `yaml:"email"`
 }
 
 type LocalConfig struct {

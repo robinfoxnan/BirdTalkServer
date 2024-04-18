@@ -19,8 +19,9 @@ server:
     group_msg_queue_len: 100
     workers: 1
     schema: https
-    cert: ./cert/cert.pem
-    key: ./cert/key.pem
+    cert: ./certs/cert.pem
+    key: ./certs/key.pem
+    friend_making: false
     email:
         host: email.sina.com
         user: robin

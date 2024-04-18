@@ -21,6 +21,8 @@ var onceShort sync.Once
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 const shortIDLength = 16
+const checkCodeLength = 4
+const numset = "0123456789"
 
 func generateRandomID(length int) string {
 	onceShort.Do(func() {
@@ -36,5 +38,22 @@ func generateRandomID(length int) string {
 		shortID[i] = charset[index]
 	}
 
+	return string(shortID)
+}
+
+// 计算一个随机的5位验证码
+func GenerateCheckCode(length int) string {
+	onceShort.Do(func() {
+		rand.Seed(time.Now().UnixNano())
+	})
+	if length < checkCodeLength {
+		length = checkCodeLength
+	}
+
+	shortID := make([]byte, length)
+	for i := 0; i < length; i++ {
+		index := rand.Intn(len(numset))
+		shortID[i] = numset[index]
+	}
 	return string(shortID)
 }

@@ -982,6 +982,30 @@ public final class MsgOuterClass {
      * <code>ErrTCheckData = 13;</code>
      */
     ErrTCheckData(13),
+    /**
+     * <pre>
+     * 消息内容与类型不匹配
+     * </pre>
+     *
+     * <code>ErrTMsgContent = 14;</code>
+     */
+    ErrTMsgContent(14),
+    /**
+     * <pre>
+     * 未登录
+     * </pre>
+     *
+     * <code>ErrTNotLogin = 15;</code>
+     */
+    ErrTNotLogin(15),
+    /**
+     * <pre>
+     * 权限不够
+     * </pre>
+     *
+     * <code>ErrTNotPermission = 16;</code>
+     */
+    ErrTNotPermission(16),
     UNRECOGNIZED(-1),
     ;
 
@@ -1077,6 +1101,30 @@ public final class MsgOuterClass {
      * <code>ErrTCheckData = 13;</code>
      */
     public static final int ErrTCheckData_VALUE = 13;
+    /**
+     * <pre>
+     * 消息内容与类型不匹配
+     * </pre>
+     *
+     * <code>ErrTMsgContent = 14;</code>
+     */
+    public static final int ErrTMsgContent_VALUE = 14;
+    /**
+     * <pre>
+     * 未登录
+     * </pre>
+     *
+     * <code>ErrTNotLogin = 15;</code>
+     */
+    public static final int ErrTNotLogin_VALUE = 15;
+    /**
+     * <pre>
+     * 权限不够
+     * </pre>
+     *
+     * <code>ErrTNotPermission = 16;</code>
+     */
+    public static final int ErrTNotPermission_VALUE = 16;
 
 
     public final int getNumber() {
@@ -1117,6 +1165,9 @@ public final class MsgOuterClass {
         case 11: return ErrTPublicKey;
         case 12: return ErrTKeyConflict;
         case 13: return ErrTCheckData;
+        case 14: return ErrTMsgContent;
+        case 15: return ErrTNotLogin;
+        case 16: return ErrTNotPermission;
         default: return null;
       }
     }
@@ -27100,25 +27151,26 @@ java.lang.String defaultValue);
       "teChatType\020\000\022\021\n\rGroupChatType\020\001*V\n\rQuery" +
       "DataType\022\025\n\021QueryDataTypeData\020\000\022\026\n\022Query" +
       "DataTypeReply\020\001\022\026\n\022QueryDataTypeByTag\020\002*" +
-      "\212\002\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
+      "\307\002\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
       "rsion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRedirec" +
       "t\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCode\020\005" +
       "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013E" +
       "rrTEncType\020\010\022\024\n\020ErrTServerInside\020\t\022\r\n\tEr" +
       "rTStage\020\n\022\021\n\rErrTPublicKey\020\013\022\023\n\017ErrTKeyC" +
-      "onflict\020\014\022\021\n\rErrTCheckData\020\r*\366\002\n\nComMsgT" +
-      "ype\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001\022\021\n\rMs" +
-      "gTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgTKeyE" +
-      "xchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgTChatRe" +
-      "ply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQueryResult\020" +
-      "\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownload\020\026\022\023\n\017M" +
-      "sgTUploadReply\020\027\022\025\n\021MsgTDownloadReply\020\030\022" +
-      "\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpRet\020 \022\020\n\014Ms" +
-      "gTFriendOp\020!\022\023\n\017MsgTFriendOpRet\020\"\022\017\n\013Msg" +
-      "TGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\tMsgTOt" +
-      "her\020d23\n\nMsgService\022%\n\013ClientEvent\022\n.mod" +
-      "el.Msg\032\n.model.MsgB\020Z\016server/pbmodelb\006pr" +
-      "oto3"
+      "onflict\020\014\022\021\n\rErrTCheckData\020\r\022\022\n\016ErrTMsgC" +
+      "ontent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025\n\021ErrTNotPer" +
+      "mission\020\020*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000" +
+      "\022\r\n\tMsgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMs" +
+      "gTError\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTCh" +
+      "atMsg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020" +
+      "\r\022\023\n\017MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020" +
+      "\n\014MsgTDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n" +
+      "\021MsgTDownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\r" +
+      "MsgTUserOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017Msg" +
+      "TFriendOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTG" +
+      "roupOpRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService" +
+      "\022%\n\013ClientEvent\022\n.model.Msg\032\n.model.MsgB" +
+      "\020Z\016server/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

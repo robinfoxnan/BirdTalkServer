@@ -57,6 +57,12 @@ func main() {
 	//fmt.Printf("%v", core.Globals.Config)
 
 	// init db
+	err = core.Globals.InitDb()
+	if err != nil {
+
+		fmt.Println("init db err! ", err.Error())
+		return
+	}
 
 	router := gin.Default()
 
@@ -90,7 +96,8 @@ func main() {
 		},
 	}
 	core.Globals.Logger.Info("server started here...")
-	err = server.ListenAndServeTLS("./certs/cert.pem", "./certs/key.pem")
+	//err = server.ListenAndServeTLS("./certs/cert.pem", "./certs/key.pem")
+	err = server.ListenAndServeTLS(core.Globals.Config.Server.CertFile, core.Globals.Config.Server.KeyFile)
 	if err != nil {
 		fmt.Println("Error starting server:", err)
 	}
