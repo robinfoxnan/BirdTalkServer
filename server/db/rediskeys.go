@@ -46,10 +46,10 @@ func (cli *RedisClient) initData() {
 }
 
 func (cli *RedisClient) makeSureInt(key string, def int) error {
-	idCmd := cli.Db.Get(key)
+	idCmd := cli.Cmd.Get(key)
 	_, err := idCmd.Result()
 	if err != nil {
-		statusCmd := cli.Db.Set(key, 1000, 0)
+		statusCmd := cli.Cmd.Set(key, 1000, 0)
 		if statusCmd.Err() != nil {
 			return statusCmd.Err()
 		}
@@ -61,7 +61,7 @@ func (cli *RedisClient) GetNextKeyId(key string) (int64, error) {
 	if cli == nil {
 		return -1, errors.New("not connected")
 	}
-	idCmd := cli.Db.Incr(key)
+	idCmd := cli.Cmd.Incr(key)
 	return idCmd.Val(), idCmd.Err()
 }
 
@@ -73,7 +73,7 @@ func (cli *RedisClient) GetNextKeyIdRange(key string, span int64) (int64, int64,
 	if span < 10 {
 		span = 10
 	}
-	idCmd := cli.Db.IncrBy(key, span)
+	idCmd := cli.Cmd.IncrBy(key, span)
 	newValue, err := idCmd.Result()
 
 	return newValue - span + 1, newValue, err

@@ -10,13 +10,13 @@ import (
 var Logger *zap.Logger = nil
 
 // 自动初始化
-func init() {
-	// 在这里进行 logger 的初始化
-	CreateLogger()
-}
+//func init() {
+//	// 在这里进行 logger 的初始化
+//	CreateLogger()
+//}
 
 // 来源于链接  http://t.csdn.cn/rcSwT
-func CreateLogger() {
+func CreateLogger() *zap.Logger {
 	var coreArr []zapcore.Core
 
 	//获取编码器
@@ -66,4 +66,5 @@ func CreateLogger() {
 	coreArr = append(coreArr, errorFileCore)
 	Logger = zap.New(zapcore.NewTee(coreArr...), zap.AddCaller()) //zap.AddCaller()为显示文件名和行号，可省略
 
+	return Logger
 }

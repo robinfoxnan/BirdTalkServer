@@ -24,8 +24,8 @@ func (cli *RedisClient) GetClusterServerActiveTime() (map[int16]int64, error) {
 }
 
 // 如果检测到长时间为活跃就应该删除这个节点
-func (cli *RedisClient) ReomoveClusterServer(id int64) error {
+func (cli *RedisClient) RemoveClusterServer(id int64) error {
 	key := GetClusterActiveStateKey()
 	field := GetServerField(id)
-	return cli.Db.HDel(key, field).Err()
+	return cli.Cmd.HDel(key, field).Err()
 }

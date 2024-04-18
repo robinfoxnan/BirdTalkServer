@@ -16,13 +16,13 @@ func (cli *RedisClient) SaveToken(uid int64, keyEx *utils.KeyExchange) error {
 	data["uid"] = strconv.FormatInt(uid, 10)
 	data["enc"] = keyEx.EncType
 
-	_, err := cli.Db.HMSet(key, data).Result()
+	_, err := cli.Cmd.HMSet(key, data).Result()
 	return err
 }
 
 func (cli *RedisClient) LoadToken(id int64) (int64, *utils.KeyExchange, error) {
 	key := GetUserTokenKey(id)
-	data, err := cli.Db.HGetAll(key).Result()
+	data, err := cli.Cmd.HGetAll(key).Result()
 	if err != nil {
 		return 0, nil, err
 	}

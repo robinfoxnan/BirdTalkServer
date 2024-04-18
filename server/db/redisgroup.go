@@ -13,14 +13,14 @@ func (cli *RedisClient) SetGroupInfo(grp *pbmodel.GroupInfo) error {
 	keyName := GetGroupInfoKey(grp.GroupId)
 	mapUser, err := utils.AnyToMap(grp, nil)
 	//fmt.Println(mapUser)
-	ret, err := cli.Db.HMSet(keyName, mapUser).Result()
+	ret, err := cli.Cmd.HMSet(keyName, mapUser).Result()
 	fmt.Println(ret)
 	return err
 }
 
 func (cli *RedisClient) GetGroupInfoById(gid int64) (*pbmodel.GroupInfo, error) {
 	keyName := GetGroupInfoKey(gid)
-	data, err := cli.Db.HGetAll(keyName).Result()
+	data, err := cli.Cmd.HGetAll(keyName).Result()
 	if err != nil {
 		//fmt.Println(err)
 		return nil, err
@@ -133,7 +133,7 @@ func (cli *RedisClient) AddActiveGroupMembersLua(gid, nodeId int64, members []in
 	}
 
 	// 执行 Lua 脚本
-	ret, err := cli.Db.Eval(lua, []string{setKey, hashKey, field}, strMem).Result()
+	ret, err := cli.Cmd.Eval(lua, []string{setKey, hashKey, field}, strMem).Result()
 	if err != nil {
 		return 0, err
 	}
@@ -187,7 +187,7 @@ func (cli *RedisClient) RemoveActiveGroupMembersLua(gid, nodeId int64, members [
 	}
 
 	// 执行 Lua 脚本
-	ret, err := cli.Db.Eval(lua, []string{setKey, hashKey, field}, strMem).Result()
+	ret, err := cli.Cmd.Eval(lua, []string{setKey, hashKey, field}, strMem).Result()
 	if err != nil {
 		return 0, err
 	}
@@ -223,7 +223,7 @@ func (cli *RedisClient) PushGroupMsg(gid int64, msg string) error {
 	// 获取群组消息缓存表的键名
 	key := GetGroupMsgCacheKey(gid)
 	// 开启 Redis 事务
-	tx := cli.Db.TxPipeline()
+	tx := cli.Cmd.TxPipeline()
 	// 左侧插入队列
 	tx.LPush(key, msg)
 	// 获取列表长度
@@ -239,7 +239,7 @@ func (cli *RedisClient) GetGroupLatestMsg(gid, count int64) ([]string, error) {
 	// 获取群组消息缓存表的键名
 	key := GetGroupMsgCacheKey(gid)
 	// 获取左侧的100条消息
-	result, err := cli.Db.LRange(key, 0, count).Result()
+	result, err := cli.Cmd.LRange(key, 0, count).Result()
 	return result, err
 }
 
@@ -247,13 +247,13 @@ func (cli *RedisClient) GetGroupLatestMsgPage(gid, offset, count int64) ([]strin
 	// 获取群组消息缓存表的键名
 	key := GetGroupMsgCacheKey(gid)
 	// 获取左侧的100条消息
-	result, err := cli.Db.LRange(key, offset, count).Result()
+	result, err := cli.Cmd.LRange(key, offset, count).Result()
 	return result, err
 }
 
 // 查看当前缓存有多少条，一个持续运行的群，消息正常都是满的
 func (cli *RedisClient) GetGroupLatestMsgCount(gid, count int64) (int64, error) {
 	key := GetGroupMsgCacheKey(gid)
-	cmd := cli.Db.LLen(key)
+	cmd := cli.Cmd.LLen(key)
 	return cmd.Result()
 }

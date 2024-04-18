@@ -22,7 +22,7 @@ func mapToUserInfo(data map[string]string) (*pbmodel.UserInfo, error) {
 func (cli *RedisClient) FindUserById(uid int64) (*pbmodel.UserInfo, error) {
 	keyName := GetUserInfoKey(uid)
 	//fmt.Println(tblName)
-	data, err := cli.Db.HGetAll(keyName).Result()
+	data, err := cli.Cmd.HGetAll(keyName).Result()
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
@@ -39,7 +39,7 @@ func (cli *RedisClient) FindUserById(uid int64) (*pbmodel.UserInfo, error) {
 func (cli *RedisClient) SetUserInfo(user *pbmodel.UserInfo) error {
 	keyName := GetUserInfoKey(user.UserId)
 	mapUser, err := userInfoToMap(user)
-	ret, err := cli.Db.HMSet(keyName, mapUser).Result()
+	ret, err := cli.Cmd.HMSet(keyName, mapUser).Result()
 	fmt.Println(ret)
 	return err
 }
@@ -232,7 +232,7 @@ func (cli *RedisClient) SetUserJoinGroup(uid, gid int64) error {
 	keyUserInG := GetUseringKey(uid)
 	keyGroupMem := GetGroupAllMembersKey(gid)
 	// 创建事务
-	tx := cli.Db.TxPipeline()
+	tx := cli.Cmd.TxPipeline()
 	// 清空集合
 	tx.SAdd(keyUserInG, gid)
 	tx.SAdd(keyGroupMem, uid)
@@ -248,7 +248,7 @@ func (cli *RedisClient) SetUserLeaveGroup(uid, gid int64) error {
 	keyUserInG := GetUseringKey(uid)
 	keyGroupMem := GetGroupAllMembersKey(gid)
 	// 创建事务
-	tx := cli.Db.TxPipeline()
+	tx := cli.Cmd.TxPipeline()
 	// 清空集合
 	tx.SRem(keyUserInG, gid)
 	tx.SRem(keyGroupMem, uid)

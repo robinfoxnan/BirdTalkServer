@@ -1,0 +1,30 @@
+redis:
+    redis_host: 127.0.0.1:6379
+    redis_pwd:
+mongoDb:
+    mongo_host: mongodb://admin:123456@127.0.0.1:27017
+    db_name: birdtalk
+scyllaDb:
+    scylla_host: 8.140.203.92:9042
+    user: cassandra
+    pwd: Tjj.31415
+kafka:
+    kafka_host:
+
+server:
+    host: 0.0.0.0
+    port: 7817
+    host_index: 1
+    host_name: "node1"
+    group_msg_queue_len: 100
+    workers: 1
+    schema: https
+    cert: ./cert/cert.pem
+    key: ./cert/key.pem
+    email:
+        host: email.sina.com
+        user: robin
+        pwd: 123456
+        tls: true
+
+
