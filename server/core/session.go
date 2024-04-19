@@ -62,6 +62,10 @@ type Session struct {
 	terminating int32
 }
 
+func (s *Session) HasStatus(mask uint32) bool {
+	return (mask & s.Status) > 0
+}
+
 func (s *Session) SetStatus(mask uint32) {
 	s.Status = mask
 }
@@ -222,6 +226,9 @@ func (sess *Session) WriteLoop() {
 			return
 
 		case <-ticker.C:
+			// 先更新时间戳
+			sess.updateTTL()
+
 			if err := wsWrite(sess.ws, websocket.PingMessage, nil); err != nil {
 				if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure,
 					websocket.CloseNormalClosure) {
@@ -343,4 +350,13 @@ func (s *Session) dispatchRaw(messageType int, rawMsg []byte) {
 	case websocket.PongMessage:
 		fmt.Println("recv pong message from sid=", s.Sid)
 	}
+}
+
+// 写时候定期更新
+func (s *Session) updateTTL() {
+	if s.UserID != 0 && s.HasStatus(model.UserStatusOk) {
+		Globals.redisCli.UpdateUserTTL(s.UserID)
+		Globals.redisCli.SetUserSessionOnServer(s.UserID, s.Sid, int64(Globals.Config.Server.HostIndex))
+	}
+
 }

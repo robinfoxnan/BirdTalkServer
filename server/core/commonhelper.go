@@ -181,6 +181,57 @@ func LoadUserNew(session *Session) error {
 	return nil
 }
 
+// 仅仅是从redis 加载到内存
+// 加载涉及到7个表，哪个出错了就返回掩码，但是不是全部加载到内存
+// 1：用户基础信息表，bsui_
+// 2：用户好友权限表，bsufb_
+// 4：用户关注表，bsufo_
+// 8：用户粉丝表，bsufa_
+// 16：用户所属群组，bsuing_
+func justLoadUserFromRedis(sess *Session) (*model.User, uint32, error) {
+	var mask uint32 = 1 | 2 | 4 | 8 | 16
+
+	// 1
+	userInfo, err := Globals.redisCli.FindUserById(sess.UserID)
+	if err != nil {
+		return nil, mask, err
+	}
+	user := model.NewUserFromInfo(userInfo)
+	user.AddSessionID(sess.Sid)
+	mask = 2 | 4 | 8 | 16
+
+	// 4 好友，没有必要全部加载内存
+
+	// 设置或者更新
+	Globals.uc.SetOrUpdateUser(sess.UserID, user)
+	return user, mask, err
+}
+
+func loadUserFromDb(session *Session, mask uint32) error {
+	return nil
+}
+
+// 用户登录时候加载
+func LoadUserLogin(session *Session) error {
+	// 如果内存里有，就不用继续了
+	user, ok := Globals.uc.GetUser(session.UserID)
+	if ok {
+		user.AddSessionID(session.Sid)
+		return nil
+	}
+	user, mask, err := justLoadUserFromRedis(session)
+	if err != nil {
+		return err
+	}
+
+	if mask > 0 {
+		err = loadUserFromDb(session, mask)
+	}
+
+	return err
+
+}
+
 func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo, ret bool, status string, session *Session) error {
 	return nil
 }

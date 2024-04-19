@@ -88,3 +88,22 @@ func IsValidEmail(email string) bool {
 	// 使用正则表达式判断是否匹配
 	return reg.MatchString(email)
 }
+
+// 合并表
+// mergeMap 合并两个map，并将结果存回第一个map
+func MergeMap[K comparable, V any](m1, m2 map[K]V) {
+	for k, v := range m2 {
+		m1[k] = v
+	}
+}
+
+func MergeMapMask(m1, m2 map[int64]uint64) {
+	for k, v := range m2 {
+		v1, ok := m1[k]
+		if ok {
+			m1[k] = v1 | v
+		} else {
+			m1[k] = v
+		}
+	}
+}

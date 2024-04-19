@@ -353,6 +353,11 @@ func (cli *RedisClient) GetHashKeyInt(key, field string) (int64, error) {
 	return i, err
 }
 
+func (cli *RedisClient) RemoveHashInt(key, field string) error {
+	cmd := cli.Cmd.HDel(key, field)
+	return cmd.Err()
+}
+
 // /////////////////////////////////////////////////////////////////////////////////
 // 这部分是用户的好友相关内容使用的
 // 使用脚本求2个hash的交集
@@ -488,4 +493,40 @@ func (cli *RedisClient) ScanHashKeys(key string, cursor uint64, pageSize int64) 
 	//fmt.Println("next cursor=", cursor)
 
 	return nextCursor, result, nil
+}
+
+func (cli *RedisClient) SetKeyExpire(key string, span time.Duration) error {
+	// 使用Redis客户端设置键的过期时间为10秒
+	expirationTime := 10 * time.Second
+	if span > expirationTime {
+		expirationTime = span
+	}
+	err := cli.Cmd.Expire("key", expirationTime).Err()
+
+	return err
+}
+
+func (cli *RedisClient) SetKeysExpire(keys []string, span time.Duration) (int, error) {
+	// 使用Redis客户端设置键的过期时间为10秒
+	expirationTime := 10 * time.Second
+	if span > expirationTime {
+		expirationTime = span
+	}
+	err := cli.Cmd.Expire("key", expirationTime).Err()
+
+	// 使用管道为每个键设置超时时间
+	pipe := cli.Cmd.Pipeline()
+	for _, key := range keys {
+		pipe.Expire(key, expirationTime)
+	}
+
+	// 执行管道操作
+	cmders, err := pipe.Exec()
+	count := 0
+	for _, cmd := range cmders {
+		if cmd.Err() != nil {
+			count++
+		}
+	}
+	return count, err
 }

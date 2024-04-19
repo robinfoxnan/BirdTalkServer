@@ -6,6 +6,7 @@ import (
 	"birdtalk/server/utils"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 func userInfoToMap(userInfo *pbmodel.UserInfo) (map[string]interface{}, error) {
@@ -264,4 +265,56 @@ func (cli *RedisClient) GetUsersInSameGroup(uid1, uid2 int64) ([]int64, error) {
 	key1 := GetUseringKey(uid1)
 	key2 := GetUseringKey(uid2)
 	return cli.IntersectIntSets(key1, key2)
+}
+
+// 更新用户相关的TTL
+// 用户基础信息表7天bsui_
+// 用户好友权限表7天bsufb_
+// 用户关注表7天bsufo_
+// 用户粉丝表7天bsufa_
+// 用户的指纹表7天bsut_
+// 用户所属群组7天bsuing_
+// 用户session 分布表  30分钟 bsud_
+func (cli *RedisClient) UpdateUserTTL(uid int64) (int, error) {
+	keyUserInfo := GetUserInfoKey(uid)
+	keyUserFollow := GetUserFollowingKey(uid)
+	keyUserFan := GetUserFansKey(uid)
+	keyUserPermission := GetUserBlockKey(uid)
+	keyUserToken := GetUserTokenKey(uid)
+	keyUserInGroup := GetUseringKey(uid)
+	keys := []string{keyUserInfo, keyUserFollow, keyUserFan, keyUserPermission, keyUserToken, keyUserInGroup}
+
+	count, err := cli.SetKeysExpire(keys, time.Hour*168) // 7 天
+
+	//keyUserDistribution := GetUserDistributionKey(uid)
+	//err = cli.SetKeyExpire(keyUserDistribution, time.Minute*30)
+	//if err != nil {
+	//	count++
+	//}
+
+	return count, err
+}
+
+// 登录时候，设置用户会话在某个服务器上，设置超时时间为30分钟
+func (cli *RedisClient) SetUserSessionOnServer(uid, sid, serverIndex int64) error {
+	keyUserDistribution := GetUserDistributionKey(uid)
+	field := strconv.FormatInt(sid, 10)
+
+	// 使用管道
+	pipe := cli.Cmd.Pipeline()
+
+	pipe.HSet(keyUserDistribution, field, serverIndex)
+	pipe.Expire(keyUserDistribution, time.Minute*30)
+
+	// 执行管道操作
+	_, err := pipe.Exec()
+
+	return err
+}
+
+// 会话断开时候，删除会话标记
+func (cli *RedisClient) RemoveUserSessionOnServer(uid, sid int64) error {
+	keyUserDistribution := GetUserDistributionKey(uid)
+	field := strconv.FormatInt(sid, 10)
+	return cli.RemoveHashInt(keyUserDistribution, field)
 }

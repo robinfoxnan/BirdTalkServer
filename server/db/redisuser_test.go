@@ -3,6 +3,7 @@ package db
 import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
+	"birdtalk/server/utils"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -197,4 +198,11 @@ func TestUserAddGroup(t *testing.T) {
 	lst, err = redisCli.GetUserInGroupAll(10002)
 	fmt.Println(lst)
 
+}
+func TestIntFormat(t *testing.T) {
+	tm := utils.GetTimeStamp()
+	i := strconv.FormatInt(tm, 10)
+	e := strconv.FormatInt(tm, 36)
+	fmt.Println(i, e)
+	fmt.Println(len(i), len(e))
 }

@@ -5,32 +5,37 @@ import (
 	"fmt"
 )
 
-// 用于获取几个流水号的键值
+// 全局用于获取几个流水号的键值
 const BirdServerUserId = "birds_uid"
 const BirdServerGroupId = "birds_gid"
 const BirdServerNewsId = "birds_nid"
 const BirdServerCommentId = "birds_cid"
+
+// 用户相关
 const BirdServerUserPrefix = "bsui_%d"      // 用户基础信息以及动态信息 hash
 const BirdServerUFolPrefix = "bsufo_%d"     // 关注表 set
 const BirdServerUFanPrefix = "bsufa_%d"     // 粉丝表 set
 const BirdServerUBloPrefix = "bsufb_%d"     // 拉黑表 hash表
 const BirdServerUserInGPrefix = "bsuing_%d" // 用户所属群的集合
+const BirdServerTokenPrefix = "bsut_%d"     // 秘钥的keyPrint
+const BirdServerTUserDisPrefix = "bsud_%d"  // 用户会话在各个服务器上分布情况，
 
+// 群组相关
 const BirdServerGroupPrefix = "bsgi_%d"         // 组基础信息  hash 存储各种属性
 const BirdServerGrpUsers = "bsgu_%d"            // 组内所有成员表 hash， 每个成员包括昵称，权限，设置
 const BirdServerGrpDistribution = "bsgd_%d"     // hash, 一个群在各个服务器上登录的用户个数 服务器器号->计数
 const BirdServerGrpDistriDetail = "bsgdi_%d_%d" // 某一个群，在某个服务器上的成员列表 set
+const BirdServerGroupMsgCache = "bsgmsg_%d"     //群组数据缓存，如果1000条
 
-const BirdServerStateCh = "bssch"              //用户、群组、服务器状态广播频道
+// 集群服务器信息
 const BirdServerClusterPrefix = "bscs_%d"      // 集群每个服务器状态hash
 const BirdServerCluSerStaPrefix = "bscs_state" // 集群信息hash表
 
-const BirdServerGroupMsgCache = "bsgmsg_%d" //群组数据缓存，如果1000条
-const MaxFriendBatchSize = 512              // 最大的批处理的个数
-const MaxFriendCacheSize = 1024             // 缓存中粉丝之类的最大数量
+const MaxFriendBatchSize = 512  // 最大的批处理的个数
+const MaxFriendCacheSize = 1024 // 缓存中粉丝之类的最大数量
 
-// 秘钥存储
-const BirdServerTokenPrefix = "bsut_%d" // 秘钥的keyPrint
+// TODO: 此广播功能不能使用集群，需要更改
+const BirdServerStateCh = "bssch" //用户、群组、服务器状态广播频道
 
 // 某些值必须要有的，确保初始化
 func (cli *RedisClient) initData() {
@@ -206,4 +211,11 @@ func GetClusterServerStateKey(id int64) string {
 //go:inline
 func GetUserTokenKey(id int64) string {
 	return fmt.Sprintf(BirdServerTokenPrefix, id)
+}
+
+// 用户会话的分布情况
+//
+//go:inline
+func GetUserDistributionKey(id int64) string {
+	return fmt.Sprintf(BirdServerTUserDisPrefix, id)
 }

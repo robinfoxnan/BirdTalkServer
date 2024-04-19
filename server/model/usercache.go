@@ -19,8 +19,19 @@ func (uc *UserCache) GetUser(uid int64) (*User, bool) {
 	return user, err
 }
 
-func (uc *UserCache) SetUser(uid int64, user *User) {
-	uc.userMap.SetIfAbsent(uid, user)
+// 更新时候的回调函数，如果未设置，则
+func updateInsertUser(exist bool, oldUser *User, newUser *User) *User {
+	if exist == false {
+		return newUser
+	} else {
+		oldUser.MergeUser(newUser)
+		return oldUser
+	}
+}
+
+// 这里可能会有并发冲突，需要解决的就是session列表需要合并
+func (uc *UserCache) SetOrUpdateUser(uid int64, user *User) {
+	uc.userMap.Upsert(uid, user, updateInsertUser)
 }
 
 // 超时不使用则删除
