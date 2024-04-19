@@ -90,10 +90,12 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		Status:    UserStatusNone,
 		Mu:        sync.Mutex{}, // 初始化互斥锁
 
-		Params:     make(map[string]string),
-		Following:  make(map[int64]string),
-		Fans:       make(map[int64]string),
-		Block:      make(map[int64]uint64),
+		Params: make(map[string]string),
+
+		Following: make(map[int64]string),
+		Fans:      make(map[int64]string),
+		Block:     make(map[int64]uint64),
+
 		Groups:     make(map[int64]bool),
 		SessionDis: make(map[int64]int32),
 	}
