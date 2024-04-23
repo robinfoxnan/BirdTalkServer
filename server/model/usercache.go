@@ -30,8 +30,9 @@ func updateInsertUser(exist bool, oldUser *User, newUser *User) *User {
 }
 
 // 这里可能会有并发冲突，需要解决的就是session列表需要合并
-func (uc *UserCache) SetOrUpdateUser(uid int64, user *User) {
-	uc.userMap.Upsert(uid, user, updateInsertUser)
+func (uc *UserCache) SetOrUpdateUser(uid int64, user *User) *User {
+	res := uc.userMap.Upsert(uid, user, updateInsertUser)
+	return res
 }
 
 // 超时不使用则删除

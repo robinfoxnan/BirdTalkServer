@@ -157,7 +157,7 @@ func (me *Scylla) FindBlocks(pk, uid1, from int64, pageSize uint) ([]model.Block
 	builder.OrderBy("uid1", qb.ASC)
 	builder.OrderBy("uid2", qb.ASC)
 
-	builder.AllowFiltering()
+	//builder.AllowFiltering()
 	builder.Limit(pageSize)
 
 	q := builder.Query(me.session)

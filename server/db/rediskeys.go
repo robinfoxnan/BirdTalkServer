@@ -18,7 +18,8 @@ const BirdServerUFanPrefix = "bsufa_%d"     // 粉丝表 set
 const BirdServerUBloPrefix = "bsufb_%d"     // 拉黑表 hash表
 const BirdServerUserInGPrefix = "bsuing_%d" // 用户所属群的集合
 const BirdServerTokenPrefix = "bsut_%d"     // 秘钥的keyPrint
-const BirdServerTUserDisPrefix = "bsud_%d"  // 用户会话在各个服务器上分布情况，
+const BirdServerUserDisPrefix = "bsud_%d"   // 用户会话在各个服务器上分布情况，
+const BirdServerUserFNumPrefix = "bsun_%d"
 
 // 群组相关
 const BirdServerGroupPrefix = "bsgi_%d"         // 组基础信息  hash 存储各种属性
@@ -217,5 +218,12 @@ func GetUserTokenKey(id int64) string {
 //
 //go:inline
 func GetUserDistributionKey(id int64) string {
-	return fmt.Sprintf(BirdServerTUserDisPrefix, id)
+	return fmt.Sprintf(BirdServerUserDisPrefix, id)
+}
+
+// 用户的关注和粉丝的个数
+//
+//go:inline
+func GetUserFriendNumKey(id int64) string {
+	return fmt.Sprintf(BirdServerUserFNumPrefix, id)
 }

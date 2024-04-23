@@ -50,6 +50,18 @@ const DefaultPermissionStranger = PermissionMaskExist | ((PermissionMaskAdd | Pe
 // 默认朋友权限的设置
 const DefaultPermissionFriend = DefaultPermissionP2P | PermissionMaskFriend
 
+// 用户加载数据的掩码
+const (
+	UserLoadStatusInfo       = 1 << iota // 1
+	UserLoadStatusPermission             // 2
+	UserLoadStatusFollow                 // 4
+	UserLoadStatusFans                   // 8
+	UserLoadStatusGroups                 // 16
+)
+
+// 所有的掩码一起设置
+const UserLoadStatusAll = UserLoadStatusInfo | UserLoadStatusPermission | UserLoadStatusFollow | UserLoadStatusFans | UserLoadStatusGroups
+
 // 相关redis表
 // 1：用户基础信息表，bsui_
 // 2：用户好友权限表，bsufb_
@@ -68,10 +80,13 @@ type User struct {
 	Params    map[string]string // 某些状态下的附加信息都放在这里，比如验证码
 
 	Block      map[int64]uint64 // 权限控制列表，高位是对方给自己的权限，低32位是自己向对方的权限
-	Following  map[int64]string // 关注列表
-	Fans       map[int64]string // 粉丝列表
+	Following  map[int64]bool   // 关注列表
+	Fans       map[int64]bool   // 粉丝列表
 	Groups     map[int64]bool   // 群组
 	SessionDis map[int64]int32  // 会话分布表
+
+	NumFans   int64
+	NumFollow int64
 
 	Mu sync.Mutex
 }
@@ -92,8 +107,8 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 
 		Params: make(map[string]string),
 
-		Following: make(map[int64]string),
-		Fans:      make(map[int64]string),
+		Following: make(map[int64]bool),
+		Fans:      make(map[int64]bool),
 		Block:     make(map[int64]uint64),
 
 		Groups:     make(map[int64]bool),
@@ -101,15 +116,28 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 	}
 }
 
-// 自己给对方的权限
-func (u *User) SetSelfMask(fid int64, mask uint32) {
+func (u *User) SetLoadMask(mask uint32) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
+	u.MaskLoad |= mask
+}
+
+// 如果长度为0，则说明是目前没有中断在线
+func (u *User) GetSessionCount() int {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	return len(u.SessionId)
+}
+
+// 自己给对方的权限
+func (u *User) SetSelfMaskNoLock(fid int64, mask uint32) {
+	//u.Mu.Lock()
+	//defer u.Mu.Unlock()
 
 	data, ok := u.Block[fid]
 	if ok {
 		// 如果好友ID已存在于屏蔽列表中，则更新其屏蔽掩码
-		u.Block[fid] = data | uint64(mask)
+		u.Block[fid] = (data & 0xffffffff00000000) | uint64(mask)
 	} else {
 		// 如果好友ID不存在于屏蔽列表中，则向列表中添加新的条目
 		u.Block[fid] = uint64(mask)
@@ -213,6 +241,7 @@ func (u *User) MergeUser(newUser *User) {
 	u.UserInfo = newUser.UserInfo
 	u.addSessionIDListNoLock(newUser.SessionId)
 	u.Status = newUser.Status
+	u.MaskLoad |= newUser.MaskLoad
 	// 合并几个map
 	utils.MergeMap(u.Params, newUser.Params)
 
@@ -222,6 +251,36 @@ func (u *User) MergeUser(newUser *User) {
 
 	utils.MergeMap(u.Groups, newUser.Groups)
 	utils.MergeMap(u.SessionDis, newUser.SessionDis)
+}
+
+// 从redis中加载当前的所在组列表
+func (u *User) SetInGroup(gList []int64) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	u.Groups = make(map[int64]bool)
+	for _, k := range gList {
+		u.Groups[k] = true
+	}
+}
+
+// 从redis查询的权限列表一次性添加到内存
+func (u *User) AddPermission(perMap map[int64]uint32) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	for k, v := range perMap {
+		u.SetSelfMaskNoLock(k, v)
+	}
+}
+
+func (u *User) AddPermissionFromDb(perList []BlockStore) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	for _, item := range perList {
+		u.SetSelfMaskNoLock(item.Uid2, uint32(item.Perm))
+	}
 }
 
 // 添加会话ID
@@ -300,10 +359,10 @@ func (u *User) HasStatus(checkStatus uint32) bool {
 	return u.Status&checkStatus == checkStatus
 }
 
-func (u *User) SetFollow(fid int64, nick string) int {
+func (u *User) SetFollow(fid int64, b bool) int {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-	u.Following[fid] = nick
+	u.Following[fid] = b
 	return len(u.Following)
 }
 
@@ -314,10 +373,10 @@ func (u *User) DelFollow(fid int64) int {
 	return len(u.Following)
 }
 
-func (u *User) SetFan(fid int64, nick string) int {
+func (u *User) SetFan(fid int64, b bool) int {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-	u.Fans[fid] = nick
+	u.Fans[fid] = b
 	return len(u.Fans)
 }
 

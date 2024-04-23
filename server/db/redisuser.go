@@ -139,13 +139,13 @@ func (cli *RedisClient) GetUserFans(uid int64, offset uint64) (uint64, map[int64
 }
 
 // 这里不返回昵称，直接返回掩码
-func (cli *RedisClient) GetUserBLocks(uid int64, offset uint64) (uint64, map[int64]int32, error) {
+func (cli *RedisClient) GetUserBLocks(uid int64, offset uint64) (uint64, map[int64]uint32, error) {
 	key := GetUserBlockKey(uid)
 	off, aMap, err := cli.ScanHashKeys(key, offset, MaxFriendBatchSize)
 	if err != nil {
 		return 0, nil, err
 	}
-	intMap := make(map[int64]int32)
+	intMap := make(map[int64]uint32)
 	for k, v := range aMap {
 		intkey, e := strconv.ParseInt(k, 10, 64)
 		if e != nil {
@@ -156,7 +156,7 @@ func (cli *RedisClient) GetUserBLocks(uid int64, offset uint64) (uint64, map[int
 		if e != nil {
 			continue
 		}
-		intMap[intkey] = int32(intValue)
+		intMap[intkey] = uint32(intValue)
 	}
 
 	return off, intMap, nil
@@ -317,4 +317,51 @@ func (cli *RedisClient) RemoveUserSessionOnServer(uid, sid int64) error {
 	keyUserDistribution := GetUserDistributionKey(uid)
 	field := strconv.FormatInt(sid, 10)
 	return cli.RemoveHashInt(keyUserDistribution, field)
+}
+
+// 设置好友的关注和粉丝的个数，永久有效，用户注册时候就加载
+func (cli *RedisClient) SetUserFriendNum(uid, numFollow, numFans int64) error {
+
+	key := GetUserFriendNumKey(uid)
+	// 使用管道
+	pipe := cli.Cmd.Pipeline()
+
+	pipe.HSet(key, "follow", numFollow)
+	pipe.HSet(key, "fans", numFans)
+	// 执行管道操作
+	_, err := pipe.Exec()
+	return err
+}
+
+func (cli *RedisClient) GetUserFriendNum(uid int64) (int64, int64, error) {
+	key := GetUserFriendNumKey(uid)
+	mapRet, err := cli.Cmd.HGetAll(key).Result()
+	if err != nil {
+		return 0, 0, err
+	}
+	numFollow := int64(0)
+	numFans := int64(0)
+	str, ok := mapRet["follow"]
+	if ok {
+		numFollow, err = strconv.ParseInt(str, 10, 64)
+	}
+
+	str, ok = mapRet["fans"]
+	if ok {
+		numFans, err = strconv.ParseInt(str, 10, 64)
+	}
+
+	return numFollow, numFans, err
+}
+
+// 不增加的就设置为0
+func (cli *RedisClient) AddUserFriendNum(uid, numFollow, numFans int64) error {
+	key := GetUserFriendNumKey(uid)
+	if numFollow > 0 {
+		return cli.Cmd.HIncrBy(key, "follow", numFollow).Err()
+	}
+	if numFans > 0 {
+		return cli.Cmd.HIncrBy(key, "fans", numFollow).Err()
+	}
+	return nil
 }

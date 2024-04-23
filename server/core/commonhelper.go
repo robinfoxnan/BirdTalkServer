@@ -1,10 +1,12 @@
 package core
 
 import (
+	"birdtalk/server/db"
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"errors"
+	"fmt"
 	"go.uber.org/zap"
 	"strings"
 )
@@ -161,20 +163,23 @@ func LoadUserNew(session *Session) error {
 	// 2) 更新redis
 	err = Globals.redisCli.SetUserInfo(&userInfos[0])
 
-	// 3) 内存缓存, 多终端登录，所以需要
+	// 3) 内存缓存, 多终端登录，所以需要，但是这里是新注册，所以冲突的概率几乎为0
 	user, ok := Globals.uc.GetUser(session.UserID)
 	if ok {
 		user.AddSessionID(session.Sid)
 	} else {
 		// 保存用户信息
 		user = model.NewUserFromInfo(&userInfos[0])
+		user.MaskLoad = model.UserLoadStatusInfo // 目前仅仅加载了基本的数据
 		user.AddSessionID(session.Sid)
+		Globals.uc.SetOrUpdateUser(user.UserId, user) // 插入或者合并
 	}
 
 	// 4) 绑定指纹
 	if session.KeyEx != nil {
 		Globals.redisCli.SaveToken(session.UserID, session.KeyEx)
 	}
+	session.Status = model.UserLoadStatusAll
 
 	// 5) todo: 广播信息
 
@@ -188,30 +193,192 @@ func LoadUserNew(session *Session) error {
 // 4：用户关注表，bsufo_
 // 8：用户粉丝表，bsufa_
 // 16：用户所属群组，bsuing_
-func justLoadUserFromRedis(sess *Session) (*model.User, uint32, error) {
-	var mask uint32 = 1 | 2 | 4 | 8 | 16
+func tryLoadUserFromRedis(sess *Session) (*model.User, uint32, error) {
+	var mask uint32 = model.UserLoadStatusAll
 
-	// 1
-	userInfo, err := Globals.redisCli.FindUserById(sess.UserID)
-	if err != nil {
-		return nil, mask, err
+	// 加载后尝试添加到内存缓存中
+	user, ok := Globals.uc.GetUser(sess.UserID)
+	if ok {
+		user.AddSessionID(sess.Sid)
+	} else {
+
+		// 1 查看是否有基本的信息
+		userInfo, err := Globals.redisCli.FindUserById(sess.UserID)
+		if err != nil {
+			return nil, mask, err
+		}
+		loadedUser := model.NewUserFromInfo(userInfo)
+		loadedUser.AddSessionID(sess.Sid)
+		loadedUser.SetLoadMask(model.UserLoadStatusInfo)
+
+		user = Globals.uc.SetOrUpdateUser(sess.UserID, loadedUser) // 插入或者合并
 	}
-	user := model.NewUserFromInfo(userInfo)
-	user.AddSessionID(sess.Sid)
-	mask = 2 | 4 | 8 | 16
 
-	// 4 好友，没有必要全部加载内存
+	mask = model.UserLoadStatusAll & (^model.UserLoadStatusInfo)
 
-	// 设置或者更新
-	Globals.uc.SetOrUpdateUser(sess.UserID, user)
+	// 2 好友仅仅加载权限,权限全都加载到内存
+	off := uint64(0)
+	var permissionMap map[int64]uint32
+	count := 0
+	var err error
+	for {
+		off, permissionMap, err = Globals.redisCli.GetUserBLocks(sess.UserID, off)
+		if err == nil {
+			user.AddPermission(permissionMap)
+		} else {
+			break
+		}
+		count += len(permissionMap)
+		fmt.Printf("len= %d off= %d, count = %d\n", len(permissionMap), off, count)
+
+		// 查询结束
+		if off == 0 {
+			if err == nil {
+				user.SetLoadMask(model.UserLoadStatusInfo)
+			}
+			break
+		}
+	}
+
+	if count > 0 {
+		mask = model.UserLoadStatusAll & (^model.UserLoadStatusPermission)
+	}
+
+	// 3 & 4 关注和粉丝都是仅仅检查一下redis中是否有；
+	off, fMap, err := Globals.redisCli.GetUserFollowing(sess.UserID, 0)
+	if err == nil {
+
+		user.SetLoadMask(model.UserLoadStatusFollow)
+		if len(fMap) < db.MaxFriendBatchSize {
+			user.NumFollow = int64(len(fMap))
+		}
+		mask = model.UserLoadStatusAll & (^model.UserLoadStatusFollow)
+	}
+
+	off, fMap, err = Globals.redisCli.GetUserFans(sess.UserID, 0)
+	if err == nil {
+
+		user.SetLoadMask(model.UserLoadStatusFans)
+		if len(fMap) < db.MaxFriendBatchSize {
+			user.NumFans = int64(len(fMap))
+		}
+		mask = model.UserLoadStatusAll & (^model.UserLoadStatusFans)
+	}
+
+	// 用户在组中的
+	gList, err := Globals.redisCli.GetUserInGroupAll(sess.UserID)
+	if err == nil {
+		user.SetInGroup(gList)
+		mask = model.UserLoadStatusAll & (^model.UserLoadStatusGroups)
+	}
+
 	return user, mask, err
 }
 
-func loadUserFromDb(session *Session, mask uint32) error {
+// 根据掩码来决定设置加载哪些
+func loadUserFromDb(sess *Session, mask uint32) error {
+	if mask == 0 {
+		return nil
+	}
+
+	// 加载后尝试添加到内存缓存中
+	user, ok := Globals.uc.GetUser(sess.UserID)
+	if ok {
+		user.AddSessionID(sess.Sid)
+	} else {
+		// 基础信息
+		userInfos, err := Globals.mongoCli.FindUserById(sess.UserID)
+		if err != nil {
+			return err
+		}
+		if len(userInfos) != 1 {
+			Globals.Logger.Error("loadUserFromDb() load user err, find count of user", zap.Int("userCount", len(userInfos)))
+			return errors.New("load user count is not 1")
+		}
+		userInfo := &userInfos[0]
+		Globals.redisCli.SetUserInfo(userInfo) // 同步到redis
+
+		loadedUser := model.NewUserFromInfo(userInfo)
+		loadedUser.AddSessionID(sess.Sid)
+		loadedUser.SetLoadMask(model.UserLoadStatusInfo)
+
+		user = Globals.uc.SetOrUpdateUser(sess.UserID, loadedUser) // 插入或者合并
+	}
+
+	numFollow := 0
+	numFans := 0
+	if (mask & model.UserLoadStatusFans) > 0 {
+		fList, err := Globals.scyllaCli.FindFans(sess.UserID, sess.UserID, 0, db.MaxFriendCacheSize)
+		if err != nil {
+			return err
+		}
+		numFans = len(fList)
+
+		Globals.redisCli.SetUserFans(sess.UserID, fList) // 同步到redis
+	}
+
+	if (mask & model.UserLoadStatusFollow) > 0 {
+		fList, err := Globals.scyllaCli.FindFollowing(sess.UserID, sess.UserID, 0, db.MaxFriendCacheSize)
+		if err != nil {
+			return err
+		}
+		numFollow = len(fList)
+
+		Globals.redisCli.SetUserFollowing(sess.UserID, fList) // 同步到redis
+	}
+
+	// 如果加载全了，则同步到缓存，入股不全就不同步了，
+	if numFollow < db.MaxFriendCacheSize && numFans < db.MaxFriendCacheSize {
+		Globals.redisCli.SetUserFriendNum(sess.UserID, int64(numFollow), int64(numFans))
+		user.NumFans = int64(numFans)
+		user.NumFollow = int64(numFollow)
+	} else {
+		user.NumFollow, user.NumFans, _ = Globals.redisCli.GetUserFriendNum(sess.UserID)
+	}
+
+	if (mask & model.UserLoadStatusPermission) > 0 {
+		count := 0
+		fromId := int64(0)
+		for {
+			perList, err := Globals.scyllaCli.FindBlocks(sess.UserID, sess.UserID, fromId, db.MaxFriendCacheSize)
+			if err != nil {
+				return err
+			}
+			if len(perList) < db.MaxFriendCacheSize {
+				break
+			}
+			count += len(perList)
+
+			fromId = perList[len(perList)-1].Uid2
+
+			// 加载到resdis与内存
+			Globals.redisCli.AddUserBlocks(sess.UserID, perList)
+			user.AddPermissionFromDb(perList)
+		}
+		Globals.Logger.Debug("Load user permission list", zap.Int64("user", sess.UserID),
+			zap.Int("count", count))
+	}
+
+	if (mask & model.UserLoadStatusGroups) > 0 {
+		gList, err := Globals.scyllaCli.FindUserInGroups(sess.UserID, sess.UserID, 0, db.MaxFriendCacheSize)
+		if err != nil {
+			return err
+		}
+
+		groupSet := make([]int64, len(gList))
+		for i, item := range gList {
+			groupSet[i] = item.Gid
+		}
+
+		// 加载到resdis与内存
+		Globals.redisCli.SetUserInGroup(sess.UserID, groupSet)
+		user.SetInGroup(groupSet)
+	}
 	return nil
 }
 
 // 用户登录时候加载
+// 这里既然登录了，加载的东西相对比较全
 func LoadUserLogin(session *Session) error {
 	// 如果内存里有，就不用继续了
 	user, ok := Globals.uc.GetUser(session.UserID)
@@ -219,7 +386,7 @@ func LoadUserLogin(session *Session) error {
 		user.AddSessionID(session.Sid)
 		return nil
 	}
-	user, mask, err := justLoadUserFromRedis(session)
+	user, mask, err := tryLoadUserFromRedis(session)
 	if err != nil {
 		return err
 	}
@@ -230,6 +397,12 @@ func LoadUserLogin(session *Session) error {
 
 	return err
 
+}
+
+// 由其他人搜索才造成的加载redis, 基本信息，并且只加载一条fid的权限
+// 至于uid是否关注了fid, 则从fid的粉丝表中加载；
+func LoadUserByFriend(uid, fid int64) error {
+	return nil
 }
 
 func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo, ret bool, status string, session *Session) error {
