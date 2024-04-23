@@ -428,6 +428,30 @@ func (cli *RedisClient) GetHashKeyIntList(key string) (map[int16]int64, error) {
 
 }
 
+func (cli *RedisClient) GetHashKeyInt64List(key string) (map[int64]int32, error) {
+	// 获取哈希表中所有字段和值
+	cmd := cli.Cmd.HGetAll(key)
+	// 检查命令执行是否出错
+	if cmd.Err() != nil {
+		return nil, cmd.Err()
+	}
+	// 提取结果并转换为 map[int16]int64 类型
+	result, err := cmd.Result()
+	if err != nil {
+		return nil, err
+	}
+	hashMap := make(map[int64]int32)
+	for field, value := range result {
+		// 将哈希表的键转换为 int16 类型
+		keyInt, _ := strconv.ParseInt(field, 10, 64)
+		// 将哈希表的值转换为 int64 类型
+		valInt, _ := strconv.ParseInt(value, 10, 32)
+		hashMap[int64(keyInt)] = int32(valInt)
+	}
+	return hashMap, nil
+
+}
+
 // 哈希表设置与添加，如果元素超过限制值，则不再添加了
 func (cli *RedisClient) SetHashMap(key string, aMap map[string]interface{}) error {
 	// 添加 hash 元素

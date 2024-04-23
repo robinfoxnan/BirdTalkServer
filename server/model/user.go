@@ -48,7 +48,7 @@ const DefaultPermissionP2P = PermissionMaskExist | PermissionMaskAdd | Permissio
 const DefaultPermissionStranger = PermissionMaskExist | ((PermissionMaskAdd | PermissionMaskViewArt) << 16)
 
 // 默认朋友权限的设置
-const DefaultPermissionFriend = DefaultPermissionP2P | PermissionMaskFriend
+const DefaultPermission = DefaultPermissionP2P | DefaultPermissionStranger
 
 // 用户加载数据的掩码
 const (
@@ -186,31 +186,8 @@ func (u *User) GetFriendToMeMask(fid int64) (uint32, bool) {
 	return 0, false
 }
 
-// 检查是否可以向对方发送消息，
-// 第2个返回值：是否设置了，未设置应该去加载
-// enable, ok := CanSendMesssageTo(1001)
-func (u *User) CanSendMessageTo(fid int64) (bool, bool) {
-	return u.checkP2PMask(fid, PermissionMaskChat)
-}
-
-func (u *User) CanSendAddReq(fid int64) (bool, bool) {
-	return u.checkP2PMask(fid, PermissionMaskAdd)
-}
-
-func (u *User) CanSendViewInfo(fid int64) (bool, bool) {
-	return u.checkP2PMask(fid, PermissionMaskViewInfo)
-}
-
-func (u *User) CanSendViewArticle(fid int64) (bool, bool) {
-	return u.checkP2PMask(fid, PermissionMaskViewArt)
-}
-
-func (u *User) CanSendViewLocation(fid int64) (bool, bool) {
-	return u.checkP2PMask(fid, PermissionMaskViewLoc)
-}
-
 // 检查某个权限
-func (u *User) checkP2PMask(fid int64, mask uint32) (bool, bool) {
+func (u *User) CheckFriendMask(fid int64, isFan bool, bits uint32) (bool, bool) {
 	data, ok := u.GetFriendToMeMask(fid)
 	if !ok {
 		return false, false
@@ -223,13 +200,13 @@ func (u *User) checkP2PMask(fid int64, mask uint32) (bool, bool) {
 		return false, false
 	}
 
-	if (data & PermissionMaskFriend) == 0 {
+	if isFan == false {
 		// 对方未关注你！陌生人
-		return (strangerMask & mask) > 0, true
+		return (strangerMask & bits) > 0, true
 	}
 
 	// 好友，但是也不一定能发
-	return (data & mask) > 0, true
+	return (data & bits) > 0, true
 }
 
 // 更新时候直接将新的数据合并过来，这个比较繁琐
@@ -274,6 +251,7 @@ func (u *User) AddPermission(perMap map[int64]uint32) {
 	}
 }
 
+// 这个是自己给对方的权限
 func (u *User) AddPermissionFromDb(perList []BlockStore) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
@@ -376,8 +354,22 @@ func (u *User) DelFollow(fid int64) int {
 func (u *User) SetFan(fid int64, b bool) int {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
+
 	u.Fans[fid] = b
 	return len(u.Fans)
+}
+
+// 检查是否设置了粉丝标记
+func (u *User) CheckFun(fid int64) (bool, bool) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	isFan, ok := u.Fans[fid]
+	if !ok {
+		return false, false
+	}
+
+	return isFan, true
 }
 
 func (u *User) DelFan(fid int64) int {

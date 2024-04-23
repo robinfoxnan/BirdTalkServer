@@ -118,6 +118,41 @@ func (me *Scylla) FindFans(pk, uid1, from int64, pageSize uint) ([]model.FriendS
 	return me.FindFriendStore(pk, uid1, from, pageSize, FansTableName)
 }
 
+func (me *Scylla) FindFollowingExact(pk, uid1, fid int64) (*model.FriendStore, error) {
+	return me.FindFriendStoreExact(pk, uid1, fid, FollowingTableName)
+}
+
+func (me *Scylla) FindFansExact(pk, uid1, fid int64) (*model.FriendStore, error) {
+	return me.FindFriendStoreExact(pk, uid1, fid, FansTableName)
+}
+
+// 精确查找
+func (me *Scylla) FindFriendStoreExact(pk, uid1, uid2 int64, table string) (*model.FriendStore, error) {
+	builder := qb.Select(table).Columns(metaFriend.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
+
+	builder.OrderBy("uid1", qb.ASC)
+	builder.OrderBy("uid2", qb.ASC)
+
+	//builder.AllowFiltering()
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid1, uid2)
+
+	var friendList []model.FriendStore
+
+	err := q.Select(&friendList)
+	if err != nil || friendList == nil || len(friendList) == 0 {
+		//fmt.Println(err)
+		return nil, err
+	}
+	return &friendList[0], nil
+}
+
 // 查询关注
 // 数据库不支持偏移，但是可以按照用户id排序，当返回数量少于分页，说明都取完了，
 // 否则，则需要按照最后一个ID继续
@@ -129,7 +164,7 @@ func (me *Scylla) FindFriendStore(pk, uid1, uid2 int64, pageSize uint, table str
 	builder.OrderBy("uid1", qb.ASC)
 	builder.OrderBy("uid2", qb.ASC)
 
-	builder.AllowFiltering()
+	//builder.AllowFiltering()
 	builder.Limit(pageSize)
 
 	q := builder.Query(me.session)
@@ -147,6 +182,33 @@ func (me *Scylla) FindFriendStore(pk, uid1, uid2 int64, pageSize uint, table str
 		return nil, err
 	}
 	return friendList, nil
+}
+
+func (me *Scylla) FindBlocksExact(pk, uid1, fid int64) (*model.BlockStore, error) {
+	builder := qb.Select(BlockTableName).Columns(metaBlock.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
+
+	builder.OrderBy("uid1", qb.ASC)
+	builder.OrderBy("uid2", qb.ASC)
+
+	//builder.AllowFiltering()
+	//builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid1, fid)
+
+	var friendList []model.BlockStore
+
+	err := q.Select(&friendList)
+	if err != nil || friendList == nil || len(friendList) == 0 {
+		//fmt.Println(err)
+		return nil, err
+	}
+	return &friendList[0], nil
 }
 
 // 查询所有的拉黑的名单

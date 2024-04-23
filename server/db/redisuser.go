@@ -138,6 +138,21 @@ func (cli *RedisClient) GetUserFans(uid int64, offset uint64) (uint64, map[int64
 	return cli.getUserFriendStore(keyName, offset)
 }
 
+// 检查是否存在好友，如果设置了空字符串，就是非好友
+func (cli *RedisClient) CheckUserFan(uid int64, fid int64) (bool, error) {
+	keyName := GetUserFansKey(uid)
+	field := strconv.FormatInt(fid, 10)
+	str, err := cli.Cmd.HGet(keyName, field).Result()
+	if err == nil {
+		if len(str) == 0 {
+			return false, nil
+		}
+		return true, err
+	}
+
+	return false, err
+}
+
 // 这里不返回昵称，直接返回掩码
 func (cli *RedisClient) GetUserBLocks(uid int64, offset uint64) (uint64, map[int64]uint32, error) {
 	key := GetUserBlockKey(uid)
@@ -317,6 +332,11 @@ func (cli *RedisClient) RemoveUserSessionOnServer(uid, sid int64) error {
 	keyUserDistribution := GetUserDistributionKey(uid)
 	field := strconv.FormatInt(sid, 10)
 	return cli.RemoveHashInt(keyUserDistribution, field)
+}
+
+func (cli *RedisClient) GetUserSessionOnServer(uid int64) (map[int64]int32, error) {
+	keyUserDistribution := GetUserDistributionKey(uid)
+	return cli.GetHashKeyInt64List(keyUserDistribution)
 }
 
 // 设置好友的关注和粉丝的个数，永久有效，用户注册时候就加载
