@@ -343,6 +343,7 @@ func (cli *RedisClient) AddHashKeyInt(key, field string, value int64) (int64, er
 	return cmd.Result()
 }
 
+// 如果不存在field,redis返回 0, redis.Nil
 func (cli *RedisClient) GetHashKeyInt(key, field string) (int64, error) {
 	cmd := cli.Cmd.HGet(key, field)
 	if cmd.Err() != nil {

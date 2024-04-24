@@ -94,6 +94,7 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 			case "email":
 				regMode = 2
 			case "phone":
+				regMode = 3
 			default:
 				regMode = 1
 			}
@@ -188,4 +189,44 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 // 8 退出
 func handleUserLogout(msg *pbmodel.Msg, session *Session) {
 
+}
+
+// 注册后的回复
+func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo,
+	ret bool, status string, session *Session) error {
+
+	result := "ok"
+	if !ret {
+		result = "fail"
+	}
+
+	params := map[string]string{
+		"status": status,
+	}
+
+	msgUserOpRet := pbmodel.UserOpResult{
+		Operation: opCode,
+		Result:    result,
+		Users:     []*pbmodel.UserInfo{userInfo},
+		Params:    params,
+	}
+
+	msgPlain := pbmodel.MsgPlain{
+		Message: &pbmodel.MsgPlain_UserOpRet{
+			UserOpRet: &msgUserOpRet,
+		},
+	}
+
+	msg := pbmodel.Msg{
+		Version:  int32(ProtocolVersion),
+		KeyPrint: 0,
+		Tm:       utils.GetTimeStamp(),
+		MsgType:  pbmodel.ComMsgType_MsgTUserOpRet,
+		SubType:  0,
+		Message: &pbmodel.Msg_PlainMsg{
+			PlainMsg: &msgPlain,
+		},
+	}
+	session.SendMessage(msg)
+	return nil
 }

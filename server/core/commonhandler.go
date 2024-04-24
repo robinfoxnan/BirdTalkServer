@@ -5,7 +5,6 @@ import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"errors"
-	"fmt"
 	"go.uber.org/zap"
 	"strconv"
 )
@@ -133,18 +132,8 @@ func handleHelloMsg(msg *pbmodel.Msg, session *Session) {
 		session.Params["CodeType"] = str
 	}
 
-	// 检查是否需要重定向
-	//errCode, errStr = checkNeedRedirect(session)
-	//if errCode != int(pbmodel.ErrorMsgType_ErrTNone) {
-	//	redirectParam := map[string]string{
-	//		"host": "127.0.0.1:8080",
-	//	}
-	//	sendBackErrorMsg(errCode, errStr, redirectParam, session)
-	//	return
-	//}
-
-	session.Status = model.UserWaitLogin
-	fmt.Println(&session)
+	//fmt.Println(&session)
+	Globals.Logger.Debug("handle client hello msg", zap.Any("session", session))
 	sendBackHelloMsg(session)
 	session.SetStatus(model.UserWaitLogin)
 }

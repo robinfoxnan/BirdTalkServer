@@ -83,12 +83,17 @@ func decryptDataAuto(data []byte, session *Session) ([]byte, error) {
 	return nil, errors.New("not supported encrypt algorithm")
 }
 
-func checkUserLogin(session *Session) bool {
-	return false
-}
+// 收到消息，先检查用户是否登录了
+func checkUserLogin(sess *Session) bool {
 
-func checkUserPermission(session *Session) bool {
-	return true
+	_, ok := Globals.uc.GetUser(sess.UserID)
+	if ok {
+		if sess.HasStatus(model.UserStatusOk) {
+			return true
+		}
+	}
+
+	return false
 }
 
 // 先放到会话中，此时
@@ -105,6 +110,24 @@ func createTempUser(userInfo *pbmodel.UserInfo, session *Session) error {
 	//
 
 	return nil
+}
+
+// 检查验证码
+func checkValidateCode(code string, session *Session) (bool, error) {
+	if !session.HasStatus(model.UserStatusValidate) {
+		return false, errors.New("not with status model.UserStatusValidate")
+	}
+
+	value := session.GetKeyValue("validateCode")
+	if len(value) == 0 {
+		return false, errors.New("no code here")
+	}
+
+	if code == value {
+		return true, nil
+	}
+
+	return false, nil
 }
 
 // 创建新用户
@@ -399,6 +422,11 @@ func LoadUserLogin(session *Session) error {
 
 }
 
+// 登录成功做确认2件事：添加到redis
+func OnUserLogin(session *Session) {
+	session.updateTTL()
+}
+
 // 由其他人搜索才造成的加载redis, 基本信息，并且只加载一条fid的权限
 // 至于uid是否关注了fid, 则从fid的粉丝表中加载；
 func LoadUserByFriend(fid int64) (*pbmodel.UserInfo, error) {
@@ -458,11 +486,21 @@ func checkFriendPermission(uid, fid int64, bFan bool, bits uint32) bool {
 		}
 	}
 
+	// 从redis查对方给自己设置的权限
+	mask, err := Globals.redisCli.CheckUserPermission(fid, uid)
+	if err == nil && mask != 0 {
+		// 借助基础函数来识别
+		user.SetFriendToMeMask(fid, mask)
+		bRet, ok = user.CheckFriendMask(fid, bFan, bits)
+		return bRet
+	}
+
 	// 查看对方自己设置的权限，默认是啥也没有的
 	permission, err := Globals.scyllaCli.FindBlocksExact(fid, fid, uid)
 
 	// 数据库中也没有，实在没有设置返回默认的，
 	if err != nil || permission == nil {
+
 		if bFan {
 			mask = model.DefaultPermissionP2P | model.PermissionMaskFriend
 		} else {
@@ -470,6 +508,7 @@ func checkFriendPermission(uid, fid int64, bFan bool, bits uint32) bool {
 		}
 	} else { // 找到了
 
+		Globals.redisCli.AddUserPermission(fid, uid, uint32(permission.Perm))
 		mask = uint32(permission.Perm)
 	}
 
@@ -519,8 +558,4 @@ func checkFriendIsFan(fid, uid int64) (bool, error) {
 	Globals.redisCli.AddUserFans(uid, []model.FriendStore{*friend})
 	user.SetFan(fid, true)
 	return true, nil
-}
-
-func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo, ret bool, status string, session *Session) error {
-	return nil
 }

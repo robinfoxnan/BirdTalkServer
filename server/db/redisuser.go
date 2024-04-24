@@ -153,6 +153,24 @@ func (cli *RedisClient) CheckUserFan(uid int64, fid int64) (bool, error) {
 	return false, err
 }
 
+// 查看用户的好友的权限
+func (cli *RedisClient) CheckUserPermission(uid int64, fid int64) (uint32, error) {
+	key := GetUserBlockKey(uid)
+	field := strconv.FormatInt(fid, 10)
+
+	perm, err := cli.GetHashKeyInt(key, field)
+	return uint32(perm), err
+}
+
+// 设置单个的用户权限
+func (cli *RedisClient) AddUserPermission(uid int64, fid int64, perm uint32) error {
+	key := GetUserBlockKey(uid)
+	field := strconv.FormatInt(fid, 10)
+
+	_, err := cli.AddHashKeyInt(key, field, int64(perm))
+	return err
+}
+
 // 这里不返回昵称，直接返回掩码
 func (cli *RedisClient) GetUserBLocks(uid int64, offset uint64) (uint64, map[int64]uint32, error) {
 	key := GetUserBlockKey(uid)

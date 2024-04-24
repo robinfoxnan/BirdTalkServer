@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
+	"go.uber.org/zap"
 	"sync/atomic"
 	"time"
 )
@@ -279,6 +280,8 @@ func (s *Session) cleanUp() {
 		if b {
 			user.RemoveSessionID(s.UserID)
 		}
+		// 从redis中删除
+		Globals.redisCli.RemoveUserSessionOnServer(s.UserID, s.Sid)
 	}
 }
 
@@ -333,11 +336,12 @@ func (sess *Session) ReadLoop() {
 func (s *Session) dispatchRaw(messageType int, rawMsg []byte) {
 	switch messageType {
 	case websocket.TextMessage:
-		fmt.Println("recv text message from sid=", s.Sid, string(rawMsg))
+		//fmt.Println("recv text message from sid=", s.Sid, string(rawMsg))
+		Globals.Logger.Debug("recv text message", zap.Int64("sid", s.Sid), zap.String("msg", string(rawMsg)))
 		str := "recv msg:" + string(rawMsg)
 		s.SendMessage([]byte(str))
 	case websocket.BinaryMessage:
-		fmt.Println("recv bin message from sid=", s.Sid)
+		//fmt.Println("recv bin message from sid=", s.Sid)
 		encoder := BinEncoder{}
 		msg, err := encoder.DecodeMsg(rawMsg)
 		if err == nil {
@@ -346,9 +350,11 @@ func (s *Session) dispatchRaw(messageType int, rawMsg []byte) {
 		}
 
 	case websocket.PingMessage:
-		fmt.Println("recv ping message from sid=", s.Sid)
+		//fmt.Println("recv ping message from sid=", s.Sid)
+		Globals.Logger.Debug("recv ping message", zap.Int64("sid", s.Sid))
 	case websocket.PongMessage:
-		fmt.Println("recv pong message from sid=", s.Sid)
+		//fmt.Println("recv pong message from sid=", s.Sid)
+		Globals.Logger.Debug("recv pong message", zap.Int64("sid", s.Sid))
 	}
 }
 
