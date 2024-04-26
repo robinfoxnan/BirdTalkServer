@@ -401,3 +401,36 @@ func (u *User) DelExtraKeyValue(key string) {
 
 	delete(u.Params, key)
 }
+
+// 设置用户禁用，删除等信息
+func (u *User) SetBaseExtraKeyValue(key, value string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	if u.UserInfo.Params == nil {
+		u.UserInfo.Params = make(map[string]string)
+	}
+
+	u.UserInfo.Params[key] = value
+}
+
+func (u *User) GetBaseExtraKeyValue(key string) (string, bool) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if u.UserInfo.Params == nil {
+		return "", false
+	}
+	ret, b := u.UserInfo.Params[key]
+	return ret, b
+}
+
+func (u *User) DelBaseExtraKeyValue(key string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if u.UserInfo.Params == nil {
+		return
+	}
+
+	delete(u.UserInfo.Params, key)
+}

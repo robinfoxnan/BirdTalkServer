@@ -86,14 +86,49 @@ func decryptDataAuto(data []byte, session *Session) ([]byte, error) {
 // 收到消息，先检查用户是否登录了
 func checkUserLogin(sess *Session) bool {
 
-	_, ok := Globals.uc.GetUser(sess.UserID)
+	user, ok := Globals.uc.GetUser(sess.UserID)
 	if ok {
+		if user.Params != nil {
+			status, b := user.Params["status"]
+			if b {
+				if status == "disabled" {
+					sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTDisabled), "user is disabled.", nil, sess)
+					return false
+				}
+			}
+		}
+
 		if sess.HasStatus(model.UserStatusOk) {
 			return true
 		}
 	}
 
+	sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotLogin), "should login first.", nil, sess)
 	return false
+}
+
+// 是否用户已经注销
+func checkUserIsUsing(sess *Session) bool {
+
+	user, ok := Globals.uc.GetUser(sess.UserID)
+	if ok {
+		if user.Params != nil {
+			status, b := user.Params["status"]
+			if b {
+				if status == "deleted" {
+					sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTDeleted), "user is deleted.", nil, sess)
+					return false
+				}
+			}
+		}
+
+		//if sess.HasStatus(model.UserStatusOk) {
+		//	return true
+		//}
+	}
+
+	//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotLogin), "should login first.", nil, sess)
+	return true
 }
 
 // 先放到会话中，此时

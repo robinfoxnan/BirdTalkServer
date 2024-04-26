@@ -1006,6 +1006,14 @@ public final class MsgOuterClass {
      * <code>ErrTNotPermission = 16;</code>
      */
     ErrTNotPermission(16),
+    /**
+     * <code>ErrTDisabled = 17;</code>
+     */
+    ErrTDisabled(17),
+    /**
+     * <code>ErrTDeleted = 18;</code>
+     */
+    ErrTDeleted(18),
     UNRECOGNIZED(-1),
     ;
 
@@ -1125,6 +1133,14 @@ public final class MsgOuterClass {
      * <code>ErrTNotPermission = 16;</code>
      */
     public static final int ErrTNotPermission_VALUE = 16;
+    /**
+     * <code>ErrTDisabled = 17;</code>
+     */
+    public static final int ErrTDisabled_VALUE = 17;
+    /**
+     * <code>ErrTDeleted = 18;</code>
+     */
+    public static final int ErrTDeleted_VALUE = 18;
 
 
     public final int getNumber() {
@@ -1168,6 +1184,8 @@ public final class MsgOuterClass {
         case 14: return ErrTMsgContent;
         case 15: return ErrTNotLogin;
         case 16: return ErrTNotPermission;
+        case 17: return ErrTDisabled;
+        case 18: return ErrTDeleted;
         default: return null;
       }
     }
@@ -27151,7 +27169,7 @@ java.lang.String defaultValue);
       "teChatType\020\000\022\021\n\rGroupChatType\020\001*V\n\rQuery" +
       "DataType\022\025\n\021QueryDataTypeData\020\000\022\026\n\022Query" +
       "DataTypeReply\020\001\022\026\n\022QueryDataTypeByTag\020\002*" +
-      "\307\002\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
+      "\352\002\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
       "rsion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRedirec" +
       "t\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCode\020\005" +
       "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013E" +
@@ -27159,18 +27177,19 @@ java.lang.String defaultValue);
       "rTStage\020\n\022\021\n\rErrTPublicKey\020\013\022\023\n\017ErrTKeyC" +
       "onflict\020\014\022\021\n\rErrTCheckData\020\r\022\022\n\016ErrTMsgC" +
       "ontent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025\n\021ErrTNotPer" +
-      "mission\020\020*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000" +
-      "\022\r\n\tMsgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMs" +
-      "gTError\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTCh" +
-      "atMsg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020" +
-      "\r\022\023\n\017MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020" +
-      "\n\014MsgTDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n" +
-      "\021MsgTDownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\r" +
-      "MsgTUserOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017Msg" +
-      "TFriendOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTG" +
-      "roupOpRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService" +
-      "\022%\n\013ClientEvent\022\n.model.Msg\032\n.model.MsgB" +
-      "\020Z\016server/pbmodelb\006proto3"
+      "mission\020\020\022\020\n\014ErrTDisabled\020\021\022\017\n\013ErrTDelet" +
+      "ed\020\022*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tM" +
+      "sgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTErr" +
+      "or\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTChatMsg" +
+      "\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017" +
+      "MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014Msg" +
+      "TDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgT" +
+      "DownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTU" +
+      "serOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFrie" +
+      "ndOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupO" +
+      "pRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService\022%\n\013C" +
+      "lientEvent\022\n.model.Msg\032\n.model.MsgB\020Z\016se" +
+      "rver/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

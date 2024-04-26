@@ -47,7 +47,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.model.UserOpResult.repeatedFields_ = [3];
+proto.model.UserOpResult.repeatedFields_ = [4];
 
 
 
@@ -82,6 +82,7 @@ proto.model.UserOpResult.toObject = function(includeInstance, msg) {
   var f, obj = {
     operation: jspb.Message.getFieldWithDefault(msg, 1, 0),
     result: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    status: jspb.Message.getFieldWithDefault(msg, 3, ""),
     usersList: jspb.Message.toObjectList(msg.getUsersList(),
     proto.model.UserInfo.toObject, includeInstance),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
@@ -130,11 +131,15 @@ proto.model.UserOpResult.deserializeBinaryFromReader = function(msg, reader) {
       msg.setResult(value);
       break;
     case 3:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setStatus(value);
+      break;
+    case 4:
       var value = new proto.model.UserInfo;
       reader.readMessage(value,proto.model.UserInfo.deserializeBinaryFromReader);
       msg.addUsers(value);
       break;
-    case 4:
+    case 5:
       var value = msg.getParamsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -183,17 +188,24 @@ proto.model.UserOpResult.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getStatus();
+  if (f.length > 0) {
+    writer.writeString(
+      3,
+      f
+    );
+  }
   f = message.getUsersList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      3,
+      4,
       f,
       proto.model.UserInfo.serializeBinaryToWriter
     );
   }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(4, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -235,12 +247,30 @@ proto.model.UserOpResult.prototype.setResult = function(value) {
 
 
 /**
- * repeated UserInfo users = 3;
+ * optional string status = 3;
+ * @return {string}
+ */
+proto.model.UserOpResult.prototype.getStatus = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.model.UserOpResult} returns this
+ */
+proto.model.UserOpResult.prototype.setStatus = function(value) {
+  return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * repeated UserInfo users = 4;
  * @return {!Array<!proto.model.UserInfo>}
  */
 proto.model.UserOpResult.prototype.getUsersList = function() {
   return /** @type{!Array<!proto.model.UserInfo>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.model.UserInfo, 3));
+    jspb.Message.getRepeatedWrapperField(this, proto.model.UserInfo, 4));
 };
 
 
@@ -249,7 +279,7 @@ proto.model.UserOpResult.prototype.getUsersList = function() {
  * @return {!proto.model.UserOpResult} returns this
 */
 proto.model.UserOpResult.prototype.setUsersList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -259,7 +289,7 @@ proto.model.UserOpResult.prototype.setUsersList = function(value) {
  * @return {!proto.model.UserInfo}
  */
 proto.model.UserOpResult.prototype.addUsers = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.model.UserInfo, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.model.UserInfo, opt_index);
 };
 
 
@@ -273,14 +303,14 @@ proto.model.UserOpResult.prototype.clearUsersList = function() {
 
 
 /**
- * map<string, string> params = 4;
+ * map<string, string> params = 5;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.UserOpResult.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 4, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 5, opt_noLazyCreate,
       null));
 };
 

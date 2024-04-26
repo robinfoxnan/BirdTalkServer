@@ -25,16 +25,15 @@ func handleUserOp(msg *pbmodel.Msg, session *Session) {
 
 	// 除了注册和登录，都需要验证是否登录与权限
 	if opCode != pbmodel.UserOperationType_Login && opCode != pbmodel.UserOperationType_RegisterUser {
-		ok := checkUserLogin(session)
+		ok := checkUserLogin(session) // 内部发送错误通知
 		if !ok {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotLogin), "should login first.", nil, session)
 			return
 		}
 	}
 
 	// 只有管理员才有权限禁用和恢复某个用户
 	if opCode == pbmodel.UserOperationType_RecoverUser || opCode == pbmodel.UserOperationType_RecoverUser {
-		ok := checkUserPermission(session)
+		ok := CheckUserPermission(session)
 		if !ok {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "permission error", nil, session)
 			return
@@ -156,14 +155,72 @@ func handleUserUnRegister(msg *pbmodel.Msg, session *Session) {
 	userOpMsg := msg.GetPlainMsg().GetUserOp()
 	userInfo := userOpMsg.GetUser()
 
+	_, err := Globals.mongoCli.UpdateGroupInfoPart(session.UserID, map[string]interface{}{"params.status": "deleted"}, nil)
+
+	if err != nil {
+		Globals.Logger.Fatal("unreg user set user status err", zap.Error(err))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
+			"unregister user meet database err",
+			nil,
+			session)
+		return
+	}
+	Globals.Logger.Info("unreg user ok", zap.Int64("user id", session.UserID))
 	SendBackUserOp(pbmodel.UserOperationType_UnregisterUser,
 		userInfo,
-		true, "loginok", session)
+		true, "unregok", session)
+
+	// todo: 清理资源
 }
 
 // 3 禁用用户
 func handleUserDisable(msg *pbmodel.Msg, session *Session) {
+	userOpMsg := msg.GetPlainMsg().GetUserOp()
+	userInfo := userOpMsg.GetUser()
+	if userInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+			"register msg userinfo is nil",
+			map[string]string{"field": "userinfo"},
+			session)
+		return
+	}
 
+	reason := ""
+	if userOpMsg.Params != nil {
+		reason, _ = userInfo.Params["reason"]
+	}
+
+	// 更新数据库
+	params := map[string]interface{}{
+		"params.status": "deleted",
+		"params.reason": reason,
+	}
+	_, err := Globals.mongoCli.UpdateGroupInfoPart(userInfo.UserId, params, nil)
+	if err != nil {
+		Globals.Logger.Fatal("disable user set user status err", zap.Error(err))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
+			"unregister user meet database err",
+			nil,
+			session)
+		return
+	}
+
+	// 更新redis
+	err = Globals.redisCli.UpdateUserInfoPart(userInfo.UserId, params, nil)
+
+	// 更新内存
+	user, ok := Globals.uc.GetUser(userInfo.UserId)
+	if ok && user != nil {
+		user.SetBaseExtraKeyValue("status", "disabled")
+		user.SetBaseExtraKeyValue("reason", reason)
+	}
+
+	Globals.Logger.Info("disable user ok", zap.Int64("user id", userInfo.UserId),
+		zap.Int64("admin id", session.UserID))
+
+	SendBackUserOp(pbmodel.UserOperationType_DisableUser,
+		userInfo,
+		true, "unregok", session)
 }
 
 // 4 恢复用户
@@ -229,4 +286,12 @@ func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo
 	}
 	session.SendMessage(msg)
 	return nil
+}
+
+// 检查用户是否是管理员，
+func CheckUserPermission(session *Session) bool {
+	if session.UserID < 10000 {
+		return true
+	}
+	return false
 }

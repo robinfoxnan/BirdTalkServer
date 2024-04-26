@@ -45,6 +45,25 @@ func (cli *RedisClient) SetUserInfo(user *pbmodel.UserInfo) error {
 	return err
 }
 
+// 设置部分内容
+func (cli *RedisClient) UpdateUserInfoPart(id int64, setData map[string]interface{}, unsetData []string) error {
+	keyName := GetUserInfoKey(id)
+
+	tx := cli.Cmd.TxPipeline()
+	// 清空集合
+	if setData != nil {
+		tx.HMSet(keyName, setData)
+	}
+
+	if unsetData != nil {
+		tx.HDel(keyName, unsetData...)
+	}
+
+	// 执行事务
+	_, err := tx.Exec()
+	return err
+}
+
 // ////////////////////////////////////////////////////////////////////////
 // 设置关注列表, 这个参数与操作数据库的结构一样，保存数据库后直接添加到redis里
 func (cli *RedisClient) setFriendsStores(key string, friends []model.FriendStore) error {
