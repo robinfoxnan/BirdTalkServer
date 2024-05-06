@@ -402,6 +402,45 @@ func (u *User) DelExtraKeyValue(key string) {
 	delete(u.Params, key)
 }
 
+// 更新信息后，设置基本信息
+func (u *User) SetBaseValue(userInfo *pbmodel.UserInfo) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if u.UserInfo.UserName != userInfo.UserName {
+		u.UserInfo.UserName = userInfo.UserName
+	}
+
+	if u.UserInfo.NickName != userInfo.NickName {
+		u.UserInfo.NickName = userInfo.NickName
+	}
+
+	if u.UserInfo.Gender != userInfo.Gender {
+		u.UserInfo.Gender = userInfo.Gender
+	}
+
+	if u.UserInfo.Age != userInfo.Age {
+		u.UserInfo.Age = userInfo.Age
+	}
+
+	if u.UserInfo.Region != userInfo.Region {
+		u.UserInfo.Region = userInfo.Region
+	}
+
+	if u.UserInfo.Icon != userInfo.Icon {
+		u.UserInfo.Icon = userInfo.Icon
+	}
+
+	if u.UserInfo.Params == nil {
+		u.UserInfo.Params = make(map[string]string)
+	}
+
+	// 这里设置其他的数据
+	for key, value := range userInfo.Params {
+		u.UserInfo.Params[key] = value
+	}
+}
+
 // 设置用户禁用，删除等信息
 func (u *User) SetBaseExtraKeyValue(key, value string) {
 	u.Mu.Lock()

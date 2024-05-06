@@ -71,6 +71,10 @@ func (s *Session) SetStatus(mask uint32) {
 	s.Status = mask
 }
 
+func (s *Session) UnSetStatus(mask uint32) {
+	s.Status = s.Status & (^mask)
+}
+
 func (s *Session) SetKeyValue(key, value string) {
 	s.Params[key] = value
 }

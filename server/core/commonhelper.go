@@ -218,6 +218,7 @@ func LoadUserNew(session *Session) error {
 	}
 	//userinfo := &userInfos[0]
 
+	session.TempUserInfo = &userInfos[0]
 	// 2) 更新redis
 	err = Globals.redisCli.SetUserInfo(&userInfos[0])
 
