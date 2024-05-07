@@ -458,11 +458,6 @@ func LoadUserLogin(session *Session) error {
 
 }
 
-// 登录成功做确认2件事：添加到redis
-func OnUserLogin(session *Session) {
-	session.updateTTL()
-}
-
 // 由其他人搜索才造成的加载redis, 基本信息，并且只加载一条fid的权限
 // 至于uid是否关注了fid, 则从fid的粉丝表中加载；
 func LoadUserByFriend(fid int64) (*pbmodel.UserInfo, error) {

@@ -427,7 +427,7 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 		onRegisterSuccess(session)
 
 	} else if session.HasStatus(model.UserStatusLogin) {
-		onLoginSuccess(session)
+		onLoginSuccess(session, true)
 
 	} else if session.HasStatus(model.UserStatusChangeInfo) {
 		onChangeInfoSuccess(session)
@@ -562,13 +562,61 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 			session)
 		return
 	}
-	onLoginSuccess(session)
+	onLoginSuccess(session, true)
 
 	return
 }
 
+// 使用指纹登录
+func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm int64) bool {
+
+	uid, keyEx, err := Globals.redisCli.LoadToken(keyPrint)
+	if err != nil || keyEx == nil || uid == 0 {
+		return false
+	}
+
+	session.UserID = uid
+	session.KeyEx = keyEx
+
+	cipher, err := utils.DecodeBase64(checkTokenData)
+	if err != nil {
+		//fmt.Println("check data error", err)
+		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
+
+		session.UserID = 0
+		session.KeyEx = nil
+		return false
+	}
+
+	tmData, err := decryptDataAuto(cipher, session)
+	if err != nil {
+		//fmt.Println("check data error", err)
+		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
+		session.UserID = 0
+		session.KeyEx = nil
+		return false
+	}
+
+	tmStr := strconv.FormatInt(tm, 10)
+	if tmStr != string(tmData) {
+		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
+		session.UserID = 0
+		session.KeyEx = nil
+		return false
+	}
+
+	// 加载用户信息等
+	onLoginSuccess(session, false)
+
+	return true
+}
+
 // 注册结束后，执行这一段
 func onRegisterSuccess(session *Session) {
+
 	// 加载用户信息
 	err := LoadUserNew(session) // 内部记录错误并回执
 	if err != nil {
@@ -588,7 +636,14 @@ func onRegisterSuccess(session *Session) {
 }
 
 // 登录最后收尾的
-func onLoginSuccess(session *Session) {
+func onLoginSuccess(session *Session, bSaveToken bool) {
+	// 前面比对密码或者验证码成功了，这里应该绑定指纹和用户，7天
+	if bSaveToken {
+		if session.KeyEx != nil {
+			Globals.redisCli.SaveToken(session.UserID, session.KeyEx)
+		}
+	}
+
 	// 加载数据
 	err := LoadUserLogin(session)
 	if err != nil {
@@ -598,7 +653,7 @@ func onLoginSuccess(session *Session) {
 			session)
 		return
 	}
-	OnUserLogin(session)
+	session.updateTTL()
 
 	// 通知用户免登录
 	SendBackUserOp(pbmodel.UserOperationType_Login,

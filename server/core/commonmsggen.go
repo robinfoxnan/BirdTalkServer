@@ -61,13 +61,13 @@ func sendBackErrorMsg(errCode int, detail string, params map[string]string, sess
 }
 
 // 应答服务端的hello消息
-func sendBackHelloMsg(session *Session) {
+func sendBackHelloMsg(session *Session, stage string) {
 
 	hello := pbmodel.MsgHello{
 		ClientId: "",
 		Version:  "v1.0",
 		Platform: "windows",
-		Stage:    "waitlogin",
+		Stage:    stage, // "waitlogin"
 		KeyPrint: 0,
 		RsaPrint: 0,
 		Params:   nil,
