@@ -12,14 +12,14 @@ import (
 )
 
 // 需要手动调用
-func InitRedisDb(host string, pwd string) error {
-	var err error
-	RedisCli, err = NewRedisClient(host, pwd)
-	if err == nil {
-		RedisCli.initData()
-	}
-	return err
-}
+//func InitRedisDb(host string, pwd string) error {
+//	var err error
+//	RedisCli, err = NewRedisClient(host, pwd)
+//	if err == nil {
+//		RedisCli.InitData()
+//	}
+//	return err
+//}
 
 // 通过该变量引用
 var RedisCli *RedisClient = nil

@@ -12,6 +12,10 @@ type SessionCache struct {
 	sessionMap utils.ConcurrentMap[int64, *Session]
 }
 
+func NewSessionCache() *SessionCache {
+	return &SessionCache{sessionMap: utils.NewConcurrentMap[int64, *Session]()}
+}
+
 // 获取用户的会话
 func (ss *SessionCache) Get(sid int64) (*Session, bool) {
 	v, b := ss.sessionMap.Get(sid)

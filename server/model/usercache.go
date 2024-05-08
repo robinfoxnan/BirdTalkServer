@@ -12,6 +12,10 @@ type UserCache struct {
 	userMap utils.ConcurrentMap[int64, *User]
 }
 
+func NewUserCache() *UserCache {
+	return &UserCache{userMap: utils.NewConcurrentMap[int64, *User]()}
+}
+
 // 如果没有，则从redis中查找，如果redis中没有，则从数据库中查找
 func (uc *UserCache) GetUser(uid int64) (*User, bool) {
 

@@ -35,7 +35,8 @@ var Globals GlobalVars
 // 初始化构造函数
 func init() {
 	Globals = GlobalVars{}
-	Globals.ss = &SessionCache{sessionMap: utils.NewConcurrentMap[int64, *Session]()}
+	Globals.ss = NewSessionCache()
+	Globals.uc = model.NewUserCache()
 	Globals.Logger = utils.CreateLogger()
 
 }
@@ -60,6 +61,8 @@ func (g *GlobalVars) InitDb() error {
 		fmt.Println(err)
 		return err
 	}
+
+	g.redisCli.InitData() // 初始一些数据
 
 	hosts := strings.Split(g.Config.ScyllaDb.Host, ",")
 	g.scyllaCli, err = db.NewScyllaClient(hosts, g.Config.ScyllaDb.User, g.Config.ScyllaDb.Pwd)

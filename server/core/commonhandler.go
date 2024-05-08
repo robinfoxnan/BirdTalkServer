@@ -5,6 +5,7 @@ import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"errors"
+	"fmt"
 	"go.uber.org/zap"
 	"strconv"
 )
@@ -138,11 +139,12 @@ func handleHelloMsg(msg *pbmodel.Msg, session *Session) {
 	Globals.Logger.Debug("handle client hello msg", zap.Any("session", session))
 
 	if msgHello.GetKeyPrint() != 0 {
+		fmt.Println("key print=", msgHello.GetKeyPrint())
 		ok = LoginWithPrint(session, msgHello.GetKeyPrint(), checkTokenData, msg.GetTm())
 		if ok {
 			// pass
 		} else {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTKeyPrint), "key print is not available", nil, session)
+
 			session.SetStatus(model.UserWaitLogin)
 		}
 	} else {

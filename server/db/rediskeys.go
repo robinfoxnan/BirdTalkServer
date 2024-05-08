@@ -39,14 +39,14 @@ const MaxFriendCacheSize = 1024 // 缓存中粉丝之类的最大数量
 const BirdServerStateCh = "bssch" //用户、群组、服务器状态广播频道
 
 // 某些值必须要有的，确保初始化
-func (cli *RedisClient) initData() {
+func (cli *RedisClient) InitData() {
 	if cli == nil {
 		return
 	}
 
 	cli.makeSureInt(BirdServerUserId, 10000)
-	cli.makeSureInt(BirdServerGroupId, 1000)
-	cli.makeSureInt(BirdServerNewsId, 0)
+	cli.makeSureInt(BirdServerGroupId, 10000)
+	cli.makeSureInt(BirdServerNewsId, 1000)
 	cli.makeSureInt(BirdServerCommentId, 0)
 
 }

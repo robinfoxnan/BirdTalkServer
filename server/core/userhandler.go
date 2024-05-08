@@ -4,6 +4,7 @@ import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"fmt"
 	"go.uber.org/zap"
 	"strconv"
 	"strings"
@@ -72,6 +73,16 @@ func handleUserOp(msg *pbmodel.Msg, session *Session) {
 // 下面是细分的子类型
 // 1 注册用户
 func handleUserRegister(msg *pbmodel.Msg, session *Session) {
+
+	// 如果登录，则不能注册账号
+	if session.HasStatus(model.UserStatusOk) {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTStage),
+			"you are already login, do not register too much id",
+			nil,
+			session)
+		return
+	}
+
 	userOpMsg := msg.GetPlainMsg().GetUserOp()
 	userInfo := userOpMsg.GetUser()
 	if userInfo == nil {
@@ -102,15 +113,17 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 邮件是否合法
-	ok := utils.IsValidEmail(userInfo.Email)
-	if ok {
-		regMode = 2
-	} else {
-		// 通知用户信息不对
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-			"email is not correct",
-			map[string]string{"field": userInfo.Email},
-			session)
+
+	if regMode == 2 {
+		ok := utils.IsValidEmail(userInfo.Email)
+		if !ok {
+			// 通知用户信息不对
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+				"email is not correct",
+				map[string]string{"field": userInfo.Email},
+				session)
+			return
+		}
 	}
 
 	if regMode == 2 {
@@ -144,6 +157,7 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 
 		// 加载并回执
 		onRegisterSuccess(session)
+		fmt.Println(session.TempUserInfo)
 	}
 
 }
@@ -571,7 +585,9 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm int64) bool {
 
 	uid, keyEx, err := Globals.redisCli.LoadToken(keyPrint)
-	if err != nil || keyEx == nil || uid == 0 {
+	if err != nil || keyEx == nil {
+		Globals.Logger.Info("try login with keyprint, but not found: ", zap.Int64("keyPrint", keyPrint))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTKeyPrint), "key print is not exist", nil, session)
 		return false
 	}
 
@@ -581,7 +597,7 @@ func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm 
 	cipher, err := utils.DecodeBase64(checkTokenData)
 	if err != nil {
 		//fmt.Println("check data error", err)
-		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
+		Globals.Logger.Info("decrypt base64 check data error: ", zap.Error(err))
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
 
 		session.UserID = 0
@@ -600,11 +616,21 @@ func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm 
 	}
 
 	tmStr := strconv.FormatInt(tm, 10)
-	if tmStr != string(tmData) {
+	decryptedTm := string(tmData)
+
+	fmt.Printf("receive tm = %v \n", decryptedTm)
+
+	if tmStr != decryptedTm {
 		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+string(tmData), nil, session)
 		session.UserID = 0
 		session.KeyEx = nil
+		return false
+	}
+
+	// 曾经交换过秘钥，但是当前显示未登录
+	if uid == 0 {
+		sendBackHelloMsg(session, "needlogin")
 		return false
 	}
 
@@ -688,6 +714,7 @@ func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo
 	msgUserOpRet := pbmodel.UserOpResult{
 		Operation: opCode,
 		Result:    result,
+		Status:    status,
 		Users:     []*pbmodel.UserInfo{userInfo},
 		Params:    params,
 	}

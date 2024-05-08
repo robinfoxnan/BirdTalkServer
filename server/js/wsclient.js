@@ -138,35 +138,31 @@ function bytesToInt64(data) {
     return int64Value.toString();
 }
 
-async function encryptString(str, key){
-    // 将文本编码为 ArrayBuffer
-    const dataBuffer = new TextEncoder().encode(str);
-    return encryptBytes(dataBuffer, key)
-}
 
-async function encryptBytes(data, key) {
-    try {
-        // 生成随机的初始化向量（IV）
-        const iv = crypto.getRandomValues(new Uint8Array(12));
 
-        // 使用 CryptoKey 对象创建 ChaCha20 算法对象
-        const algorithm = { name: "AES-GCM", iv: iv };
-
-        // 使用 CryptoKey 对象加密数据
-        const encryptedData = await crypto.subtle.encrypt(algorithm, key, dataBuffer);
-
-        // 将 IV 和加密后的数据拼接在一起
-        const result = new Uint8Array(iv.length + encryptedData.byteLength);
-        result.set(iv, 0);
-        result.set(new Uint8Array(encryptedData), iv.length);
-
-        // 返回拼接后的数据
-        return result;
-    } catch (error) {
-        console.error("Encryption failed:", error);
-        throw error;
-    }
-};
+// async function encryptBytes(data, key) {
+//     try {
+//         // 生成随机的初始化向量（IV）
+//         const iv = crypto.getRandomValues(new Uint8Array(12));
+//
+//         // 使用 CryptoKey 对象创建 ChaCha20 算法对象
+//         const algorithm = { name: "AES-GCM", iv: iv };
+//
+//         // 使用 CryptoKey 对象加密数据
+//         const encryptedData = await crypto.subtle.encrypt(algorithm, key, dataBuffer);
+//
+//         // 将 IV 和加密后的数据拼接在一起
+//         const result = new Uint8Array(iv.length + encryptedData.byteLength);
+//         result.set(iv, 0);
+//         result.set(new Uint8Array(encryptedData), iv.length);
+//
+//         // 返回拼接后的数据
+//         return result;
+//     } catch (error) {
+//         console.error("Encryption failed:", error);
+//         throw error;
+//     }
+// };
 
 // 加密整数
 async function encryptInt64(int64Value, key) {
@@ -321,6 +317,13 @@ async function calculateMD5(data) {
         throw error;
     }
 };
+
+async function encryptString(str, key){
+    // 将文本编码为 ArrayBuffer
+    const dataBuffer = new TextEncoder().encode(str);
+    const temp = await encryptAES_CTR(dataBuffer, key);
+    return arrayBufferToBase64(temp);
+}
 
 async function encryptAES_CTR(plaintext, key) {
     // 生成随机的初始化向量（IV）
@@ -499,6 +502,11 @@ class WsClient {
                 this.onKeyExchangeMsg(msg);
                 break;
 
+            case proto.model.ComMsgType.MSGTUSEROP:   // 好友申请
+                break;
+            case proto.model.ComMsgType.MSGTUSEROPRET:  // 用户或者好友操作应答
+                this.onUserOpResult(msg)
+                break;
             default:
                 // 其他类型的消息处理
                 console.warn("Received unknown message type:", msgType);
@@ -525,6 +533,17 @@ class WsClient {
             "Code: " + errorMsg.getCode() + "\n" +
             "Detail: " + errorMsg.getDetail() + "\n";
         //this.progressCallback(str);
+        switch (errorMsg.getCode()) {
+            case proto.model.ErrorMsgType.ERRTKEYPRINT:
+                console.log("delete key");
+                deleteShareKey();
+                break;
+            case proto.model.ErrorMsgType.ERRTREDIRECT:
+                break;
+            case proto.model.ErrorMsgType.ERRTWRONGPWD:
+                break;
+
+        }
         this.errorCallback(str)
     }
     // 收到消息应答
@@ -602,14 +621,66 @@ class WsClient {
 
     }
 
+    // 注册应答
+    async onUserOpResult(msg){
+
+        const userOpRet = msg.getPlainmsg().getUseropret();
+        const op = userOpRet.getOperation();
+        switch (op){
+            case proto.model.UserOperationType.REGISTERUSER:
+                break;
+        }
+
+        let str = "";
+        //str = userOpRet.toLocaleString();
+
+        str += "Received reg result  message:\n" +
+            "OP: " + op + "\n" +
+            "Status: " + userOpRet.getStatus() + "\n" +
+            "Result: " + userOpRet.getResult() + "\n" +
+            "User info: " + userOpRet.getUsersList() + "\n";
+        const users = userOpRet.getUsersList();
+        const user = users[0];
+        str += "user id: " + user.getUserid() + "\n" ;
+        this.progressCallback(str);
+    }
+    //////////////////////////////////////////////////////////////////////////////
+
     // 1.0 发送hello包
-    sendHello(){
+    async sendHello(){
+        const timestamp = getCurrentTimestamp();
         // 子消息
         const hello = new proto.model.MsgHello();
-        hello.setClientid("uuid")  //js权限低，这里可以使用一个UUID，执行本地存储，每次都带着，用于服务端区分设备
-        hello.setVersion("1.0")
-        hello.setPlatform("web")
-        hello.setStage("clienthello")
+        hello.setClientid("uuid");  //js权限低，这里可以使用一个UUID，执行本地存储，每次都带着，用于服务端区分设备
+        hello.setVersion("1.0");
+        hello.setPlatform("web");
+        hello.setStage("clienthello");
+
+        const keyPrint = loadSharedKeyPrint();
+        if (keyPrint) {
+            // 如果 sharedKeyPrint 存在，则执行相应的操作
+            console.log("sharedKeyPrint 存在");
+            console.log(keyPrint);
+            this.shareKeyPrint = keyPrint;
+
+            const shareKey = loadSharedKey();
+            if (shareKey){
+                this.shareKey = shareKey;
+
+                console.log("时间戳=", timestamp);
+                const checkData = await encryptString(timestamp, this.shareKey);
+                console.log(checkData);
+                hello.setKeyprint(this.shareKeyPrint);
+                let paramsMap = hello.getParamsMap();
+                // 设置键值对
+                paramsMap.set('checkTokenData', checkData);
+            }
+        } else {
+            // 如果 sharedKeyPrint 不存在，则执行其他操作
+            console.log("sharedKeyPrint 不存在");
+        }
+
+
 
         // 将 MsgHello 消息设置为 Msg 消息的 plainMsg 字段
         const plainMsg = new proto.model.MsgPlain();
@@ -621,7 +692,7 @@ class WsClient {
         msg.setMsgtype(proto.model.ComMsgType.MSGTHELLO);
         msg.setVersion(1);
         msg.setPlainmsg(plainMsg);
-        const timestamp = getCurrentTimestamp();
+
         msg.setTm(timestamp);
 
         this.sendObject(msg);
@@ -713,15 +784,16 @@ class WsClient {
     }
 
     // 3注册申请
-    sendRegisterMessage() {
+    // "anonymous" "email"
+    sendRegisterMessage(name, pwd, email, type) {
         showMessage("注册申请的消息")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUsername("robin");
+        userInfo.setUsername(name);
         userInfo.setUserid(0);
-        userInfo.setEmail("390017268@qq.com");
+        userInfo.setEmail(email);
         const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("pwd", "12345678");
-        paramsMap.set("regtype", "pwd");   // pwd, email,phone
+        paramsMap.set("pwd", pwd);
+        paramsMap.set("regtype", type);   // pwd, email,phone
 
 
         // 注册用户
@@ -729,18 +801,22 @@ class WsClient {
         regOpReq.setOperation(proto.model.UserOperationType.REGISTERUSER);
         regOpReq.setUser(userInfo)
 
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
 
         // 封装为通用消息
+        const tmStr = getCurrentTimestamp();
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(tmStr);
 
         this.sendObject(msg);
     }
 
     // 4. 发送验证码，所有发送验证码的都是一样的，服务端跟踪当前
-    sendcodeMessage() {
+    sendCodeMessage() {
         showMessage("发送验证消息")
         const userInfo = new proto.model.UserInfo();
         userInfo.setUserid(1001);
