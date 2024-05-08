@@ -1,0 +1,38 @@
+{{/*
+  CHINESE
+
+  定义用户注册邮件确认文案的模版。
+  语法参阅 https://golang.org/pkg/text/template/ 。
+
+  模版必须包含以下内容:
+   - 'subject'：邮件主题
+   - 以下一项或两项：
+     - 'body_html': 包含请求头"Content-type: text/html"的HTML格式消息内容。
+     - 'body_plain': 包含请求头"Content-type: text/plain"的文本格式消息内容。
+
+   如果同时包含 body_html 和 body_plain，则都作为 'multipart/alternative' 消息的一部分发送。
+*/}}
+
+{{define "subject"}}BirdTalk 验证码: 通知邮件{{end}}
+
+{{define "body_html"}}
+<html>
+<body>
+<p>您好！</p>
+
+<p>输入验证码：</p>
+<blockquote><big>{{.Code}}</big></blockquote>
+
+<p><a href="https://birdtalk.cc/">BirdTalk 团队 </p>
+</body>
+</html>
+{{end}}
+
+{{define "body_plain"}}
+您好！
+
+请输入验证码：{{.Code}}
+
+BirdTalk 团队
+https://birdtalk.cc/
+{{end}}

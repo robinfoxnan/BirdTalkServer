@@ -12,7 +12,7 @@ type CustomTask struct {
 }
 
 // 实现 Task 接口的 Run 方法，调用父类 BaseTask 的 Process 方法
-func (t *CustomTask) Process() {
+func (t *CustomTask) Process(w Worker) {
 	//fmt.Printf("CustomTask with additional info '%s' is running\n", t.AdditionalInfo)
 	// 调用父类的 Process 方法
 	//t.BaseTask.Process()

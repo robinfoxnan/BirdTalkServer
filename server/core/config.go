@@ -59,10 +59,21 @@ type ServerConf struct {
 }
 
 type LocalConfig struct {
-	Redis    RedisConf  `yaml:"redis"`
-	Server   ServerConf `yaml:"server"`
-	MongoDb  MongoConf  `yaml:"mongoDb"`
-	ScyllaDb ScyllaConf `yaml:"scyllaDb"`
+	Redis    RedisConf   `yaml:"redis"`
+	Server   ServerConf  `yaml:"server"`
+	MongoDb  MongoConf   `yaml:"mongoDb"`
+	ScyllaDb ScyllaConf  `yaml:"scyllaDb"`
+	Email    EmailConfig `yaml:"email"`
+}
+
+type EmailConfig struct {
+	SMTPAddr              string `yaml:"smtp_addr"`
+	SMTPPort              string `yaml:"smtp_port"`
+	SMTPHeloHost          string `yaml:"smtp_helo_host"`
+	UserName              string `yaml:"user_name"`
+	UserPwd               string `yaml:"user_pwd"`
+	TLSInsecureSkipVerify bool   `yaml:"tls_insecure_skip_verify"`
+	AuthType              string `yaml:"auth_type"`
 }
 
 // "config.yaml"

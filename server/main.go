@@ -45,25 +45,7 @@ func mapHTMLFiles(router *gin.Engine, dir string) {
 	}
 }
 
-func main() {
-	// load config
-	err := core.Globals.LoadConfig("config.yaml")
-	if err != nil {
-
-		fmt.Println("load config err!")
-		return
-	}
-	//fmt.Printf("%v", core.Globals.Config)
-	core.Globals.InitWithConfig()
-
-	// init db
-	err = core.Globals.InitDb()
-	if err != nil {
-
-		fmt.Println("init db err! ", err.Error())
-		return
-	}
-
+func startServer() {
 	router := gin.Default()
 
 	// 使用 GinLogger 中间件处理日志记录
@@ -97,9 +79,31 @@ func main() {
 	}
 	core.Globals.Logger.Info("server started here...")
 	//err = server.ListenAndServeTLS("./certs/cert.pem", "./certs/key.pem")
-	err = server.ListenAndServeTLS(core.Globals.Config.Server.CertFile, core.Globals.Config.Server.KeyFile)
+	err := server.ListenAndServeTLS(core.Globals.Config.Server.CertFile, core.Globals.Config.Server.KeyFile)
 	if err != nil {
 		fmt.Println("Error starting server:", err)
 	}
+}
+
+func main() {
+	// load config
+	err := core.Globals.LoadConfig("config.yaml")
+	if err != nil {
+
+		fmt.Println("load config err!")
+		return
+	}
+	//fmt.Printf("%v", core.Globals.Config)
+	core.Globals.InitWithConfig()
+
+	// init db
+	err = core.Globals.InitDb()
+	if err != nil {
+
+		fmt.Println("init db err! ", err.Error())
+		return
+	}
+
+	core.TestEmailWorkers1()
 
 }

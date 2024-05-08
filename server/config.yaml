@@ -15,7 +15,7 @@ server:
     host: 0.0.0.0
     port: 7817
     host_index: 1
-    host_name: "node1"
+    host_name: node1
     group_msg_queue_len: 100
     workers: 1
     schema: https
@@ -28,4 +28,12 @@ server:
         pwd: 123456
         tls: true
 
+email:
+    smtp_addr: smtp.sina.com
+    smtp_port: 25
+    smtp_helo_host: sina.com
+    user_name: tinodemaster@sina.com
+    user_pwd: 7ee60df2d8b390fd
+    tls_insecure_skip_verify: false
+    auth_type: login
 

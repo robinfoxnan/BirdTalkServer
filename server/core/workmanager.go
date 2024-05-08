@@ -13,7 +13,7 @@ const MaxTaskInChan = 1000
 // 定义接口
 // Task 定义任务类型
 type Task interface {
-	Process()
+	Process(w Worker)
 }
 
 // 定义一个回调函数，用于清理资源
@@ -33,7 +33,7 @@ type BaseTask struct {
 }
 
 // Run 实现 Task 接口的 Run 方法
-func (t *BaseTask) Process() {
+func (t *BaseTask) Process(w Worker) {
 	//fmt.Printf("Task %d is running\n", t.Id)
 	time.Sleep(time.Second * 1)
 	fmt.Printf("Task %d exits\n", t.Id)
@@ -76,7 +76,7 @@ func (w *BaseWorker) Start() {
 			// 执行任务处理逻辑
 			//fmt.Printf("Worker %d processing task: %#v\n", w.Id, task)
 			// ... 这里添加实际的任务处理代码 ...
-			task.Process()
+			task.Process(w)
 
 			// 重置计时器
 			if !timer.Stop() {
