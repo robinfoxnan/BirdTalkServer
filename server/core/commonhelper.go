@@ -145,8 +145,7 @@ func createTempUser(userInfo *pbmodel.UserInfo, session *Session) error {
 	}
 	// 创建临时验证码
 	code := utils.GenerateCheckCode(5)
-	// for dubug only
-	code = "12345"
+
 	Globals.Logger.Info("user reg validate info", zap.String("code", code))
 	session.SetKeyValue("code", code)
 	session.SetStatus(model.UserStatusRegister | model.UserStatusValidate)

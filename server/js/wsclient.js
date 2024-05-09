@@ -923,9 +923,9 @@ class WsClient {
         showMessage("发送用户详细消息")
         const userInfo = new proto.model.UserInfo();
         userInfo.setUserid(10003);
-        userInfo.setGender("male");
+        userInfo.setGender("男");
         userInfo.setAge(35);
-        userInfo.setIcon("sys://1");
+        userInfo.setIcon("sys://1.png");
         userInfo.setNickname("飞鸟真人");
         userInfo.setUsername("robinfoxnan");
         const paramsMap = userInfo.getParamsMap();

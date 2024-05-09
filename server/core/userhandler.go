@@ -316,47 +316,61 @@ func handleUserEnable(msg *pbmodel.Msg, session *Session) {
 }
 
 // 计算需要更新的字段
-func mergeUserinfo(user *model.User, userInfo *pbmodel.UserInfo) map[string]interface{} {
+func mergeUserinfo(user *model.User, params map[string]string, session *Session) (map[string]interface{}, map[string]interface{}, bool, bool) {
 
 	setData := make(map[string]interface{})
-	for k, v := range userInfo.Params {
-		name := "params." + strings.ToLower(k)
-		setData[name] = v
+	setDataRedis := make(map[string]interface{})
+	hasEmail := false
+	hasPhone := false
+
+	for k, v := range params {
+		key := strings.ToLower(k)
+
+		switch key {
+		case "params.status": // 防止攻击
+			continue
+
+		case "username":
+			setData["username"] = v
+			setDataRedis["UserName"] = v
+			user.SetUserName(v)
+		case "nickname":
+			setData["nickname"] = v
+			setDataRedis["NickName"] = v
+			user.SetNickName(v)
+		case "age":
+			setData["age"] = v
+			setDataRedis["Age"] = v
+			user.SetAge(v)
+		case "region":
+			setData["region"] = v
+			setDataRedis["Region"] = v
+			user.SetRegion(v)
+		case "gender":
+			setData["gender"] = v
+			setDataRedis["Gender"] = v
+			user.SetGender(v)
+		case "icon":
+			setData["icon"] = v
+			setDataRedis["Icon"] = v
+			user.SetIcon(v)
+		case "email":
+			hasEmail = true
+			session.SetKeyValue("changeEmail", v)
+		case "phone":
+			hasPhone = true
+			session.SetKeyValue("changePhone", v)
+
+		default:
+			setData[key] = v
+			setDataRedis[k] = v
+			surfix := strings.TrimLeft(key, "params.")
+			user.SetBaseKeyValue(surfix, v)
+		}
+
 	}
 
-	if user.UserInfo.UserName != userInfo.UserName {
-		setData["username"] = userInfo.UserName
-	}
-
-	if user.UserInfo.NickName != userInfo.NickName {
-		setData["nickname"] = userInfo.NickName
-	}
-
-	// 这里需要验证，
-	//if user.UserInfo.Email != userInfo.Email{
-	//	setData["email"] = userInfo.Email
-	//}
-	//
-	//if user.UserInfo.Phone != userInfo.Phone {
-	//	setData["phone"] = userInfo.Phone
-	//}
-
-	if user.UserInfo.Gender != userInfo.Gender {
-		setData["gender"] = userInfo.Gender
-	}
-
-	if user.UserInfo.Age != userInfo.Age {
-		setData["age"] = userInfo.Age
-	}
-
-	if user.UserInfo.Region != userInfo.Region {
-		setData["region"] = userInfo.Region
-	}
-
-	if user.UserInfo.Icon != userInfo.Icon {
-		setData["icon"] = userInfo.Icon
-	}
-	return setData
+	return setData, setDataRedis, hasEmail, hasPhone
 }
 
 // 5 设置用户信息
@@ -371,6 +385,15 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	// 检查要更改的字段
+	params := userOpMsg.GetParams()
+	if params == nil || len(params) == 0 {
+		SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
+			userInfo,
+			true, "ok", session)
+		return
+	}
+
 	user, ok := Globals.uc.GetUser(session.UserID)
 	if !ok || user == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
@@ -381,30 +404,62 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 更新数据库
-	setData := mergeUserinfo(user, userInfo)
+	setDataMongo, setDataRedis, hasEmail, hasPhone := mergeUserinfo(user, params, session)
 
-	_, err := Globals.mongoCli.UpdateGroupInfoPart(userInfo.UserId, setData, nil)
-	if err != nil {
-		Globals.Logger.Fatal("update user, mongodb err", zap.Error(err))
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
-			"update user, meet database err",
-			nil,
-			session)
-		return
+	// 这里需要验证，
+	if hasEmail {
+		emailAddr := session.GetKeyValue("changeEmail")
+		isOk := utils.IsValidEmail(emailAddr)
+		if !isOk {
+			// 通知用户信息不对
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+				"email is not correct",
+				map[string]string{"field": userInfo.Email},
+				session)
+			return
+		}
+
+		code := utils.GenerateCheckCode(5)
+		SendEmailCode(session, userInfo.Email, code)
+		session.SetKeyValue("code", code)
 	}
 
-	// 更新redis
-	err = Globals.redisCli.UpdateUserInfoPart(userInfo.UserId, setData, nil)
+	// todo:
+	if hasPhone {
+
+	}
+
+	if len(setDataMongo) > 0 {
+		_, err := Globals.mongoCli.UpdateGroupInfoPart(userInfo.UserId, setDataMongo, nil)
+		if err != nil {
+			Globals.Logger.Fatal("update user, mongodb err", zap.Error(err))
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
+				"update user, meet database err",
+				nil,
+				session)
+			return
+		}
+	}
+
+	if len(setDataRedis) > 0 {
+		// 更新redis
+		Globals.redisCli.UpdateUserInfoPart(userInfo.UserId, setDataRedis, nil)
+	}
 
 	// 更新内存
-	user.SetBaseValue(userInfo)
 
-	Globals.Logger.Info("recover user ok", zap.Int64("user id", userInfo.UserId),
-		zap.Int64("admin id", session.UserID))
+	Globals.Logger.Info("set user info", zap.Int64("user id", userInfo.UserId))
 
-	SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
-		userInfo,
-		true, "ok", session)
+	if hasEmail || hasPhone {
+		SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
+			userInfo,
+			true, "waitcode", session)
+	} else {
+		SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
+			userInfo,
+			true, "ok", session)
+	}
+
 }
 
 // 6 验证码检查
@@ -483,6 +538,7 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 
 	// 取消掉当前的这个状态
 	session.UnSetStatus(model.UserStatusValidate)
+	session.RemoveKeyValue("code")
 }
 
 // 如果用户可以用，返回true
@@ -563,7 +619,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 
 				// 生成临时
 				code := utils.GenerateCheckCode(5)
-				code = "12345"
+
 				session.SetKeyValue("code", code)
 				// 使用后台将验证码发送给用户
 				SendEmailCode(session, userInfoDb.Email, code)
@@ -763,6 +819,62 @@ func onLoginSuccess(session *Session, bSaveToken bool) {
 
 // 验证码对了才保存到数据库
 func onChangeInfoSuccess(session *Session) {
+	setDataMongo := make(map[string]interface{})
+	setDataRedis := make(map[string]interface{})
+
+	user, ok := Globals.uc.GetUser(session.UserID)
+	if !ok || user == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "user in not in cache, please login again", nil, session)
+		return
+	}
+
+	emailAddr := session.GetKeyValue("changeEmail")
+	if emailAddr != "" {
+		setDataMongo["email"] = emailAddr
+		setDataRedis["Email"] = emailAddr
+		user.SetEmail(emailAddr)
+		Globals.Logger.Info("set user email", zap.Int64("user id", session.UserID),
+			zap.String("email", emailAddr))
+		session.RemoveKeyValue("changeEmail")
+	}
+
+	phoneStr := session.GetKeyValue("changePhone")
+	if phoneStr != "" {
+		setDataMongo["phone"] = phoneStr
+		setDataRedis["Phone"] = phoneStr
+		user.SetPhone(phoneStr)
+		Globals.Logger.Info("set user phone", zap.Int64("user id", session.UserID),
+			zap.String("phone", phoneStr))
+		session.RemoveKeyValue("changePhone")
+	}
+
+	if len(setDataMongo) > 0 {
+		_, err := Globals.mongoCli.UpdateGroupInfoPart(session.UserID, setDataMongo, nil)
+		if err != nil {
+			Globals.Logger.Fatal("update user, mongodb err", zap.Error(err))
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
+				"update user, meet database err",
+				nil,
+				session)
+			return
+		}
+	} else {
+		Globals.Logger.Fatal("update user, email and phone not found in session params")
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
+			"update user, email and phone not found in session params",
+			nil,
+			session)
+		return
+	}
+
+	if len(setDataRedis) > 0 {
+		// 更新redis
+		Globals.redisCli.UpdateUserInfoPart(session.UserID, setDataRedis, nil)
+	}
+
+	SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
+		&user.UserInfo,
+		true, "ok", session)
 
 }
 

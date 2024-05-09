@@ -79,6 +79,10 @@ func (s *Session) SetKeyValue(key, value string) {
 	s.Params[key] = value
 }
 
+func (s *Session) RemoveKeyValue(key string) {
+	delete(s.Params, key)
+}
+
 func (s *Session) GetKeyValue(key string) string {
 	v, ok := s.Params[key]
 	if !ok {

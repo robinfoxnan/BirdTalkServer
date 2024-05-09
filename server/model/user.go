@@ -3,6 +3,7 @@ package model
 import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"strconv"
 	"sync"
 )
 
@@ -76,8 +77,8 @@ type User struct {
 	pbmodel.UserInfo
 	SessionId []int64 // 多用户会话ID
 	Status    uint32
-	MaskLoad  uint32            // 目前的加载状态
-	Params    map[string]string // 某些状态下的附加信息都放在这里，比如验证码
+	MaskLoad  uint32 // 目前的加载状态
+	//ParamsList map[string]string // 某些状态下的附加信息都放在这里，比如验证码
 
 	Block      map[int64]uint64 // 权限控制列表，高位是对方给自己的权限，低32位是自己向对方的权限
 	Following  map[int64]bool   // 关注列表
@@ -107,7 +108,7 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		Status:    UserStatusNone,
 		Mu:        sync.Mutex{}, // 初始化互斥锁
 
-		Params: make(map[string]string),
+		//ParamsList: make(map[string]string),
 
 		Following: make(map[int64]bool),
 		Fans:      make(map[int64]bool),
@@ -441,26 +442,73 @@ func (u *User) DelFan(fid int64) int {
 
 }
 
-func (u *User) SetExtraKeyValue(key, value string) {
+//func (u *User) SetExtraKeyValue(key, value string) {
+//	u.Mu.Lock()
+//	defer u.Mu.Unlock()
+//
+//	u.ParamsList[key] = value
+//}
+//
+//func (u *User) GetExtraKeyValue(key string) (string, bool) {
+//	u.Mu.Lock()
+//	defer u.Mu.Unlock()
+//
+//	ret, b := u.ParamsList[key]
+//	return ret, b
+//}
+//
+//func (u *User) DelExtraKeyValue(key string) {
+//	u.Mu.Lock()
+//	defer u.Mu.Unlock()
+//
+//	delete(u.ParamsList, key)
+//}
+
+func (u *User) SetEmail(str string) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-
-	u.Params[key] = value
+	u.UserInfo.Email = str
 }
 
-func (u *User) GetExtraKeyValue(key string) (string, bool) {
+func (u *User) SetPhone(str string) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-
-	ret, b := u.Params[key]
-	return ret, b
+	u.UserInfo.Phone = str
 }
 
-func (u *User) DelExtraKeyValue(key string) {
+func (u *User) SetUserName(str string) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
+	u.UserInfo.UserName = str
+}
 
-	delete(u.Params, key)
+func (u *User) SetNickName(str string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.UserInfo.NickName = str
+}
+
+func (u *User) SetGender(str string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Gender = str
+}
+
+func (u *User) SetRegion(str string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Region = str
+}
+
+func (u *User) SetAge(str string) {
+	n, _ := strconv.Atoi(str)
+	u.Age = int32(n)
+}
+
+func (u *User) SetIcon(str string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Icon = str
 }
 
 // 更新信息后，设置基本信息
@@ -503,7 +551,7 @@ func (u *User) SetBaseValue(userInfo *pbmodel.UserInfo) {
 }
 
 // 设置用户禁用，删除等信息
-func (u *User) SetBaseExtraKeyValue(key, value string) {
+func (u *User) SetBaseKeyValue(key, value string) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
 	if u.UserInfo.Params == nil {
@@ -513,7 +561,7 @@ func (u *User) SetBaseExtraKeyValue(key, value string) {
 	u.UserInfo.Params[key] = value
 }
 
-func (u *User) GetBaseExtraKeyValue(key string) (string, bool) {
+func (u *User) GetBaseKeyValue(key string) (string, bool) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
 
@@ -524,7 +572,7 @@ func (u *User) GetBaseExtraKeyValue(key string) (string, bool) {
 	return ret, b
 }
 
-func (u *User) DelBaseExtraKeyValue(key string) {
+func (u *User) DelBaseKeyValue(key string) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
 
