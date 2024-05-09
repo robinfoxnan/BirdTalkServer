@@ -135,14 +135,25 @@ func checkUserIsUsing(sess *Session) bool {
 func createTempUser(userInfo *pbmodel.UserInfo, session *Session) error {
 	// 保存临时信息
 	session.TempUserInfo = userInfo
+	params := userInfo.GetParams()
+	if params == nil {
+		userInfo.Params = map[string]string{
+			"email": "checked",
+		}
+	} else {
+		params["email"] = "checked"
+	}
 	// 创建临时验证码
 	code := utils.GenerateCheckCode(5)
+	// for dubug only
+	code = "12345"
 	Globals.Logger.Info("user reg validate info", zap.String("code", code))
-	session.SetKeyValue("validateCode", code)
+	session.SetKeyValue("code", code)
 	session.SetStatus(model.UserStatusRegister | model.UserStatusValidate)
 
 	// 发送验证码
 	//
+	SendEmailCode(session, userInfo.Email, code)
 
 	return nil
 }
@@ -264,6 +275,10 @@ func tryLoadUserFromRedis(sess *Session) (*model.User, uint32, error) {
 		// 1 查看是否有基本的信息
 		userInfo, err := Globals.redisCli.FindUserById(sess.UserID)
 		if err != nil {
+			return nil, mask, err
+		}
+		if userInfo.UserId == 0 {
+			fmt.Println("userinfo is default")
 			return nil, mask, err
 		}
 		loadedUser := model.NewUserFromInfo(userInfo)
@@ -447,7 +462,7 @@ func LoadUserLogin(session *Session) error {
 	}
 	user, mask, err := tryLoadUserFromRedis(session)
 	if err != nil {
-		return err
+		//
 	}
 
 	if mask > 0 {

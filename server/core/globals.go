@@ -26,6 +26,8 @@ type GlobalVars struct {
 	redisCli  *db.RedisClient
 	mongoCli  *db.MongoDBExporter
 
+	emailWorkerManager *Manager[Task, *EmailWorker]
+
 	Logger *zap.Logger
 	Config *LocalConfig
 }
@@ -49,8 +51,14 @@ func (g *GlobalVars) LoadConfig(fileName string) error {
 }
 
 func (g *GlobalVars) InitWithConfig() error {
-	Globals.maxMessageSize = 10 * (1 << 20) // 10M
-	Globals.snow = utils.NewSnowflake(1, 1)
+	g.maxMessageSize = 10 * (1 << 20) // 10M
+	g.snow = utils.NewSnowflake(1, 1)
+	n := int64(g.Config.Email.Workers)
+	if n < 2 {
+		n = 2
+	}
+	g.emailWorkerManager = NewEmailWorkerManager(n)
+
 	return nil
 }
 

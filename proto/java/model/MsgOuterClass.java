@@ -1007,13 +1007,37 @@ public final class MsgOuterClass {
      */
     ErrTNotPermission(16),
     /**
+     * <pre>
+     * 用户或者帖子被禁用了
+     * </pre>
+     *
      * <code>ErrTDisabled = 17;</code>
      */
     ErrTDisabled(17),
     /**
+     * <pre>
+     * 用户或者消息被删除了
+     * </pre>
+     *
      * <code>ErrTDeleted = 18;</code>
      */
     ErrTDeleted(18),
+    /**
+     * <pre>
+     * 邮件验证码发送错误
+     * </pre>
+     *
+     * <code>ErrTEmail = 19;</code>
+     */
+    ErrTEmail(19),
+    /**
+     * <pre>
+     * 手机验证码发送错误
+     * </pre>
+     *
+     * <code>ErrTPhone = 20;</code>
+     */
+    ErrTPhone(20),
     UNRECOGNIZED(-1),
     ;
 
@@ -1134,13 +1158,37 @@ public final class MsgOuterClass {
      */
     public static final int ErrTNotPermission_VALUE = 16;
     /**
+     * <pre>
+     * 用户或者帖子被禁用了
+     * </pre>
+     *
      * <code>ErrTDisabled = 17;</code>
      */
     public static final int ErrTDisabled_VALUE = 17;
     /**
+     * <pre>
+     * 用户或者消息被删除了
+     * </pre>
+     *
      * <code>ErrTDeleted = 18;</code>
      */
     public static final int ErrTDeleted_VALUE = 18;
+    /**
+     * <pre>
+     * 邮件验证码发送错误
+     * </pre>
+     *
+     * <code>ErrTEmail = 19;</code>
+     */
+    public static final int ErrTEmail_VALUE = 19;
+    /**
+     * <pre>
+     * 手机验证码发送错误
+     * </pre>
+     *
+     * <code>ErrTPhone = 20;</code>
+     */
+    public static final int ErrTPhone_VALUE = 20;
 
 
     public final int getNumber() {
@@ -1186,6 +1234,8 @@ public final class MsgOuterClass {
         case 16: return ErrTNotPermission;
         case 17: return ErrTDisabled;
         case 18: return ErrTDeleted;
+        case 19: return ErrTEmail;
+        case 20: return ErrTPhone;
         default: return null;
       }
     }
@@ -27169,7 +27219,7 @@ java.lang.String defaultValue);
       "teChatType\020\000\022\021\n\rGroupChatType\020\001*V\n\rQuery" +
       "DataType\022\025\n\021QueryDataTypeData\020\000\022\026\n\022Query" +
       "DataTypeReply\020\001\022\026\n\022QueryDataTypeByTag\020\002*" +
-      "\352\002\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
+      "\210\003\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
       "rsion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRedirec" +
       "t\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCode\020\005" +
       "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013E" +
@@ -27178,18 +27228,19 @@ java.lang.String defaultValue);
       "onflict\020\014\022\021\n\rErrTCheckData\020\r\022\022\n\016ErrTMsgC" +
       "ontent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025\n\021ErrTNotPer" +
       "mission\020\020\022\020\n\014ErrTDisabled\020\021\022\017\n\013ErrTDelet" +
-      "ed\020\022*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tM" +
-      "sgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTErr" +
-      "or\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTChatMsg" +
-      "\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017" +
-      "MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014Msg" +
-      "TDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgT" +
-      "DownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTU" +
-      "serOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFrie" +
-      "ndOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupO" +
-      "pRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService\022%\n\013C" +
-      "lientEvent\022\n.model.Msg\032\n.model.MsgB\020Z\016se" +
-      "rver/pbmodelb\006proto3"
+      "ed\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tErrTPhone\020\024*\366\002\n\nC" +
+      "omMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001" +
+      "\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017Ms" +
+      "gTKeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgT" +
+      "ChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQueryR" +
+      "esult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownload\020" +
+      "\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDownloadRe" +
+      "ply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpRet\020 " +
+      "\022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOpRet\020\"\022" +
+      "\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\t" +
+      "MsgTOther\020d23\n\nMsgService\022%\n\013ClientEvent" +
+      "\022\n.model.Msg\032\n.model.MsgB\020Z\016server/pbmod" +
+      "elb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

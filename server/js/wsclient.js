@@ -793,13 +793,13 @@ class WsClient {
         userInfo.setEmail(email);
         const paramsMap = userInfo.getParamsMap();
         paramsMap.set("pwd", pwd);
-        paramsMap.set("regtype", type);   // pwd, email,phone
-
 
         // 注册用户
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.REGISTERUSER);
         regOpReq.setUser(userInfo)
+        const params1 = regOpReq.getParamsMap();
+        params1.set("regmode", type);   // pwd, email,phone
 
         const plainMsg = new proto.model.MsgPlain();
         plainMsg.setUserop(regOpReq);
@@ -819,101 +819,101 @@ class WsClient {
     sendCodeMessage() {
         showMessage("发送验证消息")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("code", "12345");
-        paramsMap.set("regtype", "email");   // pwd, email,phone
-
+        userInfo.setUserid(0);
 
         // 验证码
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
         regOpReq.setUser(userInfo);
+        regOpReq.getParamsMap()
+
+        const paramsMap =  regOpReq.getParamsMap();
+        paramsMap.set("code", "12345");
+        paramsMap.set("regmode", "email");   // pwd, email,phone
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
 
 
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(getCurrentTimestamp());
 
         this.sendObject(msg);
 
     }
 
     // 5.1 用户密码登录申请
-    sendLoginPwdMessage(){
+    sendLoginMessage(mode, id, pwd){
         showMessage("发送登录消息")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("pwd", "12345");
-        paramsMap.set("logintype", "pwd");   // uidpwd, email,phone
-
+        if (mode == "phone"){
+            userInfo.setPhone(id)
+        }else if (mode == "email"){
+            userInfo.setEmail(id);
+        }else{
+            userInfo.setUserid(id);
+            const paramsMap = userInfo.getParamsMap();
+            paramsMap.set("pwd", pwd);
+        }
 
         // 登录
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.LOGIN);
         regOpReq.setUser(userInfo);
+        const params1 = regOpReq.getParamsMap();
+        params1.set("loginmode", mode);   // uidpwd, email,phone
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
 
 
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
-
-        this.sendObject(msg);
-
-    }
-
-    // 5.2 用户邮箱登录申请
-    sendLoginEmailMessage(){
-        showMessage("发送登录消息")
-        const userInfo = new proto.model.UserInfo();
-        //userInfo.setUserid(1001);
-        userInfo.setEmail("390017268@qq.com")
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("logintype", "email");   // uid, email,phone
-
-
-        // 登录
-        const regOpReq = new proto.model.UserOpReq();
-        regOpReq.setOperation(proto.model.UserOperationType.LOGIN);
-        regOpReq.setUser(userInfo);
-
-
-        // 封装为通用消息
-        const msg = new proto.model.Msg();
-        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
-        msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(getCurrentTimestamp());
 
         this.sendObject(msg);
     }
+
 
     // 5.3 邮箱登录验证码
-    sendLoginCodeMessage(){
+    sendLoginCodeMessage(mode, id, code){
         showMessage("发送验证码消息")
         const userInfo = new proto.model.UserInfo();
-        //userInfo.setUserid(1001);
-        userInfo.setEmail("390017268@qq.com")
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("logintype", "email");   // uid, email,phone
-        paramsMap.set("code", "12345");
-
+        if (mode == "phone"){
+            userInfo.setPhone(id)
+        }else if (mode == "email"){
+            userInfo.setEmail(id);
+        }else{
+            return
+        }
 
         // 登录
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
         regOpReq.setUser(userInfo);
+        const params1 = regOpReq.getParamsMap();
+        params1.set("loginmode", mode);   // uidpwd, email,phone
+        params1.set("code", code);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
 
 
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(getCurrentTimestamp());
 
         this.sendObject(msg);
     }
@@ -922,60 +922,59 @@ class WsClient {
     sendUserInfoMessage(){
         showMessage("发送用户详细消息")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
-        userInfo.setEmail("");
+        userInfo.setUserid(10003);
         userInfo.setGender("male");
-        userInfo.setAge(5);
+        userInfo.setAge(35);
         userInfo.setIcon("sys://1");
-        userInfo.setNickname("robinfox");
+        userInfo.setNickname("飞鸟真人");
         userInfo.setUsername("robinfoxnan");
         const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("title", "manager");
-        paramsMap.set("country", "china");
+        paramsMap.set("title", "Manager");
+        paramsMap.set("country", "China");
 
 
-        // 登录
+        // 设置信息
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.SETUSERINFO);
         regOpReq.setUser(userInfo);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
 
 
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(getCurrentTimestamp());
 
         this.sendObject(msg);
     }
 
     // 6.2
     sendUserInfoCodeMessage(){
-        showMessage("发送用户详细消息")
+        showMessage("发送更改信息验证码")
         const userInfo = new proto.model.UserInfo();
         userInfo.setUserid(1001);
-        userInfo.setEmail("");
-        userInfo.setGender("male");
-        userInfo.setAge(5);
-        userInfo.setIcon("sys://1");
-        userInfo.setNickname("robinfox");
-        userInfo.setUsername("robinfoxnan");
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("title", "manager");
-        paramsMap.set("country", "china");
 
-
-        // 登录
+        // 发送验证码
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
         regOpReq.setUser(userInfo);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
 
 
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(getCurrentTimestamp());
 
         this.sendObject(msg);
     }
@@ -984,7 +983,7 @@ class WsClient {
     sendUserDisableMessage(){
         showMessage("禁用用户")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
+        userInfo.setUserid(10003);
 
         // 禁用
         const regOpReq = new proto.model.UserOpReq();
@@ -992,20 +991,23 @@ class WsClient {
         regOpReq.setUser(userInfo);
 
 
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
+
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
 
         this.sendObject(msg);
     }
 
     // 7.2 解禁
     sendUserEnableMessage(){
-        showMessage("禁用用户")
+        showMessage("解禁用户")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
+        userInfo.setUserid(10003);
 
         // 解禁
         const regOpReq = new proto.model.UserOpReq();
@@ -1014,10 +1016,14 @@ class WsClient {
 
 
         // 封装为通用消息
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
+
+        // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
 
         this.sendObject(msg);
     }
@@ -1026,7 +1032,7 @@ class WsClient {
     sendUserUnregMessage(){
         showMessage("注销用户")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
+        userInfo.setUserid(10003);
 
         //
         const regOpReq = new proto.model.UserOpReq();
@@ -1034,11 +1040,14 @@ class WsClient {
         regOpReq.setUser(userInfo);
 
 
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
+
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
 
         this.sendObject(msg);
     }
@@ -1047,7 +1056,7 @@ class WsClient {
     sendUserLogoutMessage(){
         showMessage("登出用户")
         const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
+        userInfo.setUserid(10003);
 
         //
         const regOpReq = new proto.model.UserOpReq();
@@ -1055,11 +1064,14 @@ class WsClient {
         regOpReq.setUser(userInfo);
 
 
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
+
         // 封装为通用消息
         const msg = new proto.model.Msg();
         msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
         msg.setVersion(1);
-        msg.setUserop(regOpReq)
+        msg.setPlainmsg(plainMsg);
 
         this.sendObject(msg);
     }

@@ -58,3 +58,81 @@
 2024-05-08T14:59:00.543+0800	[34mINFO[0m	server/main.go:98	server started here...
 2024-05-08T14:59:08.167+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708211360684707840,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
 2024-05-08T15:08:49.288+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708213790226911232,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:23:01.055+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T12:23:11.591+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708534495757864960,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:23:11.677+0800	[35mDEBUG[0m	core/commonhelper.go:418	Load user permission list	{"user": 1003, "count": 0}
+2024-05-09T12:25:53.009+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708535185200779264,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:28:31.154+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708535846743183360,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:29:10.173+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T12:29:16.457+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708536037080698880,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:29:40.653+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708536138536718336,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:34:39.644+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708537393795436544,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:34:40.445+0800	[34mINFO[0m	core/commonhelper.go:140	user reg validate info	{"code": "99255"}
+2024-05-09T12:34:41.577+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T12:35:11.608+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T12:41:56.868+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T12:42:22.348+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708539333451321344,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:42:27.710+0800	[34mINFO[0m	core/commonhelper.go:142	user reg validate info	{"code": "12345"}
+2024-05-09T12:42:28.597+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T12:42:58.624+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T12:45:22.609+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T12:45:34.546+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708540136207552512,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:45:35.608+0800	[34mINFO[0m	core/commonhelper.go:142	user reg validate info	{"code": "12345"}
+2024-05-09T12:45:36.474+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T12:46:06.516+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T12:50:16.676+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T12:55:50.675+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T12:56:32.271+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708542896864890880,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T12:56:40.551+0800	[34mINFO[0m	core/commonhelper.go:142	user reg validate info	{"code": "12345"}
+2024-05-09T12:56:41.655+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T12:57:11.689+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T13:02:41.167+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T13:02:49.853+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708544484211822592,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T13:04:11.495+0800	[34mINFO[0m	core/commonhelper.go:142	user reg validate info	{"code": "12345"}
+2024-05-09T13:04:12.615+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T13:04:42.646+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T13:10:24.652+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T13:10:34.342+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708546424761094144,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T13:10:39.784+0800	[34mINFO[0m	core/commonhelper.go:150	user reg validate info	{"code": "12345"}
+2024-05-09T13:10:40.856+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T13:11:10.882+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T13:16:08.458+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T13:16:13.539+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708547853433311232,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-09T13:16:15.425+0800	[34mINFO[0m	core/commonhelper.go:150	user reg validate info	{"code": "12345"}
+2024-05-09T13:16:16.758+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T13:16:46.801+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T13:46:33.495+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T13:46:43.416+0800	[35mDEBUG[0m	core/commonhelper.go:428	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T13:47:32.503+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T13:48:02.543+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T13:53:40.487+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T13:54:29.197+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-09T13:54:31.108+0800	[35mDEBUG[0m	core/commonhelper.go:428	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T13:54:59.236+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-09T14:13:19.730+0800	[34mINFO[0m	core/userhandler.go:194	unreg user ok	{"user id": 10003}
+2024-05-09T14:40:06.043+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T14:40:22.083+0800	[35mDEBUG[0m	core/commonhelper.go:428	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T14:40:25.477+0800	[34mINFO[0m	core/userhandler.go:194	unreg user ok	{"user id": 10003}
+2024-05-09T14:50:21.699+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T14:51:06.079+0800	[35mDEBUG[0m	core/commonhelper.go:428	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T14:57:02.948+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T14:57:18.991+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T14:57:31.785+0800	[35mDEBUG[0m	core/commonhelper.go:428	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T15:00:42.729+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T15:00:48.415+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T15:03:23.947+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T15:03:30.268+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T15:12:12.453+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T15:13:20.985+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T15:14:19.952+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T15:14:26.959+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T15:20:33.962+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 1, "count": 0}
+2024-05-09T15:20:41.216+0800	[34mINFO[0m	core/userhandler.go:257	disable user ok	{"user id": 10003, "admin id": 1}
+2024-05-09T15:21:04.427+0800	[34mINFO[0m	core/userhandler.go:310	recover user ok	{"user id": 1001, "admin id": 1}
+2024-05-09T15:29:51.991+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-09T15:30:01.015+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 1, "count": 0}
+2024-05-09T15:30:02.978+0800	[34mINFO[0m	core/userhandler.go:257	disable user ok	{"user id": 10003, "admin id": 1}
+2024-05-09T15:30:04.473+0800	[34mINFO[0m	core/userhandler.go:310	recover user ok	{"user id": 10003, "admin id": 1}
+2024-05-09T15:30:29.326+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 10003, "count": 0}
+2024-05-09T15:30:43.442+0800	[34mINFO[0m	core/userhandler.go:257	disable user ok	{"user id": 10003, "admin id": 1}
+2024-05-09T15:31:34.586+0800	[34mINFO[0m	core/userhandler.go:310	recover user ok	{"user id": 10003, "admin id": 1}

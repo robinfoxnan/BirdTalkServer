@@ -55,7 +55,7 @@ func (cli *RedisClient) makeSureInt(key string, def int) error {
 	idCmd := cli.Cmd.Get(key)
 	_, err := idCmd.Result()
 	if err != nil {
-		statusCmd := cli.Cmd.Set(key, 1000, 0)
+		statusCmd := cli.Cmd.Set(key, def, 0)
 		if statusCmd.Err() != nil {
 			return statusCmd.Err()
 		}

@@ -26,7 +26,9 @@ func handleUserOp(msg *pbmodel.Msg, session *Session) {
 	opCode := userOpMsg.Operation
 
 	// 除了注册和登录，都需要验证是否登录与权限
-	if opCode != pbmodel.UserOperationType_Login && opCode != pbmodel.UserOperationType_RegisterUser {
+	if (opCode != pbmodel.UserOperationType_Login) &&
+		(opCode != pbmodel.UserOperationType_RegisterUser) &&
+		(opCode != pbmodel.UserOperationType_RealNameVerification) {
 		ok := checkUserLogin(session) // 内部发送错误通知
 		if !ok {
 			return
@@ -94,7 +96,7 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 	}
 
 	regMode := 1 // 1匿名，2邮件，3 手机
-	params := userInfo.GetParams()
+	params := userOpMsg.GetParams()
 	if params != nil {
 		modeStr, ok := params["regmode"]
 		if ok {
@@ -129,7 +131,7 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 	if regMode == 2 {
 		// 先检查邮箱是否合法
 		lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
-		if len(lst) > 0 {
+		if lst != nil && len(lst) > 0 {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 				"email is already used by user",
 				map[string]string{"field": userInfo.Email},
@@ -149,6 +151,18 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 		session.SetStatus(model.UserStatusRegister | model.UserStatusValidate)
 
 	} else {
+		// 如果设置了邮件，也需要检查，防止乱设置
+		if len(userInfo.Email) > 0 {
+			lst, _ := Globals.mongoCli.FindUserByEmail(userInfo.Email)
+			if lst != nil && len(lst) > 0 {
+				sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+					"email is already used by user",
+					map[string]string{"field": userInfo.Email},
+					session)
+				return
+			}
+		}
+
 		// 匿名注册
 		err := createUser(userInfo, session) // 内部记录错误并回执
 		if err != nil {
@@ -167,7 +181,7 @@ func handleUserUnRegister(msg *pbmodel.Msg, session *Session) {
 	userOpMsg := msg.GetPlainMsg().GetUserOp()
 	userInfo := userOpMsg.GetUser()
 
-	_, err := Globals.mongoCli.UpdateGroupInfoPart(session.UserID, map[string]interface{}{"params.status": "deleted"}, nil)
+	_, err := Globals.mongoCli.UpdateUserInfoPart(session.UserID, map[string]interface{}{"params.status": "deleted"}, nil)
 
 	if err != nil {
 		Globals.Logger.Fatal("unreg user set user status err", zap.Error(err))
@@ -182,7 +196,17 @@ func handleUserUnRegister(msg *pbmodel.Msg, session *Session) {
 		userInfo,
 		true, "unregok", session)
 
+	// 更新redis
+	Globals.redisCli.RemoveUser(session.UserID)
+
+	// 更新用户信息
+	user, ok := Globals.uc.GetUser(session.UserID)
+	if ok && user != nil {
+		user.SetDeleted()
+	}
+
 	// todo: 清理资源
+	session.StopSession("unregok")
 }
 
 // 3 禁用用户
@@ -207,7 +231,7 @@ func handleUserDisable(msg *pbmodel.Msg, session *Session) {
 		"params.status": "disabled",
 		"params.reason": reason,
 	}
-	_, err := Globals.mongoCli.UpdateGroupInfoPart(userInfo.UserId, params, nil)
+	_, err := Globals.mongoCli.UpdateUserInfoPart(userInfo.UserId, params, nil)
 	if err != nil {
 		Globals.Logger.Fatal("disable user set user status err", zap.Error(err))
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
@@ -217,14 +241,17 @@ func handleUserDisable(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	params = map[string]interface{}{
+		"Params.status": "disabled",
+		"Params.reason": reason,
+	}
 	// 更新redis
 	err = Globals.redisCli.UpdateUserInfoPart(userInfo.UserId, params, nil)
 
 	// 更新内存
 	user, ok := Globals.uc.GetUser(userInfo.UserId)
 	if ok && user != nil {
-		user.SetBaseExtraKeyValue("status", "disabled")
-		user.SetBaseExtraKeyValue("reason", reason)
+		user.SetDisabled(reason)
 	}
 
 	Globals.Logger.Info("disable user ok", zap.Int64("user id", userInfo.UserId),
@@ -257,7 +284,7 @@ func handleUserEnable(msg *pbmodel.Msg, session *Session) {
 		"params.status": "ok",
 		"params.reason": reason,
 	}
-	_, err := Globals.mongoCli.UpdateGroupInfoPart(userInfo.UserId, params, nil)
+	_, err := Globals.mongoCli.UpdateUserInfoPart(userInfo.UserId, params, nil)
 	if err != nil {
 		Globals.Logger.Fatal("recover user set user status err", zap.Error(err))
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
@@ -268,13 +295,16 @@ func handleUserEnable(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 更新redis
+	params = map[string]interface{}{
+		"Params.status": "ok",
+		"Params.reason": reason,
+	}
 	err = Globals.redisCli.UpdateUserInfoPart(userInfo.UserId, params, nil)
 
 	// 更新内存
 	user, ok := Globals.uc.GetUser(userInfo.UserId)
 	if ok && user != nil {
-		user.SetBaseExtraKeyValue("status", "ok")
-		user.SetBaseExtraKeyValue("reason", reason)
+		user.SetRecover()
 	}
 
 	Globals.Logger.Info("recover user ok", zap.Int64("user id", userInfo.UserId),
@@ -386,15 +416,19 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 			"not has a status of Verification ",
 			nil,
 			session)
+
+		return
 	}
 	// 检查数据
 	userOpMsg := msg.GetPlainMsg().GetUserOp()
+	//fmt.Println(userOpMsg)
 	params := userOpMsg.GetParams()
 	if params == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 			"not has params field",
 			map[string]string{"field": "params"},
 			session)
+		//fmt.Println("----------------------------")
 		return
 	}
 
@@ -451,6 +485,31 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 	session.UnSetStatus(model.UserStatusValidate)
 }
 
+// 如果用户可以用，返回true
+func checkUserUsable(userInfo *pbmodel.UserInfo, session *Session) bool {
+	// 检查状态，是否被禁用了
+	if userInfo.GetParams() != nil {
+		status, ok := userInfo.GetParams()["status"]
+		if ok {
+			if status == "deleted" {
+				sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTDeleted),
+					"user is deleted, can't be used again",
+					map[string]string{"field": "userInfo.Params.status"},
+					session)
+				return false
+			} else if status == "disabled" {
+				sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTDisabled),
+					"user is disabled, contact with admin",
+					map[string]string{"field": "userInfo.Params.status"},
+					session)
+				return false
+			}
+		}
+	}
+
+	return true
+}
+
 // 7 登录
 func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 	userOpMsg := msg.GetPlainMsg().GetUserOp()
@@ -466,7 +525,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 	var userInfoDb *pbmodel.UserInfo = nil
 
 	loginMode := 1 // 1账号，2邮件，3 手机
-	params := userInfo.GetParams()
+	params := userOpMsg.GetParams()
 	if params != nil {
 		modeStr, ok := params["loginmode"]
 		if ok {
@@ -482,6 +541,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 						"email format is not correct",
 						map[string]string{"field": userInfo.Email},
 						session)
+					return
 				}
 
 				lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
@@ -490,26 +550,33 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 						"email is not correct, can't find a user using it",
 						map[string]string{"field": userInfo.Email},
 						session)
+					return
 				}
 				userInfoDb = &lst[0]
 				session.UserID = userInfoDb.UserId
 				session.TempUserInfo = userInfoDb
+				// 检查是否可以用
+				ret := checkUserUsable(userInfoDb, session)
+				if !ret {
+					return
+				}
 
 				// 生成临时
 				code := utils.GenerateCheckCode(5)
 				code = "12345"
 				session.SetKeyValue("code", code)
 				// 使用后台将验证码发送给用户
+				SendEmailCode(session, userInfoDb.Email, code)
 
 				session.SetStatus(model.UserStatusLogin | model.UserStatusValidate)
-				// 通知用户
-				if userInfoDb.Params != nil {
-					delete(userInfoDb.Params, "pwd")
-				}
+				// 通知用户, 这里还不能通知用户真实数据
+				//if userInfoDb.Params != nil {
+				//	delete(userInfoDb.Params, "pwd")
+				//}
 				SendBackUserOp(pbmodel.UserOperationType_Login,
-					userInfoDb,
+					userInfo,
 					true, "waitcode", session)
-
+				return
 			case "phone":
 				loginMode = 3
 
@@ -542,12 +609,18 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 		if !ok {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 				"pwd is not set",
-				map[string]string{"field": "pwd", "value": pwdUser},
+				map[string]string{"field": "params.pwd", "value": pwdUser},
 				session)
 			return
 		}
 
 		userInfoDb = &lst[0]
+		// 检查是否可以用
+		ret := checkUserUsable(userInfoDb, session)
+		if !ret {
+			return
+		}
+
 		if userInfoDb.Params == nil {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
 				"pwd is not in db",
@@ -568,7 +641,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 		session.UserID = userInfoDb.UserId
 		session.TempUserInfo = userInfoDb
 
-	} else {
+	} else if loginMode == 3 {
 		// 通知用户信息不对
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 			"phone login is not available",
@@ -741,7 +814,7 @@ func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo
 
 // 检查用户是否是管理员，
 func CheckUserPermission(session *Session) bool {
-	if session.UserID < 10000 {
+	if session.UserID < 100 {
 		return true
 	}
 	return false

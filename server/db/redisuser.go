@@ -4,6 +4,7 @@ import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"errors"
 	"fmt"
 	"strconv"
 	"time"
@@ -19,6 +20,12 @@ func mapToUserInfo(data map[string]string) (*pbmodel.UserInfo, error) {
 	return &user, err
 }
 
+func (cli *RedisClient) RemoveUser(uid int64) error {
+	keyName := GetUserInfoKey(uid)
+	_, err := cli.Cmd.Del(keyName).Result()
+	return err
+}
+
 // 查找用户
 func (cli *RedisClient) FindUserById(uid int64) (*pbmodel.UserInfo, error) {
 	keyName := GetUserInfoKey(uid)
@@ -27,6 +34,9 @@ func (cli *RedisClient) FindUserById(uid int64) (*pbmodel.UserInfo, error) {
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, err
+	}
+	if len(data) == 0 {
+		return nil, errors.New("not find user")
 	}
 	//fmt.Println("from redis get the map = ", data)
 	user, err := mapToUserInfo(data)

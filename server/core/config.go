@@ -74,6 +74,7 @@ type EmailConfig struct {
 	UserPwd               string `yaml:"user_pwd"`
 	TLSInsecureSkipVerify bool   `yaml:"tls_insecure_skip_verify"`
 	AuthType              string `yaml:"auth_type"`
+	Workers               int    `yaml:"workers"`
 }
 
 // "config.yaml"

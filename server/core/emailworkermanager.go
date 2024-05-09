@@ -2,15 +2,45 @@ package core
 
 import (
 	"birdtalk/server/email"
-	"fmt"
+	"go.uber.org/zap"
 	"strconv"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
+var emailTaskId int64 = 0
+
 type EmailTask struct {
 	BaseTask
-	data *email.EmailData
+	data    *email.EmailData
+	session *Session
+}
+
+func NewEmailTask(sess *Session, emailAddr string, code string) *EmailTask {
+	n := atomic.AddInt64(&emailTaskId, 1)
+
+	data := email.EmailData{
+		HostUrl: "https://birdtalk.cc",
+		Code:    code,
+		Session: strconv.FormatInt(sess.Sid, 10),
+		Server:  strconv.Itoa(Globals.Config.Server.HostIndex),
+		Email:   emailAddr,
+	}
+
+	task := EmailTask{
+		BaseTask: BaseTask{Id: n},
+		session:  sess,
+		data:     &data,
+	}
+
+	return &task
+}
+
+// 发送数据
+func SendEmailCode(sess *Session, emailAddr string, code string) {
+	t := NewEmailTask(sess, emailAddr, code)
+	Globals.emailWorkerManager.AddTask(t)
 }
 
 func (t *EmailTask) Process(w Worker) {
@@ -23,11 +53,14 @@ func (t *EmailTask) Process(w Worker) {
 	//fmt.Println(subject, txt)
 
 	client := worker.GetSmtpClient()
-	err := client.SendMail([]string{t.data.Email}, subject+t.data.Session, txt)
+	err := client.SendMail([]string{t.data.Email}, subject, txt) // +t.data.Session
 	if err != nil {
-		fmt.Println(err, t.Id)
+		//fmt.Println(err, t.Id)
+		Globals.Logger.Info("Email sending meet error ", zap.Int64("task id", t.BaseTask.Id), zap.Error(err))
+		t.session.NotifyEmailErr()
 	}
-	fmt.Println("Email task is finished ", t.BaseTask.Id)
+	//fmt.Println("Email task is finished ", t.BaseTask.Id)
+	Globals.Logger.Info("Email task is finished ", zap.Int64("task id", t.BaseTask.Id))
 	client.Close()
 	time.Sleep(time.Millisecond * 15)
 }
@@ -95,11 +128,13 @@ func (w *EmailWorker) Start() {
 			timer.Reset(30 * time.Second)
 
 		case <-timer.C: // 超时处理
-			fmt.Printf("EmailWorker %d timed out, exiting...\n", w.Id)
+			//fmt.Printf("EmailWorker %d timed out, exiting...\n", w.Id)
+			Globals.Logger.Info("Email worker exit because of timeout", zap.Int64("worker id", w.Id))
 			return
 
 		case <-w.quitChan: // 收到退出信号，结束goroutine
-			fmt.Printf("EmailWorker %d received quit signal, exiting...\n", w.Id)
+			//fmt.Printf("EmailWorker %d received quit signal, exiting...\n", w.Id)
+			Globals.Logger.Info("Email worker exit because of signal", zap.Int64("worker id", w.Id))
 			return
 		}
 	}
@@ -123,7 +158,7 @@ func TestEmailWorkers1() {
 
 	// 添加示例任务到管理器
 	go func() {
-		for i := 0; i < 20; i++ {
+		for i := 0; i < 6; i++ {
 			var t = &EmailTask{
 				BaseTask: BaseTask{Id: int64(i)},
 				data: &email.EmailData{

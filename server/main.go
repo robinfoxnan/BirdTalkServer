@@ -104,6 +104,7 @@ func main() {
 		return
 	}
 
-	core.TestEmailWorkers1()
+	//core.TestEmailWorkers1()
+	startServer()
 
 }

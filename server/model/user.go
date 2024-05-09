@@ -88,6 +88,8 @@ type User struct {
 	NumFans   int64
 	NumFollow int64
 
+	LastActiveTm int64
+
 	Mu sync.Mutex
 }
 
@@ -111,9 +113,68 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		Fans:      make(map[int64]bool),
 		Block:     make(map[int64]uint64),
 
-		Groups:     make(map[int64]bool),
-		SessionDis: make(map[int64]int32),
+		Groups:       make(map[int64]bool),
+		SessionDis:   make(map[int64]int32),
+		LastActiveTm: utils.GetTimeStamp(),
 	}
+}
+
+func (u *User) SetDeleted() {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	if u.UserInfo.Params == nil {
+		u.UserInfo.Params = map[string]string{
+			"status": "deleted",
+		}
+	} else {
+		u.UserInfo.Params["status"] = "deleted"
+	}
+}
+
+func (u *User) SetDisabled(reason string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if u.UserInfo.Params == nil {
+		u.UserInfo.Params = map[string]string{
+			"status": "disabled",
+			"reason": reason,
+		}
+	} else {
+		u.UserInfo.Params["status"] = "disabled"
+		u.UserInfo.Params["reason"] = reason
+	}
+}
+
+func (u *User) SetRecover() {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if u.UserInfo.Params == nil {
+		u.UserInfo.Params = map[string]string{
+			"status": "ok",
+		}
+	} else {
+		u.UserInfo.Params["status"] = "ok"
+	}
+}
+
+// 是否删除了，或者禁用了
+func (u *User) IsDeletedOrDisabled() (string, bool) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if u.UserInfo.Params == nil {
+		return "", false
+	}
+
+	data, ok := u.UserInfo.Params["status"]
+	return data, ok
+}
+
+// 每次活动有需要更新，系统定时检查超时的结构体
+func (u *User) UpdateActive() {
+	u.LastActiveTm = utils.GetTimeStamp()
 }
 
 func (u *User) SetLoadMask(mask uint32) {

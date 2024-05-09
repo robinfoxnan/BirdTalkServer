@@ -207,7 +207,7 @@ func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([
 	defer cursor.Close(context.Background())
 
 	var users []pbmodel.UserInfo
-	if err := cursor.All(context.Background(), &users); err != nil {
+	if err = cursor.All(context.Background(), &users); err != nil {
 		return nil, err
 	}
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>BirdTalk Js Api 测试</title>
     <!--
     <script src="https://cdn.jsdelivr.net/npm/google-protobuf@latest/google-protobuf.js"></script>
     -->
@@ -76,24 +76,28 @@
 </div>
 <div><button onclick="sendHeart()">2.心跳</button></div>
 <div><button onclick="sendRegister()">3.1 匿名注册</button>
-    <button onclick="sendRegister1()">3.2 邮件注册</button></div>
+    <button onclick="sendRegister1()">3.2 邮件注册</button>
+    <button onclick="sendCode()">4.发送注册验证码</button></div>
 
-<div><button onclick="sendCode()">4.发送注册验证码</button></div>
-<div><button onclick="sendLoginPwdMessage()">5.1 用户密码登录</button></div>
-<div>
-    <button onclick="sendLoginEmailMessage()">5.2 邮件登录</button>
-    <button onclick="sendLoginCodeMessage()">5.3 发送登录验证码</button>
+
+<div><button onclick="sendLoginPwd()">5.1 用户密码登录</button>
+    <button onclick="sendLoginEmail()">5.2 邮件登录</button>
+    <button onclick="sendLoginCode()">5.3 发送登录验证码</button>
+    <button onclick="sendUserLogout()">9 退出登录</button>
+    <button onclick="sendUserUnreg()">8 注销用户</button>
+
 </div>
 <div>
-    <button onclick="sendUserInfoMessage()">6.1 设置用户基础信息</button>
-    <button onclick="sendUserInfoCodeMessage()">6.2 邮箱和手机需要验证</button>
+    <button onclick="sendUserInfo()">6.1 设置用户基础信息</button>
+    <button onclick="sendUserInfo()">6.2 设置用户邮件或者手机</button>
+    <button onclick="sendUserInfoCode()">6.3 发送验证码</button>
 </div>
 <div>
-    <button onclick="sendUserDisableMessage()">7.1 禁用用户</button>
-    <button onclick="sendUserEnableMessage()">7.2 解锁用户</button>
+    <button onclick="sendLoginAdmin()">7 管理员登录</button>
+    <button onclick="sendUserDisable()">7.1 禁用用户</button>
+    <button onclick="sendUserEnable()">7.2 解锁用户</button>
 </div>
-<div><button onclick="sendUserUnregMessage()">8 注销用户</button></div>
-<div><button onclick="sendUserLogoutMessage()">9 退出登录</button></div>
+
 
 <br>
 好友管理
@@ -268,81 +272,92 @@
         }
     };
 
+
+
     function sendRegister1(){
         if (client) {
-            client.sendRegisterMessage("robin", "123456", "390017268@qq.com", "email"); // 调用类的成员函数
+            client.sendRegisterMessage("robin", "123456", "robin-fox@sohu.com", "email"); // 调用类的成员函数
         }
     };
 
     // 4. 发送验证码
     function sendCode() {
         if (client) {
-            client.sendcodeMessage();
+            client.sendCodeMessage();
         }
     };
-    //
-    // // 5.1 用户密码登录申请
-    // function sendLoginPwdMessage () {
-    //     if (client) {
-    //         client.sendLoginPwdMessage();
-    //     }
-    // };
-    //
-    // // 5.2 用户邮箱登录申请
-    // function  sendLoginEmailMessage() {
-    //     if (client) {
-    //         client.sendLoginEmailMessage();
-    //     }
-    // };
-    //
-    // // 5.3 邮箱登录验证码
-    // function sendLoginCodeMessage (){
-    //     if (client) {
-    //         client.sendLoginCodeMessage();
-    //     }
-    // };
-    //
-    // // 6.1 设置用户的各种信息
-    // function  sendUserInfoMessage (){
-    //     if (client) {
-    //         client.sendUserInfoMessage();
-    //     }
-    // };
-    //
-    // // 6.2 设置用户的各种信息验证码
-    // function  sendUserInfoCodeMessage() {
-    //     if (client) {
-    //         client.sendUserInfoCodeMessage();
-    //     }
-    // };
-    //
-    // // 7.1 禁用用户
-    // function  sendUserDisableMessage () {
-    //     if (client) {
-    //         client.sendUserDisableMessage();
-    //     }
-    // };
-    //
-    // // 7.2 解禁用户
-    // function sendUserEnableMessage (){
-    //     if (client) {
-    //         client.sendUserEnableMessage();
-    //     }
-    // };
-    //
-    // // 8. 注销用户
-    // function  sendUserUnregMessage() {
-    //     if (client) {
-    //         client.sendUserUnregMessage();
-    //     }
-    // };
-    //
-    // // 9. 退出登录
-    // function  sendUserLogoutMessage () {
-    //     if (client) {
-    //         client.sendUserLogoutMessage();
-    //     }
-    // };
+
+    // 5.1 用户密码登录申请
+    function sendLoginPwd () {
+        if (client) {
+            client.sendLoginMessage("id", 10003, "123456");
+        }
+    };
+
+
+
+    // 5.2 用户邮箱登录申请
+    function  sendLoginEmail() {
+        if (client) {
+            client.sendLoginMessage("email", "robin-fox@sohu.com", "");
+        }
+    };
+
+    // 5.3 邮箱登录验证码
+    function sendLoginCode (){
+        if (client) {
+            client.sendLoginCodeMessage("email", "robin-fox1@sohu.com", "12345");
+        }
+    };
+
+    // 6.1 设置用户的各种信息
+    function  sendUserInfo (){
+        if (client) {
+            client.sendUserInfoMessage();
+        }
+    };
+
+    // 6.2 设置用户的各种信息验证码
+    function  sendUserInfoCode() {
+        if (client) {
+            client.sendUserInfoCodeMessage();
+        }
+    };
+
+    // 管理员登录
+    function sendLoginAdmin(){
+        if (client) {
+            client.sendLoginMessage("id", 1, "password123");
+        }
+    }
+
+    // 7.1 禁用用户
+    function  sendUserDisable () {
+        if (client) {
+            client.sendUserDisableMessage();
+        }
+    };
+
+    // 7.2 解禁用户
+    function sendUserEnable (){
+        if (client) {
+            client.sendUserEnableMessage();
+        }
+    };
+
+    // 8. 注销用户
+    function  sendUserUnreg() {
+        if (client) {
+            client.sendUserUnregMessage();
+        }
+    };
+
+    // 9. 退出登录
+    function  sendUserLogout() {
+        if (client) {
+            client.sendUserLogoutMessage();
+        }
+    };
     ///////////////////////////////////////////////////////////////////////////////////
     // 好友相关操作
 

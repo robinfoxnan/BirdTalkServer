@@ -36,4 +36,5 @@ email:
     user_pwd: 7ee60df2d8b390fd
     tls_insecure_skip_verify: false
     auth_type: login
+    workers: 3
 

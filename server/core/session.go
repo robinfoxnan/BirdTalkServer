@@ -367,6 +367,19 @@ func (s *Session) updateTTL() {
 	if s.UserID != 0 && s.HasStatus(model.UserStatusOk) {
 		Globals.redisCli.UpdateUserTTL(s.UserID)
 		Globals.redisCli.SetUserSessionOnServer(s.UserID, s.Sid, int64(Globals.Config.Server.HostIndex))
+		user, ok := Globals.uc.GetUser(s.UserID)
+		if ok && user != nil {
+			user.UpdateActive()
+		}
 	}
 
+}
+
+// 通知邮件错误
+func (s *Session) NotifyEmailErr() {
+	sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTEmail), "send code err", nil, s)
+}
+
+func (s *Session) NotifyPhoneErr() {
+	sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPhone), "send code err", nil, s)
 }
