@@ -621,7 +621,7 @@ class WsClient {
 
     }
 
-    // 注册应答
+    // 所有用户操作的应答
     async onUserOpResult(msg){
 
         const userOpRet = msg.getPlainmsg().getUseropret();
@@ -634,8 +634,8 @@ class WsClient {
         let str = "";
         //str = userOpRet.toLocaleString();
 
-        str += "Received reg result  message:\n" +
-            "OP: " + op + "\n" +
+        str += "Received user operation result  message:\n" +
+            "OP: " + op.toLocaleString() + "\n" +
             "Status: " + userOpRet.getStatus() + "\n" +
             "Result: " + userOpRet.getResult() + "\n" +
             "User info: " + userOpRet.getUsersList() + "\n";
@@ -923,20 +923,46 @@ class WsClient {
         showMessage("发送用户详细消息")
         const userInfo = new proto.model.UserInfo();
         userInfo.setUserid(10003);
-        userInfo.setGender("男");
-        userInfo.setAge(35);
-        userInfo.setIcon("sys://1.png");
-        userInfo.setNickname("飞鸟真人");
-        userInfo.setUsername("robinfoxnan");
-        const paramsMap = userInfo.getParamsMap();
-        paramsMap.set("title", "Manager");
-        paramsMap.set("country", "China");
-
 
         // 设置信息
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.SETUSERINFO);
         regOpReq.setUser(userInfo);
+
+        const paramsMap =  regOpReq.getParamsMap();
+        paramsMap.set("UserName", "Robin.fox");
+        paramsMap.set("NickName", "飞鸟真人");
+        paramsMap.set("Age", "35");
+        paramsMap.set("Gender", "男");
+        paramsMap.set("Region", "北京");
+        paramsMap.set("Icon", "飞鸟真人");
+        paramsMap.set("Params.title", "经理")
+        ///paramsMap.set("Email", "robin-fox@sohu.com");
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUserop(regOpReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTUSEROP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        msg.setTm(getCurrentTimestamp());
+
+        this.sendObject(msg);
+    }
+
+    sendUserInfoMessage1(){
+        showMessage("发送用户详细消息")
+        // 设置信息
+        const regOpReq = new proto.model.UserOpReq();
+        regOpReq.setOperation(proto.model.UserOperationType.SETUSERINFO);
+        // regOpReq.setUser(userInfo);
+
+        const paramsMap =  regOpReq.getParamsMap();
+        paramsMap.set("Email", "robin-fox@sohu.com");
 
 
         const plainMsg = new proto.model.MsgPlain();
@@ -954,15 +980,14 @@ class WsClient {
     }
 
     // 6.2
-    sendUserInfoCodeMessage(){
+    sendUserInfoCodeMessage(code){
         showMessage("发送更改信息验证码")
-        const userInfo = new proto.model.UserInfo();
-        userInfo.setUserid(1001);
 
         // 发送验证码
         const regOpReq = new proto.model.UserOpReq();
         regOpReq.setOperation(proto.model.UserOperationType.REALNAMEVERIFICATION);
-        regOpReq.setUser(userInfo);
+        const params1 = regOpReq.getParamsMap();
+        params1.set("code", code);
 
 
         const plainMsg = new proto.model.MsgPlain();

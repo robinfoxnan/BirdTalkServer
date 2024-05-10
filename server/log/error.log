@@ -1,2 +1,4 @@
 2024-05-08T14:36:30.008+0800	[31mERROR[0m	core/commonhelper.go:189	save new user error
 2024-05-08T14:55:45.436+0800	[31mERROR[0m	core/commonhelper.go:189	save new user error
+2024-05-10T11:23:29.470+0800	[31mERROR[0m	core/userhandler.go:659	can't find user in mongodb	{"user id ": 10003}
+2024-05-10T11:25:29.642+0800	[31mERROR[0m	core/userhandler.go:659	can't find user in mongodb	{"user id ": 10003, "error": "error decoding key age: cannot decode string into an integer type"}

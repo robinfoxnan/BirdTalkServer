@@ -136,3 +136,44 @@
 2024-05-09T15:30:29.326+0800	[35mDEBUG[0m	core/commonhelper.go:432	Load user permission list	{"user": 10003, "count": 0}
 2024-05-09T15:30:43.442+0800	[34mINFO[0m	core/userhandler.go:257	disable user ok	{"user id": 10003, "admin id": 1}
 2024-05-09T15:31:34.586+0800	[34mINFO[0m	core/userhandler.go:310	recover user ok	{"user id": 10003, "admin id": 1}
+2024-05-10T10:56:22.765+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T10:57:01.296+0800	[35mDEBUG[0m	core/commonhelper.go:431	Load user permission list	{"user": 10003, "count": 0}
+2024-05-10T10:57:06.393+0800	[34mINFO[0m	core/userhandler.go:461	set user info	{"user id": 10003}
+2024-05-10T11:07:06.984+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:07:15.221+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708877778015096832,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-10T11:07:17.871+0800	[35mDEBUG[0m	core/commonhelper.go:431	Load user permission list	{"user": 10003, "count": 0}
+2024-05-10T11:07:24.072+0800	[34mINFO[0m	core/userhandler.go:461	set user info	{"user id": 10003}
+2024-05-10T11:16:13.376+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:19:45.924+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:23:18.535+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:25:18.717+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:30:29.154+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:30:39.894+0800	[35mDEBUG[0m	core/commonhelper.go:431	Load user permission list	{"user": 10003, "count": 0}
+2024-05-10T11:30:44.546+0800	[34mINFO[0m	core/userhandler.go:462	set user info	{"user id": 10003}
+2024-05-10T11:30:45.883+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-10T11:31:15.911+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-10T11:35:44.773+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:35:54.440+0800	[35mDEBUG[0m	core/commonhelper.go:431	Load user permission list	{"user": 10003, "count": 0}
+2024-05-10T11:35:58.689+0800	[34mINFO[0m	core/userhandler.go:463	set user info	{"user id": 10003}
+2024-05-10T11:35:59.699+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-10T11:36:29.773+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-10T11:39:28.517+0800	[34mINFO[0m	core/userhandler.go:463	set user info	{"user id": 10003}
+2024-05-10T11:39:29.685+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 2}
+2024-05-10T11:42:08.841+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T11:42:21.960+0800	[35mDEBUG[0m	core/commonhelper.go:431	Load user permission list	{"user": 10003, "count": 0}
+2024-05-10T11:42:25.246+0800	[34mINFO[0m	core/userhandler.go:463	set user info	{"user id": 10003}
+2024-05-10T11:42:26.550+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 1}
+2024-05-10T11:42:29.244+0800	[34mINFO[0m	core/userhandler.go:529	verification code is not correct	{"userid": 10003, "code": "12345", "user code": ""}
+2024-05-10T11:42:56.578+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 1}
+2024-05-10T11:43:59.782+0800	[34mINFO[0m	core/userhandler.go:463	set user info	{"user id": 10003}
+2024-05-10T11:44:00.792+0800	[34mINFO[0m	core/emailworkermanager.go:63	Email task is finished 	{"task id": 2}
+2024-05-10T11:44:02.256+0800	[34mINFO[0m	core/userhandler.go:855	set user email	{"user id": 10003, "email": "robin-fox@sohu.com"}
+2024-05-10T11:44:30.824+0800	[34mINFO[0m	core/emailworkermanager.go:132	Email worker exit because of timeout	{"worker id": 2}
+2024-05-10T11:45:54.994+0800	[34mINFO[0m	core/userhandler.go:463	set user info	{"user id": 10003}
+2024-05-10T12:00:54.648+0800	[34mINFO[0m	server/main.go:80	server started here...
+2024-05-10T12:01:01.590+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708891314380476416,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-10T12:02:27.713+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708891654152654848,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-05-10T12:02:29.351+0800	[35mDEBUG[0m	core/commonhelper.go:43	decode public key from msg:	{"publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEoIT6Yv1ZwyHi+aS96VJ6UmvQCMzWGr5DlxQv7D5gtb0NBVPrW4yZ0aMKBM+px77x20TnBU9LLZ7lDkz3Seoscg==\n-----END PUBLIC KEY-----\n", "session": 708891654152654848}
+2024-05-10T12:02:29.360+0800	[35mDEBUG[0m	core/commonhandler.go:269	check data ok!	{"tm": "1715313749357", "check tm": "1715313749357"}
+2024-05-10T12:02:45.847+0800	[35mDEBUG[0m	core/commonhelper.go:431	Load user permission list	{"user": 10003, "count": 0}
+2024-05-10T12:02:56.580+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":708891795890769920,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}

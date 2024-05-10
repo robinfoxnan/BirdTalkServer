@@ -339,8 +339,9 @@ func mergeUserinfo(user *model.User, params map[string]string, session *Session)
 			setDataRedis["NickName"] = v
 			user.SetNickName(v)
 		case "age":
-			setData["age"] = v
-			setDataRedis["Age"] = v
+			nAge, _ := strconv.Atoi(v)
+			setData["age"] = nAge
+			setDataRedis["Age"] = nAge
 			user.SetAge(v)
 		case "region":
 			setData["region"] = v
@@ -376,20 +377,20 @@ func mergeUserinfo(user *model.User, params map[string]string, session *Session)
 // 5 设置用户信息
 func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 	userOpMsg := msg.GetPlainMsg().GetUserOp()
-	userInfo := userOpMsg.GetUser()
-	if userInfo == nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-			"update user info, but msg userinfo is nil",
-			map[string]string{"field": "userinfo"},
-			session)
-		return
-	}
+	//userInfo := userOpMsg.GetUser()
+	//if userInfo == nil {
+	//	sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+	//		"update user info, but msg userinfo is nil",
+	//		map[string]string{"field": "userinfo"},
+	//		session)
+	//	return
+	//}
 
 	// 检查要更改的字段
 	params := userOpMsg.GetParams()
 	if params == nil || len(params) == 0 {
 		SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
-			userInfo,
+			nil,
 			true, "ok", session)
 		return
 	}
@@ -414,23 +415,34 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 			// 通知用户信息不对
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 				"email is not correct",
-				map[string]string{"field": userInfo.Email},
+				map[string]string{"field": emailAddr},
+				session)
+			return
+		}
+
+		// 先检查邮箱是否合法
+		lst, _ := Globals.mongoCli.FindUserByEmail(emailAddr)
+		if lst != nil && len(lst) > 0 {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+				"email is already used by user",
+				map[string]string{"field": emailAddr},
 				session)
 			return
 		}
 
 		code := utils.GenerateCheckCode(5)
-		SendEmailCode(session, userInfo.Email, code)
+		SendEmailCode(session, emailAddr, code)
 		session.SetKeyValue("code", code)
+		session.SetStatus(model.UserStatusChangeInfo | model.UserStatusValidate)
 	}
 
 	// todo:
 	if hasPhone {
-
+		session.SetStatus(model.UserStatusChangeInfo | model.UserStatusValidate)
 	}
 
 	if len(setDataMongo) > 0 {
-		_, err := Globals.mongoCli.UpdateGroupInfoPart(userInfo.UserId, setDataMongo, nil)
+		_, err := Globals.mongoCli.UpdateUserInfoPart(session.UserID, setDataMongo, nil)
 		if err != nil {
 			Globals.Logger.Fatal("update user, mongodb err", zap.Error(err))
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
@@ -443,20 +455,20 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 
 	if len(setDataRedis) > 0 {
 		// 更新redis
-		Globals.redisCli.UpdateUserInfoPart(userInfo.UserId, setDataRedis, nil)
+		Globals.redisCli.UpdateUserInfoPart(session.UserID, setDataRedis, nil)
 	}
 
 	// 更新内存
 
-	Globals.Logger.Info("set user info", zap.Int64("user id", userInfo.UserId))
+	Globals.Logger.Info("set user info", zap.Int64("user id", session.UserID))
 
 	if hasEmail || hasPhone {
 		SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
-			userInfo,
+			user.GetUserInfo(),
 			true, "waitcode", session)
 	} else {
 		SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
-			userInfo,
+			user.GetUserInfo(),
 			true, "ok", session)
 	}
 
@@ -468,7 +480,7 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 	// 如果没有没有
 	if !session.HasStatus(model.UserStatusValidate) {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTStage),
-			"not has a status of Verification ",
+			"current user session not has a status of Verification ",
 			nil,
 			session)
 
@@ -511,8 +523,11 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 	if codeUser != codeTemp {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 			"verification code, but params.code is not correct",
-			map[string]string{"field": "params.code"},
+			map[string]string{"field": "params.code", "value": codeUser},
 			session)
+
+		Globals.Logger.Info("verification code is not correct", zap.Int64("userid", session.UserID),
+			zap.String("code", codeTemp), zap.String("user code", codeUser))
 		return
 	}
 
@@ -534,6 +549,7 @@ func handleUserVerification(msg *pbmodel.Msg, session *Session) {
 
 	} else if session.HasStatus(model.UserStatusChangeInfo) {
 		onChangeInfoSuccess(session)
+
 	}
 
 	// 取消掉当前的这个状态
@@ -646,8 +662,11 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 	if loginMode == 1 {
 		lst, err := Globals.mongoCli.FindUserById(userInfo.UserId)
 		if err != nil || len(lst) != 1 {
+			Globals.Logger.Error("can't find user in mongodb",
+				zap.Int64("user id ", userInfo.UserId),
+				zap.Error(err))
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-				"pwd is not set",
+				"can't find user by id",
 				map[string]string{"field": "userid", "value": strconv.FormatInt(userInfo.UserId, 10)},
 				session)
 			return
@@ -664,7 +683,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 		pwdUser, ok := userInfo.Params["pwd"]
 		if !ok {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-				"pwd is not set",
+				"pwd is not set in your login data",
 				map[string]string{"field": "params.pwd", "value": pwdUser},
 				session)
 			return
@@ -849,7 +868,7 @@ func onChangeInfoSuccess(session *Session) {
 	}
 
 	if len(setDataMongo) > 0 {
-		_, err := Globals.mongoCli.UpdateGroupInfoPart(session.UserID, setDataMongo, nil)
+		_, err := Globals.mongoCli.UpdateUserInfoPart(session.UserID, setDataMongo, nil)
 		if err != nil {
 			Globals.Logger.Fatal("update user, mongodb err", zap.Error(err))
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
@@ -873,9 +892,10 @@ func onChangeInfoSuccess(session *Session) {
 	}
 
 	SendBackUserOp(pbmodel.UserOperationType_SetUserInfo,
-		&user.UserInfo,
+		user.GetUserInfo(),
 		true, "ok", session)
 
+	session.SetStatus(model.UserStatusChangeInfo)
 }
 
 // 8 退出，是否需要删除缓存？不，因为可能有多用户登录

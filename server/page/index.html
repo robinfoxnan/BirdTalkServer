@@ -89,7 +89,7 @@
 </div>
 <div>
     <button onclick="sendUserInfo()">6.1 设置用户基础信息</button>
-    <button onclick="sendUserInfo()">6.2 设置用户邮件或者手机</button>
+    <button onclick="sendUserInfoEmail()">6.2 设置用户邮件或者手机</button>
     <button onclick="sendUserInfoCode()">6.3 发送验证码</button>
 </div>
 <div>
@@ -317,10 +317,16 @@
         }
     };
 
+    function  sendUserInfoEmail (){
+        if (client) {
+            client.sendUserInfoMessage1();
+        }
+    };
+
     // 6.2 设置用户的各种信息验证码
     function  sendUserInfoCode() {
         if (client) {
-            client.sendUserInfoCodeMessage();
+            client.sendUserInfoCodeMessage("12345");
         }
     };
 

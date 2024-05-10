@@ -120,6 +120,13 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 	}
 }
 
+// 用于给用户返回的数据
+func (u *User) GetUserInfo() *pbmodel.UserInfo {
+	uinfo := u.UserInfo
+	delete(uinfo.Params, "pwd")
+	return &uinfo
+}
+
 func (u *User) SetDeleted() {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
@@ -502,6 +509,10 @@ func (u *User) SetRegion(str string) {
 
 func (u *User) SetAge(str string) {
 	n, _ := strconv.Atoi(str)
+	u.Age = int32(n)
+}
+
+func (u *User) SetAgeN(n int) {
 	u.Age = int32(n)
 }
 
