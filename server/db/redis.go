@@ -555,3 +555,28 @@ func (cli *RedisClient) SetKeysExpire(keys []string, span time.Duration) (int, e
 	}
 	return count, err
 }
+
+// 如果一个键存在，就给它续命，否则就不管了
+func (cli *RedisClient) HasKey(key string, span time.Duration) (bool, error) {
+	// Lua 脚本
+	script := `
+		local key = KEYS[1]
+		local ttl = tonumber(ARGV[1])
+
+		local exists = redis.call('EXISTS', key)
+
+		if exists == 1 then
+		    redis.call('EXPIRE', key, ttl)
+		    return 1
+		else
+		    return 0
+		end
+	`
+
+	// 使用 EVAL 执行 Lua 脚本
+	result, err := cli.Cmd.Eval(script, []string{key}, strconv.Itoa(int(span.Seconds()))).Int()
+	if err != nil {
+		return false, err
+	}
+	return result == 1, nil
+}

@@ -74,7 +74,7 @@ message FriendOpResult {
   UserOperationType operation = 1;            // 操作类型
   string result = 2;                // "ok" "fail"
   UserInfo user = 3;                // 消息发起者
-  UserInfo users = 4;               // 涉及的用户信息列表，使用repeated表示多个用户
+  repeated UserInfo users = 4;      // 涉及的用户信息列表，使用repeated表示多个用户
   int64 sendId = 5;                 // 用户发给服务器的时候带着
   int64 msgId = 6;                  // 转发给用户的时候才有
   map<string, string> params = 7;

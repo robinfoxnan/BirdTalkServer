@@ -2,7 +2,7 @@ package core
 
 import "birdtalk/server/pbmodel"
 
-// 5) 交换秘钥消息
+// 5 聊天的信息
 func handleChatMsg(msg *pbmodel.Msg, session *Session) {
 
 }

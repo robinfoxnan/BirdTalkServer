@@ -387,3 +387,12 @@ func (s *Session) NotifyEmailErr() {
 func (s *Session) NotifyPhoneErr() {
 	sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTPhone), "send code err", nil, s)
 }
+
+func (s *Session) GetUser() *model.User {
+	user, ok := Globals.uc.GetUser(s.UserID)
+	if !ok {
+		return nil
+	}
+
+	return user
+}

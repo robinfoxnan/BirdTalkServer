@@ -31,7 +31,7 @@ goog.forwardDeclare('proto.model.UserOperationType');
  * @constructor
  */
 proto.model.FriendOpResult = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.model.FriendOpResult.repeatedFields_, null);
 };
 goog.inherits(proto.model.FriendOpResult, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -41,6 +41,13 @@ if (goog.DEBUG && !COMPILED) {
    */
   proto.model.FriendOpResult.displayName = 'proto.model.FriendOpResult';
 }
+
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.model.FriendOpResult.repeatedFields_ = [4];
 
 
 
@@ -76,7 +83,8 @@ proto.model.FriendOpResult.toObject = function(includeInstance, msg) {
     operation: jspb.Message.getFieldWithDefault(msg, 1, 0),
     result: jspb.Message.getFieldWithDefault(msg, 2, ""),
     user: (f = msg.getUser()) && proto.model.UserInfo.toObject(includeInstance, f),
-    users: (f = msg.getUsers()) && proto.model.UserInfo.toObject(includeInstance, f),
+    usersList: jspb.Message.toObjectList(msg.getUsersList(),
+    proto.model.UserInfo.toObject, includeInstance),
     sendid: jspb.Message.getFieldWithDefault(msg, 5, 0),
     msgid: jspb.Message.getFieldWithDefault(msg, 6, 0),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
@@ -132,7 +140,7 @@ proto.model.FriendOpResult.deserializeBinaryFromReader = function(msg, reader) {
     case 4:
       var value = new proto.model.UserInfo;
       reader.readMessage(value,proto.model.UserInfo.deserializeBinaryFromReader);
-      msg.setUsers(value);
+      msg.addUsers(value);
       break;
     case 5:
       var value = /** @type {number} */ (reader.readInt64());
@@ -199,9 +207,9 @@ proto.model.FriendOpResult.serializeBinaryToWriter = function(message, writer) {
       proto.model.UserInfo.serializeBinaryToWriter
     );
   }
-  f = message.getUsers();
-  if (f != null) {
-    writer.writeMessage(
+  f = message.getUsersList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
       4,
       f,
       proto.model.UserInfo.serializeBinaryToWriter
@@ -302,39 +310,40 @@ proto.model.FriendOpResult.prototype.hasUser = function() {
 
 
 /**
- * optional UserInfo users = 4;
- * @return {?proto.model.UserInfo}
+ * repeated UserInfo users = 4;
+ * @return {!Array<!proto.model.UserInfo>}
  */
-proto.model.FriendOpResult.prototype.getUsers = function() {
-  return /** @type{?proto.model.UserInfo} */ (
-    jspb.Message.getWrapperField(this, proto.model.UserInfo, 4));
+proto.model.FriendOpResult.prototype.getUsersList = function() {
+  return /** @type{!Array<!proto.model.UserInfo>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.model.UserInfo, 4));
 };
 
 
 /**
- * @param {?proto.model.UserInfo|undefined} value
+ * @param {!Array<!proto.model.UserInfo>} value
  * @return {!proto.model.FriendOpResult} returns this
 */
-proto.model.FriendOpResult.prototype.setUsers = function(value) {
-  return jspb.Message.setWrapperField(this, 4, value);
+proto.model.FriendOpResult.prototype.setUsersList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
 /**
- * Clears the message field making it undefined.
+ * @param {!proto.model.UserInfo=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.model.UserInfo}
+ */
+proto.model.FriendOpResult.prototype.addUsers = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.model.UserInfo, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
  * @return {!proto.model.FriendOpResult} returns this
  */
-proto.model.FriendOpResult.prototype.clearUsers = function() {
-  return this.setUsers(undefined);
-};
-
-
-/**
- * Returns whether this field is set.
- * @return {boolean}
- */
-proto.model.FriendOpResult.prototype.hasUsers = function() {
-  return jspb.Message.getField(this, 4) != null;
+proto.model.FriendOpResult.prototype.clearUsersList = function() {
+  return this.setUsersList([]);
 };
 
 

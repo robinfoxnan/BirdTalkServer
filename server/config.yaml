@@ -22,11 +22,8 @@ server:
     cert: ./certs/cert.pem
     key: ./certs/key.pem
     friend_making: false
-    email:
-        host: email.sina.com
-        user: robin
-        pwd: 123456
-        tls: true
+    cluster_mode: false
+
 
 email:
     smtp_addr: smtp.sina.com

@@ -16,7 +16,7 @@ var metaUserOp = table.Metadata{
 }
 
 // 插入好友申请,
-func (me *Scylla) SaveUserOp(record *model.CommonOpStore, pk2 int64) error {
+func (me *Scylla) SaveUserOp(record *model.CommonOpStore, pk2 int16) error {
 
 	// 发出申请的人保存一条，io=out,   收到的人写一条io=in
 	// 创建 Batch

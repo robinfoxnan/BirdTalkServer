@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+const DefaultUserTTL = time.Hour * 168
+
 func userInfoToMap(userInfo *pbmodel.UserInfo) (map[string]interface{}, error) {
 	return utils.AnyToMap(userInfo, nil)
 }
@@ -32,7 +34,7 @@ func (cli *RedisClient) FindUserById(uid int64) (*pbmodel.UserInfo, error) {
 	//fmt.Println(tblName)
 	data, err := cli.Cmd.HGetAll(keyName).Result()
 	if err != nil {
-		fmt.Println(err.Error())
+		//fmt.Println(err.Error())
 		return nil, err
 	}
 	if len(data) == 0 {
@@ -165,6 +167,21 @@ func (cli *RedisClient) GetUserFollowing(uid int64, offset uint64) (uint64, map[
 func (cli *RedisClient) GetUserFans(uid int64, offset uint64) (uint64, map[int64]string, error) {
 	keyName := GetUserFansKey(uid)
 	return cli.getUserFriendStore(keyName, offset)
+}
+
+func (cli *RedisClient) ExistFollowing(uid int64) (bool, error) {
+	keyName := GetUserFollowingKey(uid)
+	return cli.HasKey(keyName, DefaultUserTTL)
+}
+
+func (cli *RedisClient) ExistFans(uid int64) (bool, error) {
+	keyName := GetUserFansKey(uid)
+	return cli.HasKey(keyName, DefaultUserTTL)
+}
+
+func (cli *RedisClient) ExistPermission(uid int64) (bool, error) {
+	keyName := GetUserBlockKey(uid)
+	return cli.HasKey(keyName, DefaultUserTTL)
 }
 
 // 检查是否存在好友，如果设置了空字符串，就是非好友
@@ -346,7 +363,7 @@ func (cli *RedisClient) UpdateUserTTL(uid int64) (int, error) {
 	keyUserInGroup := GetUseringKey(uid)
 	keys := []string{keyUserInfo, keyUserFollow, keyUserFan, keyUserPermission, keyUserToken, keyUserInGroup}
 
-	count, err := cli.SetKeysExpire(keys, time.Hour*168) // 7 天
+	count, err := cli.SetKeysExpire(keys, DefaultUserTTL) // 7 天
 
 	//keyUserDistribution := GetUserDistributionKey(uid)
 	//err = cli.SetKeyExpire(keyUserDistribution, time.Minute*30)

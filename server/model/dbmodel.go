@@ -99,7 +99,7 @@ type CommonOpStore struct {
 	Io   int8   `db:"io"`   // 0=out, 1=in
 	St   int8   `db:"st"`   // 0=normal, 1=送达,2阅读，
 	Cmd  int8   `db:"cmd"`  // 0=删除好友; 1=申请好友;2= 设置权限; 10=邀请好友；11=申请加入；
-	Ret  int8   `db:"ret"`  // 0=拒绝， 1=同意
+	Ret  int8   `db:"ret"`  // 2=拒绝， 1=同意
 	Mask int32  `db:"mask"` // 权限操作的掩码
 	Ref  int64  `db:"ref"`  // 引用
 	Draf []byte `db:"draf"` // 附加消息

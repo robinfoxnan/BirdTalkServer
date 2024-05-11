@@ -19,8 +19,8 @@ func NewUserCache() *UserCache {
 // 如果没有，则从redis中查找，如果redis中没有，则从数据库中查找
 func (uc *UserCache) GetUser(uid int64) (*User, bool) {
 
-	user, err := uc.userMap.Get(uid)
-	return user, err
+	user, ok := uc.userMap.Get(uid)
+	return user, ok
 }
 
 // 更新时候的回调函数，如果未设置，则

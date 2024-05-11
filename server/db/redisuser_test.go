@@ -11,6 +11,26 @@ import (
 	"time"
 )
 
+func TestFindFollow(t *testing.T) {
+	redisCli, err := NewRedisClient("127.0.0.1:6379", "")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	//list, err := redisCli.GetFriendIntersect(10001)
+	//fmt.Println(list)
+
+	off := uint64(0)
+
+	cursor, list1, err := redisCli.GetUserFollowing(10003, off)
+
+	fmt.Println(cursor, list1, err)
+
+	b, err := redisCli.HasKey("t10003", time.Hour)
+	fmt.Println(b, err)
+
+}
 func TestUserInfoToMap(t *testing.T) {
 	redisCli, err := NewRedisClient("127.0.0.1:6379", "")
 	if err != nil {
@@ -57,7 +77,7 @@ func TestUserInfoLoad(t *testing.T) {
 		return
 	}
 	// 创建一个用户信息对象
-	userInfo, err := redisCli.FindUserById(10001)
+	userInfo, err := redisCli.FindUserById(10005)
 	fmt.Println("err = ", err)
 
 	fmt.Println(userInfo)

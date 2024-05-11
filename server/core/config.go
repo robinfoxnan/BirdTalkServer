@@ -36,13 +36,6 @@ type ScyllaConf struct {
 	Pwd  string `yaml:"pwd"`
 }
 
-type EmailConf struct {
-	Host string `yaml:"host"`
-	User string `yaml:"user"`
-	Pwd  string `yaml:"pwd"`
-	Tls  bool   `yaml:"tls"`
-}
-
 type ServerConf struct {
 	Host      string `yaml:"host"`
 	Port      int    `yaml:"port"`
@@ -50,12 +43,12 @@ type ServerConf struct {
 	HostName  string `yaml:"host_name"`
 	MsgQueLen int    `yaml:"group_msg_queue_len"`
 
-	Workers    int       `yaml:"workers"`
-	Schema     string    `yaml:"schema"`
-	CertFile   string    `yaml:"cert"`
-	KeyFile    string    `yaml:"key"`
-	FriendMode bool      `yaml:"friend_making"`
-	Email      EmailConf `yaml:"email"`
+	Workers     int    `yaml:"workers"`
+	Schema      string `yaml:"schema"`
+	CertFile    string `yaml:"cert"`
+	KeyFile     string `yaml:"key"`
+	FriendMode  bool   `yaml:"friend_making"` // 交友模式，社区模式
+	ClusterMode bool   `yaml:"cluster_mode"`
 }
 
 type LocalConfig struct {

@@ -61,6 +61,7 @@ func handleUserOp(msg *pbmodel.Msg, session *Session) {
 		handleUserLogin(msg, session)
 	case pbmodel.UserOperationType_Logout:
 		handleUserLogout(msg, session)
+
 	default:
 		Globals.Logger.Info("receive unknown user op",
 			zap.Int64("sid", session.Sid),
@@ -114,8 +115,15 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 		}
 	}
 
-	// 邮件是否合法
+	if userInfo.GetUserName() == "" {
+		userInfo.UserName = "momo"
 
+	}
+	if userInfo.GetNickName() == "" {
+		userInfo.NickName = userInfo.UserName
+	}
+
+	// 邮件是否合法
 	if regMode == 2 {
 		ok := utils.IsValidEmail(userInfo.Email)
 		if !ok {
