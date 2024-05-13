@@ -271,16 +271,16 @@ func (me *Scylla) CountFriendStore(pk, uid1 int64, table string) (int64, error) 
 	return count, nil
 }
 
-func (me *Scylla) SetFollowingNick(pk, uid1, uid2 int64, nick string) error {
+func (me *Scylla) SetFollowingNick(pk int16, uid1, uid2 int64, nick string) error {
 	return me.setFriendStoreNick(pk, uid1, uid2, nick, FollowingTableName)
 }
 
-func (me *Scylla) SetFansNick(pk, uid1, uid2 int64, nick string) error {
+func (me *Scylla) SetFansNick(pk int16, uid1, uid2 int64, nick string) error {
 	return me.setFriendStoreNick(pk, uid1, uid2, nick, FansTableName)
 }
 
 // 设置一个名字
-func (me *Scylla) setFriendStoreNick(pk, uid1, uid2 int64, nick, table string) error {
+func (me *Scylla) setFriendStoreNick(pk int16, uid1, uid2 int64, nick, table string) error {
 	builder := qb.Update(table)
 
 	builder.Set("nick")

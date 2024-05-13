@@ -184,6 +184,7 @@ message MsgQueryResult{
   QueryDataType queryType = 8;                         // data, reply
   repeated MsgChat chatDataList = 11;
   repeated MsgChatReply chatReplyList = 12;
+
   map<string, string> params = 13;
 }
 

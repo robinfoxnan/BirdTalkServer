@@ -109,7 +109,7 @@ func (me *Scylla) SetUserOpRecvReadReply(pk1, pk2, uid1, uid2, msgId, tm1, tm2 i
 // 设置收方对请求的同意或者拒绝
 // const UserOpResultRefuse = 2
 // const UserOpResultOk = 1
-func (me *Scylla) SetUserOpResult(pk1, pk2, uid1, uid2, msgId int64, result int) error {
+func (me *Scylla) SetUserOpResult(pk1, pk2 int16, uid1, uid2, msgId int64, result int) error {
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
 	batch.Cons = gocql.LocalOne
 

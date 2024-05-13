@@ -92,10 +92,24 @@ func (cli *RedisClient) SetUserFollowing(uid int64, friends []model.FriendStore)
 	return cli.setFriendsStores(keyName, friends)
 }
 
+func (cli *RedisClient) SetUserFollowingNick(uid, fid int64, nick string) error {
+	keyName := GetUserFollowingKey(uid)
+	field := strconv.FormatInt(fid, 10)
+
+	_, err := cli.UpdateHashFieldIfExist(keyName, field, nick)
+	return err
+}
+
 // 设置粉丝列表
 func (cli *RedisClient) SetUserFans(uid int64, friends []model.FriendStore) error {
 	keyName := GetUserFansKey(uid)
 	return cli.setFriendsStores(keyName, friends)
+}
+func (cli *RedisClient) SetUserFansNick(uid, fid int64, nick string) error {
+	keyName := GetUserFansKey(uid)
+	field := strconv.FormatInt(fid, 10)
+	_, err := cli.UpdateHashFieldIfExist(keyName, field, nick)
+	return err
 }
 
 // 设置拉黑列表

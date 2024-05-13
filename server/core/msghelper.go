@@ -18,8 +18,9 @@ func trySendMsgToUser(uid int64, msg *pbmodel.Msg) {
 		return
 	}
 
-	// 如果是集群模式，则应该查找并转发
+	// TODO: 如果是集群模式，则应该查找并转发
 	if Globals.Config.Server.ClusterMode {
 
+		// 将对方的登录情况写到自己的的User中，如果没有，去redis中查一下
 	}
 }

@@ -580,3 +580,28 @@ func (cli *RedisClient) HasKey(key string, span time.Duration) (bool, error) {
 	}
 	return result == 1, nil
 }
+
+func (cli *RedisClient) UpdateHashFieldIfExist(key, field, v string) (bool, error) {
+	// Lua 脚本
+	script := `
+		local key = KEYS[1]
+		local field = ARGV[1]
+		local value = ARGV[2]
+
+		local exists = redis.call('HEXISTS', key, field)
+
+		if exists == 1 then
+		    redis.call('HSET', key, field, value)
+		    return 1
+		else
+		    return 0
+		end
+	`
+
+	// 使用 EVAL 执行 Lua 脚本
+	result, err := cli.Cmd.Eval(script, []string{key}, field, v).Int()
+	if err != nil {
+		return false, err
+	}
+	return result == 1, nil
+}
