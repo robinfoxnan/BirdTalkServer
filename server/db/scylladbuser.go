@@ -50,6 +50,7 @@ func (me *Scylla) InsertBlock(friend *model.BlockStore) error {
 
 	// Insert song using query builder.
 	insertChat := qb.Insert(BlockTableName).Columns(metaBlock.Columns...).Query(me.session).Consistency(gocql.One)
+
 	insertChat.BindStruct(friend)
 	if err := insertChat.ExecRelease(); err != nil {
 		//fmt.Println(err)
@@ -118,16 +119,16 @@ func (me *Scylla) FindFans(pk, uid1, from int64, pageSize uint) ([]model.FriendS
 	return me.FindFriendStore(pk, uid1, from, pageSize, FansTableName)
 }
 
-func (me *Scylla) FindFollowingExact(pk, uid1, fid int64) (*model.FriendStore, error) {
+func (me *Scylla) FindFollowingExact(pk int16, uid1, fid int64) (*model.FriendStore, error) {
 	return me.FindFriendStoreExact(pk, uid1, fid, FollowingTableName)
 }
 
-func (me *Scylla) FindFansExact(pk, uid1, fid int64) (*model.FriendStore, error) {
+func (me *Scylla) FindFansExact(pk int16, uid1, fid int64) (*model.FriendStore, error) {
 	return me.FindFriendStoreExact(pk, uid1, fid, FansTableName)
 }
 
 // 精确查找
-func (me *Scylla) FindFriendStoreExact(pk, uid1, uid2 int64, table string) (*model.FriendStore, error) {
+func (me *Scylla) FindFriendStoreExact(pk int16, uid1, uid2 int64, table string) (*model.FriendStore, error) {
 	builder := qb.Select(table).Columns(metaFriend.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
 
@@ -184,7 +185,7 @@ func (me *Scylla) FindFriendStore(pk, uid1, uid2 int64, pageSize uint, table str
 	return friendList, nil
 }
 
-func (me *Scylla) FindBlocksExact(pk, uid1, fid int64) (*model.BlockStore, error) {
+func (me *Scylla) FindBlocksExact(pk int16, uid1, fid int64) (*model.BlockStore, error) {
 	builder := qb.Select(BlockTableName).Columns(metaBlock.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
 

@@ -12,7 +12,7 @@ type FriendStore struct {
 
 type BlockStore struct {
 	FriendStore
-	Perm int64
+	Perm int32
 }
 
 // 数据库中记录群组成员的结构体

@@ -226,3 +226,24 @@ func TestIntFormat(t *testing.T) {
 	fmt.Println(i, e)
 	fmt.Println(len(i), len(e))
 }
+
+// 测试查询某个值是否存在
+func TestCheckUserFan(t *testing.T) {
+	redisCli, err := NewRedisClient("127.0.0.1:6379", "")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	friend := model.FriendStore{
+		Pk:   int16(10001),
+		Uid1: 10001,
+		Uid2: int64(10003),
+		Tm:   time.Now().UTC().UnixMilli(),
+		Nick: "用户1",
+	}
+	redisCli.AddUserFans(10001, []model.FriendStore{friend})
+
+	ret, err := redisCli.CheckUserFan(10001, 10004)
+	fmt.Println(ret, err)
+}

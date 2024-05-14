@@ -552,48 +552,48 @@ func checkUserOnline(fid int64) (bool, map[int64]int32) {
 }
 
 // 检查对方给自己设置的权限，
-// 首先看内存，如果没有， 直接查数据库，redis不存这个
+// 首先看内存，如果没有，查对方redis给设计的权限, 如果没有就查数据库，如果实在没有设置默认的
 func checkFriendPermission(uid, fid int64, bFan bool, bits uint32) bool {
 	user, ok := Globals.uc.GetUser(uid)
 	bRet := false
 	mask := uint32(0)
 	if ok {
 		// 未设置有2种情况
-		bRet, ok = user.CheckFriendMask(fid, bFan, bits)
+		bRet, ok = user.CheckFriendToMeMask(fid, bits)
 		if ok {
 			return bRet
 		}
 	}
 
-	// 从redis查对方给自己设置的权限
+	// 从redis查对方给自己设置的权限，如果有就添加到自己的内存中
 	mask, err := Globals.redisCli.CheckUserPermission(fid, uid)
 	if err == nil && mask != 0 {
 		// 借助基础函数来识别
-		user.SetFriendToMeMask(fid, mask)
-		bRet, ok = user.CheckFriendMask(fid, bFan, bits)
+		user.SetFriendToMeMask(fid, mask|model.PermissionMaskExist)
+		bRet, ok = user.CheckFriendToMeMask(fid, bits)
 		return bRet
 	}
 
 	// 查看对方自己设置的权限，默认是啥也没有的
-	permission, err := Globals.scyllaCli.FindBlocksExact(fid, fid, uid)
+	permission, err := Globals.scyllaCli.FindBlocksExact(db.ComputePk(fid), fid, uid)
 
 	// 数据库中也没有，实在没有设置返回默认的，
 	if err != nil || permission == nil {
 
 		if bFan {
-			mask = model.DefaultPermissionP2P | model.PermissionMaskFriend
+			mask = model.DefaultPermissionP2P | model.PermissionMaskFriend | model.PermissionMaskExist
 		} else {
-			mask = model.DefaultPermissionStranger
+			mask = model.DefaultPermissionStranger | model.PermissionMaskExist
 		}
 	} else { // 找到了
 
-		Globals.redisCli.AddUserPermission(fid, uid, uint32(permission.Perm))
+		Globals.redisCli.AddUserPermission(fid, uid, uint32(permission.Perm|model.PermissionMaskExist))
 		mask = uint32(permission.Perm)
 	}
 
 	// 借助基础函数来识别
 	user.SetFriendToMeMask(fid, mask)
-	bRet, ok = user.CheckFriendMask(fid, bFan, bits)
+	bRet, ok = user.CheckFriendToMeMask(fid, bits)
 	return bRet
 }
 
@@ -607,33 +607,37 @@ func checkFriendIsFan(fid, uid int64) (bool, error) {
 		}
 	} else {
 		return false, errors.New("can't find user")
-		Globals.Logger.Fatal("checkFriendIsFan() can't find user in memory", zap.Int64("uid", uid))
+		Globals.Logger.Fatal("checkFriendIsFan() can't find user in memory User cache", zap.Int64("uid", uid))
 	}
 
 	// 内存未设置，则应该从redis开始查找
 	bFan, err := Globals.redisCli.CheckUserFan(uid, fid)
+	// 主找到了，如果没好有找到，则err = redis: nil
 	if err == nil {
 		user.SetFan(fid, bFan)
 		return bFan, err
 	}
 
 	// 没有找到，则从数据库开始加载
-	friend, err := Globals.scyllaCli.FindFollowingExact(uid, uid, fid)
-	if err != nil || friend == nil {
+	//friend, err := Globals.scyllaCli.FindFansExact(db.ComputePk(uid), uid, fid)
+	// 粉丝可能几百万，关注永远不会那么多
+	friend, err := Globals.scyllaCli.FindFollowingExact(db.ComputePk(fid), fid, uid)
+
+	// 数据库也没有设置，那就对方不是自己的粉丝，自己不是对方的朋友
+	if friend == nil {
 		fan := model.FriendStore{
-			Pk:   int16(uid),
+			Pk:   db.ComputePk(uid),
 			Uid1: uid,
 			Uid2: fid,
 			Tm:   0,
-			Nick: "",
+			Nick: "##",
 		}
 		Globals.redisCli.AddUserFans(uid, []model.FriendStore{fan})
 		user.SetFan(fid, false)
 		return false, nil
 	}
 
-	// 数据库中找到了，那就是真粉丝
-
+	// 数据库中找到了，那对方是自己的粉丝，自己是对方的朋友
 	Globals.redisCli.AddUserFans(uid, []model.FriendStore{*friend})
 	user.SetFan(fid, true)
 	return true, nil

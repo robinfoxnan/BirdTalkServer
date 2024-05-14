@@ -199,15 +199,16 @@ func (cli *RedisClient) ExistPermission(uid int64) (bool, error) {
 }
 
 // 检查是否存在好友，如果设置了空字符串，就是非好友
+// 如果没有，error = redis: nil
 func (cli *RedisClient) CheckUserFan(uid int64, fid int64) (bool, error) {
 	keyName := GetUserFansKey(uid)
 	field := strconv.FormatInt(fid, 10)
 	str, err := cli.Cmd.HGet(keyName, field).Result()
 	if err == nil {
-		if len(str) == 0 {
+		if str == "##" {
 			return false, nil
 		}
-		return true, err
+		return true, nil
 	}
 
 	return false, err

@@ -41,12 +41,13 @@ const (
 
 	// 陌生人也是如此，左移16位
 )
+const PermissionBits = 16
 
 // 如果你是对方好友，即对方关注你了，你得到的权限是除了看位置信息，其他都可以！
 const DefaultPermissionP2P = PermissionMaskExist | PermissionMaskAdd | PermissionMaskChat | PermissionMaskViewInfo | PermissionMaskViewArt
 
 // 如果你是陌生人，那么默认可以添加好友，可以看帖子
-const DefaultPermissionStranger = PermissionMaskExist | ((PermissionMaskAdd | PermissionMaskViewArt) << 16)
+const DefaultPermissionStranger = (PermissionMaskExist | PermissionMaskAdd | PermissionMaskViewArt) << PermissionBits
 
 // 默认朋友权限的设置
 const DefaultPermission = DefaultPermissionP2P | DefaultPermissionStranger
@@ -72,6 +73,8 @@ const UserLoadStatusAll = UserLoadStatusInfo | UserLoadStatusPermission | UserLo
 // 32：用户所属群组，bsuing_
 // 64：用户session 分布表  30分钟 bsud_
 
+// 每一部分权限掩码的位数，以后也许是32位
+
 // 内存缓存使用的用户模型
 type User struct {
 	pbmodel.UserInfo
@@ -80,7 +83,7 @@ type User struct {
 	MaskLoad  uint32 // 目前的加载状态
 	//ParamsList map[string]string // 某些状态下的附加信息都放在这里，比如验证码
 
-	Block      map[int64]uint64 // 权限控制列表，高位是对方给自己的权限，低32位是自己向对方的权限
+	Block      map[int64]uint32 // 权限控制列表，高位是对方给自己的权限，低16位是自己向对方的权限
 	Following  map[int64]bool   // 关注列表
 	Fans       map[int64]bool   // 粉丝列表
 	Groups     map[int64]bool   // 群组
@@ -112,7 +115,7 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 
 		Following: make(map[int64]bool),
 		Fans:      make(map[int64]bool),
-		Block:     make(map[int64]uint64),
+		Block:     make(map[int64]uint32),
 
 		Groups:       make(map[int64]bool),
 		SessionDis:   make(map[int64]int32),
@@ -206,13 +209,21 @@ func (u *User) SetSelfMaskNoLock(fid int64, mask uint32) {
 	data, ok := u.Block[fid]
 	if ok {
 		// 如果好友ID已存在于屏蔽列表中，则更新其屏蔽掩码
-		u.Block[fid] = (data & 0xffffffff00000000) | uint64(mask)
+		u.Block[fid] = (data & 0xffff0000) | uint32(mask)
 	} else {
 		// 如果好友ID不存在于屏蔽列表中，则向列表中添加新的条目
-		u.Block[fid] = uint64(mask)
+		u.Block[fid] = uint32(mask)
 	}
 }
 
+func (u *User) SetSelfMask(fid int64, mask uint32) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	u.SetSelfMaskNoLock(fid, mask)
+}
+
+// 去掉某几位掩码
 func (u *User) RemoveSelfMask(fid int64, mask uint32) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
@@ -220,7 +231,7 @@ func (u *User) RemoveSelfMask(fid int64, mask uint32) {
 	data, ok := u.Block[fid]
 	if ok {
 		// 如果好友ID存在于屏蔽列表中，则从屏蔽掩码中移除指定的掩码
-		u.Block[fid] = data &^ uint64(mask)
+		u.Block[fid] = data & ^uint32(mask)
 	}
 	// 如果好友ID不存在于屏蔽列表中，则不执行任何操作
 }
@@ -233,10 +244,10 @@ func (u *User) SetFriendToMeMask(fid int64, mask uint32) {
 	data, ok := u.Block[fid]
 	if ok {
 		// 如果好友ID已存在于屏蔽列表中，则更新其屏蔽掩码
-		u.Block[fid] = data | (uint64(mask) << 32) | PermissionMaskExist
+		u.Block[fid] = (data & 0x0000ffff) | (uint32(mask) << PermissionBits)
 	} else {
 		// 如果好友ID不存在于屏蔽列表中，则向列表中添加新的条目
-		u.Block[fid] = uint64(mask) << 32
+		u.Block[fid] = uint32(mask) << PermissionBits
 	}
 }
 
@@ -248,34 +259,30 @@ func (u *User) GetFriendToMeMask(fid int64) (uint32, bool) {
 	// 尝试从屏蔽列表中获取指定好友的屏蔽掩码
 	data, ok := u.Block[fid]
 	if ok {
-		// 如果好友ID已存在于屏蔽列表中，则返回其屏蔽掩码的高32位
-		return uint32(data >> 32), true
+		// 如果好友ID已存在于屏蔽列表中，则返回其屏蔽掩码的高16位
+		perm := uint32(data >> PermissionBits)
+		return perm, true
 	}
 	// 如果好友ID不存在于屏蔽列表中，则返回0
 	return 0, false
 }
 
 // 检查某个权限
-func (u *User) CheckFriendMask(fid int64, isFan bool, bits uint32) (bool, bool) {
+// isFan是检查自己的粉丝列表得来的，也就是对方是否把你当朋友
+// 是否设置了掩码，是否存在；如果不存在，这应该尝试加载
+func (u *User) CheckFriendToMeMask(fid int64, bits uint32) (bool, bool) {
 	data, ok := u.GetFriendToMeMask(fid)
 	if !ok {
 		return false, false
 	}
 
-	strangerMask := data >> 16
-
-	// 还未设置
+	// 低位设置了，高位未设置
 	if (data & PermissionMaskExist) == 0 {
 		return false, false
 	}
 
-	if isFan == false {
-		// 对方未关注你！陌生人
-		return (strangerMask & bits) > 0, true
-	}
-
-	// 好友，但是也不一定能发
-	return (data & bits) > 0, true
+	// 已经计算过了，但是不一定是对方设置的
+	return (data & bits) != 0, true
 }
 
 // 更新时候直接将新的数据合并过来，这个比较繁琐

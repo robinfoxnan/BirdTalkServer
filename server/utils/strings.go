@@ -97,7 +97,7 @@ func MergeMap[K comparable, V any](m1, m2 map[K]V) {
 	}
 }
 
-func MergeMapMask(m1, m2 map[int64]uint64) {
+func MergeMapMask(m1, m2 map[int64]uint32) {
 	for k, v := range m2 {
 		v1, ok := m1[k]
 		if ok {

@@ -237,7 +237,8 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 	//params := userOpMsg.GetParams()
 	userInfo := friendOpMsg.GetUser()
 	if userInfo == nil {
-
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "userinfo is null", nil, session)
+		return
 	}
 
 	uid2 := userInfo.UserId
@@ -272,18 +273,212 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 		}
 	}
 
+	sendBackFriendOpResult(pbmodel.UserOperationType_RemoveFriend,
+		"ok",
+		userInfo,
+		nil,
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
+
 }
 
+// 拉黑某人，好用，这里不区分好友与非好友
 func handleFriendBlock(msg *pbmodel.Msg, session *Session) {
 
+	friendOpMsg := msg.GetPlainMsg().GetFriendOp()
+	//params := userOpMsg.GetParams()
+	userInfo := friendOpMsg.GetUser()
+	if userInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "userinfo is null", nil, session)
+		return
+	}
+
+	uid2 := userInfo.UserId
+	// 0. 检测对方是否存在
+	friendInfo, _, _ := findUserInfo(uid2)
+	if friendInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "user not in db", nil, session)
+		return
+	}
+
+	// 更新数据库
+	mask := model.PermissionMaskExist
+	uid1 := session.UserID
+	blockStore := model.BlockStore{
+		FriendStore: model.FriendStore{
+			Pk:   db.ComputePk(uid1),
+			Uid1: uid1,
+			Uid2: uid2,
+			Nick: userInfo.GetNickName(),
+			Tm:   utils.GetTimeStamp(),
+		},
+		Perm: int32(mask),
+	}
+
+	err := Globals.scyllaCli.InsertBlock(&blockStore)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "insert into db error", nil, session)
+		return
+	}
+
+	// 更新到redis中
+	Globals.redisCli.SetUserBlocks(uid1, []model.BlockStore{blockStore})
+
+	// 更新到自己的内存中
+	User := session.GetUser()
+	User.SetSelfMask(uid2, uint32(mask))
+
+	// 同步到对方的内存中
+	friendUser, ok := Globals.uc.GetUser(uid2)
+	if ok && friendUser != nil {
+		friendUser.SetFriendToMeMask(uid1, uint32(mask))
+	} else {
+
+		if Globals.Config.Server.ClusterMode {
+			// todo:
+		}
+	}
+
+	sendBackFriendOpResult(pbmodel.UserOperationType_BlockFriend,
+		"ok",
+		userInfo,
+		nil,
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 }
 
+// 直接删除即可
 func handleFriendUnBlock(msg *pbmodel.Msg, session *Session) {
 
+	friendOpMsg := msg.GetPlainMsg().GetFriendOp()
+	//params := userOpMsg.GetParams()
+	userInfo := friendOpMsg.GetUser()
+	if userInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "userinfo is null", nil, session)
+		return
+	}
+
+	uid1 := session.UserID
+	uid2 := userInfo.UserId
+	// 0. 检测对方是否存在
+	friendInfo, _, _ := findUserInfo(uid2)
+	if friendInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "user not in db", nil, session)
+		return
+	}
+
+	// 更新数据库
+	err := Globals.scyllaCli.DeleteBlock(db.ComputePk(uid1), uid1, uid2)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "insert into db error", nil, session)
+		return
+	}
+
+	// 更新到redis中
+	Globals.redisCli.RemoveUserBlocks(uid1, []int64{uid2})
+
+	// 更新到自己的内存中
+	User := session.GetUser()
+	// 意思是没有设置，回头再计算
+	User.SetSelfMask(uid2, uint32(0))
+
+	// 同步到对方的内存中
+	friendUser, ok := Globals.uc.GetUser(uid2)
+	if ok && friendUser != nil {
+		friendUser.SetFriendToMeMask(uid1, uint32(0))
+	} else {
+
+		if Globals.Config.Server.ClusterMode {
+			// todo:
+		}
+	}
+
+	sendBackFriendOpResult(pbmodel.UserOperationType_UnBlockFriend,
+		"ok",
+		userInfo,
+		nil,
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 }
 
+// 给好友设置相应的权限
 func handleFriendPermission(msg *pbmodel.Msg, session *Session) {
 
+	friendOpMsg := msg.GetPlainMsg().GetFriendOp()
+	//params := userOpMsg.GetParams()
+	userInfo := friendOpMsg.GetUser()
+	if userInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "userinfo is null", nil, session)
+		return
+	}
+
+	uid1 := session.UserID
+	uid2 := userInfo.UserId
+
+	// 0. 检测对方是否存在
+	friendInfo, _, _ := findUserInfo(uid2)
+	if friendInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "user not in db", nil, session)
+		return
+	}
+
+	params := friendOpMsg.GetParams()
+	permStr, ok := params["permission"]
+	if !ok || len(permStr) == 0 {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "params.permission is null", nil, session)
+		return
+	}
+
+	permMask, err := strconv.ParseInt(permStr, 10, 16)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "params.permission is too big", nil, session)
+		return
+	}
+
+	perm := uint32(permMask) | model.PermissionMaskExist
+
+	// 更新数据库
+	blockStore := model.BlockStore{
+		FriendStore: model.FriendStore{
+			Pk:   db.ComputePk(uid1),
+			Uid1: uid1,
+			Uid2: uid2,
+			Nick: userInfo.GetNickName(),
+			Tm:   utils.GetTimeStamp(),
+		},
+		Perm: int32(perm),
+	}
+
+	err = Globals.scyllaCli.InsertBlock(&blockStore)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "insert into db error", nil, session)
+		return
+	}
+
+	// 更新到redis中
+	Globals.redisCli.SetUserBlocks(uid1, []model.BlockStore{blockStore})
+
+	// 更新到自己的内存中
+	User := session.GetUser()
+	User.SetSelfMask(uid2, uint32(perm))
+
+	// 同步到对方的内存中
+	friendUser, ok := Globals.uc.GetUser(uid2)
+	if ok && friendUser != nil {
+		friendUser.SetFriendToMeMask(uid1, uint32(perm))
+	} else {
+
+		if Globals.Config.Server.ClusterMode {
+			// todo:
+		}
+	}
+
+	sendBackFriendOpResult(pbmodel.UserOperationType_SetFriendPermission,
+		"ok",
+		userInfo,
+		nil,
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 }
 
 // 这个比较简单，就是给对方设置一个备注
@@ -320,6 +515,13 @@ func handleFriendSetMemo(msg *pbmodel.Msg, session *Session) {
 		Globals.scyllaCli.SetFansNick(pk1, uid1, uid2, nickName)
 		Globals.redisCli.SetUserFansNick(uid1, uid2, nickName)
 	}
+
+	sendBackFriendOpResult(pbmodel.UserOperationType_SetFriendMemo,
+		"ok",
+		userInfo,
+		nil,
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 }
 
 // 转发信息，这里主要是用于转发用户好友申请
@@ -401,8 +603,10 @@ func sendBackFriendOpResult(opCode pbmodel.UserOperationType, result string, use
 	userList []pbmodel.UserInfo, params map[string]string, session *Session, sendId, msgId int64) {
 
 	msg := newFriendOpResultMsg(opCode, result, user, userList, params, sendId, msgId)
-	session.SendMessage(msg)
+	//session.SendMessage(msg)
 
+	// 多终端登录时候，转发到所有的消息
+	trySendMsgToUser(session.UserID, msg)
 }
 
 // 保存加好友记录
