@@ -24,3 +24,16 @@ func trySendMsgToUser(uid int64, msg *pbmodel.Msg) {
 		// 将对方的登录情况写到自己的的User中，如果没有，去redis中查一下
 	}
 }
+
+// 将消息转发给所有的群组用户
+func notifyGroupMembers(groupId int64, msg *pbmodel.Msg) {
+	group, _ := Globals.grc.GetGroup(groupId)
+	if group == nil {
+		return
+	}
+
+	members := group.GetMembers()
+	for _, mId := range members {
+		trySendMsgToUser(mId, msg)
+	}
+}

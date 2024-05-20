@@ -18,6 +18,12 @@ func (cli *RedisClient) SetGroupInfo(grp *pbmodel.GroupInfo) error {
 	return err
 }
 
+func (cli *RedisClient) SetGroupInfoPart(gid int64, field, value string) error {
+	keyName := GetGroupInfoKey(gid)
+	_, err := cli.Cmd.HSet(keyName, field, value).Result()
+	return err
+}
+
 func (cli *RedisClient) GetGroupInfoById(gid int64) (*pbmodel.GroupInfo, error) {
 	keyName := GetGroupInfoKey(gid)
 	data, err := cli.Cmd.HGetAll(keyName).Result()
@@ -45,6 +51,12 @@ func (cli *RedisClient) SetGroupMembers(gid int64, members []int64) error {
 func (cli *RedisClient) AddGroupMembers(gid int64, members []int64) (int64, error) {
 	keyName := GetGroupAllMembersKey(gid)
 	return cli.AddIntSet(keyName, members)
+}
+
+// 解散
+func (cli *RedisClient) RemoveAllUserOfGroup(gid int64) error {
+	keyName := GetGroupAllMembersKey(gid)
+	return cli.RemoveKey(keyName)
 }
 
 // 退出群聊的的删除
@@ -161,6 +173,17 @@ func (cli *RedisClient) RemoveActiveGroupMembers(gid, nodeId int64, members []in
 	count, err = cli.AddHashKeyInt(hashKey, field, 0-count)
 
 	return count, err
+}
+
+// 解散时候，记得清楚相关的群组成员分布数据
+func (cli *RedisClient) RemoveActiveGroupRelated(gid int64) error {
+	setKey := GetGroupActiveMemsPerNodeKey(gid, 1)
+	cli.RemoveKey(setKey)
+
+	hashKey := GetGroupMemNumPerNodeKey(gid)
+	cli.RemoveKey(hashKey)
+
+	return nil
 }
 
 // bsgdi_1001_1 set中删除相关用户，同时重新计算计数

@@ -359,6 +359,11 @@ func (cli *RedisClient) RemoveHashInt(key, field string) error {
 	return cmd.Err()
 }
 
+func (cli *RedisClient) RemoveKey(key string) error {
+	cmd := cli.Cmd.Del(key)
+	return cmd.Err()
+}
+
 // /////////////////////////////////////////////////////////////////////////////////
 // 这部分是用户的好友相关内容使用的
 // 使用脚本求2个hash的交集

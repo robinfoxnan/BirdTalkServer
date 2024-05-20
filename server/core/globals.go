@@ -39,6 +39,7 @@ func init() {
 	Globals = GlobalVars{}
 	Globals.ss = NewSessionCache()
 	Globals.uc = model.NewUserCache()
+	Globals.grc = model.NewGroupCache()
 	Globals.Logger = utils.CreateLogger()
 
 }

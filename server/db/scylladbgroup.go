@@ -150,7 +150,7 @@ func (me *Scylla) DeleteGroupMember(pk1, pk2, gid, uid int64) error {
 }
 
 // 解散时候，删除所有的成员即可，用户再发送消息出错再处理所在群的表
-func (me *Scylla) DissolveGroupAllMember(pk, gid int64) error {
+func (me *Scylla) DissolveGroupAllMember(pk int16, gid int64) error {
 	// 构建删除语句
 	builder := qb.Delete(GroupMemberTableName)
 
@@ -171,7 +171,7 @@ func (me *Scylla) DissolveGroupAllMember(pk, gid int64) error {
 }
 
 // 删除用户在某一个表，主动删除，
-func (me *Scylla) DeleteUserInG(pk, uid, gid int64) error {
+func (me *Scylla) DeleteUserInG(pk int16, uid, gid int64) error {
 	// 构建删除语句
 	builder := qb.Delete(UserInGroupTableName)
 
