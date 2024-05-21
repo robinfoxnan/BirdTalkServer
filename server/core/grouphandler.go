@@ -5,6 +5,7 @@ import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"errors"
 	"go.uber.org/zap"
 	"strconv"
 	"strings"
@@ -237,7 +238,7 @@ func handleGroupDissolveOp(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	group, _ := Globals.grc.GetGroup(groupInfo.GroupId)
+	group, _ := findGroup(groupInfo.GroupId)
 	if group == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group dissolve operation group info id is wrong", nil, session)
 		return
@@ -247,33 +248,218 @@ func handleGroupDissolveOp(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	// 解散群基础信息
+	// 解散群： 在基础信息中设置标记
 	_, err := Globals.mongoCli.UpdateGroupInfoPart(groupInfo.GroupId, map[string]interface{}{"params.status": "deleted"}, nil)
-	err = Globals.redisCli.SetGroupInfoPart(groupInfo.GroupId, "Params.status", "deleted")
+	if err != nil {
 
-	// 群内的所有用户
+	}
+	err = Globals.redisCli.SetGroupInfoPart(groupInfo.GroupId, "Params.status", "deleted")
+	group.SetDeleted()
+
+	// 删除群内的所有用户
 	err = Globals.scyllaCli.DissolveGroupAllMember(db.ComputePk(groupInfo.GroupId), groupInfo.GroupId)
-	Globals.redisCli.RemoveAllUserOfGroup(groupInfo.GroupId)
+	err = Globals.redisCli.RemoveAllUserOfGroup(groupInfo.GroupId)
+
+	// 群内还需要通知用户解散
+	reqMem := msg.GetPlainMsg().GetGroupOp().GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    "",
+			Icon:    "",
+			Role:    "",
+			GroupId: groupInfo.GroupId,
+			Params:  nil,
+		}
+	}
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupDissolve, groupInfo,
+		reqMem,
+		nil,
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	if Globals.Config.Server.ClusterMode {
+
+	}
+
+	// 清理内存
+	group.ClearMember()
 
 	// 各个用户所在群，删除一个
 	membersId := group.GetMembers()
 	for _, mId := range membersId {
 		err = Globals.scyllaCli.DeleteUserInG(db.ComputePk(mId), mId, groupInfo.GroupId)
 		Globals.redisCli.SetUserLeaveGroup(mId, groupInfo.GroupId)
+		user, ok := Globals.uc.GetUser(mId)
+		if user != nil && ok {
+			user.SetLeaveGroup(groupInfo.GroupId)
+		}
 	}
 
-	// redis中群组用户分布
+	// redis中群组用户分布情况
 	Globals.redisCli.RemoveActiveGroupRelated(groupInfo.GroupId)
 
+	return
 }
 
-// 设置基础信息
+// 设置基础信息，这个也是只有管理员才可以设置，不同于微信的
 func handleGroupSetBasicInfo(msg *pbmodel.Msg, session *Session) {
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group set info operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group set info operation group info id is wrong", nil, session)
+		return
+	}
+
+	isAdmin := group.IsAdmin(session.UserID)
+	if !isAdmin {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group set info operation, you are not admin", nil, session)
+		return
+	}
+	// 先合并到内存，更新到数据库和redis
+	group.MergeGroupInfo(groupInfo)
+	_, err := Globals.mongoCli.UpdateGroupInfo(group.GetGroupInfo())
+	if err != nil {
+
+	}
+
+	err = Globals.redisCli.SetGroupInfo(group.GetGroupInfo())
+	if err != nil {
+
+	}
+	// 通知所有的用户
+	reqMem := msg.GetPlainMsg().GetGroupOp().GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    "",
+			Icon:    "",
+			Role:    "",
+			GroupId: groupInfo.GroupId,
+			Params:  nil,
+		}
+	}
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSetInfo,
+		group.GetGroupInfo(),
+		reqMem,
+		nil,
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	if Globals.Config.Server.ClusterMode {
+
+	}
 
 }
 
 // 踢人
 func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation group info id is wrong", nil, session)
+		return
+	}
+
+	isAdmin := group.IsAdmin(session.UserID)
+	if !isAdmin {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation, you are not admin", nil, session)
+		return
+	}
+
+	opMsg := msg.GetPlainMsg().GetGroupOp()
+	uid := int64(0)
+	str, ok := opMsg.Params["uid"]
+	if !ok || str == "" {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation, params.uid is wrong", nil, session)
+		return
+	}
+
+	uid, err := strconv.ParseInt(str, 10, 64)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation, params.uid is not an id", nil, session)
+		return
+	}
+
+	// 同时操作2个表
+	Globals.scyllaCli.DeleteGroupMember(db.ComputePk(groupInfo.GroupId), db.ComputePk(uid), groupInfo.GroupId, uid)
+
+	// 从成员表中删除
+	Globals.redisCli.RemoveGroupMembers(groupInfo.GroupId, []int64{uid})
+	// 从分布表中删除
+	index := int64(Globals.Config.Server.HostIndex)
+	Globals.redisCli.RemoveActiveGroupMembersLua(groupInfo.GroupId, index, []int64{uid})
+	// 标记用户的所属群
+	Globals.redisCli.SetUserLeaveGroup(uid, groupInfo.GroupId)
+
+	// 内存中删除成员
+	group.RemoveMember(uid)
+
+	// 内存中，用户退出组，
+	user, ok := Globals.uc.GetUser(uid)
+	if user != nil {
+		user.SetLeaveGroup(groupInfo.GroupId)
+	}
+
+	// 通知所有的用户
+	reqMem := msg.GetPlainMsg().GetGroupOp().GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    "",
+			Icon:    "",
+			Role:    "",
+			GroupId: groupInfo.GroupId,
+			Params:  nil,
+		}
+	}
+
+	kickMember := &pbmodel.GroupMember{
+		UserId:  uid,
+		Nick:    "",
+		Icon:    "",
+		Role:    "",
+		GroupId: groupInfo.GroupId,
+		Params:  nil,
+	}
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupKickMember,
+		group.GetGroupInfo(),
+		reqMem,
+		[]*pbmodel.GroupMember{
+			kickMember,
+		},
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	// 通知该用户所在的机器更改user
+	if Globals.Config.Server.ClusterMode {
+
+	}
 
 }
 
@@ -385,13 +571,11 @@ func saveNewGroup(groupInfo *pbmodel.GroupInfo, session *Session) (*model.Group,
 	return g, err
 }
 
-// 应答群组操作结果
-func sendBackGroupOpRet(opCode pbmodel.GroupOperationType,
+func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 	groupInfo *pbmodel.GroupInfo,
 	reqMem *pbmodel.GroupMember,
 	members []*pbmodel.GroupMember,
-	ret string, detail string, session *Session) {
-
+	ret string, detail string, session *Session) *pbmodel.Msg {
 	msgGroupOpRet := pbmodel.GroupOpResult{
 		ReqMem:    reqMem,
 		Operation: opCode,
@@ -418,7 +602,55 @@ func sendBackGroupOpRet(opCode pbmodel.GroupOperationType,
 			PlainMsg: &msgPlain,
 		},
 	}
+	return &msg
+}
 
-	notifyGroupMembers(groupInfo.GroupId, &msg)
+// 应答群组操作结果
+func sendBackGroupOpRet(opCode pbmodel.GroupOperationType,
+	groupInfo *pbmodel.GroupInfo,
+	reqMem *pbmodel.GroupMember,
+	members []*pbmodel.GroupMember,
+	ret string, detail string, session *Session) {
+
+	msg := createGroupOpRetMsg(opCode, groupInfo, reqMem, members, ret, detail, session)
+	notifyGroupMembers(groupInfo.GroupId, msg)
+
+}
+
+// 从数据库中加载Group基础信息
+func findGroup(gid int64) (*model.Group, error) {
+	group, ok := Globals.grc.GetGroup(gid)
+	if ok && group != nil {
+		return group, nil
+	}
+
+	// 从redis中查找群
+	groupInfo, err := Globals.redisCli.GetGroupInfoById(gid)
+	if groupInfo != nil {
+		group = model.NewGroupFromInfo(groupInfo)
+		Globals.grc.InsertGroup(gid, group)
+		return group, nil
+	}
+
+	lst, err := Globals.mongoCli.FindGroupById(gid)
+	if lst == nil || len(lst) == 0 {
+		return nil, err
+	}
+
+	if len(lst) > 1 {
+		Globals.Logger.Fatal("find more than one group by id", zap.Int64("gid", gid))
+		return nil, errors.New("find more than one group by id")
+	}
+
+	groupInfo = &lst[0]
+
+	// 保存到当前的群基础信息到redis中
+	Globals.redisCli.SetGroupInfo(groupInfo)
+
+	// 保存到内存
+	group = model.NewGroupFromInfo(groupInfo)
+	Globals.grc.InsertGroup(gid, group)
+
+	return group, nil
 
 }

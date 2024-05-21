@@ -120,7 +120,7 @@ func (me *Scylla) FindGroupMembers(pk, gid, from int64, pageSize uint) ([]model.
 }
 
 // 从群内移除成员时，需要操作2个表
-func (me *Scylla) DeleteGroupMember(pk1, pk2, gid, uid int64) error {
+func (me *Scylla) DeleteGroupMember(pk1, pk2 int16, gid, uid int64) error {
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
 	batch.Cons = gocql.LocalOne
 

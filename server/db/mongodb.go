@@ -8,6 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"strings"
 	"time"
 )
 
@@ -347,14 +348,14 @@ func (me *MongoDBExporter) UpdateGroupInfo(g *pbmodel.GroupInfo) (int64, error) 
 	update := bson.M{
 		"$set": bson.M{
 			"groupname": g.GroupName,
-			"grouptype": g.GroupType,
+			//"grouptype": g.GroupType,
 			"grouptags": g.Tags,
 		},
 	}
 
 	// 遍历param中的字段
 	for k, v := range g.Params {
-		key := "params." + k
+		key := "params." + strings.ToLower(k)
 		update["$set"].(bson.M)[key] = v
 	}
 

@@ -317,6 +317,13 @@ func (u *User) SetInGroup(gList []int64) {
 	}
 }
 
+func (u *User) SetLeaveGroup(gid int64) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	u.Groups[gid] = false
+}
+
 // 从redis查询的权限列表一次性添加到内存
 func (u *User) AddPermission(perMap map[int64]uint32) {
 	u.Mu.Lock()

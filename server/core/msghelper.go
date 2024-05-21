@@ -32,8 +32,15 @@ func notifyGroupMembers(groupId int64, msg *pbmodel.Msg) {
 		return
 	}
 
-	members := group.GetMembers()
-	for _, mId := range members {
-		trySendMsgToUser(mId, msg)
+	// 集群模式需要检查各个用户的分布情况
+	if Globals.Config.Server.ClusterMode {
+
+	} else {
+		// 单机模式直接转发在线的用户
+		members := group.GetMembers()
+		for _, mId := range members {
+			trySendMsgToUser(mId, msg)
+		}
 	}
+
 }

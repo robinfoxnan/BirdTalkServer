@@ -4,6 +4,8 @@ import (
 	"time"
 )
 
+const TwentyFourHoursInMilliseconds = 24 * 60 * 60 * 1000
+
 func TmToUtcString(utcMillis int64) string {
 	// 将毫秒时间戳转换为 time.Time 类型
 	utcTime := time.UnixMilli(utcMillis)
