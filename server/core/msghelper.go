@@ -25,6 +25,12 @@ func trySendMsgToUser(uid int64, msg *pbmodel.Msg) {
 	}
 }
 
+func trySendMsgToUserList(uidList []int64, msg *pbmodel.Msg) {
+	for _, uid := range uidList {
+		trySendMsgToUser(uid, msg)
+	}
+}
+
 // 将消息转发给所有的群组用户
 func notifyGroupMembers(groupId int64, msg *pbmodel.Msg) {
 	group, _ := Globals.grc.GetGroup(groupId)

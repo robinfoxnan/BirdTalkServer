@@ -3,6 +3,7 @@ package model
 import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"strings"
 	"sync"
 )
 
@@ -58,9 +59,28 @@ func (g *Group) MergeGroupInfo(info *pbmodel.GroupInfo) {
 	}
 }
 
+// 有些敏感信息不能发给用户
 func (g *Group) GetGroupInfo() *pbmodel.GroupInfo {
 
-	return &g.GroupInfo
+	params := map[string]string{}
+	for k, v := range g.Params {
+		key := strings.ToLower(k)
+		if key == "joinanswer" {
+			continue
+		}
+		if key == "code" {
+			continue
+		}
+		params[key] = v
+	}
+
+	return &pbmodel.GroupInfo{
+		GroupId:   g.GroupId,
+		GroupName: g.GroupName,
+		GroupType: g.GroupType,
+		Tags:      g.Tags,
+		Params:    params,
+	}
 }
 
 func NewGroupFromInfo(info *pbmodel.GroupInfo) *Group {
@@ -185,4 +205,55 @@ func (g *Group) IsTimeout() bool {
 		return true
 	}
 	return false
+}
+
+// 查询某个值
+func (g *Group) GetParamByKey(key string) string {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.GroupInfo.GetParams() == nil {
+		return ""
+	}
+
+	v, ok := g.GroupInfo.GetParams()[key]
+	if !ok {
+		return ""
+	}
+	return v
+}
+
+func (g *Group) SetParamByKey(key, value string) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.GroupInfo.GetParams() == nil {
+		g.GroupInfo.Params = map[string]string{
+			key: value,
+		}
+		return
+	}
+
+	g.GroupInfo.Params[key] = value
+
+}
+
+func (g *Group) GetAdminMembers() []int64 {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	if g.Owner == nil {
+		return nil
+	}
+
+	members := make([]int64, len(g.Admins)+1)
+	members[0] = g.Owner.Uid
+	index := 1
+	for _, v := range g.Admins {
+		members[index] = v.Uid
+		index++
+	}
+
+	return members
+
 }

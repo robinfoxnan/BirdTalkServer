@@ -184,6 +184,26 @@ const cqlCreateTableUserOp = `CREATE TABLE IF NOT EXISTS  chatuserop.userop (
 			PRIMARY KEY (pk, uid1, id)
 		)`
 
+const cqlCreateTableGroupOp = `CREATE TABLE IF NOT EXISTS  chatuserop.groupop (
+			pk SMALLINT,
+			gid BIGINT,
+			id BIGINT,
+			uid1 BIGINT,
+			uid2 BIGINT,
+			usid BIGINT,
+			tm BIGINT,
+			tm1 BIGINT,
+			tm2 BIGINT,
+			io TINYINT,
+			st TINYINT,
+			cmd TINYINT,
+			ret TINYINT,
+			mask INT,
+			ref BIGINT,
+			draf BLOB,
+			PRIMARY KEY (pk, gid, id)
+		)`
+
 // ////////////////////////////////////////////////////////
 // 用户关系
 const FollowingTableName = "chatuser.following"
@@ -201,11 +221,14 @@ const GroupChatTableName = "chatdata.gchat"
 // 好友申请，群申请记录
 const UserOpTableName = "chatuserop.userop"
 
+// 群组的操作记录
+const GroupOpTableName = "chatuserop.groupop"
+
 var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData, cqlCreateKeySpaceChatUserOp,
 	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock,
 	cqlCreateTableGroupMem, cqlCreateTableUinG,
 	cqlCreateTablePChat, cqlCreateTableGChat,
-	cqlCreateTableUserOp,
+	cqlCreateTableUserOp, cqlCreateTableGroupOp,
 }
 
 func (me *Scylla) Init() error {

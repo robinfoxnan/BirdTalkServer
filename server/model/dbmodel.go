@@ -104,3 +104,14 @@ type CommonOpStore struct {
 	Ref  int64  `db:"ref"`  // 引用
 	Draf []byte `db:"draf"` // 附加消息
 }
+
+const (
+	CommonGroupOpCreate        = 1
+	CommonGroupOpDissolve      = 2
+	CommonGroupOpJoinRequest   = 3
+	CommonGroupOpInviteRequest = 4
+	CommonGroupOpAddAdmin      = 5
+	CommonGroupOpRemoveAdmin   = 6
+	CommonGroupOpSetInfo       = 7
+	CommonGroupOpTransferOwner = 8
+)

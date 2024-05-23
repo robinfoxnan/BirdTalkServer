@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // 群组相关的基本操作
@@ -221,11 +222,15 @@ func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 	// todo:保存操作记录
 
 	// 通知相关用户，建立了新群
-	sendBackGroupOpRet(pbmodel.GroupOperationType_GroupCreate,
+	retMsg := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupCreate,
 		groupInfo,
 		msg.GetPlainMsg().GetGroupOp().ReqMem,
 		msg.GetPlainMsg().GetGroupOp().Members,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
 		"ok", "", session)
+
+	notifyGroupMembers(groupInfo.GroupId, retMsg)
 
 	return
 }
@@ -275,6 +280,8 @@ func handleGroupDissolveOp(msg *pbmodel.Msg, session *Session) {
 	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupDissolve, groupInfo,
 		reqMem,
 		nil,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
 		"ok",
 		"", session)
 
@@ -353,6 +360,8 @@ func handleGroupSetBasicInfo(msg *pbmodel.Msg, session *Session) {
 		group.GetGroupInfo(),
 		reqMem,
 		nil,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
 		"ok",
 		"", session)
 
@@ -448,6 +457,8 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 		[]*pbmodel.GroupMember{
 			kickMember,
 		},
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
 		"ok",
 		"", session)
 
@@ -473,14 +484,111 @@ func handleInviteAnswer(msg *pbmodel.Msg, session *Session) {
 
 }
 
-// 加入申请
+// 公开群加入申请
 func handleGroupJoinReq(msg *pbmodel.Msg, session *Session) {
+
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	// params["visibility"] = "public" | "private" 默认为public
+	visibility := group.GetParamByKey("visibility")
+	if strings.ToLower(visibility) == "private" {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "group is private, must join the group by invitation", nil, session)
+		return
+	}
+
+	// 检查这个群的加入类型：params["jointype"] = "any" | "admin"
+	joinType := group.GetParamByKey("jointype")
+	switch strings.ToLower(joinType) {
+	case "invite": // 私群
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "one must join the group by invitation", nil, session)
+		return
+	case "question":
+		onJoinGroupNeedQuestion(group, msg, session)
+	case "admin": // 管理员审核
+		onJoinGroupNeedAdmin(group, msg, session)
+		break
+	default: // ""  | "any"
+		onJoinGroupOk(group, msg, session)
+	}
 
 }
 
 // 某个管理员对加入申请的应答
 func handleGroupJoinAnswer(msg *pbmodel.Msg, session *Session) {
+	groupInfo := msg.GetPlainMsg().GetGroupOpRet().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
 
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	isAdmin := group.IsAdmin(session.UserID)
+	if !isAdmin {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "group join answer should from an admin of group", nil, session)
+		return
+	}
+
+	msgId := msg.GetPlainMsg().GetGroupOpRet().MsgId
+	pk := db.ComputePk(groupInfo.GroupId)
+	record, err := Globals.scyllaCli.FindGroupOpExact(pk, groupInfo.GroupId, msgId)
+	if record == nil || err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "reference msgId is not correct", nil, session)
+		return
+	}
+
+	ret := model.UserOpResultOk
+	strRet := strings.ToLower(msg.GetPlainMsg().GetGroupOpRet().GetResult())
+	if strRet == "refuse" {
+		ret = model.UserOpResultRefuse
+	} else if strRet == "accept" {
+		ret = model.UserOpResultOk
+	} else {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "result must be accept or refuse", nil, session)
+		return
+	}
+
+	if record.Ret != 0 {
+		if int(record.Ret) == ret {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNone), "request has been answered", map[string]string{
+				"uid": strconv.FormatInt(record.Uid2, 10),
+			}, session)
+			return
+		} else {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTStage), "request has been answered", map[string]string{
+				"uid": strconv.FormatInt(record.Uid2, 10),
+			}, session)
+			return
+		}
+	}
+
+	// 更新记录
+	err = Globals.scyllaCli.SetGroupOpResult(db.ComputePk(group.GroupId), groupInfo.GroupId, msgId, session.UserID, ret == model.UserOpResultOk)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "update scylladb error", nil, session)
+		return
+	}
+
+	if ret == model.UserOpResultOk {
+		onJoinGroupOk(group, msg, session)
+	} else {
+		// 拒绝了用户的请求
+		trySendMsgToUser(record.Uid1, msg)
+	}
 }
 
 // 退群申请
@@ -575,10 +683,13 @@ func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 	groupInfo *pbmodel.GroupInfo,
 	reqMem *pbmodel.GroupMember,
 	members []*pbmodel.GroupMember,
+	sendId, msgId int64,
 	ret string, detail string, session *Session) *pbmodel.Msg {
 	msgGroupOpRet := pbmodel.GroupOpResult{
 		ReqMem:    reqMem,
 		Operation: opCode,
+		SendId:    sendId,
+		MsgId:     msgId,
 		Result:    ret,
 		Detail:    detail,
 		Group:     groupInfo,
@@ -603,18 +714,6 @@ func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 		},
 	}
 	return &msg
-}
-
-// 应答群组操作结果
-func sendBackGroupOpRet(opCode pbmodel.GroupOperationType,
-	groupInfo *pbmodel.GroupInfo,
-	reqMem *pbmodel.GroupMember,
-	members []*pbmodel.GroupMember,
-	ret string, detail string, session *Session) {
-
-	msg := createGroupOpRetMsg(opCode, groupInfo, reqMem, members, ret, detail, session)
-	notifyGroupMembers(groupInfo.GroupId, msg)
-
 }
 
 // 从数据库中加载Group基础信息
@@ -653,4 +752,177 @@ func findGroup(gid int64) (*model.Group, error) {
 
 	return group, nil
 
+}
+
+// 加入一个群，随便进的那种
+func onJoinGroupOk(group *model.Group, msg *pbmodel.Msg, session *Session) {
+	// 保存成员信息
+	nick := ""
+	user := session.GetUser()
+	if user != nil {
+		nick = user.GetNickName()
+	}
+
+	mem := model.GroupMemberStore{
+		Pk:   db.ComputePk(group.GroupId),
+		Gid:  group.GroupId,
+		Uid:  session.UserID,
+		Tm:   utils.GetTimeStamp(),
+		Role: model.RoleGroupMember,
+		Nick: nick,
+	}
+
+	item := model.UserInGStore{
+		Pk:  db.ComputePk(session.UserID),
+		Uid: session.UserID,
+		Gid: group.GroupId,
+	}
+	// 保存数据库
+	err := Globals.scyllaCli.InsertGroupMember(&mem, &item)
+	if err != nil {
+		Globals.Logger.Fatal("InsertGroupMember() err", zap.Error(err))
+	}
+
+	// redis的群所有成员
+	err = Globals.redisCli.SetUserJoinGroup(session.UserID, group.GroupId)
+	if err != nil {
+		Globals.Logger.Fatal("SetUserJoinGroup() err", zap.Error(err))
+	}
+	index := int64(Globals.Config.Server.HostIndex)
+	err = Globals.redisCli.SetActiveGroupMembers(group.GroupId, index, []int64{session.UserID})
+	if err != nil {
+		Globals.Logger.Fatal("SetActiveGroupMembers() err", zap.Error(err))
+	}
+
+	// 更新内存的部分
+	group.AddMember(user.UserId, nick)
+	// 设置用户在群中
+	user.SetInGroup([]int64{group.GroupId})
+
+	addedMember := &pbmodel.GroupMember{
+		UserId:  session.UserID,
+		Nick:    nick,
+		Icon:    user.Icon,
+		Role:    "",
+		GroupId: group.GroupId,
+		Params:  nil,
+	}
+	// 最后通知所有的成员有新伙伴
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+		group.GetGroupInfo(),
+		nil,
+		[]*pbmodel.GroupMember{
+			addedMember,
+		},
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(group.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	// 通知该用户所在的机器更改user
+	if Globals.Config.Server.ClusterMode {
+
+	}
+}
+
+// 加入一个群时候，需要回答问题，这里直接检查问题的回答是否正确
+// params["joinquestion"]
+// params["joinanswer"]
+func onJoinGroupNeedQuestion(group *model.Group, msg *pbmodel.Msg, session *Session) error {
+	question := group.GetParamByKey("joinquestion")
+	answer := group.GetParamByKey("joinanswer")
+
+	if question == "" || answer == "" {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "group question or answer is null", nil, session)
+		return errors.New("no answer in msg")
+	}
+
+	params := msg.GetPlainMsg().GetGroupOpRet().GetParams()
+	if params == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "should answer the question", map[string]string{
+			"question": question,
+		}, session)
+		return errors.New("no answer in msg")
+	}
+	answerOfUser, ok := params["answer"]
+	if !ok || answerOfUser == "" {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "should answer the question", map[string]string{
+			"question": question,
+		}, session)
+		return errors.New("no answer in msg")
+	}
+
+}
+
+// 加入一个群，需要管理员审核, 那么需要发消息给所有的的管理员
+func onJoinGroupNeedAdmin(group *model.Group, msg *pbmodel.Msg, session *Session) error {
+	// 先把这个消息保存到群的操作记录中
+	id := Globals.snow.GenerateID()
+	pk := db.ComputePk(group.GroupId)
+	record := model.CommonOpStore{
+		Pk:   pk,
+		Gid:  group.GroupId,
+		Uid1: session.UserID,
+		Uid2: 0,
+		Id:   id,
+		Usid: 0,
+		Tm:   time.Now().UnixMilli(),
+		Tm1:  0,
+		Tm2:  0,
+		Io:   0,
+		St:   0,
+		Cmd:  1,
+		Ret:  0,
+		Mask: 0,
+		Ref:  0,
+		Draf: nil,
+	}
+	err := Globals.scyllaCli.SaveGroupOp(&record)
+	if err != nil {
+		return err
+	}
+
+	adminList := group.GetAdminMembers()
+	if adminList == nil || len(adminList) == 0 {
+		return errors.New("admins and owner is nil")
+	}
+
+	// 尝试向左右在线的用户发送消息
+	if msg.GetPlainMsg().GetGroupOpRet().GetReqMem() == nil {
+		user := session.GetUser()
+		if user == nil {
+			Globals.Logger.Fatal("onJoinGroupNeedAdmin() get user from session meet error")
+			return errors.New("can't find user in cache")
+		}
+
+		msg.GetPlainMsg().GetGroupOpRet().ReqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    user.GetNickName(),
+			Icon:    user.GetIcon(),
+			Role:    "",
+			GroupId: group.GroupId,
+			Params:  nil,
+		}
+	}
+	trySendMsgToUserList(adminList, msg)
+
+	// 通知原用户等待
+	// 最后通知所有的成员有新伙伴
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+		group.GetGroupInfo(),
+		nil,
+		nil,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"wait",
+		"", session)
+
+	trySendMsgToUser(session.UserID, msgRet)
+
+	return nil
 }
