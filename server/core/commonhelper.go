@@ -228,9 +228,9 @@ func LoadUserNew(session *Session) error {
 	}
 	//userinfo := &userInfos[0]
 
-	session.TempUserInfo = &userInfos[0]
+	session.TempUserInfo = userInfos[0]
 	// 2) 更新redis
-	err = Globals.redisCli.SetUserInfo(&userInfos[0])
+	err = Globals.redisCli.SetUserInfo(userInfos[0])
 
 	// 3) 内存缓存, 多终端登录，所以需要，但是这里是新注册，所以冲突的概率几乎为0
 	user, ok := Globals.uc.GetUser(session.UserID)
@@ -238,7 +238,7 @@ func LoadUserNew(session *Session) error {
 		user.AddSessionID(session.Sid)
 	} else {
 		// 保存用户信息
-		user = model.NewUserFromInfo(&userInfos[0])
+		user = model.NewUserFromInfo(userInfos[0])
 		user.MaskLoad = model.UserLoadStatusInfo // 目前仅仅加载了基本的数据
 		user.AddSessionID(session.Sid)
 		Globals.uc.SetOrUpdateUser(user.UserId, user) // 插入或者合并
@@ -368,7 +368,7 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 			Globals.Logger.Error("loadUserFromDb() load user err, find count of user", zap.Int("userCount", len(userInfos)))
 			return errors.New("load user count is not 1")
 		}
-		userInfo := &userInfos[0]
+		userInfo := userInfos[0]
 		Globals.redisCli.SetUserInfo(userInfo) // 同步到redis
 
 		loadedUser := model.NewUserFromInfo(userInfo)
@@ -488,6 +488,22 @@ func findUserMongoRedis(uid int64) ([]pbmodel.UserInfo, error) {
 }
 
 // 后面会有各种地方需要找到好友的信息
+func findUser(uid int64) (*model.User, bool, error) {
+	user, ok := Globals.uc.GetUser(uid)
+	if ok && user != nil {
+		return user, true, nil
+	}
+
+	userInfo, err := LoadUserByFriend(uid)
+	if userInfo != nil {
+		user = model.NewUserFromInfo(userInfo)
+		Globals.uc.SetOrUpdateUser(uid, user)
+		return user, false, nil
+	} else {
+		return nil, false, err
+	}
+}
+
 func findUserInfo(uid int64) (*pbmodel.UserInfo, bool, error) {
 	user, ok := Globals.uc.GetUser(uid)
 	if ok && user != nil {
@@ -525,7 +541,7 @@ func LoadUserByFriend(fid int64) (*pbmodel.UserInfo, error) {
 	if len(userInfos) == 0 {
 		return nil, errors.New("no user in db")
 	}
-	userInfo = &userInfos[0]
+	userInfo = userInfos[0]
 	Globals.redisCli.SetUserInfo(userInfo) // 同步到redis
 
 	return userInfo, nil

@@ -213,7 +213,7 @@ func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 		Globals.scyllaCli.InsertGroupMember(&member, &item)
 
 		// redis, 用户所在群
-		Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId)
+		Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, memUser.NickName)
 
 		// 添加到内存
 		group.AddMember(memUser.UserId, memUser.NickName)
@@ -414,12 +414,12 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 	Globals.scyllaCli.DeleteGroupMember(db.ComputePk(groupInfo.GroupId), db.ComputePk(uid), groupInfo.GroupId, uid)
 
 	// 从成员表中删除
-	Globals.redisCli.RemoveGroupMembers(groupInfo.GroupId, []int64{uid})
+	// 标记用户的所属群
+	Globals.redisCli.SetUserLeaveGroup(uid, groupInfo.GroupId)
+
 	// 从分布表中删除
 	index := int64(Globals.Config.Server.HostIndex)
 	Globals.redisCli.RemoveActiveGroupMembersLua(groupInfo.GroupId, index, []int64{uid})
-	// 标记用户的所属群
-	Globals.redisCli.SetUserLeaveGroup(uid, groupInfo.GroupId)
 
 	// 内存中删除成员
 	group.RemoveMember(uid)
@@ -518,7 +518,7 @@ func handleGroupJoinReq(msg *pbmodel.Msg, session *Session) {
 		onJoinGroupNeedAdmin(group, msg, session)
 		break
 	default: // ""  | "any"
-		onJoinGroupOk(group, msg, session)
+		onJoinGroupOk(session.GetUser(), group, msg, session)
 	}
 
 }
@@ -583,8 +583,11 @@ func handleGroupJoinAnswer(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	// 这里大概率是直接从缓存加载的，除非申请后下线了，而且过去一周了
+	user, _, _ := findUser(record.Uid1)
+
 	if ret == model.UserOpResultOk {
-		onJoinGroupOk(group, msg, session)
+		onJoinGroupOk(user, group, msg, session)
 	} else {
 		// 拒绝了用户的请求
 		trySendMsgToUser(record.Uid1, msg)
@@ -594,15 +597,223 @@ func handleGroupJoinAnswer(msg *pbmodel.Msg, session *Session) {
 // 退群申请
 func handleGroupMemberQuit(msg *pbmodel.Msg, session *Session) {
 
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	uid := session.UserID
+	// 同时操作2个表
+	Globals.scyllaCli.DeleteGroupMember(db.ComputePk(groupInfo.GroupId), db.ComputePk(uid), groupInfo.GroupId, uid)
+
+	// 从成员表中删除
+	// 标记用户的所属群
+	Globals.redisCli.SetUserLeaveGroup(uid, groupInfo.GroupId)
+
+	// 从分布表中删除
+	index := int64(Globals.Config.Server.HostIndex)
+	Globals.redisCli.RemoveActiveGroupMembersLua(groupInfo.GroupId, index, []int64{uid})
+
+	// 内存中删除成员
+	group.RemoveMember(uid)
+
+	// 内存中，用户退出组，
+	user := session.GetUser()
+	if user != nil {
+		user.SetLeaveGroup(groupInfo.GroupId)
+	}
+
+	// 通知所有的用户
+	reqMem := msg.GetPlainMsg().GetGroupOp().GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    "",
+			Icon:    "",
+			Role:    "",
+			GroupId: groupInfo.GroupId,
+			Params:  nil,
+		}
+	}
+
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupQuit,
+		group.GetGroupInfo(),
+		reqMem,
+		nil,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	// 通知该用户所在的机器更改user
+	if Globals.Config.Server.ClusterMode {
+
+	}
 }
 
 // 设置某人为群管理员
 func handleGroupSetSomeoneAsAdmin(msg *pbmodel.Msg, session *Session) {
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
 
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	isOwner := group.IsOwner(session.UserID)
+	if !isOwner {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group set admin operation, you are not owner", nil, session)
+		return
+	}
+
+	members := msg.GetPlainMsg().GetGroupOp().GetMembers()
+	for _, mem := range members {
+		nick, ok := group.HasMember(mem.UserId)
+		if !ok {
+			continue
+		}
+		// 更新数据库
+		err := Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), groupInfo.GroupId, mem.UserId, model.RoleGroupAdmin|model.RoleGroupMember)
+		if err != nil {
+
+		}
+		// 更新redis
+		data := model.GroupMemberStore{
+			Uid:  mem.UserId,
+			Role: model.RoleGroupAdmin,
+			Nick: nick,
+		}
+		Globals.redisCli.SetGroupMembers(groupInfo.GroupId, []model.GroupMemberStore{data})
+
+		// 更新内存
+		group.AddAdmin(mem.UserId)
+
+	}
+
+	// 通知所有用户
+	reqMem := msg.GetPlainMsg().GetGroupOp().GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    "",
+			Icon:    "",
+			Role:    "",
+			GroupId: 0,
+			Params:  nil,
+		}
+	}
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupAddAdmin,
+		group.GetGroupInfo(),
+		reqMem,
+		members,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	// 通知该用户所在的机器更改user
+	if Globals.Config.Server.ClusterMode {
+
+	}
 }
 
 // 删除管理员权限
 func handleGroupRemoveSomeoneFromAdmin(msg *pbmodel.Msg, session *Session) {
+
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	isOwner := group.IsOwner(session.UserID)
+	if !isOwner {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group delete admin operation, you are not owner", nil, session)
+		return
+	}
+
+	members := msg.GetPlainMsg().GetGroupOp().GetMembers()
+	for _, mem := range members {
+		nick, ok := group.HasMember(mem.UserId)
+		if !ok {
+			continue
+		}
+		// 更新数据库
+		err := Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), groupInfo.GroupId, mem.UserId, model.RoleGroupMember)
+		if err != nil {
+
+		}
+		// 更新redis
+		data := model.GroupMemberStore{
+			Uid:  mem.UserId,
+			Role: model.RoleGroupMember,
+			Nick: nick,
+		}
+		Globals.redisCli.SetGroupMembers(groupInfo.GroupId, []model.GroupMemberStore{data})
+
+		// 更新内存
+		group.RemoveAdmin(mem.UserId)
+
+	}
+
+	// 通知所有用户
+	reqMem := msg.GetPlainMsg().GetGroupOp().GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    "",
+			Icon:    "",
+			Role:    "",
+			GroupId: 0,
+			Params:  nil,
+		}
+	}
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupDelAdmin,
+		group.GetGroupInfo(),
+		reqMem,
+		members,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"", session)
+
+	// 通知所有用户
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	// 通知该用户所在的机器更改user
+	if Globals.Config.Server.ClusterMode {
+
+	}
 
 }
 
@@ -616,13 +827,158 @@ func handleSetMemberInfo(msg *pbmodel.Msg, session *Session) {
 
 }
 
-// 搜群
+// 搜群 params["keyword"]
 func handleGroupSearch(msg *pbmodel.Msg, session *Session) {
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	params := msgOp.GetParams()
+	if params == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a keyword in msg params", nil, session)
+		return
+	}
+
+	keyword, ok := params["keyword"]
+	if !ok {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a keyword in msg params", nil, session)
+		return
+	}
+
+	var msgRet *pbmodel.Msg = nil
+	id, err := strconv.ParseInt(keyword, 10, 64)
+	if err == nil {
+		group, _ := findGroup(id)
+		if group == nil {
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+				nil,
+				nil,
+				nil,
+				msg.GetPlainMsg().GetGroupOpRet().SendId,
+				Globals.snow.GenerateID(),
+				"fail",
+				"not find id", session)
+
+		} else {
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+				nil,
+				nil,
+				nil,
+				msg.GetPlainMsg().GetGroupOpRet().SendId,
+				Globals.snow.GenerateID(),
+				"ok",
+				"find it", session)
+			msgRet.GetPlainMsg().GetGroupOpRet().Groups = []*pbmodel.GroupInfo{group.GetGroupInfo()}
+
+		}
+	} else {
+		// 通过关键字搜索
+		lst, err := Globals.mongoCli.FindGroupByKeyword(keyword)
+		if lst == nil || err != nil {
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+				nil,
+				nil,
+				nil,
+				msg.GetPlainMsg().GetGroupOpRet().SendId,
+				Globals.snow.GenerateID(),
+				"fail",
+				"not find id", session)
+		} else {
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+				nil,
+				nil,
+				nil,
+				msg.GetPlainMsg().GetGroupOpRet().SendId,
+				Globals.snow.GenerateID(),
+				"ok",
+				"find it", session)
+			msgRet.GetPlainMsg().GetGroupOpRet().Groups = lst
+		}
+
+	}
+
+	// 最后通知所有的成员有新伙伴
+	session.SendMessage(msgRet)
 
 }
 
 // 搜群内的成员
 func handleGroupSearchMember(msg *pbmodel.Msg, session *Session) {
+
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	params := msgOp.GetParams()
+	if params == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a uid in msg params", nil, session)
+		return
+	}
+
+	keyword, ok := params["uid"]
+	if !ok {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a uid in msg params", nil, session)
+		return
+	}
+
+	groupInfo := msg.GetPlainMsg().GetGroupOpRet().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	pk := db.ComputePk(groupInfo.GroupId)
+	uid, err := strconv.ParseInt(keyword, 10, 64)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a valid uid in msg params", nil, session)
+		return
+	}
+
+	memberStoreList, err := Globals.scyllaCli.FindGroupMembers(pk, groupInfo.GroupId, uid, 100)
+	if memberStoreList == nil || len(memberStoreList) == 0 {
+
+		msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+			groupInfo,
+			nil,
+			nil,
+			msg.GetPlainMsg().GetGroupOpRet().SendId,
+			Globals.snow.GenerateID(),
+			"ok",
+			"do not has more members", session)
+
+		session.SendMessage(msgRet)
+		return
+	}
+
+	members := make([]*pbmodel.GroupMember, len(memberStoreList))
+	for index, mem := range memberStoreList {
+		// 查找资源
+		icon := ""
+		user, _, _ := findUserInfo(mem.Uid)
+		if user != nil {
+			icon = user.Icon
+		}
+
+		members[index] = &pbmodel.GroupMember{
+			UserId:  mem.Uid,
+			Nick:    mem.Nick,
+			Icon:    icon,
+			Role:    mem.GetRoleStr(),
+			GroupId: 0,
+			Params:  nil,
+		}
+	}
+
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+		groupInfo,
+		nil,
+		members,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"find some", session)
+
+	session.SendMessage(msgRet)
 
 }
 
@@ -665,7 +1021,7 @@ func saveNewGroup(groupInfo *pbmodel.GroupInfo, session *Session) (*model.Group,
 	err = Globals.scyllaCli.InsertGroupMember(&mem, &item)
 
 	// redis中
-	Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId)
+	Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, user.GetNickName())
 
 	// 将群信息添加到内存
 	g := model.NewGroupFromInfo(groupInfo)
@@ -716,6 +1072,37 @@ func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 	return &msg
 }
 
+//func loadGroupAdmins(group *model.Group) {
+//
+//}
+
+// 加载群的用户信息; 群的数量为2000上限，所以这里直接从数据库加载所有群用户，放到redis中
+func loadGroupMembers(group *model.Group) {
+	// 从redis中查找，如果找到了，
+	lst, err := Globals.redisCli.GetGroupMembers(group.GroupId)
+	if lst != nil && len(lst) > 0 {
+		group.SetMembers(lst)
+		return
+	}
+
+	// 从数据库中加载
+	memlist, err := Globals.scyllaCli.FindGroupMembers(db.ComputePk(group.GroupId), group.GroupId, 0, 2000)
+	if err != nil {
+		Globals.Logger.Fatal("loadGroupMembers db error", zap.Error(err))
+		return
+	}
+
+	// 同步到redis
+	err = Globals.redisCli.SetGroupMembers(group.GroupId, memlist)
+	// 如果错了，大不了下次再加载
+
+	// 同步到内存在中
+	if memlist != nil && len(memlist) > 0 {
+		group.SetMembers(memlist)
+	}
+
+}
+
 // 从数据库中加载Group基础信息
 func findGroup(gid int64) (*model.Group, error) {
 	group, ok := Globals.grc.GetGroup(gid)
@@ -728,6 +1115,8 @@ func findGroup(gid int64) (*model.Group, error) {
 	if groupInfo != nil {
 		group = model.NewGroupFromInfo(groupInfo)
 		Globals.grc.InsertGroup(gid, group)
+
+		loadGroupMembers(group)
 		return group, nil
 	}
 
@@ -749,16 +1138,16 @@ func findGroup(gid int64) (*model.Group, error) {
 	// 保存到内存
 	group = model.NewGroupFromInfo(groupInfo)
 	Globals.grc.InsertGroup(gid, group)
+	loadGroupMembers(group)
 
 	return group, nil
 
 }
 
 // 加入一个群，随便进的那种
-func onJoinGroupOk(group *model.Group, msg *pbmodel.Msg, session *Session) {
+func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, session *Session) {
 	// 保存成员信息
 	nick := ""
-	user := session.GetUser()
 	if user != nil {
 		nick = user.GetNickName()
 	}
@@ -784,7 +1173,7 @@ func onJoinGroupOk(group *model.Group, msg *pbmodel.Msg, session *Session) {
 	}
 
 	// redis的群所有成员
-	err = Globals.redisCli.SetUserJoinGroup(session.UserID, group.GroupId)
+	err = Globals.redisCli.SetUserJoinGroup(session.UserID, group.GroupId, nick)
 	if err != nil {
 		Globals.Logger.Fatal("SetUserJoinGroup() err", zap.Error(err))
 	}
@@ -857,6 +1246,16 @@ func onJoinGroupNeedQuestion(group *model.Group, msg *pbmodel.Msg, session *Sess
 		return errors.New("no answer in msg")
 	}
 
+	if answerOfUser != answer {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "answer is not correct", map[string]string{
+			"question": question,
+		}, session)
+		return errors.New("no answer in msg")
+	}
+
+	onJoinGroupOk(session.GetUser(), group, msg, session)
+
+	return nil
 }
 
 // 加入一个群，需要管理员审核, 那么需要发消息给所有的的管理员

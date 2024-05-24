@@ -46,7 +46,7 @@ func (me *Scylla) InsertGroupMember(gmem *model.GroupMemberStore, uing *model.Us
 }
 
 // 设置成员在群众的昵称和角色
-func (me *Scylla) SetGroupMemberNickRole(pk, gid, uid int64, nick string, role int32) error {
+func (me *Scylla) SetGroupMemberNickRole(pk int16, gid, uid int64, nick string, role int32) error {
 	builder := qb.Update(GroupMemberTableName)
 
 	builder.Set("nick", "role")
@@ -57,6 +57,22 @@ func (me *Scylla) SetGroupMemberNickRole(pk, gid, uid int64, nick string, role i
 
 	query.Consistency(gocql.One)
 	query.Bind(nick, role, pk, gid, uid)
+
+	err := query.Exec()
+	return err
+}
+
+func (me *Scylla) SetGroupMemberRole(pk int16, gid, uid int64, role int32) error {
+	builder := qb.Update(GroupMemberTableName)
+
+	builder.Set("role")
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.Eq("uid"))
+
+	query := builder.Query(me.session)
+	defer query.Release()
+
+	query.Consistency(gocql.One)
+	query.Bind(role, pk, gid, uid)
 
 	err := query.Exec()
 	return err
@@ -92,7 +108,7 @@ func (me *Scylla) FindUserInGroups(pk, uid, from int64, pageSize uint) ([]model.
 }
 
 // 查询组内成员列表
-func (me *Scylla) FindGroupMembers(pk, gid, from int64, pageSize uint) ([]model.GroupMemberStore, error) {
+func (me *Scylla) FindGroupMembers(pk int16, gid, from int64, pageSize uint) ([]model.GroupMemberStore, error) {
 	builder := qb.Select(GroupMemberTableName).Columns(metaGroupMembers.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.Gt("uid"))
 

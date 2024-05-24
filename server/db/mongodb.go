@@ -167,25 +167,25 @@ func (me *MongoDBExporter) CreateNewUser(u *pbmodel.UserInfo) error {
 }
 
 // 查找用户，
-func (me *MongoDBExporter) FindUserById(id int64) ([]pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserById(id int64) ([]*pbmodel.UserInfo, error) {
 
 	return me.FindUserByField("userid", id)
 }
 
 // 这个字段没有设置唯一索引，出于性能考虑，在更改名字的时候可以检测是否唯一，
-func (me *MongoDBExporter) FindUserByName(keyword string) ([]pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByName(keyword string) ([]*pbmodel.UserInfo, error) {
 	return me.FindUserByField("username", keyword)
 }
 
-func (me *MongoDBExporter) FindUserByEmail(keyword string) ([]pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByEmail(keyword string) ([]*pbmodel.UserInfo, error) {
 	return me.FindUserByField("email", keyword)
 }
 
-func (me *MongoDBExporter) FindUserByPhone(keyword string) ([]pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByPhone(keyword string) ([]*pbmodel.UserInfo, error) {
 	return me.FindUserByField("phone", keyword)
 }
 
-func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([]pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([]*pbmodel.UserInfo, error) {
 	collection := me.db.Collection(UserTableName)
 
 	//var filter bson.M
@@ -211,16 +211,34 @@ func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([
 	}
 	defer cursor.Close(context.Background())
 
-	var users []pbmodel.UserInfo
-	if err = cursor.All(context.Background(), &users); err != nil {
-		return nil, err
+	var users []*pbmodel.UserInfo
+	//if err = cursor.All(context.Background(), &users); err != nil {
+	//	return nil, err
+	//}
+	count := 0
+	for cursor.Next(context.Background()) {
+		var user pbmodel.UserInfo
+		if err = cursor.Decode(&user); err != nil {
+			continue
+		}
+		users = append(users, &user)
+		count++
+
+		// 检查结果数量是否达到限制
+		if count >= limit {
+			break
+		}
+	}
+
+	if count == 0 {
+		return nil, nil
 	}
 
 	return users, nil
 }
 
 // 根据用户名、邮件或手机号进行搜索
-func (me *MongoDBExporter) FindUserByKeyword(keyword string) ([]pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByKeyword(keyword string) ([]*pbmodel.UserInfo, error) {
 	collection := me.db.Collection(UserTableName)
 
 	// 构建查询条件
@@ -245,9 +263,28 @@ func (me *MongoDBExporter) FindUserByKeyword(keyword string) ([]pbmodel.UserInfo
 	}
 	defer cursor.Close(context.Background())
 
-	var users []pbmodel.UserInfo
-	if err := cursor.All(context.Background(), &users); err != nil {
-		return nil, err
+	var users []*pbmodel.UserInfo
+	//if err := cursor.All(context.Background(), &users); err != nil {
+	//	return nil, err
+	//}
+
+	count := 0
+	for cursor.Next(context.Background()) {
+		var user pbmodel.UserInfo
+		if err = cursor.Decode(&user); err != nil {
+			continue
+		}
+		users = append(users, &user)
+		count++
+
+		// 检查结果数量是否达到限制
+		if count >= limit {
+			break
+		}
+	}
+
+	if count == 0 {
+		return nil, nil
 	}
 
 	return users, nil
@@ -442,7 +479,9 @@ func (me *MongoDBExporter) FindGroupById(id int64) ([]pbmodel.GroupInfo, error) 
 }
 
 // 通过名字或者TAG字段来查找
-func (me *MongoDBExporter) FindGroupByKeyword(key string) ([]pbmodel.GroupInfo, error) {
+const limit = 100
+
+func (me *MongoDBExporter) FindGroupByKeyword(key string) ([]*pbmodel.GroupInfo, error) {
 	collection := me.db.Collection(GroupTableName)
 
 	// 构建查询条件，不区分大小写了，影响性能，精确查找
@@ -465,9 +504,29 @@ func (me *MongoDBExporter) FindGroupByKeyword(key string) ([]pbmodel.GroupInfo, 
 	}
 	defer cursor.Close(context.Background())
 
-	var groups []pbmodel.GroupInfo
-	if err := cursor.All(context.Background(), &groups); err != nil {
-		return nil, err
+	cursor.SetMaxTime(time.Second * 10)
+	var groups []*pbmodel.GroupInfo
+	//if err = cursor.All(context.Background(), &groups); err != nil {
+	//	return nil, err
+	//}
+
+	count := 0
+	for cursor.Next(context.Background()) {
+		var group pbmodel.GroupInfo
+		if err = cursor.Decode(&group); err != nil {
+			continue
+		}
+		groups = append(groups, &group)
+		count++
+
+		// 检查结果数量是否达到限制
+		if count >= limit {
+			break
+		}
+	}
+
+	if groups == nil || len(groups) == 0 {
+		return nil, nil
 	}
 
 	return groups, nil

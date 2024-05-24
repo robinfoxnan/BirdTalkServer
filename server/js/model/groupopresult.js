@@ -48,7 +48,7 @@ if (goog.DEBUG && !COMPILED) {
  * @private {!Array<number>}
  * @const
  */
-proto.model.GroupOpResult.repeatedFields_ = [8];
+proto.model.GroupOpResult.repeatedFields_ = [8,10];
 
 
 
@@ -90,7 +90,9 @@ proto.model.GroupOpResult.toObject = function(includeInstance, msg) {
     msgid: jspb.Message.getFieldWithDefault(msg, 7, 0),
     membersList: jspb.Message.toObjectList(msg.getMembersList(),
     proto.model.GroupMember.toObject, includeInstance),
-    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
+    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : [],
+    groupsList: jspb.Message.toObjectList(msg.getGroupsList(),
+    proto.model.GroupInfo.toObject, includeInstance)
   };
 
   if (includeInstance) {
@@ -167,6 +169,11 @@ proto.model.GroupOpResult.deserializeBinaryFromReader = function(msg, reader) {
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
          });
+      break;
+    case 10:
+      var value = new proto.model.GroupInfo;
+      reader.readMessage(value,proto.model.GroupInfo.deserializeBinaryFromReader);
+      msg.addGroups(value);
       break;
     default:
       reader.skipField();
@@ -259,6 +266,14 @@ proto.model.GroupOpResult.serializeBinaryToWriter = function(message, writer) {
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
     f.serializeBinary(9, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
+  f = message.getGroupsList();
+  if (f.length > 0) {
+    writer.writeRepeatedMessage(
+      10,
+      f,
+      proto.model.GroupInfo.serializeBinaryToWriter
+    );
   }
 };
 
@@ -485,5 +500,43 @@ proto.model.GroupOpResult.prototype.getParamsMap = function(opt_noLazyCreate) {
 proto.model.GroupOpResult.prototype.clearParamsMap = function() {
   this.getParamsMap().clear();
   return this;};
+
+
+/**
+ * repeated GroupInfo groups = 10;
+ * @return {!Array<!proto.model.GroupInfo>}
+ */
+proto.model.GroupOpResult.prototype.getGroupsList = function() {
+  return /** @type{!Array<!proto.model.GroupInfo>} */ (
+    jspb.Message.getRepeatedWrapperField(this, proto.model.GroupInfo, 10));
+};
+
+
+/**
+ * @param {!Array<!proto.model.GroupInfo>} value
+ * @return {!proto.model.GroupOpResult} returns this
+*/
+proto.model.GroupOpResult.prototype.setGroupsList = function(value) {
+  return jspb.Message.setRepeatedWrapperField(this, 10, value);
+};
+
+
+/**
+ * @param {!proto.model.GroupInfo=} opt_value
+ * @param {number=} opt_index
+ * @return {!proto.model.GroupInfo}
+ */
+proto.model.GroupOpResult.prototype.addGroups = function(opt_value, opt_index) {
+  return jspb.Message.addToRepeatedWrapperField(this, 10, opt_value, proto.model.GroupInfo, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.model.GroupOpResult} returns this
+ */
+proto.model.GroupOpResult.prototype.clearGroupsList = function() {
+  return this.setGroupsList([]);
+};
 
 

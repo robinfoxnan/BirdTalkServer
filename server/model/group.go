@@ -19,14 +19,13 @@ const (
 )
 
 type GroupMember struct {
-	Uid  int64
 	Nick string
 }
 
 type Group struct {
 	pbmodel.GroupInfo
 
-	Owner   *GroupMember
+	Owner   int64
 	Admins  map[int64]*GroupMember
 	Members map[int64]*GroupMember
 
@@ -86,7 +85,7 @@ func (g *Group) GetGroupInfo() *pbmodel.GroupInfo {
 func NewGroupFromInfo(info *pbmodel.GroupInfo) *Group {
 	return &Group{
 		GroupInfo:    *info,
-		Owner:        nil,
+		Owner:        0,
 		Admins:       make(map[int64]*GroupMember),
 		Members:      make(map[int64]*GroupMember),
 		Mu:           sync.Mutex{},
@@ -99,9 +98,46 @@ func (g *Group) SetOwner(uid int64, nick string) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
-	g.Owner = &GroupMember{
-		Uid:  uid,
-		Nick: nick,
+	g.Owner = uid
+	g.Members[uid] = &GroupMember{Nick: nick}
+}
+
+func (g *Group) AddAdmin(uid int64) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	g.Admins[uid] = g.Members[uid]
+}
+
+func (g *Group) RemoveAdmin(uid int64) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	delete(g.Admins, uid)
+}
+
+func (g *Group) HasMember(uid int64) (string, bool) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	m, ok := g.Members[uid]
+	if ok {
+		return m.Nick, true
+	}
+	return "", false
+}
+
+// 加载数据库的内容
+func (g *Group) SetMembers(lst []GroupMemberStore) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	for _, mem := range lst {
+		g.Members[mem.Uid] = &GroupMember{Nick: mem.Nick}
+		if mem.Role == RoleGroupOwner {
+			g.Owner = mem.Uid
+		} else if mem.Role == RoleGroupAdmin {
+			g.Admins[mem.Uid] = &GroupMember{Nick: mem.Nick}
+		}
 	}
 }
 
@@ -110,7 +146,7 @@ func (g *Group) AddMember(uid int64, nick string) {
 	defer g.Mu.Unlock()
 
 	member := &GroupMember{
-		Uid:  uid,
+		//Uid:  uid,
 		Nick: nick,
 	}
 
@@ -150,8 +186,8 @@ func (g *Group) GetMembers() []int64 {
 
 	members := make([]int64, len(g.Members))
 	index := 0
-	for _, v := range g.Members {
-		members[index] = v.Uid
+	for k, _ := range g.Members {
+		members[index] = k
 		index++
 	}
 
@@ -162,24 +198,15 @@ func (g *Group) GetMembers() []int64 {
 func (g *Group) IsOwner(uid int64) bool {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
-	if g.Owner == nil {
-		return false
-	}
 
-	if g.Owner.Uid == uid {
-		return true
-	}
-
-	return false
+	return g.Owner == uid
 }
 
 func (g *Group) IsAdmin(uid int64) bool {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
-	if g.Owner != nil {
-		if g.Owner.Uid == uid {
-			return true
-		}
+	if g.Owner == uid {
+		return true
 	}
 
 	for k, _ := range g.Admins {
@@ -242,15 +269,11 @@ func (g *Group) GetAdminMembers() []int64 {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
-	if g.Owner == nil {
-		return nil
-	}
-
 	members := make([]int64, len(g.Admins)+1)
-	members[0] = g.Owner.Uid
+	members[0] = g.Owner
 	index := 1
-	for _, v := range g.Admins {
-		members[index] = v.Uid
+	for k, _ := range g.Admins {
+		members[index] = k
 		index++
 	}
 

@@ -321,17 +321,21 @@ func (cli *RedisClient) GetUserInGroupPage(uid, offset, pageSize int64) (uint64,
 	return cli.ScanIntSet(keyUserInG, uint64(offset), pageSize)
 }
 
-// 用户加入群组
-func (cli *RedisClient) SetUserJoinGroup(uid, gid int64) error {
+// 用户加入群组，处理2处
+// 1） 用户参加的群列表
+// 2) 群全员用户的hash表
+func (cli *RedisClient) SetUserJoinGroup(uid, gid int64, nick string) error {
 
 	keyUserInG := GetUseringKey(uid)
 	keyGroupMem := GetGroupAllMembersKey(gid)
+	idStr := strconv.FormatInt(uid, 10)
 	// 创建事务
 	tx := cli.Cmd.TxPipeline()
 	// 清空集合
 	tx.SAdd(keyUserInG, gid)
 	tx.Expire(keyUserInG, DefaultUserTTL) // 如果不登录，7天后消失
-	tx.SAdd(keyGroupMem, uid)
+	//tx.SAdd(keyGroupMem, uid)
+	tx.HSet(keyGroupMem, idStr, nick)
 	// 执行事务
 	_, err := tx.Exec()
 
@@ -343,11 +347,13 @@ func (cli *RedisClient) SetUserLeaveGroup(uid, gid int64) error {
 
 	keyUserInG := GetUseringKey(uid)
 	keyGroupMem := GetGroupAllMembersKey(gid)
+	idStr := strconv.FormatInt(uid, 10)
 	// 创建事务
 	tx := cli.Cmd.TxPipeline()
 	// 清空集合
 	tx.SRem(keyUserInG, gid)
-	tx.SRem(keyGroupMem, uid)
+	//tx.SRem(keyGroupMem, uid)
+	tx.HDel(keyGroupMem, idStr)
 	// 执行事务
 	_, err := tx.Exec()
 

@@ -25,6 +25,20 @@ type GroupMemberStore struct {
 	Nick string
 }
 
+func (gms *GroupMemberStore) GetRoleStr() string {
+	switch gms.Role {
+	case RoleGroupOwner:
+		return "owner"
+	case RoleGroupAdmin:
+		return "admin"
+	case RoleGroupMemberRead:
+		return "readonly"
+	default:
+		return "normal"
+	}
+
+}
+
 type UserInGStore struct {
 	Pk  int16
 	Uid int64

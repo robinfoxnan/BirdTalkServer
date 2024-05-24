@@ -149,4 +149,5 @@ message GroupOpResult{
   int64 msgId = 7;                // 转发给用户的时候才有
   repeated GroupMember members = 8;  // 涉及的群组成员信息列表
   map<string, string> params = 9;
+  repeated GroupInfo groups = 10;
 }

@@ -1,11 +1,13 @@
 package db
 
 import (
+	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 // 从mongoDB加载后，需要设置到redis中
@@ -42,15 +44,80 @@ func (cli *RedisClient) GetGroupInfoById(gid int64) (*pbmodel.GroupInfo, error) 
 
 // ////////////////////////////////////////////////////////////////////////////////
 // 设置成员SET表
-func (cli *RedisClient) SetGroupMembers(gid int64, members []int64) error {
+//func (cli *RedisClient) SetGroupMembers(gid int64, members []int64) error {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.SetIntSet(keyName, members)
+//}
+//
+//// 添加到成员SET表
+//func (cli *RedisClient) AddGroupMembers(gid int64, members []int64) (int64, error) {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.AddIntSet(keyName, members)
+//}
+//
+//// 解散
+//func (cli *RedisClient) RemoveAllUserOfGroup(gid int64) error {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.RemoveKey(keyName)
+//}
+//
+//// 退出群聊的的删除
+//func (cli *RedisClient) RemoveGroupMembers(gid int64, members []int64) (int64, error) {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.RemoveIntSet(keyName, members)
+//}
+//
+//// 获取所有的用户成员
+//func (cli *RedisClient) GetGroupMembers(gid int64) ([]int64, error) {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.GetIntSet(keyName)
+//}
+//
+//// 计算成员个数
+//func (cli *RedisClient) GetGroupMembersCount(gid int64) (int64, error) {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.GetSetLen(keyName)
+//}
+//
+//func (cli *RedisClient) GetGroupMembersPage(gid, offset, pageSize int64) (uint64, []int64, error) {
+//	keyName := GetGroupAllMembersKey(gid)
+//	return cli.ScanIntSet(keyName, uint64(offset), pageSize)
+//}
+
+// 设置成员hash表
+func (cli *RedisClient) SetGroupMembers(gid int64, members []model.GroupMemberStore) error {
 	keyName := GetGroupAllMembersKey(gid)
-	return cli.SetIntSet(keyName, members)
+	setData := map[string]interface{}{}
+	for _, m := range members {
+		data := m.Nick
+		if (m.Role & model.RoleGroupAdmin) > 0 {
+			data = "*|" + m.Nick
+		} else if (m.Role & model.RoleGroupOwner) > 0 {
+			data = "#|" + m.Nick
+		}
+		idStr := strconv.FormatInt(m.Uid, 10)
+		setData[idStr] = data
+	}
+
+	return cli.SetHashMap(keyName, setData)
 }
 
-// 添加到成员SET表
-func (cli *RedisClient) AddGroupMembers(gid int64, members []int64) (int64, error) {
+// 添加到成员HASH表
+func (cli *RedisClient) AddGroupMembers(gid int64, uid int64, nick string, role int) error {
 	keyName := GetGroupAllMembersKey(gid)
-	return cli.AddIntSet(keyName, members)
+
+	idStr := strconv.FormatInt(uid, 10)
+	data := nick
+	if (role & model.RoleGroupAdmin) > 0 {
+		data = "*|" + nick
+	} else if (role & model.RoleGroupOwner) > 0 {
+		data = "#|" + nick
+	}
+	setData := map[string]interface{}{
+		idStr: data,
+	}
+
+	return cli.SetHashMap(keyName, setData)
 }
 
 // 解散
@@ -60,26 +127,84 @@ func (cli *RedisClient) RemoveAllUserOfGroup(gid int64) error {
 }
 
 // 退出群聊的的删除
-func (cli *RedisClient) RemoveGroupMembers(gid int64, members []int64) (int64, error) {
-	keyName := GetGroupAllMembersKey(gid)
-	return cli.RemoveIntSet(keyName, members)
-}
+//func (cli *RedisClient) RemoveGroupMembers(gid int64, uid int64) error {
+//	keyName := GetGroupAllMembersKey(gid)
+//
+//	idStr := strconv.FormatInt(uid, 10)
+//	return cli.RemoveHashMap(keyName, []string{idStr})
+//}
 
 // 获取所有的用户成员
-func (cli *RedisClient) GetGroupMembers(gid int64) ([]int64, error) {
+func (cli *RedisClient) GetGroupMembers(gid int64) ([]model.GroupMemberStore, error) {
 	keyName := GetGroupAllMembersKey(gid)
-	return cli.GetIntSet(keyName)
+	dataMap, err := cli.GetHashMap(keyName)
+	if err != nil || len(dataMap) == 0 {
+		return nil, err
+	}
+
+	lst := make([]model.GroupMemberStore, len(dataMap))
+	index := 0
+	for k, v := range dataMap {
+		uid, _ := strconv.ParseInt(k, 10, 64)
+		role := model.RoleGroupMember
+		nick := v
+		if strings.HasSuffix(v, "*|") {
+			role = model.RoleGroupAdmin
+			nick = strings.TrimLeft(v, "*|")
+
+		} else if strings.HasSuffix(v, "#|") {
+			role = model.RoleGroupOwner
+			nick = strings.TrimLeft(v, "#|")
+		}
+		lst[index] = model.GroupMemberStore{
+			Pk:   ComputePk(gid),
+			Gid:  gid,
+			Uid:  uid,
+			Role: int16(role),
+			Nick: nick,
+		}
+	}
+
+	return lst, nil
 }
 
 // 计算成员个数
-func (cli *RedisClient) GetGroupMembersCount(gid int64) (int64, error) {
-	keyName := GetGroupAllMembersKey(gid)
-	return cli.GetSetLen(keyName)
-}
+//func (cli *RedisClient) GetGroupMembersCount(gid int64) (int64, error) {
+//	keyName := GetGroupAllMembersKey(gid)
+//
+//}
 
-func (cli *RedisClient) GetGroupMembersPage(gid, offset, pageSize int64) (uint64, []int64, error) {
+func (cli *RedisClient) GetGroupMembersPage(gid int64, offset uint64, pageSize int64) ([]model.GroupMemberStore, uint64, error) {
 	keyName := GetGroupAllMembersKey(gid)
-	return cli.ScanIntSet(keyName, uint64(offset), pageSize)
+	offset, dataMap, err := cli.ScanHashKeys(keyName, offset, pageSize)
+	if err != nil {
+		return nil, offset, err
+	}
+
+	lst := make([]model.GroupMemberStore, len(dataMap))
+	index := 0
+	for k, v := range dataMap {
+		uid, _ := strconv.ParseInt(k, 10, 64)
+		role := model.RoleGroupMember
+		nick := v
+		if strings.HasSuffix(v, "*|") {
+			role = model.RoleGroupAdmin
+			nick = strings.TrimLeft(v, "*|")
+
+		} else if strings.HasSuffix(v, "#|") {
+			role = model.RoleGroupOwner
+			nick = strings.TrimLeft(v, "#|")
+		}
+		lst[index] = model.GroupMemberStore{
+			Pk:   ComputePk(gid),
+			Gid:  gid,
+			Uid:  uid,
+			Role: int16(role),
+			Nick: nick,
+		}
+	}
+
+	return lst, offset, nil
 }
 
 // ////////////////////////////////////////////////////////////////////////////////
