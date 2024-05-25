@@ -35,6 +35,27 @@ type Group struct {
 	Mu sync.Mutex
 }
 
+func CheckGroupInfoIsPrivate(g *pbmodel.GroupInfo) bool {
+	if g.Params == nil {
+		return false
+	}
+
+	b, ok := g.Params["visibility"]
+	if !ok {
+		return false
+	}
+	if strings.ToLower(b) == "private" {
+		return true
+	}
+
+	return false
+}
+
+// 不设置默认就是公开的
+func (g *Group) IsPrivate() bool {
+	return CheckGroupInfoIsPrivate(&g.GroupInfo)
+}
+
 func (g *Group) MergeGroup(other *Group) {
 
 }
@@ -132,11 +153,12 @@ func (g *Group) SetMembers(lst []GroupMemberStore) {
 	defer g.Mu.Unlock()
 
 	for _, mem := range lst {
-		g.Members[mem.Uid] = &GroupMember{Nick: mem.Nick}
+		data := &GroupMember{Nick: mem.Nick}
+		g.Members[mem.Uid] = data
 		if mem.Role == RoleGroupOwner {
 			g.Owner = mem.Uid
 		} else if mem.Role == RoleGroupAdmin {
-			g.Admins[mem.Uid] = &GroupMember{Nick: mem.Nick}
+			g.Admins[mem.Uid] = data
 		}
 	}
 }
@@ -209,13 +231,47 @@ func (g *Group) IsAdmin(uid int64) bool {
 		return true
 	}
 
-	for k, _ := range g.Admins {
-		if k == uid {
-			return true
-		}
+	_, ok := g.Admins[uid]
+	if ok {
+		return true
 	}
 
 	return false
+}
+
+func (g *Group) SetMemberNick(uid int64, nick string) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+
+	data, ok := g.Members[uid]
+	if ok {
+		data.Nick = nick
+	}
+
+	// 一般指向同一个指针
+	data, ok = g.Admins[uid]
+	if ok {
+		data.Nick = nick
+	}
+}
+
+func (g *Group) GetMemberRole(uid int64) (int, bool) {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	if uid == g.Owner {
+		return RoleGroupOwner | RoleGroupMember, true
+	}
+
+	_, ok := g.Admins[uid]
+	if ok {
+		return RoleGroupAdmin | RoleGroupMember, true
+	}
+
+	_, ok = g.Members[uid]
+	if ok {
+		return RoleGroupMember, true
+	}
+	return 0, false
 }
 
 // 设置活跃的最后时间

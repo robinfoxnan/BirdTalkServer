@@ -62,6 +62,22 @@ func (me *Scylla) SetGroupMemberNickRole(pk int16, gid, uid int64, nick string, 
 	return err
 }
 
+func (me *Scylla) SetGroupMemberNick(pk int16, gid, uid int64, nick string) error {
+	builder := qb.Update(GroupMemberTableName)
+
+	builder.Set("nick")
+	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.Eq("uid"))
+
+	query := builder.Query(me.session)
+	defer query.Release()
+
+	query.Consistency(gocql.One)
+	query.Bind(nick, pk, gid, uid)
+
+	err := query.Exec()
+	return err
+}
+
 func (me *Scylla) SetGroupMemberRole(pk int16, gid, uid int64, role int32) error {
 	builder := qb.Update(GroupMemberTableName)
 

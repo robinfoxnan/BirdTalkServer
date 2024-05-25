@@ -820,10 +820,190 @@ func handleGroupRemoveSomeoneFromAdmin(msg *pbmodel.Msg, session *Session) {
 // 转让群主
 func handleGroupTransferOwner(msg *pbmodel.Msg, session *Session) {
 
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	groupInfo := msgOp.GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group transfer owner operation, group info is null", nil, session)
+		return
+	}
+
+	group, err := findGroup(groupInfo.GroupId)
+	if err != nil || group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "do not find a group with id", nil, session)
+		return
+	}
+
+	isOwner := group.IsOwner(session.UserID)
+	if !isOwner {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "you are not the owner", nil, session)
+		return
+	}
+
+	memList := msgOp.GetMembers()
+	if memList == nil || len(memList) < 1 {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must give out the new owner in members", nil, session)
+		return
+	}
+
+	mem := memList[0]
+	// 检查member是否是群成员
+	nick, bHas := group.HasMember(mem.UserId)
+	if !bHas {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "new owner is not a member of the group", nil, session)
+		return
+	}
+
+	err = Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), group.GroupId, mem.UserId, model.RoleGroupOwner|model.RoleGroupMember)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "set new owner, db error", nil, session)
+		return
+	}
+
+	// 更新redis
+	memStore := model.GroupMemberStore{
+		Pk:   0,
+		Role: int16(model.RoleGroupOwner | model.RoleGroupMember),
+		Gid:  groupInfo.GroupId,
+		Uid:  mem.UserId,
+		Tm:   utils.GetTimeStamp(),
+		Nick: nick,
+	}
+	err = Globals.redisCli.SetGroupMembers(groupInfo.GroupId, []model.GroupMemberStore{memStore})
+	if err != nil {
+		Globals.Logger.Fatal("SetGroupMembers() redis error", zap.Error(err))
+	}
+
+	// 更新群主
+	group.SetOwner(mem.UserId, nick)
+
+	// 通知所有人
+	reqMem := msgOp.GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    nick,
+			Icon:    "",
+			Role:    "",
+			GroupId: 0,
+			Params:  nil,
+		}
+	}
+	// 生成回复消息
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupTransferOwner,
+		groupInfo,
+		reqMem,
+		memList,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"change owner", session)
+
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// todo:
+	// 如果是集群模式，通知其他的服务器同步内存中的信息
+	// 通知该用户所在的机器更改user
+	if Globals.Config.Server.ClusterMode {
+
+	}
 }
 
 // 设置自己的在群内的信息
 func handleSetMemberInfo(msg *pbmodel.Msg, session *Session) {
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	params := msgOp.GetParams()
+	if params == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a nick in msg params", nil, session)
+		return
+	}
+
+	nick, ok := params["nick"]
+	if !ok {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a nick in msg params", nil, session)
+		return
+	}
+
+	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
+
+	group, err := findGroup(groupInfo.GroupId)
+	if err != nil || group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "do not find a group with id", nil, session)
+		return
+	}
+
+	oldNick, bHas := group.HasMember(session.UserID)
+	if !bHas {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group id in not correct, you are not a member of it", nil, session)
+		return
+	}
+
+	reqMem := msgOp.GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    nick,
+			Icon:    "",
+			Role:    "",
+			GroupId: 0,
+			Params:  nil,
+		}
+	}
+
+	// 不用改
+	if oldNick == nick {
+		msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSetInfo,
+			groupInfo,
+			reqMem,
+			nil,
+			msg.GetPlainMsg().GetGroupOpRet().SendId,
+			Globals.snow.GenerateID(),
+			"ok",
+			"update nick", session)
+		session.SendMessage(msgRet)
+		return
+	}
+
+	err = Globals.scyllaCli.SetGroupMemberNick(db.ComputePk(groupInfo.GroupId), groupInfo.GroupId, session.UserID, nick)
+	if err != nil {
+		Globals.Logger.Fatal("", zap.Error(err))
+	}
+
+	role, _ := group.GetMemberRole(session.UserID)
+	memStore := model.GroupMemberStore{
+		Pk:   0,
+		Role: int16(role),
+		Gid:  groupInfo.GroupId,
+		Uid:  session.UserID,
+		Tm:   utils.GetTimeStamp(),
+		Nick: nick,
+	}
+	err = Globals.redisCli.SetGroupMembers(groupInfo.GroupId, []model.GroupMemberStore{memStore})
+	if err != nil {
+		Globals.Logger.Fatal("", zap.Error(err))
+	}
+
+	group.SetMemberNick(session.UserID, nick)
+
+	// 生成回复消息
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSetInfo,
+		groupInfo,
+		reqMem,
+		nil,
+		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		Globals.snow.GenerateID(),
+		"ok",
+		"update nick", session)
+
+	notifyGroupMembers(groupInfo.GroupId, msgRet)
+
+	// 同步到其他的主机
+	if Globals.Config.Server.ClusterMode {
+
+	}
 
 }
 
@@ -857,20 +1037,31 @@ func handleGroupSearch(msg *pbmodel.Msg, session *Session) {
 				"not find id", session)
 
 		} else {
-			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
-				nil,
-				nil,
-				nil,
-				msg.GetPlainMsg().GetGroupOpRet().SendId,
-				Globals.snow.GenerateID(),
-				"ok",
-				"find it", session)
-			msgRet.GetPlainMsg().GetGroupOpRet().Groups = []*pbmodel.GroupInfo{group.GetGroupInfo()}
-
+			if group.IsPrivate() {
+				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+					nil,
+					nil,
+					nil,
+					msg.GetPlainMsg().GetGroupOpRet().SendId,
+					Globals.snow.GenerateID(),
+					"fail",
+					"not find id", session)
+			} else {
+				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+					nil,
+					nil,
+					nil,
+					msg.GetPlainMsg().GetGroupOpRet().SendId,
+					Globals.snow.GenerateID(),
+					"ok",
+					"find it", session)
+				msgRet.GetPlainMsg().GetGroupOpRet().Groups = []*pbmodel.GroupInfo{group.GetGroupInfo()}
+			}
 		}
 	} else {
 		// 通过关键字搜索
-		lst, err := Globals.mongoCli.FindGroupByKeyword(keyword)
+		bFilter := !session.GetUser().IsSystemUser()
+		lst, err := Globals.mongoCli.FindGroupByKeyword(keyword, bFilter)
 		if lst == nil || err != nil {
 			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
 				nil,
@@ -881,6 +1072,7 @@ func handleGroupSearch(msg *pbmodel.Msg, session *Session) {
 				"fail",
 				"not find id", session)
 		} else {
+
 			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
 				nil,
 				nil,

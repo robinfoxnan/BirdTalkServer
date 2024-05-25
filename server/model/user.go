@@ -123,6 +123,10 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 	}
 }
 
+func (u *User) IsSystemUser() bool {
+	return u.UserId < 1000
+}
+
 // 用于给用户返回的数据
 func (u *User) GetUserInfo() *pbmodel.UserInfo {
 	uinfo := u.UserInfo

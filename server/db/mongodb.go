@@ -1,6 +1,7 @@
 package db
 
 import (
+	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"context"
 	"fmt"
@@ -481,7 +482,7 @@ func (me *MongoDBExporter) FindGroupById(id int64) ([]pbmodel.GroupInfo, error) 
 // 通过名字或者TAG字段来查找
 const limit = 100
 
-func (me *MongoDBExporter) FindGroupByKeyword(key string) ([]*pbmodel.GroupInfo, error) {
+func (me *MongoDBExporter) FindGroupByKeyword(key string, bFilter bool) ([]*pbmodel.GroupInfo, error) {
 	collection := me.db.Collection(GroupTableName)
 
 	// 构建查询条件，不区分大小写了，影响性能，精确查找
@@ -515,6 +516,12 @@ func (me *MongoDBExporter) FindGroupByKeyword(key string) ([]*pbmodel.GroupInfo,
 		var group pbmodel.GroupInfo
 		if err = cursor.Decode(&group); err != nil {
 			continue
+		}
+		// 过滤掉私有的
+		if bFilter {
+			if model.CheckGroupInfoIsPrivate(&group) {
+				continue
+			}
 		}
 		groups = append(groups, &group)
 		count++
