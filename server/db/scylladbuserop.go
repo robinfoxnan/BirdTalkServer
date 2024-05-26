@@ -2,6 +2,7 @@ package db
 
 import (
 	"birdtalk/server/model"
+	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -157,4 +158,36 @@ func (me *Scylla) FindUserOpForward(pk, uid, littleId int64, pageSize uint) ([]m
 		return nil, err
 	}
 	return lst, nil
+}
+
+func (me *Scylla) FindUserOpExact(pk int16, uid, msgId int64) (*model.CommonOpStore, error) {
+
+	builder := qb.Select(UserOpTableName).Columns(metaUserOp.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
+
+	builder.OrderBy("uid1", qb.ASC)
+	builder.OrderBy("id", qb.ASC)
+
+	//builder.AllowFiltering()
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, msgId)
+
+	var lst []model.CommonOpStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	if len(lst) < 1 {
+		return nil, errors.New("not find")
+	}
+	if len(lst) > 0 {
+		return nil, errors.New("too much")
+	}
+	return &lst[0], nil
 }

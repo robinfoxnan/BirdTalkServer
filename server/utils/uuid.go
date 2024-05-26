@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/google/uuid"
 	"math/rand"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -57,4 +58,11 @@ func GenerateCheckCode(length int) string {
 	}
 	//return string(shortID)
 	return "12345"
+}
+
+func GenerateCheckCodeInt32(length int) int {
+
+	code := GenerateCheckCode(length)
+	data, _ := strconv.Atoi(code)
+	return data
 }

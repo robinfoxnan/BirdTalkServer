@@ -126,7 +126,7 @@ func handleFriendFind(msg *pbmodel.Msg, session *Session) {
 
 		return
 	}
-	var userList []pbmodel.UserInfo
+	var userList []*pbmodel.UserInfo
 	var err error
 	switch strings.ToLower(mode) {
 	case "id":
@@ -222,7 +222,7 @@ func handleFriendApprove(msg *pbmodel.Msg, session *Session) {
 	// 向用户应答好友请求的结果
 	msgRet := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, strings.ToLower(result),
 		reqUserInfo,
-		[]pbmodel.UserInfo{*user.GetUserInfo()},
+		[]*pbmodel.UserInfo{user.GetUserInfo()},
 		friendOpRetMsg.GetParams(),
 		sendId,
 		msgId)
@@ -561,17 +561,13 @@ func sendForwardFriendOpReq(fid int64, params map[string]string, sendId, msgId i
 func newFriendOpResultMsg(opCode pbmodel.UserOperationType,
 	result string,
 	user *pbmodel.UserInfo,
-	userList []pbmodel.UserInfo, params map[string]string, sendId, msgId int64) *pbmodel.Msg {
+	userList []*pbmodel.UserInfo, params map[string]string, sendId, msgId int64) *pbmodel.Msg {
 
-	uList := make([]*pbmodel.UserInfo, len(userList))
-	for index, item := range userList {
-		uList[index] = &item
-	}
 	msgFriendOpRet := pbmodel.FriendOpResult{
 		Operation: opCode,
 		Result:    result,
 		User:      user,
-		Users:     uList,
+		Users:     userList,
 		SendId:    sendId,
 		MsgId:     msgId,
 		Params:    params,
@@ -600,7 +596,7 @@ func newFriendOpResultMsg(opCode pbmodel.UserOperationType,
 
 // 发送应答信息
 func sendBackFriendOpResult(opCode pbmodel.UserOperationType, result string, user *pbmodel.UserInfo,
-	userList []pbmodel.UserInfo, params map[string]string, session *Session, sendId, msgId int64) {
+	userList []*pbmodel.UserInfo, params map[string]string, session *Session, sendId, msgId int64) {
 
 	msg := newFriendOpResultMsg(opCode, result, user, userList, params, sendId, msgId)
 	//session.SendMessage(msg)
@@ -629,7 +625,7 @@ func saveAddFriendLog(uid1, uid2 int64, reqSendId, msgId int64, bFinish bool) er
 		Tm2:  0,
 		Io:   0,
 		St:   0,
-		Cmd:  int8(pbmodel.UserOperationType_AddFriend),
+		Cmd:  int8(model.CommonUserOpAddRequest),
 		Ret:  int8(ret),
 		Mask: 0,
 		Ref:  0,
@@ -700,7 +696,7 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 		sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
 			"reject",
 			nil,
-			[]pbmodel.UserInfo{*friendInfo},
+			[]*pbmodel.UserInfo{friendInfo},
 			nil,
 			session, friendOpMsg.SendId, friendOpMsg.MsgId)
 
@@ -728,7 +724,7 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 		sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
 			"question",
 			nil,
-			[]pbmodel.UserInfo{*friendInfo},
+			[]*pbmodel.UserInfo{friendInfo},
 			map[string]string{
 				"question": question,
 			},
@@ -837,7 +833,7 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
 		"ok",
 		user.GetUserInfo(),
-		[]pbmodel.UserInfo{*friendInfo},
+		[]*pbmodel.UserInfo{friendInfo},
 		nil,
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 

@@ -473,17 +473,17 @@ func LoadUserLogin(session *Session) error {
 }
 
 // 这个函数是给查询好友使用的
-func findUserMongoRedis(uid int64) ([]pbmodel.UserInfo, error) {
+func findUserMongoRedis(uid int64) ([]*pbmodel.UserInfo, error) {
 	user, ok := Globals.uc.GetUser(uid)
 	if ok && user != nil {
-		return []pbmodel.UserInfo{user.UserInfo}, nil
+		return []*pbmodel.UserInfo{&user.UserInfo}, nil
 	}
 
 	userInfo, err := LoadUserByFriend(uid)
 	if userInfo != nil {
-		return []pbmodel.UserInfo{*userInfo}, nil
+		return []*pbmodel.UserInfo{userInfo}, nil
 	} else {
-		return []pbmodel.UserInfo{}, err
+		return []*pbmodel.UserInfo{}, err
 	}
 }
 

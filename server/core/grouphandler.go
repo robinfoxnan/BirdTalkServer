@@ -476,15 +476,149 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 
 // 邀请某人
 func handleInviteSomeone(msg *pbmodel.Msg, session *Session) {
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	groupInfo := msgOp.GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroup(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+
+	isPrivate := group.IsPrivate()
+	if isPrivate {
+		isAdmin := group.IsAdmin(session.UserID)
+		if !isAdmin {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "you are not the admin of the private group", nil, session)
+			return
+		}
+	}
+
+	memList := msgOp.GetMembers()
+	if memList == nil || len(memList) < 1 {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must give out the invitee in members", nil, session)
+		return
+	}
+
+	user := session.GetUser()
+	reqMem := msgOp.GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    user.NickName,
+			Icon:    user.Icon,
+			Role:    "",
+			GroupId: groupInfo.GroupId,
+			Params:  nil,
+		}
+	}
+
+	for _, mem := range memList {
+		msgId := Globals.snow.GenerateID()
+		// 用户不存在就不能继续操作，否则后续的用户注册进来会造成脏数据
+		memUser, _, err := findUserInfo(mem.UserId)
+		if memUser == nil {
+			continue
+		}
+		code := utils.GenerateCheckCode(6)
+		code32, _ := strconv.Atoi(code)
+
+		record := model.CommonOpStore{
+			Pk:   db.ComputePk(session.UserID),
+			Uid1: session.UserID,
+			Uid2: mem.UserId,
+			Gid:  groupInfo.GroupId,
+			Id:   msgId,
+			Usid: msgOp.SendId,
+			Tm:   time.Now().UnixMilli(),
+			Tm1:  0,
+			Tm2:  0,
+			Io:   0,
+			St:   0,
+			Cmd:  model.CommonGroupOpInviteRequest,
+			Ret:  0,
+			Mask: int32(code32),
+			Ref:  0,
+			Draf: nil,
+		}
+		// todo: save the draft
+		pk2 := db.ComputePk(mem.UserId)
+		err = Globals.scyllaCli.SaveUserOp(&record, pk2)
+		if err != nil {
+			continue
+		}
+
+		// 通知被邀请人
+		msgNotice := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupInviteRequest,
+			group.GetGroupInfo(),
+			reqMem,
+			[]*pbmodel.GroupMember{
+				mem,
+			},
+			msgOp.SendId,
+			msgId,
+			"notify",
+			"group invitation", session)
+		trySendMsgToUser(mem.UserId, msgNotice)
+
+		// 恢复发出邀请的用户
+		msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupInviteRequest,
+			group.GetGroupInfo(),
+			reqMem,
+			[]*pbmodel.GroupMember{mem},
+			msgOp.SendId,
+			msgId,
+			"wait",
+			"group invitation", session)
+		trySendMsgToUser(session.UserID, msgRet)
+	}
 
 }
 
 // 邀请的回答
 func handleInviteAnswer(msg *pbmodel.Msg, session *Session) {
+	msgOpRet := msg.GetPlainMsg().GetGroupOpRet()
 
+	user := session.GetUser()
+	msgId := msgOpRet.GetMsgId()
+	record, _ := Globals.scyllaCli.FindUserOpExact(db.ComputePk(session.UserID), session.UserID, msgId)
+	if record == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "not find record of invitation", nil, session)
+		return
+	}
+
+	group, _ := findGroup(record.Gid)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group id in record  is wrong", nil, session)
+		return
+	}
+
+	reqMem := msgOpRet.GetReqMem()
+	// 这里不能为空，这里是邀请人
+	if reqMem == nil || reqMem.UserId != record.Uid2 {
+
+	}
+
+	result := strings.ToLower(msgOpRet.GetResult())
+	ret := model.UserOpResultRefuse
+	if result == "accept" {
+		ret = model.UserOpResultOk
+	}
+
+	// 记录到数据库中
+	Globals.scyllaCli.SetUserOpResult(db.ComputePk(reqMem.UserId), db.ComputePk(session.UserID),
+		reqMem.UserId, session.UserID, msgId, ret)
+
+	// 执行加入的各种操作
+	onJoinGroupOk(user, group, msg, session, "invitation")
 }
 
 // 公开群加入申请
+// todo: 应该加入存储个人的好友操作记录表中，否则申请的个人无法查询结果也无法同步到多终端
 func handleGroupJoinReq(msg *pbmodel.Msg, session *Session) {
 
 	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
@@ -518,7 +652,7 @@ func handleGroupJoinReq(msg *pbmodel.Msg, session *Session) {
 		onJoinGroupNeedAdmin(group, msg, session)
 		break
 	default: // ""  | "any"
-		onJoinGroupOk(session.GetUser(), group, msg, session)
+		onJoinGroupOk(session.GetUser(), group, msg, session, "any")
 	}
 
 }
@@ -587,7 +721,7 @@ func handleGroupJoinAnswer(msg *pbmodel.Msg, session *Session) {
 	user, _, _ := findUser(record.Uid1)
 
 	if ret == model.UserOpResultOk {
-		onJoinGroupOk(user, group, msg, session)
+		onJoinGroupOk(user, group, msg, session, "admin")
 	} else {
 		// 拒绝了用户的请求
 		trySendMsgToUser(record.Uid1, msg)
@@ -1264,10 +1398,6 @@ func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 	return &msg
 }
 
-//func loadGroupAdmins(group *model.Group) {
-//
-//}
-
 // 加载群的用户信息; 群的数量为2000上限，所以这里直接从数据库加载所有群用户，放到redis中
 func loadGroupMembers(group *model.Group) {
 	// 从redis中查找，如果找到了，
@@ -1336,8 +1466,8 @@ func findGroup(gid int64) (*model.Group, error) {
 
 }
 
-// 加入一个群，随便进的那种
-func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, session *Session) {
+// 加入一个群，成功了，
+func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, session *Session, fromWays string) {
 	// 保存成员信息
 	nick := ""
 	if user != nil {
@@ -1398,7 +1528,7 @@ func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, sessi
 		msg.GetPlainMsg().GetGroupOpRet().SendId,
 		Globals.snow.GenerateID(),
 		"ok",
-		"", session)
+		fromWays, session)
 
 	// 通知所有用户
 	notifyGroupMembers(group.GroupId, msgRet)
@@ -1445,7 +1575,7 @@ func onJoinGroupNeedQuestion(group *model.Group, msg *pbmodel.Msg, session *Sess
 		return errors.New("no answer in msg")
 	}
 
-	onJoinGroupOk(session.GetUser(), group, msg, session)
+	onJoinGroupOk(session.GetUser(), group, msg, session, "question")
 
 	return nil
 }
@@ -1467,7 +1597,7 @@ func onJoinGroupNeedAdmin(group *model.Group, msg *pbmodel.Msg, session *Session
 		Tm2:  0,
 		Io:   0,
 		St:   0,
-		Cmd:  1,
+		Cmd:  model.CommonGroupOpJoinRequest,
 		Ret:  0,
 		Mask: 0,
 		Ref:  0,
