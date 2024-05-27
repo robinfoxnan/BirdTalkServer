@@ -132,7 +132,7 @@ func (me *Scylla) SetUserOpResult(pk1, pk2 int16, uid1, uid2, msgId int64, resul
 }
 
 // 正向查找，如果从头开始查找，那么设置为littleId = 0
-func (me *Scylla) FindUserOpForward(pk, uid, littleId int64, pageSize uint) ([]model.CommonOpStore, error) {
+func (me *Scylla) FindUserOpForward(pk int16, uid, littleId int64, pageSize uint) ([]model.CommonOpStore, error) {
 
 	builder := qb.Select(UserOpTableName).Columns(metaUserOp.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))

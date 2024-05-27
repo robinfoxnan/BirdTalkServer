@@ -95,8 +95,9 @@ enum EncryptType{
 
 // 聊天类型2种：
 enum ChatType{
-  PrivateChatType = 0;
-  GroupChatType = 1;
+  ChatTypeNone = 0;
+  ChatTypeP2P = 1;
+  ChatTypeGroup = 2;
 }
 
 
@@ -147,12 +148,18 @@ message MsgChatReply {
   map<string, string> params = 30;
 }
 
-
 // 查询的类型：聊天数据，回执,关键字搜索
 enum QueryDataType {
-  QueryDataTypeData = 0;
-  QueryDataTypeReply = 1;
-  QueryDataTypeByTag = 2;
+  QueryDataTypeChatData = 0;
+  QueryDataTypeChatReply = 1;
+  QueryDataTypeFriendOP = 2;
+  QueryDataTypeGroupOP = 3;
+}
+// 同步方式，3种
+enum SynType {
+    SynTypeForward = 0;
+    SynTypeBackward = 1;
+    SynTypeBetween = 2;
 }
 // 登录后查询离线消息，或者查询某些超时的送达和已读
 // 向服务器上报自己当前的消息的位置，请求后续的部分
@@ -163,7 +170,7 @@ message MsgQuery{
     int64 groupId = 2 [jstype = JS_STRING];              // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
     int64 bigId = 3 [jstype = JS_STRING];                // 这里是消息的范围
     int64 littleId = 4 [jstype = JS_STRING];             // 消息范围
-    int32 synType = 5;                                   // 正向=0，反向=1
+    SynType synType = 5;                                   // 正向=0，反向=1
     int64 tm = 6 [jstype = JS_STRING];
 
     ChatType chatType = 7;                               // p2p, group
@@ -174,18 +181,20 @@ message MsgQuery{
 // 查询的回执
 message MsgQueryResult{
   int64 userId = 1 [jstype = JS_STRING];               // 用于存储的clusterKey
-  int64 anId = 2 [jstype = JS_STRING];                 // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
+  int64 groupId = 2 [jstype = JS_STRING];                 // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
   int64 bigId = 3 [jstype = JS_STRING];                // 这里是消息的范围
   int64 littleId = 4 [jstype = JS_STRING];             // 消息范围
-  int32 synType = 5;                                   // 正向=0，反向=1
+  SynType synType = 5;                                   // 正向=0，反向=1
   int64 tm = 6 [jstype = JS_STRING];
 
   ChatType chatType = 7;                               // p2p, group
   QueryDataType queryType = 8;                         // data, reply
   repeated MsgChat chatDataList = 11;
   repeated MsgChatReply chatReplyList = 12;
+  repeated FriendOpResult friendOpRetList = 13;
+  repeated GroupOpResult groupOpRetList = 14;
 
-  map<string, string> params = 13;
+  map<string, string> params = 30;
 }
 
 // 上传文件的消息

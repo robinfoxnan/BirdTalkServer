@@ -11,15 +11,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-goog.provide('proto.model.QueryDataType');
+goog.provide('proto.model.SynType');
 
 /**
  * @enum {number}
  */
-proto.model.QueryDataType = {
-  QUERYDATATYPECHATDATA: 0,
-  QUERYDATATYPECHATREPLY: 1,
-  QUERYDATATYPEFRIENDOP: 2,
-  QUERYDATATYPEGROUPOP: 3
+proto.model.SynType = {
+  SYNTYPEFORWARD: 0,
+  SYNTYPEBACKWARD: 1,
+  SYNTYPEBETWEEN: 2
 };
 

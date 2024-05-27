@@ -658,24 +658,32 @@ public final class MsgOuterClass {
   public enum ChatType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>PrivateChatType = 0;</code>
+     * <code>ChatTypeNone = 0;</code>
      */
-    PrivateChatType(0),
+    ChatTypeNone(0),
     /**
-     * <code>GroupChatType = 1;</code>
+     * <code>ChatTypeP2P = 1;</code>
      */
-    GroupChatType(1),
+    ChatTypeP2P(1),
+    /**
+     * <code>ChatTypeGroup = 2;</code>
+     */
+    ChatTypeGroup(2),
     UNRECOGNIZED(-1),
     ;
 
     /**
-     * <code>PrivateChatType = 0;</code>
+     * <code>ChatTypeNone = 0;</code>
      */
-    public static final int PrivateChatType_VALUE = 0;
+    public static final int ChatTypeNone_VALUE = 0;
     /**
-     * <code>GroupChatType = 1;</code>
+     * <code>ChatTypeP2P = 1;</code>
      */
-    public static final int GroupChatType_VALUE = 1;
+    public static final int ChatTypeP2P_VALUE = 1;
+    /**
+     * <code>ChatTypeGroup = 2;</code>
+     */
+    public static final int ChatTypeGroup_VALUE = 2;
 
 
     public final int getNumber() {
@@ -702,8 +710,9 @@ public final class MsgOuterClass {
      */
     public static ChatType forNumber(int value) {
       switch (value) {
-        case 0: return PrivateChatType;
-        case 1: return GroupChatType;
+        case 0: return ChatTypeNone;
+        case 1: return ChatTypeP2P;
+        case 2: return ChatTypeGroup;
         default: return null;
       }
     }
@@ -770,32 +779,40 @@ public final class MsgOuterClass {
   public enum QueryDataType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
-     * <code>QueryDataTypeData = 0;</code>
+     * <code>QueryDataTypeChatData = 0;</code>
      */
-    QueryDataTypeData(0),
+    QueryDataTypeChatData(0),
     /**
-     * <code>QueryDataTypeReply = 1;</code>
+     * <code>QueryDataTypeChatReply = 1;</code>
      */
-    QueryDataTypeReply(1),
+    QueryDataTypeChatReply(1),
     /**
-     * <code>QueryDataTypeByTag = 2;</code>
+     * <code>QueryDataTypeFriendOP = 2;</code>
      */
-    QueryDataTypeByTag(2),
+    QueryDataTypeFriendOP(2),
+    /**
+     * <code>QueryDataTypeGroupOP = 3;</code>
+     */
+    QueryDataTypeGroupOP(3),
     UNRECOGNIZED(-1),
     ;
 
     /**
-     * <code>QueryDataTypeData = 0;</code>
+     * <code>QueryDataTypeChatData = 0;</code>
      */
-    public static final int QueryDataTypeData_VALUE = 0;
+    public static final int QueryDataTypeChatData_VALUE = 0;
     /**
-     * <code>QueryDataTypeReply = 1;</code>
+     * <code>QueryDataTypeChatReply = 1;</code>
      */
-    public static final int QueryDataTypeReply_VALUE = 1;
+    public static final int QueryDataTypeChatReply_VALUE = 1;
     /**
-     * <code>QueryDataTypeByTag = 2;</code>
+     * <code>QueryDataTypeFriendOP = 2;</code>
      */
-    public static final int QueryDataTypeByTag_VALUE = 2;
+    public static final int QueryDataTypeFriendOP_VALUE = 2;
+    /**
+     * <code>QueryDataTypeGroupOP = 3;</code>
+     */
+    public static final int QueryDataTypeGroupOP_VALUE = 3;
 
 
     public final int getNumber() {
@@ -822,9 +839,10 @@ public final class MsgOuterClass {
      */
     public static QueryDataType forNumber(int value) {
       switch (value) {
-        case 0: return QueryDataTypeData;
-        case 1: return QueryDataTypeReply;
-        case 2: return QueryDataTypeByTag;
+        case 0: return QueryDataTypeChatData;
+        case 1: return QueryDataTypeChatReply;
+        case 2: return QueryDataTypeFriendOP;
+        case 3: return QueryDataTypeGroupOP;
         default: return null;
       }
     }
@@ -879,6 +897,127 @@ public final class MsgOuterClass {
     }
 
     // @@protoc_insertion_point(enum_scope:model.QueryDataType)
+  }
+
+  /**
+   * <pre>
+   * 同步方式，3种
+   * </pre>
+   *
+   * Protobuf enum {@code model.SynType}
+   */
+  public enum SynType
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>SynTypeForward = 0;</code>
+     */
+    SynTypeForward(0),
+    /**
+     * <code>SynTypeBackward = 1;</code>
+     */
+    SynTypeBackward(1),
+    /**
+     * <code>SynTypeBetween = 2;</code>
+     */
+    SynTypeBetween(2),
+    UNRECOGNIZED(-1),
+    ;
+
+    /**
+     * <code>SynTypeForward = 0;</code>
+     */
+    public static final int SynTypeForward_VALUE = 0;
+    /**
+     * <code>SynTypeBackward = 1;</code>
+     */
+    public static final int SynTypeBackward_VALUE = 1;
+    /**
+     * <code>SynTypeBetween = 2;</code>
+     */
+    public static final int SynTypeBetween_VALUE = 2;
+
+
+    public final int getNumber() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalArgumentException(
+            "Can't get the number of an unknown enum value.");
+      }
+      return value;
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     * @deprecated Use {@link #forNumber(int)} instead.
+     */
+    @java.lang.Deprecated
+    public static SynType valueOf(int value) {
+      return forNumber(value);
+    }
+
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
+    public static SynType forNumber(int value) {
+      switch (value) {
+        case 0: return SynTypeForward;
+        case 1: return SynTypeBackward;
+        case 2: return SynTypeBetween;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<SynType>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static final com.google.protobuf.Internal.EnumLiteMap<
+        SynType> internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<SynType>() {
+            public SynType findValueByNumber(int number) {
+              return SynType.forNumber(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new java.lang.IllegalStateException(
+            "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return model.MsgOuterClass.getDescriptor().getEnumTypes().get(6);
+    }
+
+    private static final SynType[] VALUES = values();
+
+    public static SynType valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int value;
+
+    private SynType(int value) {
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:model.SynType)
   }
 
   /**
@@ -1266,7 +1405,7 @@ public final class MsgOuterClass {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return model.MsgOuterClass.getDescriptor().getEnumTypes().get(6);
+      return model.MsgOuterClass.getDescriptor().getEnumTypes().get(7);
     }
 
     private static final ErrorMsgType[] VALUES = values();
@@ -1636,7 +1775,7 @@ public final class MsgOuterClass {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return model.MsgOuterClass.getDescriptor().getEnumTypes().get(7);
+      return model.MsgOuterClass.getDescriptor().getEnumTypes().get(8);
     }
 
     private static final ComMsgType[] VALUES = values();
@@ -6404,7 +6543,7 @@ java.lang.String defaultValue);
       if (encType_ != model.MsgOuterClass.EncryptType.PLAIN.getNumber()) {
         output.writeEnum(16, encType_);
       }
-      if (chatType_ != model.MsgOuterClass.ChatType.PrivateChatType.getNumber()) {
+      if (chatType_ != model.MsgOuterClass.ChatType.ChatTypeNone.getNumber()) {
         output.writeEnum(17, chatType_);
       }
       if (subMsgType_ != 0) {
@@ -6491,7 +6630,7 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(16, encType_);
       }
-      if (chatType_ != model.MsgOuterClass.ChatType.PrivateChatType.getNumber()) {
+      if (chatType_ != model.MsgOuterClass.ChatType.ChatTypeNone.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(17, chatType_);
       }
@@ -9751,10 +9890,19 @@ java.lang.String defaultValue);
      * 正向=0，反向=1
      * </pre>
      *
-     * <code>int32 synType = 5;</code>
+     * <code>.model.SynType synType = 5;</code>
+     * @return The enum numeric value on the wire for synType.
+     */
+    int getSynTypeValue();
+    /**
+     * <pre>
+     * 正向=0，反向=1
+     * </pre>
+     *
+     * <code>.model.SynType synType = 5;</code>
      * @return The synType.
      */
-    int getSynType();
+    model.MsgOuterClass.SynType getSynType();
 
     /**
      * <code>int64 tm = 6 [jstype = JS_STRING];</code>
@@ -9856,6 +10004,7 @@ java.lang.String defaultValue);
       super(builder);
     }
     private MsgQuery() {
+      synType_ = 0;
       chatType_ = 0;
       queryType_ = 0;
     }
@@ -9912,8 +10061,9 @@ java.lang.String defaultValue);
               break;
             }
             case 40: {
+              int rawValue = input.readEnum();
 
-              synType_ = input.readInt32();
+              synType_ = rawValue;
               break;
             }
             case 48: {
@@ -10059,12 +10209,24 @@ java.lang.String defaultValue);
      * 正向=0，反向=1
      * </pre>
      *
-     * <code>int32 synType = 5;</code>
+     * <code>.model.SynType synType = 5;</code>
+     * @return The enum numeric value on the wire for synType.
+     */
+    @java.lang.Override public int getSynTypeValue() {
+      return synType_;
+    }
+    /**
+     * <pre>
+     * 正向=0，反向=1
+     * </pre>
+     *
+     * <code>.model.SynType synType = 5;</code>
      * @return The synType.
      */
-    @java.lang.Override
-    public int getSynType() {
-      return synType_;
+    @java.lang.Override public model.MsgOuterClass.SynType getSynType() {
+      @SuppressWarnings("deprecation")
+      model.MsgOuterClass.SynType result = model.MsgOuterClass.SynType.valueOf(synType_);
+      return result == null ? model.MsgOuterClass.SynType.UNRECOGNIZED : result;
     }
 
     public static final int TM_FIELD_NUMBER = 6;
@@ -10239,16 +10401,16 @@ java.lang.String defaultValue);
       if (littleId_ != 0L) {
         output.writeInt64(4, littleId_);
       }
-      if (synType_ != 0) {
-        output.writeInt32(5, synType_);
+      if (synType_ != model.MsgOuterClass.SynType.SynTypeForward.getNumber()) {
+        output.writeEnum(5, synType_);
       }
       if (tm_ != 0L) {
         output.writeInt64(6, tm_);
       }
-      if (chatType_ != model.MsgOuterClass.ChatType.PrivateChatType.getNumber()) {
+      if (chatType_ != model.MsgOuterClass.ChatType.ChatTypeNone.getNumber()) {
         output.writeEnum(7, chatType_);
       }
-      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeData.getNumber()) {
+      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeChatData.getNumber()) {
         output.writeEnum(8, queryType_);
       }
       com.google.protobuf.GeneratedMessageV3
@@ -10282,19 +10444,19 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(4, littleId_);
       }
-      if (synType_ != 0) {
+      if (synType_ != model.MsgOuterClass.SynType.SynTypeForward.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, synType_);
+          .computeEnumSize(5, synType_);
       }
       if (tm_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(6, tm_);
       }
-      if (chatType_ != model.MsgOuterClass.ChatType.PrivateChatType.getNumber()) {
+      if (chatType_ != model.MsgOuterClass.ChatType.ChatTypeNone.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(7, chatType_);
       }
-      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeData.getNumber()) {
+      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeChatData.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(8, queryType_);
       }
@@ -10331,8 +10493,7 @@ java.lang.String defaultValue);
           != other.getBigId()) return false;
       if (getLittleId()
           != other.getLittleId()) return false;
-      if (getSynType()
-          != other.getSynType()) return false;
+      if (synType_ != other.synType_) return false;
       if (getTm()
           != other.getTm()) return false;
       if (chatType_ != other.chatType_) return false;
@@ -10363,7 +10524,7 @@ java.lang.String defaultValue);
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getLittleId());
       hash = (37 * hash) + SYNTYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getSynType();
+      hash = (53 * hash) + synType_;
       hash = (37 * hash) + TM_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTm());
@@ -10651,8 +10812,8 @@ java.lang.String defaultValue);
         if (other.getLittleId() != 0L) {
           setLittleId(other.getLittleId());
         }
-        if (other.getSynType() != 0) {
-          setSynType(other.getSynType());
+        if (other.synType_ != 0) {
+          setSynTypeValue(other.getSynTypeValue());
         }
         if (other.getTm() != 0L) {
           setTm(other.getTm());
@@ -10867,17 +11028,16 @@ java.lang.String defaultValue);
         return this;
       }
 
-      private int synType_ ;
+      private int synType_ = 0;
       /**
        * <pre>
        * 正向=0，反向=1
        * </pre>
        *
-       * <code>int32 synType = 5;</code>
-       * @return The synType.
+       * <code>.model.SynType synType = 5;</code>
+       * @return The enum numeric value on the wire for synType.
        */
-      @java.lang.Override
-      public int getSynType() {
+      @java.lang.Override public int getSynTypeValue() {
         return synType_;
       }
       /**
@@ -10885,11 +11045,11 @@ java.lang.String defaultValue);
        * 正向=0，反向=1
        * </pre>
        *
-       * <code>int32 synType = 5;</code>
-       * @param value The synType to set.
+       * <code>.model.SynType synType = 5;</code>
+       * @param value The enum numeric value on the wire for synType to set.
        * @return This builder for chaining.
        */
-      public Builder setSynType(int value) {
+      public Builder setSynTypeValue(int value) {
         
         synType_ = value;
         onChanged();
@@ -10900,7 +11060,39 @@ java.lang.String defaultValue);
        * 正向=0，反向=1
        * </pre>
        *
-       * <code>int32 synType = 5;</code>
+       * <code>.model.SynType synType = 5;</code>
+       * @return The synType.
+       */
+      @java.lang.Override
+      public model.MsgOuterClass.SynType getSynType() {
+        @SuppressWarnings("deprecation")
+        model.MsgOuterClass.SynType result = model.MsgOuterClass.SynType.valueOf(synType_);
+        return result == null ? model.MsgOuterClass.SynType.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       * 正向=0，反向=1
+       * </pre>
+       *
+       * <code>.model.SynType synType = 5;</code>
+       * @param value The synType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSynType(model.MsgOuterClass.SynType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        synType_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 正向=0，反向=1
+       * </pre>
+       *
+       * <code>.model.SynType synType = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearSynType() {
@@ -11291,10 +11483,10 @@ java.lang.String defaultValue);
      * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
      * </pre>
      *
-     * <code>int64 anId = 2 [jstype = JS_STRING];</code>
-     * @return The anId.
+     * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
+     * @return The groupId.
      */
-    long getAnId();
+    long getGroupId();
 
     /**
      * <pre>
@@ -11321,10 +11513,19 @@ java.lang.String defaultValue);
      * 正向=0，反向=1
      * </pre>
      *
-     * <code>int32 synType = 5;</code>
+     * <code>.model.SynType synType = 5;</code>
+     * @return The enum numeric value on the wire for synType.
+     */
+    int getSynTypeValue();
+    /**
+     * <pre>
+     * 正向=0，反向=1
+     * </pre>
+     *
+     * <code>.model.SynType synType = 5;</code>
      * @return The synType.
      */
-    int getSynType();
+    model.MsgOuterClass.SynType getSynType();
 
     /**
      * <code>int64 tm = 6 [jstype = JS_STRING];</code>
@@ -11419,11 +11620,59 @@ java.lang.String defaultValue);
         int index);
 
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    java.util.List<model.User.FriendOpResult> 
+        getFriendOpRetListList();
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    model.User.FriendOpResult getFriendOpRetList(int index);
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    int getFriendOpRetListCount();
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    java.util.List<? extends model.User.FriendOpResultOrBuilder> 
+        getFriendOpRetListOrBuilderList();
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    model.User.FriendOpResultOrBuilder getFriendOpRetListOrBuilder(
+        int index);
+
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    java.util.List<model.User.GroupOpResult> 
+        getGroupOpRetListList();
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    model.User.GroupOpResult getGroupOpRetList(int index);
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    int getGroupOpRetListCount();
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    java.util.List<? extends model.User.GroupOpResultOrBuilder> 
+        getGroupOpRetListOrBuilderList();
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    model.User.GroupOpResultOrBuilder getGroupOpRetListOrBuilder(
+        int index);
+
+    /**
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
     int getParamsCount();
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
     boolean containsParams(
         java.lang.String key);
@@ -11434,12 +11683,12 @@ java.lang.String defaultValue);
     java.util.Map<java.lang.String, java.lang.String>
     getParams();
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
     java.util.Map<java.lang.String, java.lang.String>
     getParamsMap();
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
 
     /* nullable */
@@ -11448,7 +11697,7 @@ java.lang.String getParamsOrDefault(
         /* nullable */
 java.lang.String defaultValue);
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
 
     java.lang.String getParamsOrThrow(
@@ -11471,10 +11720,13 @@ java.lang.String defaultValue);
       super(builder);
     }
     private MsgQueryResult() {
+      synType_ = 0;
       chatType_ = 0;
       queryType_ = 0;
       chatDataList_ = java.util.Collections.emptyList();
       chatReplyList_ = java.util.Collections.emptyList();
+      friendOpRetList_ = java.util.Collections.emptyList();
+      groupOpRetList_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -11515,7 +11767,7 @@ java.lang.String defaultValue);
             }
             case 16: {
 
-              anId_ = input.readInt64();
+              groupId_ = input.readInt64();
               break;
             }
             case 24: {
@@ -11529,8 +11781,9 @@ java.lang.String defaultValue);
               break;
             }
             case 40: {
+              int rawValue = input.readEnum();
 
-              synType_ = input.readInt32();
+              synType_ = rawValue;
               break;
             }
             case 48: {
@@ -11570,9 +11823,27 @@ java.lang.String defaultValue);
             }
             case 106: {
               if (!((mutable_bitField0_ & 0x00000004) != 0)) {
+                friendOpRetList_ = new java.util.ArrayList<model.User.FriendOpResult>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              friendOpRetList_.add(
+                  input.readMessage(model.User.FriendOpResult.parser(), extensionRegistry));
+              break;
+            }
+            case 114: {
+              if (!((mutable_bitField0_ & 0x00000008) != 0)) {
+                groupOpRetList_ = new java.util.ArrayList<model.User.GroupOpResult>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              groupOpRetList_.add(
+                  input.readMessage(model.User.GroupOpResult.parser(), extensionRegistry));
+              break;
+            }
+            case 242: {
+              if (!((mutable_bitField0_ & 0x00000010) != 0)) {
                 params_ = com.google.protobuf.MapField.newMapField(
                     ParamsDefaultEntryHolder.defaultEntry);
-                mutable_bitField0_ |= 0x00000004;
+                mutable_bitField0_ |= 0x00000010;
               }
               com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
               params__ = input.readMessage(
@@ -11604,6 +11875,12 @@ java.lang.String defaultValue);
         if (((mutable_bitField0_ & 0x00000002) != 0)) {
           chatReplyList_ = java.util.Collections.unmodifiableList(chatReplyList_);
         }
+        if (((mutable_bitField0_ & 0x00000004) != 0)) {
+          friendOpRetList_ = java.util.Collections.unmodifiableList(friendOpRetList_);
+        }
+        if (((mutable_bitField0_ & 0x00000008) != 0)) {
+          groupOpRetList_ = java.util.Collections.unmodifiableList(groupOpRetList_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -11618,7 +11895,7 @@ java.lang.String defaultValue);
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 13:
+        case 30:
           return internalGetParams();
         default:
           throw new RuntimeException(
@@ -11648,19 +11925,19 @@ java.lang.String defaultValue);
       return userId_;
     }
 
-    public static final int ANID_FIELD_NUMBER = 2;
-    private long anId_;
+    public static final int GROUPID_FIELD_NUMBER = 2;
+    private long groupId_;
     /**
      * <pre>
      * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
      * </pre>
      *
-     * <code>int64 anId = 2 [jstype = JS_STRING];</code>
-     * @return The anId.
+     * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
+     * @return The groupId.
      */
     @java.lang.Override
-    public long getAnId() {
-      return anId_;
+    public long getGroupId() {
+      return groupId_;
     }
 
     public static final int BIGID_FIELD_NUMBER = 3;
@@ -11700,12 +11977,24 @@ java.lang.String defaultValue);
      * 正向=0，反向=1
      * </pre>
      *
-     * <code>int32 synType = 5;</code>
+     * <code>.model.SynType synType = 5;</code>
+     * @return The enum numeric value on the wire for synType.
+     */
+    @java.lang.Override public int getSynTypeValue() {
+      return synType_;
+    }
+    /**
+     * <pre>
+     * 正向=0，反向=1
+     * </pre>
+     *
+     * <code>.model.SynType synType = 5;</code>
      * @return The synType.
      */
-    @java.lang.Override
-    public int getSynType() {
-      return synType_;
+    @java.lang.Override public model.MsgOuterClass.SynType getSynType() {
+      @SuppressWarnings("deprecation")
+      model.MsgOuterClass.SynType result = model.MsgOuterClass.SynType.valueOf(synType_);
+      return result == null ? model.MsgOuterClass.SynType.UNRECOGNIZED : result;
     }
 
     public static final int TM_FIELD_NUMBER = 6;
@@ -11853,7 +12142,87 @@ java.lang.String defaultValue);
       return chatReplyList_.get(index);
     }
 
-    public static final int PARAMS_FIELD_NUMBER = 13;
+    public static final int FRIENDOPRETLIST_FIELD_NUMBER = 13;
+    private java.util.List<model.User.FriendOpResult> friendOpRetList_;
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    @java.lang.Override
+    public java.util.List<model.User.FriendOpResult> getFriendOpRetListList() {
+      return friendOpRetList_;
+    }
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends model.User.FriendOpResultOrBuilder> 
+        getFriendOpRetListOrBuilderList() {
+      return friendOpRetList_;
+    }
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    @java.lang.Override
+    public int getFriendOpRetListCount() {
+      return friendOpRetList_.size();
+    }
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    @java.lang.Override
+    public model.User.FriendOpResult getFriendOpRetList(int index) {
+      return friendOpRetList_.get(index);
+    }
+    /**
+     * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+     */
+    @java.lang.Override
+    public model.User.FriendOpResultOrBuilder getFriendOpRetListOrBuilder(
+        int index) {
+      return friendOpRetList_.get(index);
+    }
+
+    public static final int GROUPOPRETLIST_FIELD_NUMBER = 14;
+    private java.util.List<model.User.GroupOpResult> groupOpRetList_;
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    @java.lang.Override
+    public java.util.List<model.User.GroupOpResult> getGroupOpRetListList() {
+      return groupOpRetList_;
+    }
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    @java.lang.Override
+    public java.util.List<? extends model.User.GroupOpResultOrBuilder> 
+        getGroupOpRetListOrBuilderList() {
+      return groupOpRetList_;
+    }
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    @java.lang.Override
+    public int getGroupOpRetListCount() {
+      return groupOpRetList_.size();
+    }
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    @java.lang.Override
+    public model.User.GroupOpResult getGroupOpRetList(int index) {
+      return groupOpRetList_.get(index);
+    }
+    /**
+     * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+     */
+    @java.lang.Override
+    public model.User.GroupOpResultOrBuilder getGroupOpRetListOrBuilder(
+        int index) {
+      return groupOpRetList_.get(index);
+    }
+
+    public static final int PARAMS_FIELD_NUMBER = 30;
     private static final class ParamsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, java.lang.String> defaultEntry =
@@ -11880,7 +12249,7 @@ java.lang.String defaultValue);
       return internalGetParams().getMap().size();
     }
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
 
     @java.lang.Override
@@ -11898,7 +12267,7 @@ java.lang.String defaultValue);
       return getParamsMap();
     }
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
     @java.lang.Override
 
@@ -11906,7 +12275,7 @@ java.lang.String defaultValue);
       return internalGetParams().getMap();
     }
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
     @java.lang.Override
 
@@ -11919,7 +12288,7 @@ java.lang.String defaultValue);
       return map.containsKey(key) ? map.get(key) : defaultValue;
     }
     /**
-     * <code>map&lt;string, string&gt; params = 13;</code>
+     * <code>map&lt;string, string&gt; params = 30;</code>
      */
     @java.lang.Override
 
@@ -11951,8 +12320,8 @@ java.lang.String defaultValue);
       if (userId_ != 0L) {
         output.writeInt64(1, userId_);
       }
-      if (anId_ != 0L) {
-        output.writeInt64(2, anId_);
+      if (groupId_ != 0L) {
+        output.writeInt64(2, groupId_);
       }
       if (bigId_ != 0L) {
         output.writeInt64(3, bigId_);
@@ -11960,16 +12329,16 @@ java.lang.String defaultValue);
       if (littleId_ != 0L) {
         output.writeInt64(4, littleId_);
       }
-      if (synType_ != 0) {
-        output.writeInt32(5, synType_);
+      if (synType_ != model.MsgOuterClass.SynType.SynTypeForward.getNumber()) {
+        output.writeEnum(5, synType_);
       }
       if (tm_ != 0L) {
         output.writeInt64(6, tm_);
       }
-      if (chatType_ != model.MsgOuterClass.ChatType.PrivateChatType.getNumber()) {
+      if (chatType_ != model.MsgOuterClass.ChatType.ChatTypeNone.getNumber()) {
         output.writeEnum(7, chatType_);
       }
-      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeData.getNumber()) {
+      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeChatData.getNumber()) {
         output.writeEnum(8, queryType_);
       }
       for (int i = 0; i < chatDataList_.size(); i++) {
@@ -11978,12 +12347,18 @@ java.lang.String defaultValue);
       for (int i = 0; i < chatReplyList_.size(); i++) {
         output.writeMessage(12, chatReplyList_.get(i));
       }
+      for (int i = 0; i < friendOpRetList_.size(); i++) {
+        output.writeMessage(13, friendOpRetList_.get(i));
+      }
+      for (int i = 0; i < groupOpRetList_.size(); i++) {
+        output.writeMessage(14, groupOpRetList_.get(i));
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetParams(),
           ParamsDefaultEntryHolder.defaultEntry,
-          13);
+          30);
       unknownFields.writeTo(output);
     }
 
@@ -11997,9 +12372,9 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(1, userId_);
       }
-      if (anId_ != 0L) {
+      if (groupId_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt64Size(2, anId_);
+          .computeInt64Size(2, groupId_);
       }
       if (bigId_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
@@ -12009,19 +12384,19 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(4, littleId_);
       }
-      if (synType_ != 0) {
+      if (synType_ != model.MsgOuterClass.SynType.SynTypeForward.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, synType_);
+          .computeEnumSize(5, synType_);
       }
       if (tm_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(6, tm_);
       }
-      if (chatType_ != model.MsgOuterClass.ChatType.PrivateChatType.getNumber()) {
+      if (chatType_ != model.MsgOuterClass.ChatType.ChatTypeNone.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(7, chatType_);
       }
-      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeData.getNumber()) {
+      if (queryType_ != model.MsgOuterClass.QueryDataType.QueryDataTypeChatData.getNumber()) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(8, queryType_);
       }
@@ -12033,6 +12408,14 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(12, chatReplyList_.get(i));
       }
+      for (int i = 0; i < friendOpRetList_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(13, friendOpRetList_.get(i));
+      }
+      for (int i = 0; i < groupOpRetList_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(14, groupOpRetList_.get(i));
+      }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetParams().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
@@ -12041,7 +12424,7 @@ java.lang.String defaultValue);
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(13, params__);
+            .computeMessageSize(30, params__);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -12060,14 +12443,13 @@ java.lang.String defaultValue);
 
       if (getUserId()
           != other.getUserId()) return false;
-      if (getAnId()
-          != other.getAnId()) return false;
+      if (getGroupId()
+          != other.getGroupId()) return false;
       if (getBigId()
           != other.getBigId()) return false;
       if (getLittleId()
           != other.getLittleId()) return false;
-      if (getSynType()
-          != other.getSynType()) return false;
+      if (synType_ != other.synType_) return false;
       if (getTm()
           != other.getTm()) return false;
       if (chatType_ != other.chatType_) return false;
@@ -12076,6 +12458,10 @@ java.lang.String defaultValue);
           .equals(other.getChatDataListList())) return false;
       if (!getChatReplyListList()
           .equals(other.getChatReplyListList())) return false;
+      if (!getFriendOpRetListList()
+          .equals(other.getFriendOpRetListList())) return false;
+      if (!getGroupOpRetListList()
+          .equals(other.getGroupOpRetListList())) return false;
       if (!internalGetParams().equals(
           other.internalGetParams())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -12092,9 +12478,9 @@ java.lang.String defaultValue);
       hash = (37 * hash) + USERID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getUserId());
-      hash = (37 * hash) + ANID_FIELD_NUMBER;
+      hash = (37 * hash) + GROUPID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
-          getAnId());
+          getGroupId());
       hash = (37 * hash) + BIGID_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getBigId());
@@ -12102,7 +12488,7 @@ java.lang.String defaultValue);
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getLittleId());
       hash = (37 * hash) + SYNTYPE_FIELD_NUMBER;
-      hash = (53 * hash) + getSynType();
+      hash = (53 * hash) + synType_;
       hash = (37 * hash) + TM_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getTm());
@@ -12117,6 +12503,14 @@ java.lang.String defaultValue);
       if (getChatReplyListCount() > 0) {
         hash = (37 * hash) + CHATREPLYLIST_FIELD_NUMBER;
         hash = (53 * hash) + getChatReplyListList().hashCode();
+      }
+      if (getFriendOpRetListCount() > 0) {
+        hash = (37 * hash) + FRIENDOPRETLIST_FIELD_NUMBER;
+        hash = (53 * hash) + getFriendOpRetListList().hashCode();
+      }
+      if (getGroupOpRetListCount() > 0) {
+        hash = (37 * hash) + GROUPOPRETLIST_FIELD_NUMBER;
+        hash = (53 * hash) + getGroupOpRetListList().hashCode();
       }
       if (!internalGetParams().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMS_FIELD_NUMBER;
@@ -12237,7 +12631,7 @@ java.lang.String defaultValue);
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 13:
+          case 30:
             return internalGetParams();
           default:
             throw new RuntimeException(
@@ -12248,7 +12642,7 @@ java.lang.String defaultValue);
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 13:
+          case 30:
             return internalGetMutableParams();
           default:
             throw new RuntimeException(
@@ -12278,6 +12672,8 @@ java.lang.String defaultValue);
                 .alwaysUseFieldBuilders) {
           getChatDataListFieldBuilder();
           getChatReplyListFieldBuilder();
+          getFriendOpRetListFieldBuilder();
+          getGroupOpRetListFieldBuilder();
         }
       }
       @java.lang.Override
@@ -12285,7 +12681,7 @@ java.lang.String defaultValue);
         super.clear();
         userId_ = 0L;
 
-        anId_ = 0L;
+        groupId_ = 0L;
 
         bigId_ = 0L;
 
@@ -12310,6 +12706,18 @@ java.lang.String defaultValue);
           bitField0_ = (bitField0_ & ~0x00000002);
         } else {
           chatReplyListBuilder_.clear();
+        }
+        if (friendOpRetListBuilder_ == null) {
+          friendOpRetList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          friendOpRetListBuilder_.clear();
+        }
+        if (groupOpRetListBuilder_ == null) {
+          groupOpRetList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          groupOpRetListBuilder_.clear();
         }
         internalGetMutableParams().clear();
         return this;
@@ -12340,7 +12748,7 @@ java.lang.String defaultValue);
         model.MsgOuterClass.MsgQueryResult result = new model.MsgOuterClass.MsgQueryResult(this);
         int from_bitField0_ = bitField0_;
         result.userId_ = userId_;
-        result.anId_ = anId_;
+        result.groupId_ = groupId_;
         result.bigId_ = bigId_;
         result.littleId_ = littleId_;
         result.synType_ = synType_;
@@ -12364,6 +12772,24 @@ java.lang.String defaultValue);
           result.chatReplyList_ = chatReplyList_;
         } else {
           result.chatReplyList_ = chatReplyListBuilder_.build();
+        }
+        if (friendOpRetListBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) != 0)) {
+            friendOpRetList_ = java.util.Collections.unmodifiableList(friendOpRetList_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.friendOpRetList_ = friendOpRetList_;
+        } else {
+          result.friendOpRetList_ = friendOpRetListBuilder_.build();
+        }
+        if (groupOpRetListBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) != 0)) {
+            groupOpRetList_ = java.util.Collections.unmodifiableList(groupOpRetList_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.groupOpRetList_ = groupOpRetList_;
+        } else {
+          result.groupOpRetList_ = groupOpRetListBuilder_.build();
         }
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
@@ -12418,8 +12844,8 @@ java.lang.String defaultValue);
         if (other.getUserId() != 0L) {
           setUserId(other.getUserId());
         }
-        if (other.getAnId() != 0L) {
-          setAnId(other.getAnId());
+        if (other.getGroupId() != 0L) {
+          setGroupId(other.getGroupId());
         }
         if (other.getBigId() != 0L) {
           setBigId(other.getBigId());
@@ -12427,8 +12853,8 @@ java.lang.String defaultValue);
         if (other.getLittleId() != 0L) {
           setLittleId(other.getLittleId());
         }
-        if (other.getSynType() != 0) {
-          setSynType(other.getSynType());
+        if (other.synType_ != 0) {
+          setSynTypeValue(other.getSynTypeValue());
         }
         if (other.getTm() != 0L) {
           setTm(other.getTm());
@@ -12488,6 +12914,58 @@ java.lang.String defaultValue);
                    getChatReplyListFieldBuilder() : null;
             } else {
               chatReplyListBuilder_.addAllMessages(other.chatReplyList_);
+            }
+          }
+        }
+        if (friendOpRetListBuilder_ == null) {
+          if (!other.friendOpRetList_.isEmpty()) {
+            if (friendOpRetList_.isEmpty()) {
+              friendOpRetList_ = other.friendOpRetList_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureFriendOpRetListIsMutable();
+              friendOpRetList_.addAll(other.friendOpRetList_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.friendOpRetList_.isEmpty()) {
+            if (friendOpRetListBuilder_.isEmpty()) {
+              friendOpRetListBuilder_.dispose();
+              friendOpRetListBuilder_ = null;
+              friendOpRetList_ = other.friendOpRetList_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              friendOpRetListBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getFriendOpRetListFieldBuilder() : null;
+            } else {
+              friendOpRetListBuilder_.addAllMessages(other.friendOpRetList_);
+            }
+          }
+        }
+        if (groupOpRetListBuilder_ == null) {
+          if (!other.groupOpRetList_.isEmpty()) {
+            if (groupOpRetList_.isEmpty()) {
+              groupOpRetList_ = other.groupOpRetList_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureGroupOpRetListIsMutable();
+              groupOpRetList_.addAll(other.groupOpRetList_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.groupOpRetList_.isEmpty()) {
+            if (groupOpRetListBuilder_.isEmpty()) {
+              groupOpRetListBuilder_.dispose();
+              groupOpRetListBuilder_ = null;
+              groupOpRetList_ = other.groupOpRetList_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              groupOpRetListBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getGroupOpRetListFieldBuilder() : null;
+            } else {
+              groupOpRetListBuilder_.addAllMessages(other.groupOpRetList_);
             }
           }
         }
@@ -12566,31 +13044,31 @@ java.lang.String defaultValue);
         return this;
       }
 
-      private long anId_ ;
+      private long groupId_ ;
       /**
        * <pre>
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 anId = 2 [jstype = JS_STRING];</code>
-       * @return The anId.
+       * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
+       * @return The groupId.
        */
       @java.lang.Override
-      public long getAnId() {
-        return anId_;
+      public long getGroupId() {
+        return groupId_;
       }
       /**
        * <pre>
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 anId = 2 [jstype = JS_STRING];</code>
-       * @param value The anId to set.
+       * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
+       * @param value The groupId to set.
        * @return This builder for chaining.
        */
-      public Builder setAnId(long value) {
+      public Builder setGroupId(long value) {
         
-        anId_ = value;
+        groupId_ = value;
         onChanged();
         return this;
       }
@@ -12599,12 +13077,12 @@ java.lang.String defaultValue);
        * 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
        * </pre>
        *
-       * <code>int64 anId = 2 [jstype = JS_STRING];</code>
+       * <code>int64 groupId = 2 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
-      public Builder clearAnId() {
+      public Builder clearGroupId() {
         
-        anId_ = 0L;
+        groupId_ = 0L;
         onChanged();
         return this;
       }
@@ -12695,17 +13173,16 @@ java.lang.String defaultValue);
         return this;
       }
 
-      private int synType_ ;
+      private int synType_ = 0;
       /**
        * <pre>
        * 正向=0，反向=1
        * </pre>
        *
-       * <code>int32 synType = 5;</code>
-       * @return The synType.
+       * <code>.model.SynType synType = 5;</code>
+       * @return The enum numeric value on the wire for synType.
        */
-      @java.lang.Override
-      public int getSynType() {
+      @java.lang.Override public int getSynTypeValue() {
         return synType_;
       }
       /**
@@ -12713,11 +13190,11 @@ java.lang.String defaultValue);
        * 正向=0，反向=1
        * </pre>
        *
-       * <code>int32 synType = 5;</code>
-       * @param value The synType to set.
+       * <code>.model.SynType synType = 5;</code>
+       * @param value The enum numeric value on the wire for synType to set.
        * @return This builder for chaining.
        */
-      public Builder setSynType(int value) {
+      public Builder setSynTypeValue(int value) {
         
         synType_ = value;
         onChanged();
@@ -12728,7 +13205,39 @@ java.lang.String defaultValue);
        * 正向=0，反向=1
        * </pre>
        *
-       * <code>int32 synType = 5;</code>
+       * <code>.model.SynType synType = 5;</code>
+       * @return The synType.
+       */
+      @java.lang.Override
+      public model.MsgOuterClass.SynType getSynType() {
+        @SuppressWarnings("deprecation")
+        model.MsgOuterClass.SynType result = model.MsgOuterClass.SynType.valueOf(synType_);
+        return result == null ? model.MsgOuterClass.SynType.UNRECOGNIZED : result;
+      }
+      /**
+       * <pre>
+       * 正向=0，反向=1
+       * </pre>
+       *
+       * <code>.model.SynType synType = 5;</code>
+       * @param value The synType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSynType(model.MsgOuterClass.SynType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        synType_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 正向=0，反向=1
+       * </pre>
+       *
+       * <code>.model.SynType synType = 5;</code>
        * @return This builder for chaining.
        */
       public Builder clearSynType() {
@@ -13397,6 +13906,486 @@ java.lang.String defaultValue);
         return chatReplyListBuilder_;
       }
 
+      private java.util.List<model.User.FriendOpResult> friendOpRetList_ =
+        java.util.Collections.emptyList();
+      private void ensureFriendOpRetListIsMutable() {
+        if (!((bitField0_ & 0x00000004) != 0)) {
+          friendOpRetList_ = new java.util.ArrayList<model.User.FriendOpResult>(friendOpRetList_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          model.User.FriendOpResult, model.User.FriendOpResult.Builder, model.User.FriendOpResultOrBuilder> friendOpRetListBuilder_;
+
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public java.util.List<model.User.FriendOpResult> getFriendOpRetListList() {
+        if (friendOpRetListBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(friendOpRetList_);
+        } else {
+          return friendOpRetListBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public int getFriendOpRetListCount() {
+        if (friendOpRetListBuilder_ == null) {
+          return friendOpRetList_.size();
+        } else {
+          return friendOpRetListBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public model.User.FriendOpResult getFriendOpRetList(int index) {
+        if (friendOpRetListBuilder_ == null) {
+          return friendOpRetList_.get(index);
+        } else {
+          return friendOpRetListBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder setFriendOpRetList(
+          int index, model.User.FriendOpResult value) {
+        if (friendOpRetListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.set(index, value);
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder setFriendOpRetList(
+          int index, model.User.FriendOpResult.Builder builderForValue) {
+        if (friendOpRetListBuilder_ == null) {
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder addFriendOpRetList(model.User.FriendOpResult value) {
+        if (friendOpRetListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.add(value);
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder addFriendOpRetList(
+          int index, model.User.FriendOpResult value) {
+        if (friendOpRetListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.add(index, value);
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder addFriendOpRetList(
+          model.User.FriendOpResult.Builder builderForValue) {
+        if (friendOpRetListBuilder_ == null) {
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.add(builderForValue.build());
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder addFriendOpRetList(
+          int index, model.User.FriendOpResult.Builder builderForValue) {
+        if (friendOpRetListBuilder_ == null) {
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder addAllFriendOpRetList(
+          java.lang.Iterable<? extends model.User.FriendOpResult> values) {
+        if (friendOpRetListBuilder_ == null) {
+          ensureFriendOpRetListIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, friendOpRetList_);
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder clearFriendOpRetList() {
+        if (friendOpRetListBuilder_ == null) {
+          friendOpRetList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public Builder removeFriendOpRetList(int index) {
+        if (friendOpRetListBuilder_ == null) {
+          ensureFriendOpRetListIsMutable();
+          friendOpRetList_.remove(index);
+          onChanged();
+        } else {
+          friendOpRetListBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public model.User.FriendOpResult.Builder getFriendOpRetListBuilder(
+          int index) {
+        return getFriendOpRetListFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public model.User.FriendOpResultOrBuilder getFriendOpRetListOrBuilder(
+          int index) {
+        if (friendOpRetListBuilder_ == null) {
+          return friendOpRetList_.get(index);  } else {
+          return friendOpRetListBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public java.util.List<? extends model.User.FriendOpResultOrBuilder> 
+           getFriendOpRetListOrBuilderList() {
+        if (friendOpRetListBuilder_ != null) {
+          return friendOpRetListBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(friendOpRetList_);
+        }
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public model.User.FriendOpResult.Builder addFriendOpRetListBuilder() {
+        return getFriendOpRetListFieldBuilder().addBuilder(
+            model.User.FriendOpResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public model.User.FriendOpResult.Builder addFriendOpRetListBuilder(
+          int index) {
+        return getFriendOpRetListFieldBuilder().addBuilder(
+            index, model.User.FriendOpResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .model.FriendOpResult friendOpRetList = 13;</code>
+       */
+      public java.util.List<model.User.FriendOpResult.Builder> 
+           getFriendOpRetListBuilderList() {
+        return getFriendOpRetListFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          model.User.FriendOpResult, model.User.FriendOpResult.Builder, model.User.FriendOpResultOrBuilder> 
+          getFriendOpRetListFieldBuilder() {
+        if (friendOpRetListBuilder_ == null) {
+          friendOpRetListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              model.User.FriendOpResult, model.User.FriendOpResult.Builder, model.User.FriendOpResultOrBuilder>(
+                  friendOpRetList_,
+                  ((bitField0_ & 0x00000004) != 0),
+                  getParentForChildren(),
+                  isClean());
+          friendOpRetList_ = null;
+        }
+        return friendOpRetListBuilder_;
+      }
+
+      private java.util.List<model.User.GroupOpResult> groupOpRetList_ =
+        java.util.Collections.emptyList();
+      private void ensureGroupOpRetListIsMutable() {
+        if (!((bitField0_ & 0x00000008) != 0)) {
+          groupOpRetList_ = new java.util.ArrayList<model.User.GroupOpResult>(groupOpRetList_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          model.User.GroupOpResult, model.User.GroupOpResult.Builder, model.User.GroupOpResultOrBuilder> groupOpRetListBuilder_;
+
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public java.util.List<model.User.GroupOpResult> getGroupOpRetListList() {
+        if (groupOpRetListBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(groupOpRetList_);
+        } else {
+          return groupOpRetListBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public int getGroupOpRetListCount() {
+        if (groupOpRetListBuilder_ == null) {
+          return groupOpRetList_.size();
+        } else {
+          return groupOpRetListBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public model.User.GroupOpResult getGroupOpRetList(int index) {
+        if (groupOpRetListBuilder_ == null) {
+          return groupOpRetList_.get(index);
+        } else {
+          return groupOpRetListBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder setGroupOpRetList(
+          int index, model.User.GroupOpResult value) {
+        if (groupOpRetListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.set(index, value);
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder setGroupOpRetList(
+          int index, model.User.GroupOpResult.Builder builderForValue) {
+        if (groupOpRetListBuilder_ == null) {
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder addGroupOpRetList(model.User.GroupOpResult value) {
+        if (groupOpRetListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.add(value);
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder addGroupOpRetList(
+          int index, model.User.GroupOpResult value) {
+        if (groupOpRetListBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.add(index, value);
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder addGroupOpRetList(
+          model.User.GroupOpResult.Builder builderForValue) {
+        if (groupOpRetListBuilder_ == null) {
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.add(builderForValue.build());
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder addGroupOpRetList(
+          int index, model.User.GroupOpResult.Builder builderForValue) {
+        if (groupOpRetListBuilder_ == null) {
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder addAllGroupOpRetList(
+          java.lang.Iterable<? extends model.User.GroupOpResult> values) {
+        if (groupOpRetListBuilder_ == null) {
+          ensureGroupOpRetListIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, groupOpRetList_);
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder clearGroupOpRetList() {
+        if (groupOpRetListBuilder_ == null) {
+          groupOpRetList_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public Builder removeGroupOpRetList(int index) {
+        if (groupOpRetListBuilder_ == null) {
+          ensureGroupOpRetListIsMutable();
+          groupOpRetList_.remove(index);
+          onChanged();
+        } else {
+          groupOpRetListBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public model.User.GroupOpResult.Builder getGroupOpRetListBuilder(
+          int index) {
+        return getGroupOpRetListFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public model.User.GroupOpResultOrBuilder getGroupOpRetListOrBuilder(
+          int index) {
+        if (groupOpRetListBuilder_ == null) {
+          return groupOpRetList_.get(index);  } else {
+          return groupOpRetListBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public java.util.List<? extends model.User.GroupOpResultOrBuilder> 
+           getGroupOpRetListOrBuilderList() {
+        if (groupOpRetListBuilder_ != null) {
+          return groupOpRetListBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(groupOpRetList_);
+        }
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public model.User.GroupOpResult.Builder addGroupOpRetListBuilder() {
+        return getGroupOpRetListFieldBuilder().addBuilder(
+            model.User.GroupOpResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public model.User.GroupOpResult.Builder addGroupOpRetListBuilder(
+          int index) {
+        return getGroupOpRetListFieldBuilder().addBuilder(
+            index, model.User.GroupOpResult.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .model.GroupOpResult groupOpRetList = 14;</code>
+       */
+      public java.util.List<model.User.GroupOpResult.Builder> 
+           getGroupOpRetListBuilderList() {
+        return getGroupOpRetListFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          model.User.GroupOpResult, model.User.GroupOpResult.Builder, model.User.GroupOpResultOrBuilder> 
+          getGroupOpRetListFieldBuilder() {
+        if (groupOpRetListBuilder_ == null) {
+          groupOpRetListBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              model.User.GroupOpResult, model.User.GroupOpResult.Builder, model.User.GroupOpResultOrBuilder>(
+                  groupOpRetList_,
+                  ((bitField0_ & 0x00000008) != 0),
+                  getParentForChildren(),
+                  isClean());
+          groupOpRetList_ = null;
+        }
+        return groupOpRetListBuilder_;
+      }
+
       private com.google.protobuf.MapField<
           java.lang.String, java.lang.String> params_;
       private com.google.protobuf.MapField<java.lang.String, java.lang.String>
@@ -13424,7 +14413,7 @@ java.lang.String defaultValue);
         return internalGetParams().getMap().size();
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
 
       @java.lang.Override
@@ -13442,7 +14431,7 @@ java.lang.String defaultValue);
         return getParamsMap();
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
       @java.lang.Override
 
@@ -13450,7 +14439,7 @@ java.lang.String defaultValue);
         return internalGetParams().getMap();
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
       @java.lang.Override
 
@@ -13463,7 +14452,7 @@ java.lang.String defaultValue);
         return map.containsKey(key) ? map.get(key) : defaultValue;
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
       @java.lang.Override
 
@@ -13484,7 +14473,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
 
       public Builder removeParams(
@@ -13503,7 +14492,7 @@ java.lang.String defaultValue);
         return internalGetMutableParams().getMutableMap();
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
       public Builder putParams(
           java.lang.String key,
@@ -13518,7 +14507,7 @@ java.lang.String defaultValue);
         return this;
       }
       /**
-       * <code>map&lt;string, string&gt; params = 13;</code>
+       * <code>map&lt;string, string&gt; params = 30;</code>
        */
 
       public Builder putAllParams(
@@ -27151,96 +28140,102 @@ java.lang.String defaultValue);
       " \001(\003B\0020\001\022\022\n\006fromId\030\010 \001(\003B\0020\001\022/\n\006params\030\036" +
       " \003(\0132\037.model.MsgChatReply.ParamsEntry\032-\n" +
       "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\"\245\002\n\010MsgQuery\022\022\n\006userId\030\001 \001(\003B\0020\001\022\023\n" +
+      ":\0028\001\"\265\002\n\010MsgQuery\022\022\n\006userId\030\001 \001(\003B\0020\001\022\023\n" +
       "\007groupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 \001(\003B\0020\001\022\024\n" +
-      "\010littleId\030\004 \001(\003B\0020\001\022\017\n\007synType\030\005 \001(\005\022\016\n\002" +
-      "tm\030\006 \001(\003B\0020\001\022!\n\010chatType\030\007 \001(\0162\017.model.C" +
-      "hatType\022\'\n\tqueryType\030\010 \001(\0162\024.model.Query" +
-      "DataType\022+\n\006params\030\t \003(\0132\033.model.MsgQuer" +
-      "y.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\200\003\n\016MsgQueryResult\022" +
-      "\022\n\006userId\030\001 \001(\003B\0020\001\022\020\n\004anId\030\002 \001(\003B\0020\001\022\021\n" +
-      "\005bigId\030\003 \001(\003B\0020\001\022\024\n\010littleId\030\004 \001(\003B\0020\001\022\017" +
-      "\n\007synType\030\005 \001(\005\022\016\n\002tm\030\006 \001(\003B\0020\001\022!\n\010chatT" +
-      "ype\030\007 \001(\0162\017.model.ChatType\022\'\n\tqueryType\030" +
-      "\010 \001(\0162\024.model.QueryDataType\022$\n\014chatDataL" +
-      "ist\030\013 \003(\0132\016.model.MsgChat\022*\n\rchatReplyLi" +
-      "st\030\014 \003(\0132\023.model.MsgChatReply\0221\n\006params\030" +
-      "\r \003(\0132!.model.MsgQueryResult.ParamsEntry" +
-      "\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\t:\0028\001\"\212\001\n\014MsgUploadReq\022\020\n\010fileName\030\001 \001" +
-      "(\t\022\020\n\010fileSize\030\002 \001(\003\022\020\n\010fileData\030\003 \001(\014\022\020" +
-      "\n\010hashType\030\004 \001(\t\022\020\n\010hashCode\030\005 \001(\014\022\020\n\010fi" +
-      "leType\030\006 \001(\t\022\016\n\006sendId\030\007 \001(\t\"T\n\016MsgUploa" +
-      "dReply\022\020\n\010fileName\030\001 \001(\t\022\016\n\006sendId\030\002 \001(\t" +
-      "\022\020\n\010uuidName\030\003 \001(\t\022\016\n\006result\030\004 \001(\t\"B\n\016Ms" +
-      "gDownloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName" +
-      "\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\250\001\n\020MsgDownloadRe" +
-      "ply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001(\t\022\020\n" +
-      "\010realName\030\003 \001(\t\022\020\n\010fileType\030\004 \001(\t\022\020\n\010has" +
-      "hType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\014\022\014\n\004data\030\007 " +
-      "\001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\"\204\001\n\010Ms" +
-      "gError\022\014\n\004code\030\001 \001(\005\022\016\n\006detail\030\002 \001(\t\022+\n\006" +
-      "params\030\t \003(\0132\033.model.MsgError.ParamsEntr" +
-      "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hello\030\007 \001(\0132\017.m" +
-      "odel.MsgHelloH\000\022(\n\theartBeat\030\010 \001(\0132\023.mod" +
-      "el.MsgHeartBeatH\000\022#\n\010errorMsg\030\t \001(\0132\017.mo" +
-      "del.MsgErrorH\000\022&\n\005keyEx\030\n \001(\0132\025.model.Ms" +
-      "gKeyExchangeH\000\022\"\n\010chatData\030\013 \001(\0132\016.model" +
-      ".MsgChatH\000\022(\n\tchatReply\030\014 \001(\0132\023.model.Ms" +
-      "gChatReplyH\000\022&\n\013commonQuery\030\r \001(\0132\017.mode" +
-      "l.MsgQueryH\000\022/\n\016commonQueryRet\030\016 \001(\0132\025.m" +
-      "odel.MsgQueryResultH\000\022(\n\tuploadReq\030\025 \001(\013" +
-      "2\023.model.MsgUploadReqH\000\022,\n\013downloadReq\030\026" +
-      " \001(\0132\025.model.MsgDownloadReqH\000\022,\n\013uploadR" +
-      "eply\030\027 \001(\0132\025.model.MsgUploadReplyH\000\0220\n\rd" +
-      "ownloadReply\030\030 \001(\0132\027.model.MsgDownloadRe" +
-      "plyH\000\022\"\n\006userOp\030\037 \001(\0132\020.model.UserOpReqH" +
-      "\000\022(\n\tuserOpRet\030  \001(\0132\023.model.UserOpResul" +
-      "tH\000\022&\n\010friendOp\030! \001(\0132\022.model.FriendOpRe" +
-      "qH\000\022,\n\013friendOpRet\030\" \001(\0132\025.model.FriendO" +
-      "pResultH\000\022$\n\007groupOp\030# \001(\0132\021.model.Group" +
-      "OpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132\024.model.Grou" +
-      "pOpResultH\000\022\026\n\014otherTypeMsg\030d \001(\014H\000B\t\n\007m" +
-      "essage\"\263\001\n\003Msg\022\017\n\007version\030\001 \001(\005\022\024\n\010keyPr" +
-      "int\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020\001\022\"\n\007msgType" +
-      "\030\004 \001(\0162\021.model.ComMsgType\022\017\n\007subType\030\005 \001" +
-      "(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plainMsg\030\014 \001(\0132\017" +
-      ".model.MsgPlainH\000B\t\n\007message*,\n\013MsgPrior" +
-      "ity\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004HIGH\020\002*X\n\rCh" +
-      "atMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004SENT\020\001\022\n\n\006FA" +
-      "ILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004READ\020\004\022\013\n\007DELET" +
-      "ED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020\001" +
-      "\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006DELE" +
-      "TE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n\013EncryptType" +
-      "\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010CHACHA20\020\002\022\013\n" +
-      "\007TWOFISH\020\003\022\007\n\003AES\020\004*2\n\010ChatType\022\023\n\017Priva" +
-      "teChatType\020\000\022\021\n\rGroupChatType\020\001*V\n\rQuery" +
-      "DataType\022\025\n\021QueryDataTypeData\020\000\022\026\n\022Query" +
-      "DataTypeReply\020\001\022\026\n\022QueryDataTypeByTag\020\002*" +
-      "\210\003\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVe" +
-      "rsion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRedirec" +
-      "t\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCode\020\005" +
-      "\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013E" +
-      "rrTEncType\020\010\022\024\n\020ErrTServerInside\020\t\022\r\n\tEr" +
-      "rTStage\020\n\022\021\n\rErrTPublicKey\020\013\022\023\n\017ErrTKeyC" +
-      "onflict\020\014\022\021\n\rErrTCheckData\020\r\022\022\n\016ErrTMsgC" +
-      "ontent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025\n\021ErrTNotPer" +
-      "mission\020\020\022\020\n\014ErrTDisabled\020\021\022\017\n\013ErrTDelet" +
-      "ed\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tErrTPhone\020\024*\366\002\n\nC" +
-      "omMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001" +
-      "\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017Ms" +
-      "gTKeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgT" +
-      "ChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQueryR" +
-      "esult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownload\020" +
-      "\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDownloadRe" +
-      "ply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpRet\020 " +
-      "\022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOpRet\020\"\022" +
-      "\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\t" +
-      "MsgTOther\020d23\n\nMsgService\022%\n\013ClientEvent" +
-      "\022\n.model.Msg\032\n.model.MsgB\020Z\016server/pbmod" +
-      "elb\006proto3"
+      "\010littleId\030\004 \001(\003B\0020\001\022\037\n\007synType\030\005 \001(\0162\016.m" +
+      "odel.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001\022!\n\010chatType" +
+      "\030\007 \001(\0162\017.model.ChatType\022\'\n\tqueryType\030\010 \001" +
+      "(\0162\024.model.QueryDataType\022+\n\006params\030\t \003(\013" +
+      "2\033.model.MsgQuery.ParamsEntry\032-\n\013ParamsE" +
+      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\361\003\n" +
+      "\016MsgQueryResult\022\022\n\006userId\030\001 \001(\003B\0020\001\022\023\n\007g" +
+      "roupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 \001(\003B\0020\001\022\024\n\010l" +
+      "ittleId\030\004 \001(\003B\0020\001\022\037\n\007synType\030\005 \001(\0162\016.mod" +
+      "el.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001\022!\n\010chatType\030\007" +
+      " \001(\0162\017.model.ChatType\022\'\n\tqueryType\030\010 \001(\016" +
+      "2\024.model.QueryDataType\022$\n\014chatDataList\030\013" +
+      " \003(\0132\016.model.MsgChat\022*\n\rchatReplyList\030\014 " +
+      "\003(\0132\023.model.MsgChatReply\022.\n\017friendOpRetL" +
+      "ist\030\r \003(\0132\025.model.FriendOpResult\022,\n\016grou" +
+      "pOpRetList\030\016 \003(\0132\024.model.GroupOpResult\0221" +
+      "\n\006params\030\036 \003(\0132!.model.MsgQueryResult.Pa" +
+      "ramsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
+      "\005value\030\002 \001(\t:\0028\001\"\212\001\n\014MsgUploadReq\022\020\n\010fil" +
+      "eName\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\020\n\010fileDat" +
+      "a\030\003 \001(\014\022\020\n\010hashType\030\004 \001(\t\022\020\n\010hashCode\030\005 " +
+      "\001(\014\022\020\n\010fileType\030\006 \001(\t\022\016\n\006sendId\030\007 \001(\t\"T\n" +
+      "\016MsgUploadReply\022\020\n\010fileName\030\001 \001(\t\022\016\n\006sen" +
+      "dId\030\002 \001(\t\022\020\n\010uuidName\030\003 \001(\t\022\016\n\006result\030\004 " +
+      "\001(\t\"B\n\016MsgDownloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n" +
+      "\010fileName\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\250\001\n\020MsgD" +
+      "ownloadReply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName" +
+      "\030\002 \001(\t\022\020\n\010realName\030\003 \001(\t\022\020\n\010fileType\030\004 \001" +
+      "(\t\022\020\n\010hashType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\014\022\014" +
+      "\n\004data\030\007 \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001" +
+      "(\003\"\204\001\n\010MsgError\022\014\n\004code\030\001 \001(\005\022\016\n\006detail\030" +
+      "\002 \001(\t\022+\n\006params\030\t \003(\0132\033.model.MsgError.P" +
+      "aramsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
+      "\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hello\030" +
+      "\007 \001(\0132\017.model.MsgHelloH\000\022(\n\theartBeat\030\010 " +
+      "\001(\0132\023.model.MsgHeartBeatH\000\022#\n\010errorMsg\030\t" +
+      " \001(\0132\017.model.MsgErrorH\000\022&\n\005keyEx\030\n \001(\0132\025" +
+      ".model.MsgKeyExchangeH\000\022\"\n\010chatData\030\013 \001(" +
+      "\0132\016.model.MsgChatH\000\022(\n\tchatReply\030\014 \001(\0132\023" +
+      ".model.MsgChatReplyH\000\022&\n\013commonQuery\030\r \001" +
+      "(\0132\017.model.MsgQueryH\000\022/\n\016commonQueryRet\030" +
+      "\016 \001(\0132\025.model.MsgQueryResultH\000\022(\n\tupload" +
+      "Req\030\025 \001(\0132\023.model.MsgUploadReqH\000\022,\n\013down" +
+      "loadReq\030\026 \001(\0132\025.model.MsgDownloadReqH\000\022," +
+      "\n\013uploadReply\030\027 \001(\0132\025.model.MsgUploadRep" +
+      "lyH\000\0220\n\rdownloadReply\030\030 \001(\0132\027.model.MsgD" +
+      "ownloadReplyH\000\022\"\n\006userOp\030\037 \001(\0132\020.model.U" +
+      "serOpReqH\000\022(\n\tuserOpRet\030  \001(\0132\023.model.Us" +
+      "erOpResultH\000\022&\n\010friendOp\030! \001(\0132\022.model.F" +
+      "riendOpReqH\000\022,\n\013friendOpRet\030\" \001(\0132\025.mode" +
+      "l.FriendOpResultH\000\022$\n\007groupOp\030# \001(\0132\021.mo" +
+      "del.GroupOpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132\024.m" +
+      "odel.GroupOpResultH\000\022\026\n\014otherTypeMsg\030d \001" +
+      "(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017\n\007version\030\001 \001(\005" +
+      "\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020\001\022\"" +
+      "\n\007msgType\030\004 \001(\0162\021.model.ComMsgType\022\017\n\007su" +
+      "bType\030\005 \001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plainMs" +
+      "g\030\014 \001(\0132\017.model.MsgPlainH\000B\t\n\007message*,\n" +
+      "\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004HIG" +
+      "H\020\002*X\n\rChatMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004SEN" +
+      "T\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004READ\020\004" +
+      "\022\013\n\007DELETED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020\000\022\t" +
+      "\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FILE\020" +
+      "\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n\013En" +
+      "cryptType\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010CHAC" +
+      "HA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010ChatType" +
+      "\022\020\n\014ChatTypeNone\020\000\022\017\n\013ChatTypeP2P\020\001\022\021\n\rC" +
+      "hatTypeGroup\020\002*{\n\rQueryDataType\022\031\n\025Query" +
+      "DataTypeChatData\020\000\022\032\n\026QueryDataTypeChatR" +
+      "eply\020\001\022\031\n\025QueryDataTypeFriendOP\020\002\022\030\n\024Que" +
+      "ryDataTypeGroupOP\020\003*F\n\007SynType\022\022\n\016SynTyp" +
+      "eForward\020\000\022\023\n\017SynTypeBackward\020\001\022\022\n\016SynTy" +
+      "peBetween\020\002*\210\003\n\014ErrorMsgType\022\014\n\010ErrTNone" +
+      "\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n" +
+      "\014ErrTRedirect\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErr" +
+      "TWrongCode\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTe" +
+      "mpKey\020\007\022\017\n\013ErrTEncType\020\010\022\024\n\020ErrTServerIn" +
+      "side\020\t\022\r\n\tErrTStage\020\n\022\021\n\rErrTPublicKey\020\013" +
+      "\022\023\n\017ErrTKeyConflict\020\014\022\021\n\rErrTCheckData\020\r" +
+      "\022\022\n\016ErrTMsgContent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025" +
+      "\n\021ErrTNotPermission\020\020\022\020\n\014ErrTDisabled\020\021\022" +
+      "\017\n\013ErrTDeleted\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tErrTP" +
+      "hone\020\024*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000\022\r\n" +
+      "\tMsgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTE" +
+      "rror\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTChatM" +
+      "sg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023" +
+      "\n\017MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014M" +
+      "sgTDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021Ms" +
+      "gTDownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsg" +
+      "TUserOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFr" +
+      "iendOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGrou" +
+      "pOpRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService\022%\n" +
+      "\013ClientEvent\022\n.model.Msg\032\n.model.MsgB\020Z\016" +
+      "server/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -27312,7 +28307,7 @@ java.lang.String defaultValue);
     internal_static_model_MsgQueryResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_MsgQueryResult_descriptor,
-        new java.lang.String[] { "UserId", "AnId", "BigId", "LittleId", "SynType", "Tm", "ChatType", "QueryType", "ChatDataList", "ChatReplyList", "Params", });
+        new java.lang.String[] { "UserId", "GroupId", "BigId", "LittleId", "SynType", "Tm", "ChatType", "QueryType", "ChatDataList", "ChatReplyList", "FriendOpRetList", "GroupOpRetList", "Params", });
     internal_static_model_MsgQueryResult_ParamsEntry_descriptor =
       internal_static_model_MsgQueryResult_descriptor.getNestedTypes().get(0);
     internal_static_model_MsgQueryResult_ParamsEntry_fieldAccessorTable = new

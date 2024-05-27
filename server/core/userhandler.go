@@ -632,7 +632,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 						session)
 					return
 				}
-				userInfoDb = &lst[0]
+				userInfoDb = lst[0]
 				session.UserID = userInfoDb.UserId
 				session.TempUserInfo = userInfoDb
 				// 检查是否可以用
@@ -697,7 +697,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 			return
 		}
 
-		userInfoDb = &lst[0]
+		userInfoDb = lst[0]
 		// 检查是否可以用
 		ret := checkUserUsable(userInfoDb, session)
 		if !ret {

@@ -17,7 +17,8 @@ goog.provide('proto.model.ChatType');
  * @enum {number}
  */
 proto.model.ChatType = {
-  PRIVATECHATTYPE: 0,
-  GROUPCHATTYPE: 1
+  CHATTYPENONE: 0,
+  CHATTYPEP2P: 1,
+  CHATTYPEGROUP: 2
 };
 

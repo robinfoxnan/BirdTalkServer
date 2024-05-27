@@ -12,7 +12,10 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 
 }
 
-// 7 这里的查询包括：私聊消息同步，群消息同步，回执查询；好友请求查询，群用户操作消息
-func handleCommonQuery(msg *pbmodel.Msg, session *Session) {
+func onQueryChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
+
+}
+
+func onQueryChatReply(queryMsg *pbmodel.MsgQuery, session *Session) {
 
 }
