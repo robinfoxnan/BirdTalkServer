@@ -49,6 +49,7 @@ type ServerConf struct {
 	KeyFile     string `yaml:"key"`
 	FriendMode  bool   `yaml:"friend_making"` // 交友模式，社区模式
 	ClusterMode bool   `yaml:"cluster_mode"`
+	AvatarFont  string `yaml:"avatar_font"`
 }
 
 type LocalConfig struct {

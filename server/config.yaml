@@ -23,6 +23,7 @@ server:
     key: ./certs/key.pem
     friend_making: false
     cluster_mode: false
+    avatar_font: ./ttf/SourceHanSans-VF.ttf
 
 
 email:

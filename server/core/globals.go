@@ -42,6 +42,11 @@ func init() {
 	Globals.grc = model.NewGroupCache()
 	Globals.Logger = utils.CreateLogger()
 
+	err := utils.InitFont(Globals.Config.Server.AvatarFont)
+	if err != nil {
+		Globals.Logger.Error("load font error", zap.Error(err))
+	}
+
 }
 
 // 加载配置
