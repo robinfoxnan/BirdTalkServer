@@ -1,5 +1,8 @@
 github.com/BurntSushi/toml v1.3.2 h1:o7IhLm0Msx3BaB+n3Ag7L8EVlByGnpq14C4YWiu/gL8=
 github.com/BurntSushi/toml v1.3.2/go.mod h1:CxXYINrC8qIiEnFrOxCa7Jy5BFHlXnUU2pbicEuybxQ=
+github.com/adamzy/cedar-go v0.0.0-20170805034717-80a9c64b256d h1:ir/IFJU5xbja5UaBEQLjcvn7aAU01nqU/NUyOBEU+ew=
+github.com/adamzy/cedar-go v0.0.0-20170805034717-80a9c64b256d/go.mod h1:PRWNwWq0yifz6XDPZu48aSld8BWwBfr2JKB2bGWiEd4=
+github.com/adamzy/sego v0.0.0-20151004184924-5eab9a44f8e8/go.mod h1:KQxo+Xesl2wLJ3yJcX443KaoWzXpbPzU1GNRyE8kNEY=
 github.com/bitly/go-hostpool v0.0.0-20171023180738-a3a6125de932 h1:mXoPYz/Ul5HYEDvkta6I8/rnYM5gSdSV2tJ6XbZuEtY=
 github.com/bitly/go-hostpool v0.0.0-20171023180738-a3a6125de932/go.mod h1:NOuUCSz6Q9T7+igc/hlvDOUdtWKryOrtFyIVABv/p7k=
 github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 h1:DDGfHa7BWjL4YnC6+E63dPcxHo2sUxDIu8g3QgEJdRY=
@@ -71,6 +74,9 @@ github.com/gorilla/websocket v1.5.1/go.mod h1:x3kM2JMyaluk02fnUJpQuwD2dCS5NDG2ZH
 github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed h1:5upAirOpQc1Q53c0bnx2ufif5kANL7bfZWcc6VJWJd8=
 github.com/hailocab/go-hostpool v0.0.0-20160125115350-e80d13ce29ed/go.mod h1:tMWxXQ9wFIaZeTI9F+hmhFiGpFmhOHzyShyFUhRm0H4=
 github.com/hpcloud/tail v1.0.0/go.mod h1:ab1qPbhIpdTxEkNHXyeSf5vhxWSCs/tWer42PpOxQnU=
+github.com/huichen/sego v0.0.0-20210824061530-c87651ea5c76 h1:qNQ2+1IQT9Mor/vfEHePOQSbiapLoNI7sQmpxM7l1Ew=
+github.com/huichen/sego v0.0.0-20210824061530-c87651ea5c76/go.mod h1:Fymg8+khR/cKSuIwqRxy/jmZg7PIPLk7CauXzrbcMUM=
+github.com/issue9/assert v1.4.1/go.mod h1:Yktk83hAVl1SPSYtd9kjhBizuiBIqUQyj+D5SE2yjVY=
 github.com/json-iterator/go v1.1.12 h1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=
 github.com/json-iterator/go v1.1.12/go.mod h1:e30LSqwooZae/UwlEbR2852Gd8hjQvJoHmT4TnhNGBo=
 github.com/klauspost/compress v1.13.6 h1:P76CopJELS0TiO2mebmnzgWaajssP/EszplttgQxcgc=
@@ -142,6 +148,8 @@ github.com/xdg-go/scram v1.1.2 h1:FHX5I5B4i4hKRVRBCFRxq1iQRej7WO3hhBuJf+UUySY=
 github.com/xdg-go/scram v1.1.2/go.mod h1:RT/sEzTbU5y00aCK8UOx6R7YryM0iF1N2MOmC3kKLN4=
 github.com/xdg-go/stringprep v1.0.4 h1:XLI/Ng3O1Atzq0oBs3TWm+5ZVgkq2aqdlvP9JtoZ6c8=
 github.com/xdg-go/stringprep v1.0.4/go.mod h1:mPGuuIYwz7CmR2bT9j4GbQqutWS1zV24gijq1dTyGkM=
+github.com/yanyiwu/gojieba v1.3.0 h1:6VeaPOR+MawnImdeSvWNr7rP4tvUfnGlEKaoBnR33Ds=
+github.com/yanyiwu/gojieba v1.3.0/go.mod h1:54wkP7sMJ6bklf7yPl6F+JG71dzVUU1WigZbR47nGdY=
 github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d h1:splanxYIlg+5LfHAM6xpdFEAYOk8iySO56hMFq6uLyA=
 github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d/go.mod h1:rHwXgn7JulP+udvsHwJoVG1YGAP6VLg4y9I5dyZdqmA=
 github.com/yuin/goldmark v1.2.1/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=

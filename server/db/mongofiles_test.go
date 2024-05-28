@@ -49,24 +49,19 @@ func TestFindFileByString(t *testing.T) {
 		return
 	}
 
-	err = MongoClient.Init()
-	fmt.Println(err)
+	//err = MongoClient.Init()
+	//fmt.Println(err)
 
-	fileInfo := model.FileInfo{
-		HashCode:  "111",
-		StoreType: "md5",
-		FileName:  "测试1.doc",
-		UniqName:  "aaaaaa.doc",
-		Gid:       1001,
-		Tm:        utils.GetTimeStamp(),
-		FileSize:  12,
-		UserId:    1001,
-		Tags:      []string{"test", "robin"},
-	}
-	err = MongoClient.SaveNewFile(&fileInfo)
-	fmt.Println("save", err)
+	//lst, err := MongoClient.FindFileByTag("robin")
+	//fmt.Println("save", len(lst), lst)
 
-	lst, err := MongoClient.FindFileByTag("robin")
-	fmt.Println("save", lst)
+	//data, err := MongoClient.FindFileByHash("11")
+	//fmt.Println("save", data)
+
+	lst, err := MongoClient.FindFileByGroup(1002, 1716883226053)
+	fmt.Println("save", len(lst), lst)
+
+	lst, err = MongoClient.FindFileByUser(1001, 1716883139804)
+	fmt.Println("save", len(lst), lst)
 
 }
