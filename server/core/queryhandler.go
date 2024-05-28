@@ -180,7 +180,119 @@ func onQueryFriendOp(queryMsg *pbmodel.MsgQuery, session *Session) {
 	session.SendMessage(&msg)
 }
 
+func groupOpRecords2Msg(records []model.CommonOpStore) []*pbmodel.GroupOpResult {
+	if records == nil || len(records) == 0 {
+		return nil
+	}
+
+	lstGroup := make([]*pbmodel.GroupOpResult, len(records))
+	var groupItem *pbmodel.GroupOpResult = nil
+
+	for index, record := range records {
+		groupItem = nil
+
+		result := ""
+		if record.Ret == model.UserOpResultOk {
+			result = "accept"
+		} else if record.Ret == model.UserOpResultRefuse {
+			result = "refuse"
+		}
+
+		//record.Io == model.ChatDataIOOut
+
+		switch record.Cmd {
+		case model.CommonGroupOpJoinRequest:
+			groupItem = &pbmodel.GroupOpResult{
+				Result:    result,
+				Operation: pbmodel.GroupOperationType_GroupJoinRequest,
+				MsgId:     record.Id,
+				SendId:    record.Usid,
+				Detail:    string(record.Draf),
+				Group:     &pbmodel.GroupInfo{GroupId: record.Gid},
+				ReqMem: &pbmodel.GroupMember{
+					UserId: record.Uid1,
+				},
+				Members: []*pbmodel.GroupMember{
+					&pbmodel.GroupMember{
+						UserId: record.Uid2,
+					},
+				},
+			}
+
+		default:
+
+		}
+
+		// 添加到数组
+		lstGroup[index] = groupItem
+	} // end of for-loop
+
+	return lstGroup
+}
+
 // 群管理员才需要同步这个数据，仅仅是用户请求加入群的消息
 func onQueryGroupOp(queryMsg *pbmodel.MsgQuery, session *Session) {
 
+	var err error
+	var lst []model.CommonOpStore
+
+	groupId := queryMsg.GetGroupId()
+	group, err := findGroup(groupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "query message, group id is not correct", nil, session)
+		return
+	}
+
+	isAdmin := group.IsAdmin(session.UserID)
+	if !isAdmin {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "query message, you are not group admin", nil, session)
+		return
+	}
+
+	pk := db.ComputePk(groupId)
+	switch queryMsg.GetSynType() {
+	case pbmodel.SynType_SynTypeForward:
+		lst, err = Globals.scyllaCli.FindGroupOpForward(pk, groupId, queryMsg.LittleId, 100)
+	default:
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "query message, syn type is not accepted", nil, session)
+		return
+	}
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "query db meet some err", nil, session)
+		return
+	}
+
+	// 格式转化
+	groupLst := groupOpRecords2Msg(lst)
+
+	queryRet := pbmodel.MsgQueryResult{
+		UserId:          session.UserID,
+		GroupId:         groupId,
+		LittleId:        0,
+		BigId:           0,
+		SynType:         queryMsg.GetSynType(),
+		Tm:              utils.GetTimeStamp(),
+		ChatType:        pbmodel.ChatType_ChatTypeNone,
+		QueryType:       pbmodel.QueryDataType_QueryDataTypeGroupOP,
+		FriendOpRetList: nil,
+		GroupOpRetList:  groupLst,
+	}
+
+	msgPlain := pbmodel.MsgPlain{
+		Message: &pbmodel.MsgPlain_CommonQueryRet{
+			CommonQueryRet: &queryRet,
+		},
+	}
+
+	msg := pbmodel.Msg{
+		Version:  int32(ProtocolVersion),
+		KeyPrint: 0,
+		Tm:       utils.GetTimeStamp(),
+		MsgType:  pbmodel.ComMsgType_MsgTQueryResult,
+		SubType:  0,
+		Message: &pbmodel.Msg_PlainMsg{
+			PlainMsg: &msgPlain,
+		},
+	}
+	session.SendMessage(&msg)
 }

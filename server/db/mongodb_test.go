@@ -241,7 +241,7 @@ func TestFindGroupByTag(t *testing.T) {
 		return
 	}
 
-	grps, err := MongoClient.FindGroupByKeyword("test1")
+	grps, err := MongoClient.FindGroupByKeyword("test1", true)
 	if grps != nil {
 		for _, g := range grps {
 			b, _ := json.Marshal(g)

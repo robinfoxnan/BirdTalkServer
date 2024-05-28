@@ -123,12 +123,12 @@ const UserOpResultOk = 1
 const (
 	CommonGroupOpCreate        = 1
 	CommonGroupOpDissolve      = 2
-	CommonGroupOpJoinRequest   = 3
-	CommonGroupOpInviteRequest = 4
+	CommonGroupOpJoinRequest   = 3 // 写到群操作记录中
+	CommonGroupOpInviteRequest = 4 // 写到个人的操作记录中
 	CommonGroupOpAddAdmin      = 5
 	CommonGroupOpRemoveAdmin   = 6
 	CommonGroupOpSetInfo       = 7
 	CommonGroupOpTransferOwner = 8
 
-	CommonUserOpAddRequest = 101
+	CommonUserOpAddRequest = 101 // 写到个人的操作记录中
 )

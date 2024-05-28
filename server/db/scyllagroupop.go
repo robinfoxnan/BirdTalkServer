@@ -97,7 +97,7 @@ func (me *Scylla) FindGroupOpExact(pk int16, gid, logId int64) (*model.CommonOpS
 }
 
 // 正向查找，如果从头开始查找，那么设置为littleId = 0
-func (me *Scylla) FindGroupOpForward(pk, uid, littleId int64, pageSize uint) ([]model.CommonOpStore, error) {
+func (me *Scylla) FindGroupOpForward(pk int16, gid, littleId int64, pageSize uint) ([]model.CommonOpStore, error) {
 
 	builder := qb.Select(GroupOpTableName).Columns(metaGroupOp.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.GtOrEq("id"))
@@ -113,7 +113,7 @@ func (me *Scylla) FindGroupOpForward(pk, uid, littleId int64, pageSize uint) ([]
 
 	q.Consistency(gocql.One)
 
-	q.Bind(pk, uid, littleId)
+	q.Bind(pk, gid, littleId)
 
 	var lst []model.CommonOpStore
 

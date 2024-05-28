@@ -18,9 +18,12 @@ const UserTableName = "users"
 const UserTableIndex = "userid"
 const GroupTableName = "groups"
 const GroupTableIndex = "groupid"
+const FileTableName = "files"
+const FileTableIndex = "hashcode"
 
 // 内部使用
 var userTableSearchFields = []string{"username", "email", "phone"}
+var fileTableSearchFields = []string{"gid", "tm", "filename", "tags"}
 
 // MongoDBExporter 结构体
 type MongoDBExporter struct {
@@ -102,8 +105,12 @@ func printTm(tm1, tm2 int64) {
 func (me *MongoDBExporter) Init() error {
 	// 在此进行初始化操作，如果有需要的话
 	err := me.CreateIndex(UserTableName, UserTableIndex)
-	err = me.CreateIndex(GroupTableName, GroupTableIndex)
 	err = me.CreateIndexes(UserTableName, userTableSearchFields)
+
+	err = me.CreateIndex(GroupTableName, GroupTableIndex)
+
+	err = me.CreateIndex(FileTableName, FileTableIndex)
+	err = me.CreateIndexes(FileTableName, fileTableSearchFields)
 	return err
 }
 

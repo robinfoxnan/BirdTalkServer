@@ -49,8 +49,8 @@ func TestAddGroupMember(t *testing.T) {
 		return
 	}
 
-	count, err := redisCli.AddGroupMembers(101, []int64{10001, 10002, 10003})
-	fmt.Println(count)
+	err = redisCli.AddGroupMembers(101, 1001, "", 1)
+	fmt.Println(err)
 
 	//count, err = redisCli.AddGroupMembers(101, []int64{10004, 10005, 10006})
 	//count, err = redisCli.RemoveGroupMembers(101, []int64{10004, 10005, 10006})

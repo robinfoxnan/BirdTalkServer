@@ -8,6 +8,9 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/gorilla/websocket"
 	"go.uber.org/zap"
+	"hash"
+	"os"
+	"sync"
 	"sync/atomic"
 	"time"
 )
@@ -37,6 +40,8 @@ type Session struct {
 	RemoteAddr  string // 客户端的 IP 地址。
 	Params      map[string]string
 
+	Files map[string]*SessionFile // 上传或者下载的文件
+
 	TempUserInfo *pbmodel.UserInfo // 临时保存的
 
 	Status uint32             // 状态码
@@ -61,6 +66,30 @@ type Session struct {
 	send        chan any
 	stop        chan any //// 用于关闭会话的通道，缓冲 1。
 	terminating int32
+}
+
+// 上传或者下载的文件
+type SessionFile struct {
+	File       *os.File
+	isUpload   bool
+	Filename   string
+	TempName   string // 临时文件名
+	UniqName   string // 唯一文件名
+	hash       hash.Hash
+	Lock       sync.Mutex
+	ChunkSize  int32
+	ChunkIndex int32
+	ChunkCount int32
+}
+
+// 断点上传或者下载过程中使用文件名
+func (s *Session) GetFile(fileName string) *SessionFile {
+	file, ok := s.Files[fileName]
+	if ok {
+		return file
+	}
+
+	return nil
 }
 
 func (s *Session) HasStatus(mask uint32) bool {

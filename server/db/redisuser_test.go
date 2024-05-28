@@ -208,8 +208,8 @@ func TestUserAddGroup(t *testing.T) {
 		return
 	}
 
-	err = redisCli.SetUserJoinGroup(10002, 101)
-	err = redisCli.SetUserJoinGroup(10002, 102)
+	err = redisCli.SetUserJoinGroup(10002, 101, "test1")
+	err = redisCli.SetUserJoinGroup(10002, 102, "test2")
 	fmt.Println(err)
 
 	lst, err := redisCli.GetUsersInSameGroup(10001, 10002)
