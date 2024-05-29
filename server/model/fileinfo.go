@@ -1,8 +1,8 @@
 package model
 
 type FileInfo struct {
-	HashCode string
-
+	HashCode  string
+	Status    string
 	StoreType string
 	FileName  string
 	UniqName  string

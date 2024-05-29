@@ -24,6 +24,7 @@ server:
     friend_making: false
     cluster_mode: false
     avatar_font: ./ttf/SourceHanSans-VF.ttf
+    file_base_path: e:/upload
 
 
 email:

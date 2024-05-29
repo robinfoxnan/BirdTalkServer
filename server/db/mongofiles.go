@@ -26,15 +26,15 @@ func (me *MongoDBExporter) SaveNewFile(f *model.FileInfo) error {
 
 // 查找
 
-func (me *MongoDBExporter) FindFileByHash(keyword string) (*model.FileInfo, error) {
-	fileLst, err := me.findFileByFieldAndTmOrder("hashcode", keyword, utils.GetTimeStamp())
-
-	if fileLst == nil || len(fileLst) == 0 {
-		return nil, err
-	}
-
-	return &fileLst[0], nil
-}
+//func (me *MongoDBExporter) FindFileByHash(keyword string) (*model.FileInfo, error) {
+//	fileLst, err := me.findFileByFieldAndTmOrder("hashcode", keyword, utils.GetTimeStamp())
+//
+//	if fileLst == nil || len(fileLst) == 0 {
+//		return nil, err
+//	}
+//
+//	return &fileLst[0], nil
+//}
 
 func (me *MongoDBExporter) findFileByFieldAndTmOrder(field string, keyword interface{}, bigTm int64) ([]model.FileInfo, error) {
 	collection := me.db.Collection(FileTableName)
@@ -72,7 +72,7 @@ func (me *MongoDBExporter) FindFileByTag(keyword string) ([]model.FileInfo, erro
 	return me.findFileByFieldAndTmOrder("tags", keyword, utils.GetTimeStamp())
 }
 
-func (me *MongoDBExporter) FindFileById(hashcode string) (*model.FileInfo, error) {
+func (me *MongoDBExporter) FindFileByHashCode(hashcode string) (*model.FileInfo, error) {
 	collection := me.db.Collection(FileTableName)
 
 	filter := bson.M{"hashcode": hashcode}

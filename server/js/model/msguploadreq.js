@@ -74,9 +74,13 @@ proto.model.MsgUploadReq.toObject = function(includeInstance, msg) {
     filesize: jspb.Message.getFieldWithDefault(msg, 2, 0),
     filedata: msg.getFiledata_asB64(),
     hashtype: jspb.Message.getFieldWithDefault(msg, 4, ""),
-    hashcode: msg.getHashcode_asB64(),
+    hashcode: jspb.Message.getFieldWithDefault(msg, 5, ""),
     filetype: jspb.Message.getFieldWithDefault(msg, 6, ""),
-    sendid: jspb.Message.getFieldWithDefault(msg, 7, "")
+    sendid: jspb.Message.getFieldWithDefault(msg, 7, 0),
+    chunkindex: jspb.Message.getFieldWithDefault(msg, 8, 0),
+    chunkcount: jspb.Message.getFieldWithDefault(msg, 9, 0),
+    chunksize: jspb.Message.getFieldWithDefault(msg, 10, 0),
+    groupid: jspb.Message.getFieldWithDefault(msg, 11, 0)
   };
 
   if (includeInstance) {
@@ -130,7 +134,7 @@ proto.model.MsgUploadReq.deserializeBinaryFromReader = function(msg, reader) {
       msg.setHashtype(value);
       break;
     case 5:
-      var value = /** @type {!Uint8Array} */ (reader.readBytes());
+      var value = /** @type {string} */ (reader.readString());
       msg.setHashcode(value);
       break;
     case 6:
@@ -138,8 +142,24 @@ proto.model.MsgUploadReq.deserializeBinaryFromReader = function(msg, reader) {
       msg.setFiletype(value);
       break;
     case 7:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setSendid(value);
+      break;
+    case 8:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setChunkindex(value);
+      break;
+    case 9:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setChunkcount(value);
+      break;
+    case 10:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setChunksize(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setGroupid(value);
       break;
     default:
       reader.skipField();
@@ -198,9 +218,9 @@ proto.model.MsgUploadReq.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getHashcode_asU8();
+  f = message.getHashcode();
   if (f.length > 0) {
-    writer.writeBytes(
+    writer.writeString(
       5,
       f
     );
@@ -213,9 +233,37 @@ proto.model.MsgUploadReq.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getSendid();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt64(
       7,
+      f
+    );
+  }
+  f = message.getChunkindex();
+  if (f !== 0) {
+    writer.writeInt32(
+      8,
+      f
+    );
+  }
+  f = message.getChunkcount();
+  if (f !== 0) {
+    writer.writeInt32(
+      9,
+      f
+    );
+  }
+  f = message.getChunksize();
+  if (f !== 0) {
+    writer.writeInt32(
+      10,
+      f
+    );
+  }
+  f = message.getGroupid();
+  if (f !== 0) {
+    writer.writeInt64(
+      11,
       f
     );
   }
@@ -319,7 +367,7 @@ proto.model.MsgUploadReq.prototype.setHashtype = function(value) {
 
 
 /**
- * optional bytes hashCode = 5;
+ * optional string hashCode = 5;
  * @return {string}
  */
 proto.model.MsgUploadReq.prototype.getHashcode = function() {
@@ -328,35 +376,11 @@ proto.model.MsgUploadReq.prototype.getHashcode = function() {
 
 
 /**
- * optional bytes hashCode = 5;
- * This is a type-conversion wrapper around `getHashcode()`
- * @return {string}
- */
-proto.model.MsgUploadReq.prototype.getHashcode_asB64 = function() {
-  return /** @type {string} */ (jspb.Message.bytesAsB64(
-      this.getHashcode()));
-};
-
-
-/**
- * optional bytes hashCode = 5;
- * Note that Uint8Array is not supported on all browsers.
- * @see http://caniuse.com/Uint8Array
- * This is a type-conversion wrapper around `getHashcode()`
- * @return {!Uint8Array}
- */
-proto.model.MsgUploadReq.prototype.getHashcode_asU8 = function() {
-  return /** @type {!Uint8Array} */ (jspb.Message.bytesAsU8(
-      this.getHashcode()));
-};
-
-
-/**
- * @param {!(string|Uint8Array)} value
+ * @param {string} value
  * @return {!proto.model.MsgUploadReq} returns this
  */
 proto.model.MsgUploadReq.prototype.setHashcode = function(value) {
-  return jspb.Message.setProto3BytesField(this, 5, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
@@ -379,20 +403,92 @@ proto.model.MsgUploadReq.prototype.setFiletype = function(value) {
 
 
 /**
- * optional string sendId = 7;
- * @return {string}
+ * optional int64 sendId = 7;
+ * @return {number}
  */
 proto.model.MsgUploadReq.prototype.getSendid = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 7, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 7, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.model.MsgUploadReq} returns this
  */
 proto.model.MsgUploadReq.prototype.setSendid = function(value) {
-  return jspb.Message.setProto3StringField(this, 7, value);
+  return jspb.Message.setProto3IntField(this, 7, value);
+};
+
+
+/**
+ * optional int32 chunkIndex = 8;
+ * @return {number}
+ */
+proto.model.MsgUploadReq.prototype.getChunkindex = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 8, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgUploadReq} returns this
+ */
+proto.model.MsgUploadReq.prototype.setChunkindex = function(value) {
+  return jspb.Message.setProto3IntField(this, 8, value);
+};
+
+
+/**
+ * optional int32 chunkCount = 9;
+ * @return {number}
+ */
+proto.model.MsgUploadReq.prototype.getChunkcount = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 9, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgUploadReq} returns this
+ */
+proto.model.MsgUploadReq.prototype.setChunkcount = function(value) {
+  return jspb.Message.setProto3IntField(this, 9, value);
+};
+
+
+/**
+ * optional int32 chunkSize = 10;
+ * @return {number}
+ */
+proto.model.MsgUploadReq.prototype.getChunksize = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 10, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgUploadReq} returns this
+ */
+proto.model.MsgUploadReq.prototype.setChunksize = function(value) {
+  return jspb.Message.setProto3IntField(this, 10, value);
+};
+
+
+/**
+ * optional int64 groupId = 11;
+ * @return {number}
+ */
+proto.model.MsgUploadReq.prototype.getGroupid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgUploadReq} returns this
+ */
+proto.model.MsgUploadReq.prototype.setGroupid = function(value) {
+  return jspb.Message.setProto3IntField(this, 11, value);
 };
 
 

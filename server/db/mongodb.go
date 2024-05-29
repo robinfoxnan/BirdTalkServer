@@ -19,11 +19,10 @@ const UserTableIndex = "userid"
 const GroupTableName = "groups"
 const GroupTableIndex = "groupid"
 const FileTableName = "files"
-const FileTableIndex = "hashcode"
 
 // 内部使用
 var userTableSearchFields = []string{"username", "email", "phone"}
-var fileTableSearchFields = []string{"gid", "tm", "filename", "tags"}
+var fileTableSearchFields = []string{"hashcode", "gid", "tm", "tags"}
 
 // MongoDBExporter 结构体
 type MongoDBExporter struct {
@@ -39,8 +38,8 @@ func NewMongoDBExporter(connectionString, dbName string) (*MongoDBExporter, erro
 	// 创建 MongoDB 连接选项
 	clientOptions := options.Client().ApplyURI(connectionString)
 	clientOptions.SetConnectTimeout(10 * time.Second). // 设置连接超时时间为 10 秒
-								SetSocketTimeout(5 * time.Second). // 设置 Socket 超时时间为 5 秒
-								SetMaxPoolSize(100)                // 设置连接池大小为 100
+		SetSocketTimeout(5 * time.Second). // 设置 Socket 超时时间为 5 秒
+		SetMaxPoolSize(100) // 设置连接池大小为 100
 
 	// 连接到 MongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -109,7 +108,6 @@ func (me *MongoDBExporter) Init() error {
 
 	err = me.CreateIndex(GroupTableName, GroupTableIndex)
 
-	err = me.CreateIndex(FileTableName, FileTableIndex)
 	err = me.CreateIndexes(FileTableName, fileTableSearchFields)
 	return err
 }

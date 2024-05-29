@@ -204,21 +204,24 @@ message MsgUploadReq {
   bytes fileData = 3;       // 上传的文件数据
 
   string hashType = 4;      // 文件哈希算法类型（例如：MD5、SHA-256等）
-  bytes hashCode = 5;       // 文件哈希值
+  string hashCode = 5;       // 文件哈希值
   string fileType = 6;      // 文件类型（例如：文本、图像、视频等）
-  string sendId = 7;        // 用于确认消息的发送 ID
+  int64 sendId = 7;        // 用于确认消息的发送 ID
   int32  chunkIndex = 8;   // 块编号
   int32  chunkCount = 9;   // 总块数
   int32  chunkSize = 10;   // 切块大小
+  int64  groupId = 11;
 }
 
 // 上传文件的响应消息
 message MsgUploadReply {
   string fileName = 1;    // 上传文件的名称，用于标识文件
-  string sendId = 2;      // 用于确认消息的发送 ID
+  int64 sendId = 2;      // 用于确认消息的发送 ID
   string uuidName = 3;    // 服务器生成的文件唯一标识，例如存储在服务器上的文件名
   int32  chunkIndex = 4;  // 对单独每个块的应答
   string result = 5;      // 上传结果或状态信息
+  string detail = 6;
+
 }
 
 // 下载文件的请求消息

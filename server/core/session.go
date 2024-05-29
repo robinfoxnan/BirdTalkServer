@@ -70,12 +70,16 @@ type Session struct {
 
 // 上传或者下载的文件
 type SessionFile struct {
-	File       *os.File
-	isUpload   bool
-	Filename   string
-	TempName   string // 临时文件名
-	UniqName   string // 唯一文件名
-	hash       hash.Hash
+	File     *os.File
+	isUpload bool
+	FileName string
+	FullPath string // 临时文件名
+	UniqName string // 唯一文件名
+	HashCode string
+	Gid      int64
+
+	FileSize   int64
+	Hash       hash.Hash
 	Lock       sync.Mutex
 	ChunkSize  int32
 	ChunkIndex int32
@@ -90,6 +94,25 @@ func (s *Session) GetFile(fileName string) *SessionFile {
 	}
 
 	return nil
+}
+
+// 如果有失败未清理掉的资源则需要清理
+func (s *Session) SetFile(fileName string, file *SessionFile) {
+
+	fileOld, ok := s.Files[fileName]
+	if ok {
+		if fileOld.File != nil {
+			fileOld.File.Close()
+		}
+		if fileOld.FullPath != "" {
+			os.Remove(fileOld.FullPath)
+		}
+	}
+	s.Files[fileName] = file
+}
+
+func (s *Session) RemoveFile(fileName string) {
+	delete(s.Files, fileName)
 }
 
 func (s *Session) HasStatus(mask uint32) bool {

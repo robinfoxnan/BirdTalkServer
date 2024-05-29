@@ -134,6 +134,37 @@ func SplitCamelCase(str string) []string {
 	return words
 }
 
+type SegmentJieba struct {
+	x *gojieba.Jieba
+}
+
+func NewSegment() *SegmentJieba {
+	seg := SegmentJieba{x: gojieba.NewJieba()}
+	return &seg
+}
+
+func (seg *SegmentJieba) Close() {
+	if seg != nil && seg.x != nil {
+		seg.x.Free()
+		seg.x = nil
+	}
+}
+
+func (seg *SegmentJieba) Cut(str string) []string {
+	if seg == nil {
+		return nil
+	}
+	words := seg.x.Cut(str, true)
+	tags := []string{}
+	for _, word := range words {
+		b := IsAllPunctuationOrWhitespace(word)
+		if !b {
+			tags = append(tags, word)
+		}
+	}
+	return tags
+}
+
 // 中文进行分词
 func SegmentTextChinese(text string) []string {
 	// 进行分词

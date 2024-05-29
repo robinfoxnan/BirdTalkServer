@@ -43,13 +43,14 @@ type ServerConf struct {
 	HostName  string `yaml:"host_name"`
 	MsgQueLen int    `yaml:"group_msg_queue_len"`
 
-	Workers     int    `yaml:"workers"`
-	Schema      string `yaml:"schema"`
-	CertFile    string `yaml:"cert"`
-	KeyFile     string `yaml:"key"`
-	FriendMode  bool   `yaml:"friend_making"` // 交友模式，社区模式
-	ClusterMode bool   `yaml:"cluster_mode"`
-	AvatarFont  string `yaml:"avatar_font"`
+	Workers      int    `yaml:"workers"`
+	Schema       string `yaml:"schema"`
+	CertFile     string `yaml:"cert"`
+	KeyFile      string `yaml:"key"`
+	FriendMode   bool   `yaml:"friend_making"` // 交友模式，社区模式
+	ClusterMode  bool   `yaml:"cluster_mode"`
+	AvatarFont   string `yaml:"avatar_font"`
+	FileBasePath string `yaml:"file_base_path"`
 }
 
 type LocalConfig struct {

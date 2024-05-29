@@ -71,9 +71,11 @@ proto.model.MsgUploadReply.prototype.toObject = function(opt_includeInstance) {
 proto.model.MsgUploadReply.toObject = function(includeInstance, msg) {
   var f, obj = {
     filename: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    sendid: jspb.Message.getFieldWithDefault(msg, 2, ""),
+    sendid: jspb.Message.getFieldWithDefault(msg, 2, 0),
     uuidname: jspb.Message.getFieldWithDefault(msg, 3, ""),
-    result: jspb.Message.getFieldWithDefault(msg, 4, "")
+    chunkindex: jspb.Message.getFieldWithDefault(msg, 4, 0),
+    result: jspb.Message.getFieldWithDefault(msg, 5, ""),
+    detail: jspb.Message.getFieldWithDefault(msg, 6, "")
   };
 
   if (includeInstance) {
@@ -115,7 +117,7 @@ proto.model.MsgUploadReply.deserializeBinaryFromReader = function(msg, reader) {
       msg.setFilename(value);
       break;
     case 2:
-      var value = /** @type {string} */ (reader.readString());
+      var value = /** @type {number} */ (reader.readInt64());
       msg.setSendid(value);
       break;
     case 3:
@@ -123,8 +125,16 @@ proto.model.MsgUploadReply.deserializeBinaryFromReader = function(msg, reader) {
       msg.setUuidname(value);
       break;
     case 4:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setChunkindex(value);
+      break;
+    case 5:
       var value = /** @type {string} */ (reader.readString());
       msg.setResult(value);
+      break;
+    case 6:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDetail(value);
       break;
     default:
       reader.skipField();
@@ -163,8 +173,8 @@ proto.model.MsgUploadReply.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getSendid();
-  if (f.length > 0) {
-    writer.writeString(
+  if (f !== 0) {
+    writer.writeInt64(
       2,
       f
     );
@@ -176,10 +186,24 @@ proto.model.MsgUploadReply.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getChunkindex();
+  if (f !== 0) {
+    writer.writeInt32(
+      4,
+      f
+    );
+  }
   f = message.getResult();
   if (f.length > 0) {
     writer.writeString(
-      4,
+      5,
+      f
+    );
+  }
+  f = message.getDetail();
+  if (f.length > 0) {
+    writer.writeString(
+      6,
       f
     );
   }
@@ -205,20 +229,20 @@ proto.model.MsgUploadReply.prototype.setFilename = function(value) {
 
 
 /**
- * optional string sendId = 2;
- * @return {string}
+ * optional int64 sendId = 2;
+ * @return {number}
  */
 proto.model.MsgUploadReply.prototype.getSendid = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /**
- * @param {string} value
+ * @param {number} value
  * @return {!proto.model.MsgUploadReply} returns this
  */
 proto.model.MsgUploadReply.prototype.setSendid = function(value) {
-  return jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
@@ -241,11 +265,29 @@ proto.model.MsgUploadReply.prototype.setUuidname = function(value) {
 
 
 /**
- * optional string result = 4;
+ * optional int32 chunkIndex = 4;
+ * @return {number}
+ */
+proto.model.MsgUploadReply.prototype.getChunkindex = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.MsgUploadReply} returns this
+ */
+proto.model.MsgUploadReply.prototype.setChunkindex = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * optional string result = 5;
  * @return {string}
  */
 proto.model.MsgUploadReply.prototype.getResult = function() {
-  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, ""));
 };
 
 
@@ -254,7 +296,25 @@ proto.model.MsgUploadReply.prototype.getResult = function() {
  * @return {!proto.model.MsgUploadReply} returns this
  */
 proto.model.MsgUploadReply.prototype.setResult = function(value) {
-  return jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
+};
+
+
+/**
+ * optional string detail = 6;
+ * @return {string}
+ */
+proto.model.MsgUploadReply.prototype.getDetail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 6, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.model.MsgUploadReply} returns this
+ */
+proto.model.MsgUploadReply.prototype.setDetail = function(value) {
+  return jspb.Message.setProto3StringField(this, 6, value);
 };
 
 

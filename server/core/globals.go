@@ -20,7 +20,8 @@ type GlobalVars struct {
 	uc  *model.UserCache  // 用户内存缓存
 	grc *model.GroupCache // 群组信息内存缓存
 
-	snow *utils.Snowflake // 雪花算法
+	snow    *utils.Snowflake // 雪花算法
+	segment *utils.SegmentJieba
 
 	scyllaCli *db.Scylla
 	redisCli  *db.RedisClient
@@ -41,6 +42,7 @@ func init() {
 	Globals.uc = model.NewUserCache()
 	Globals.grc = model.NewGroupCache()
 	Globals.Logger = utils.CreateLogger()
+	Globals.segment = utils.NewSegment()
 
 	err := utils.InitFont(Globals.Config.Server.AvatarFont)
 	if err != nil {
