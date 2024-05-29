@@ -5,6 +5,7 @@ import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"crypto/md5"
+	"encoding/hex"
 	"errors"
 	"fmt"
 	"os"
@@ -16,6 +17,10 @@ import (
 
 func handleFileUpload(msg *pbmodel.Msg, session *Session) {
 	uploadMsg := msg.GetPlainMsg().GetUploadReq()
+	if uploadMsg == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "upload request is null", nil, session)
+		return
+	}
 	hashType := strings.ToLower(uploadMsg.GetHashType())
 	if hashType != "md5" && hashType != "sha1" {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "hash type is not accepted", nil, session)
@@ -37,25 +42,78 @@ func handleFileUpload(msg *pbmodel.Msg, session *Session) {
 	return
 }
 
+// 下载的请求
 func handleFileDownload(msg *pbmodel.Msg, session *Session) {
+	downLoadReq := msg.GetPlainMsg().GetDownloadReq()
+	if downLoadReq == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "download request is null", nil, session)
+		return
+	}
+
+	fileFullPath, _ := utils.FileName2FilePath(Globals.Config.Server.FileBasePath, downLoadReq.GetFileName(), false)
+
+	st, err := os.Stat(fileFullPath)
+	if os.IsNotExist(err) {
+
+		msgRet := createDownloadRetMsg(downLoadReq, "", "fail", "not exist",
+			0, 0, 0, 0, nil, "")
+		session.SendMessage(msgRet)
+		return
+	}
+	sz := st.Size()
+	if sz < (1<<20)*2 {
+		sendbackFile(downLoadReq, sz, fileFullPath, session)
+	} else {
+		go sendbackFile(downLoadReq, sz, fileFullPath, session)
+	}
 
 }
 
-// 计算流水号文件名
-func getUUIDFileName(fileName string) string {
-	id := uint64(Globals.snow.GenerateID())
-	filename := strconv.FormatUint(id, 36)
-	ext := filepath.Ext(filename)
-	return filename + ext
-}
+// 应答文件数据
+func sendbackFile(downLoadReq *pbmodel.MsgDownloadReq, sz int64, fileFullPath string, session *Session) {
 
-func sendBackFileUploadErr(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result string, detail string, session *Session) {
-	Globals.Logger.Error(detail)
-	msgRet := createUpLoadRetMsg(uniqName, uploadMsg, result, detail)
+	file, err := os.Open(fileFullPath)
+	if err != nil {
+		msgRet := createDownloadRetMsg(downLoadReq, "", "fail", "open file error",
+			0, 0, 0, 0, nil, "")
+		session.SendMessage(msgRet)
+		return
+	}
+	defer file.Close()
+
+	chSize := int64(1 << 20)
+	chCount := (sz + chSize) / int64(chSize)
+	chIndex := 0
+
+	buffer := make([]byte, chSize)
+
+	for {
+		n, err := file.Read(buffer)
+		if err != nil {
+			msgRet := createDownloadRetMsg(downLoadReq, "", "fail", "open file error",
+				0, 0, 0, 0, nil, "")
+			session.SendMessage(msgRet)
+			return
+		}
+
+		if n > 0 {
+			msgRet := createDownloadRetMsg(downLoadReq, "", "trunk", "",
+				sz, int32(chIndex), int32(chCount), int32(chSize), buffer, "")
+			session.SendMessage(msgRet)
+		}
+
+		if int64(n) < chSize {
+			break
+		}
+
+		chIndex++
+	}
+	msgRet := createDownloadRetMsg(downLoadReq, "", "finish", "",
+		sz, int32(chIndex), int32(chCount), int32(chSize), buffer, "")
 	session.SendMessage(msgRet)
 }
 
-// 创建回复的消息
+// 上传的消息的应答
 func createUpLoadRetMsg(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result, detail string) *pbmodel.Msg {
 
 	msgUploadRet := pbmodel.MsgUploadReply{
@@ -85,6 +143,59 @@ func createUpLoadRetMsg(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result
 	}
 
 	return &msg
+}
+
+// 创建下载回复的消息
+func createDownloadRetMsg(downloadRet *pbmodel.MsgDownloadReq, fileName, result, detail string,
+	sz int64, index, chCount, chSize int32, data []byte, hashCode string) *pbmodel.Msg {
+
+	msgDownloadRet := pbmodel.MsgDownloadReply{
+		Result:     result,
+		Detail:     detail,
+		FileName:   downloadRet.FileName,
+		RealName:   fileName,
+		Offset:     0,
+		Size:       sz,
+		ChunkIndex: index,
+		ChunkCount: chCount,
+		ChunkSize:  chSize,
+		Data:       data,
+		HashCode:   hashCode,
+		HashType:   "md5",
+	}
+
+	msgPlain := pbmodel.MsgPlain{
+		Message: &pbmodel.MsgPlain_DownloadReply{
+			DownloadReply: &msgDownloadRet,
+		},
+	}
+
+	msg := pbmodel.Msg{
+		Version:  int32(ProtocolVersion),
+		KeyPrint: 0,
+		Tm:       utils.GetTimeStamp(),
+		MsgType:  pbmodel.ComMsgType_MsgTDownload,
+		SubType:  0,
+		Message: &pbmodel.Msg_PlainMsg{
+			PlainMsg: &msgPlain,
+		},
+	}
+
+	return &msg
+}
+
+// 计算流水号文件名
+func getUUIDFileName(fileName string) string {
+	id := uint64(Globals.snow.GenerateID())
+	filename := strconv.FormatUint(id, 36)
+	ext := filepath.Ext(filename)
+	return filename + ext
+}
+
+func sendBackFileUploadErr(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result string, detail string, session *Session) {
+	Globals.Logger.Error(detail)
+	msgRet := createUpLoadRetMsg(uniqName, uploadMsg, result, detail)
+	session.SendMessage(msgRet)
 }
 
 // 文件名，存在否，一样否
@@ -185,6 +296,16 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 
 	// 最后一片
 	if uploadMsg.GetChunkCount() == 1 {
+		// 计算MD5
+		hashInBytes := sFile.Hash.Sum(nil)
+		hashString := hex.EncodeToString(hashInBytes)
+		fmt.Printf("接收的md5 = %s \n", hashString)
+		if hashString != sFile.HashCode {
+			cleanSFile(sFile, session)
+			sendBackFileUploadErr("", uploadMsg, "fail", "md5 hash code is not same", session)
+			return
+		}
+
 		closeSFile(sFile, session)
 		msgRet := createUpLoadRetMsg(sFile.UniqName, uploadMsg, "fileok", "finish")
 		session.SendMessage(msgRet)
@@ -249,7 +370,8 @@ func writeToFile(data []byte, sFile *SessionFile) error {
 		return err
 	}
 
-	fmt.Println("数据写入文件成功")
+	//fmt.Println("数据写入文件成功")
+	sFile.Hash.Write(data)
 
 	return nil
 }
@@ -276,6 +398,16 @@ func onHandleUploadTrunkOther(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 	}
 
 	if bLast {
+		// 计算MD5
+		hashInBytes := sFile.Hash.Sum(nil)
+		hashString := hex.EncodeToString(hashInBytes)
+		fmt.Printf("接收的md5 = %s \n", hashString)
+		if hashString != sFile.HashCode {
+			cleanSFile(sFile, session)
+			sendBackFileUploadErr("", uploadMsg, "fail", "md5 hash code is not same", session)
+			return
+		}
+
 		closeSFile(sFile, session)
 		msgRet := createUpLoadRetMsg(sFile.UniqName, uploadMsg, "fileok", "finish")
 		session.SendMessage(msgRet)

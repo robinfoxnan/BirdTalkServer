@@ -7,10 +7,7 @@ import (
 	"errors"
 	"github.com/yanyiwu/gojieba"
 	"math"
-	"os"
-	"path/filepath"
 	"regexp"
-	"runtime"
 	"unicode"
 )
 
@@ -25,33 +22,6 @@ func HexStrToBytes(hexStr string) ([]byte, error) {
 		return nil, err
 	}
 	return data, nil
-}
-
-// GetAbsolutePath 获取相对路径的绝对路径
-func GetAbsolutePath(relativePath string) (string, error) {
-	// 检查输入路径是否是绝对路径
-	if filepath.IsAbs(relativePath) {
-		return relativePath, nil
-	}
-
-	// 获取当前可执行文件的路径
-	exePath, err := os.Executable()
-	if err != nil {
-		return "", err
-	}
-
-	// 判断操作系统类型
-	var absPath string
-	if runtime.GOOS == "windows" {
-		// 如果是 Windows，使用 filepath.Join 拼接路径
-		absPath = filepath.Join(filepath.Dir(exePath), relativePath)
-	} else {
-		// 如果是 Linux，直接拼接路径
-		absPath = filepath.Join(filepath.Dir(exePath), relativePath)
-	}
-
-	// 返回绝对路径
-	return absPath, nil
 }
 
 func BytesToInt64(data []byte) (int64, error) {

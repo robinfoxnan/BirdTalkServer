@@ -239,11 +239,17 @@ message MsgDownloadReply {
   string fileType = 4;      // 文件类型（例如：文本、图像、视频等）
 
   string hashType = 5;      // 文件哈希算法类型，表示计算文件哈希值所使用的算法（MD5、SHA-256等）
-  bytes hashCode = 6;       // 文件哈希值，用于验证文件完整性
+  string hashCode = 6;       // 文件哈希值，用于验证文件完整性
   bytes data = 7;           // 下载的文件数据
   int64 size = 8;           // 文件总大小
   int64 offset = 9;         // 下载的文件偏移量，如果不需要分片下载，可以忽略
-}
+  int32 chunkSize = 10;
+  int32 chunkCount = 11;
+  int32 chunkIndex = 12;   // 0 索引
+
+  string result = 13;
+  string detail = 14;
+ }
 
 // 错误消息类型
 enum ErrorMsgType{

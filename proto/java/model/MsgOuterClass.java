@@ -18675,10 +18675,20 @@ java.lang.String defaultValue);
      * 文件哈希值，用于验证文件完整性
      * </pre>
      *
-     * <code>bytes hashCode = 6;</code>
+     * <code>string hashCode = 6;</code>
      * @return The hashCode.
      */
-    com.google.protobuf.ByteString getHashCode();
+    java.lang.String getHashCode();
+    /**
+     * <pre>
+     * 文件哈希值，用于验证文件完整性
+     * </pre>
+     *
+     * <code>string hashCode = 6;</code>
+     * @return The bytes for hashCode.
+     */
+    com.google.protobuf.ByteString
+        getHashCodeBytes();
 
     /**
      * <pre>
@@ -18709,6 +18719,52 @@ java.lang.String defaultValue);
      * @return The offset.
      */
     long getOffset();
+
+    /**
+     * <code>int32 chunkSize = 10;</code>
+     * @return The chunkSize.
+     */
+    int getChunkSize();
+
+    /**
+     * <code>int32 chunkCount = 11;</code>
+     * @return The chunkCount.
+     */
+    int getChunkCount();
+
+    /**
+     * <pre>
+     * 0 索引
+     * </pre>
+     *
+     * <code>int32 chunkIndex = 12;</code>
+     * @return The chunkIndex.
+     */
+    int getChunkIndex();
+
+    /**
+     * <code>string result = 13;</code>
+     * @return The result.
+     */
+    java.lang.String getResult();
+    /**
+     * <code>string result = 13;</code>
+     * @return The bytes for result.
+     */
+    com.google.protobuf.ByteString
+        getResultBytes();
+
+    /**
+     * <code>string detail = 14;</code>
+     * @return The detail.
+     */
+    java.lang.String getDetail();
+    /**
+     * <code>string detail = 14;</code>
+     * @return The bytes for detail.
+     */
+    com.google.protobuf.ByteString
+        getDetailBytes();
   }
   /**
    * <pre>
@@ -18732,8 +18788,10 @@ java.lang.String defaultValue);
       realName_ = "";
       fileType_ = "";
       hashType_ = "";
-      hashCode_ = com.google.protobuf.ByteString.EMPTY;
+      hashCode_ = "";
       data_ = com.google.protobuf.ByteString.EMPTY;
+      result_ = "";
+      detail_ = "";
     }
 
     @java.lang.Override
@@ -18797,8 +18855,9 @@ java.lang.String defaultValue);
               break;
             }
             case 50: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              hashCode_ = input.readBytes();
+              hashCode_ = s;
               break;
             }
             case 58: {
@@ -18814,6 +18873,33 @@ java.lang.String defaultValue);
             case 72: {
 
               offset_ = input.readInt64();
+              break;
+            }
+            case 80: {
+
+              chunkSize_ = input.readInt32();
+              break;
+            }
+            case 88: {
+
+              chunkCount_ = input.readInt32();
+              break;
+            }
+            case 96: {
+
+              chunkIndex_ = input.readInt32();
+              break;
+            }
+            case 106: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              result_ = s;
+              break;
+            }
+            case 114: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              detail_ = s;
               break;
             }
             default: {
@@ -19081,18 +19167,49 @@ java.lang.String defaultValue);
     }
 
     public static final int HASHCODE_FIELD_NUMBER = 6;
-    private com.google.protobuf.ByteString hashCode_;
+    private volatile java.lang.Object hashCode_;
     /**
      * <pre>
      * 文件哈希值，用于验证文件完整性
      * </pre>
      *
-     * <code>bytes hashCode = 6;</code>
+     * <code>string hashCode = 6;</code>
      * @return The hashCode.
      */
     @java.lang.Override
-    public com.google.protobuf.ByteString getHashCode() {
-      return hashCode_;
+    public java.lang.String getHashCode() {
+      java.lang.Object ref = hashCode_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        hashCode_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * 文件哈希值，用于验证文件完整性
+     * </pre>
+     *
+     * <code>string hashCode = 6;</code>
+     * @return The bytes for hashCode.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getHashCodeBytes() {
+      java.lang.Object ref = hashCode_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        hashCode_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int DATA_FIELD_NUMBER = 7;
@@ -19140,6 +19257,119 @@ java.lang.String defaultValue);
       return offset_;
     }
 
+    public static final int CHUNKSIZE_FIELD_NUMBER = 10;
+    private int chunkSize_;
+    /**
+     * <code>int32 chunkSize = 10;</code>
+     * @return The chunkSize.
+     */
+    @java.lang.Override
+    public int getChunkSize() {
+      return chunkSize_;
+    }
+
+    public static final int CHUNKCOUNT_FIELD_NUMBER = 11;
+    private int chunkCount_;
+    /**
+     * <code>int32 chunkCount = 11;</code>
+     * @return The chunkCount.
+     */
+    @java.lang.Override
+    public int getChunkCount() {
+      return chunkCount_;
+    }
+
+    public static final int CHUNKINDEX_FIELD_NUMBER = 12;
+    private int chunkIndex_;
+    /**
+     * <pre>
+     * 0 索引
+     * </pre>
+     *
+     * <code>int32 chunkIndex = 12;</code>
+     * @return The chunkIndex.
+     */
+    @java.lang.Override
+    public int getChunkIndex() {
+      return chunkIndex_;
+    }
+
+    public static final int RESULT_FIELD_NUMBER = 13;
+    private volatile java.lang.Object result_;
+    /**
+     * <code>string result = 13;</code>
+     * @return The result.
+     */
+    @java.lang.Override
+    public java.lang.String getResult() {
+      java.lang.Object ref = result_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        result_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string result = 13;</code>
+     * @return The bytes for result.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getResultBytes() {
+      java.lang.Object ref = result_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        result_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DETAIL_FIELD_NUMBER = 14;
+    private volatile java.lang.Object detail_;
+    /**
+     * <code>string detail = 14;</code>
+     * @return The detail.
+     */
+    @java.lang.Override
+    public java.lang.String getDetail() {
+      java.lang.Object ref = detail_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        detail_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string detail = 14;</code>
+     * @return The bytes for detail.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDetailBytes() {
+      java.lang.Object ref = detail_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        detail_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     @java.lang.Override
     public final boolean isInitialized() {
@@ -19169,8 +19399,8 @@ java.lang.String defaultValue);
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(hashType_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 5, hashType_);
       }
-      if (!hashCode_.isEmpty()) {
-        output.writeBytes(6, hashCode_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(hashCode_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 6, hashCode_);
       }
       if (!data_.isEmpty()) {
         output.writeBytes(7, data_);
@@ -19180,6 +19410,21 @@ java.lang.String defaultValue);
       }
       if (offset_ != 0L) {
         output.writeInt64(9, offset_);
+      }
+      if (chunkSize_ != 0) {
+        output.writeInt32(10, chunkSize_);
+      }
+      if (chunkCount_ != 0) {
+        output.writeInt32(11, chunkCount_);
+      }
+      if (chunkIndex_ != 0) {
+        output.writeInt32(12, chunkIndex_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(result_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 13, result_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(detail_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 14, detail_);
       }
       unknownFields.writeTo(output);
     }
@@ -19205,9 +19450,8 @@ java.lang.String defaultValue);
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(hashType_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(5, hashType_);
       }
-      if (!hashCode_.isEmpty()) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, hashCode_);
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(hashCode_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, hashCode_);
       }
       if (!data_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
@@ -19220,6 +19464,24 @@ java.lang.String defaultValue);
       if (offset_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(9, offset_);
+      }
+      if (chunkSize_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(10, chunkSize_);
+      }
+      if (chunkCount_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(11, chunkCount_);
+      }
+      if (chunkIndex_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(12, chunkIndex_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(result_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(13, result_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(detail_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(14, detail_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -19254,6 +19516,16 @@ java.lang.String defaultValue);
           != other.getSize()) return false;
       if (getOffset()
           != other.getOffset()) return false;
+      if (getChunkSize()
+          != other.getChunkSize()) return false;
+      if (getChunkCount()
+          != other.getChunkCount()) return false;
+      if (getChunkIndex()
+          != other.getChunkIndex()) return false;
+      if (!getResult()
+          .equals(other.getResult())) return false;
+      if (!getDetail()
+          .equals(other.getDetail())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -19285,6 +19557,16 @@ java.lang.String defaultValue);
       hash = (37 * hash) + OFFSET_FIELD_NUMBER;
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getOffset());
+      hash = (37 * hash) + CHUNKSIZE_FIELD_NUMBER;
+      hash = (53 * hash) + getChunkSize();
+      hash = (37 * hash) + CHUNKCOUNT_FIELD_NUMBER;
+      hash = (53 * hash) + getChunkCount();
+      hash = (37 * hash) + CHUNKINDEX_FIELD_NUMBER;
+      hash = (53 * hash) + getChunkIndex();
+      hash = (37 * hash) + RESULT_FIELD_NUMBER;
+      hash = (53 * hash) + getResult().hashCode();
+      hash = (37 * hash) + DETAIL_FIELD_NUMBER;
+      hash = (53 * hash) + getDetail().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -19432,13 +19714,23 @@ java.lang.String defaultValue);
 
         hashType_ = "";
 
-        hashCode_ = com.google.protobuf.ByteString.EMPTY;
+        hashCode_ = "";
 
         data_ = com.google.protobuf.ByteString.EMPTY;
 
         size_ = 0L;
 
         offset_ = 0L;
+
+        chunkSize_ = 0;
+
+        chunkCount_ = 0;
+
+        chunkIndex_ = 0;
+
+        result_ = "";
+
+        detail_ = "";
 
         return this;
       }
@@ -19475,6 +19767,11 @@ java.lang.String defaultValue);
         result.data_ = data_;
         result.size_ = size_;
         result.offset_ = offset_;
+        result.chunkSize_ = chunkSize_;
+        result.chunkCount_ = chunkCount_;
+        result.chunkIndex_ = chunkIndex_;
+        result.result_ = result_;
+        result.detail_ = detail_;
         onBuilt();
         return result;
       }
@@ -19543,8 +19840,9 @@ java.lang.String defaultValue);
           hashType_ = other.hashType_;
           onChanged();
         }
-        if (other.getHashCode() != com.google.protobuf.ByteString.EMPTY) {
-          setHashCode(other.getHashCode());
+        if (!other.getHashCode().isEmpty()) {
+          hashCode_ = other.hashCode_;
+          onChanged();
         }
         if (other.getData() != com.google.protobuf.ByteString.EMPTY) {
           setData(other.getData());
@@ -19554,6 +19852,23 @@ java.lang.String defaultValue);
         }
         if (other.getOffset() != 0L) {
           setOffset(other.getOffset());
+        }
+        if (other.getChunkSize() != 0) {
+          setChunkSize(other.getChunkSize());
+        }
+        if (other.getChunkCount() != 0) {
+          setChunkCount(other.getChunkCount());
+        }
+        if (other.getChunkIndex() != 0) {
+          setChunkIndex(other.getChunkIndex());
+        }
+        if (!other.getResult().isEmpty()) {
+          result_ = other.result_;
+          onChanged();
+        }
+        if (!other.getDetail().isEmpty()) {
+          detail_ = other.detail_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -20064,29 +20379,59 @@ java.lang.String defaultValue);
         return this;
       }
 
-      private com.google.protobuf.ByteString hashCode_ = com.google.protobuf.ByteString.EMPTY;
+      private java.lang.Object hashCode_ = "";
       /**
        * <pre>
        * 文件哈希值，用于验证文件完整性
        * </pre>
        *
-       * <code>bytes hashCode = 6;</code>
+       * <code>string hashCode = 6;</code>
        * @return The hashCode.
        */
-      @java.lang.Override
-      public com.google.protobuf.ByteString getHashCode() {
-        return hashCode_;
+      public java.lang.String getHashCode() {
+        java.lang.Object ref = hashCode_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          hashCode_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
        * <pre>
        * 文件哈希值，用于验证文件完整性
        * </pre>
        *
-       * <code>bytes hashCode = 6;</code>
+       * <code>string hashCode = 6;</code>
+       * @return The bytes for hashCode.
+       */
+      public com.google.protobuf.ByteString
+          getHashCodeBytes() {
+        java.lang.Object ref = hashCode_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          hashCode_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * 文件哈希值，用于验证文件完整性
+       * </pre>
+       *
+       * <code>string hashCode = 6;</code>
        * @param value The hashCode to set.
        * @return This builder for chaining.
        */
-      public Builder setHashCode(com.google.protobuf.ByteString value) {
+      public Builder setHashCode(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
@@ -20100,12 +20445,32 @@ java.lang.String defaultValue);
        * 文件哈希值，用于验证文件完整性
        * </pre>
        *
-       * <code>bytes hashCode = 6;</code>
+       * <code>string hashCode = 6;</code>
        * @return This builder for chaining.
        */
       public Builder clearHashCode() {
         
         hashCode_ = getDefaultInstance().getHashCode();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 文件哈希值，用于验证文件完整性
+       * </pre>
+       *
+       * <code>string hashCode = 6;</code>
+       * @param value The bytes for hashCode to set.
+       * @return This builder for chaining.
+       */
+      public Builder setHashCodeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        hashCode_ = value;
         onChanged();
         return this;
       }
@@ -20238,6 +20603,263 @@ java.lang.String defaultValue);
       public Builder clearOffset() {
         
         offset_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private int chunkSize_ ;
+      /**
+       * <code>int32 chunkSize = 10;</code>
+       * @return The chunkSize.
+       */
+      @java.lang.Override
+      public int getChunkSize() {
+        return chunkSize_;
+      }
+      /**
+       * <code>int32 chunkSize = 10;</code>
+       * @param value The chunkSize to set.
+       * @return This builder for chaining.
+       */
+      public Builder setChunkSize(int value) {
+        
+        chunkSize_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 chunkSize = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearChunkSize() {
+        
+        chunkSize_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int chunkCount_ ;
+      /**
+       * <code>int32 chunkCount = 11;</code>
+       * @return The chunkCount.
+       */
+      @java.lang.Override
+      public int getChunkCount() {
+        return chunkCount_;
+      }
+      /**
+       * <code>int32 chunkCount = 11;</code>
+       * @param value The chunkCount to set.
+       * @return This builder for chaining.
+       */
+      public Builder setChunkCount(int value) {
+        
+        chunkCount_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 chunkCount = 11;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearChunkCount() {
+        
+        chunkCount_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int chunkIndex_ ;
+      /**
+       * <pre>
+       * 0 索引
+       * </pre>
+       *
+       * <code>int32 chunkIndex = 12;</code>
+       * @return The chunkIndex.
+       */
+      @java.lang.Override
+      public int getChunkIndex() {
+        return chunkIndex_;
+      }
+      /**
+       * <pre>
+       * 0 索引
+       * </pre>
+       *
+       * <code>int32 chunkIndex = 12;</code>
+       * @param value The chunkIndex to set.
+       * @return This builder for chaining.
+       */
+      public Builder setChunkIndex(int value) {
+        
+        chunkIndex_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 0 索引
+       * </pre>
+       *
+       * <code>int32 chunkIndex = 12;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearChunkIndex() {
+        
+        chunkIndex_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object result_ = "";
+      /**
+       * <code>string result = 13;</code>
+       * @return The result.
+       */
+      public java.lang.String getResult() {
+        java.lang.Object ref = result_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          result_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string result = 13;</code>
+       * @return The bytes for result.
+       */
+      public com.google.protobuf.ByteString
+          getResultBytes() {
+        java.lang.Object ref = result_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          result_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string result = 13;</code>
+       * @param value The result to set.
+       * @return This builder for chaining.
+       */
+      public Builder setResult(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        result_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string result = 13;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearResult() {
+        
+        result_ = getDefaultInstance().getResult();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string result = 13;</code>
+       * @param value The bytes for result to set.
+       * @return This builder for chaining.
+       */
+      public Builder setResultBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        result_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object detail_ = "";
+      /**
+       * <code>string detail = 14;</code>
+       * @return The detail.
+       */
+      public java.lang.String getDetail() {
+        java.lang.Object ref = detail_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          detail_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string detail = 14;</code>
+       * @return The bytes for detail.
+       */
+      public com.google.protobuf.ByteString
+          getDetailBytes() {
+        java.lang.Object ref = detail_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          detail_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string detail = 14;</code>
+       * @param value The detail to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDetail(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        detail_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string detail = 14;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDetail() {
+        
+        detail_ = getDefaultInstance().getDetail();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string detail = 14;</code>
+       * @param value The bytes for detail to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDetailBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        detail_ = value;
         onChanged();
         return this;
       }
@@ -28653,75 +29275,77 @@ java.lang.String defaultValue);
       "\002 \001(\003\022\020\n\010uuidName\030\003 \001(\t\022\022\n\nchunkIndex\030\004 " +
       "\001(\005\022\016\n\006result\030\005 \001(\t\022\016\n\006detail\030\006 \001(\t\"B\n\016M" +
       "sgDownloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileNam" +
-      "e\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\250\001\n\020MsgDownloadR" +
+      "e\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\203\002\n\020MsgDownloadR" +
       "eply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001(\t\022\020" +
       "\n\010realName\030\003 \001(\t\022\020\n\010fileType\030\004 \001(\t\022\020\n\010ha" +
-      "shType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\014\022\014\n\004data\030\007" +
-      " \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\"\204\001\n\010M" +
-      "sgError\022\014\n\004code\030\001 \001(\005\022\016\n\006detail\030\002 \001(\t\022+\n" +
-      "\006params\030\t \003(\0132\033.model.MsgError.ParamsEnt" +
-      "ry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030" +
-      "\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hello\030\007 \001(\0132\017." +
-      "model.MsgHelloH\000\022(\n\theartBeat\030\010 \001(\0132\023.mo" +
-      "del.MsgHeartBeatH\000\022#\n\010errorMsg\030\t \001(\0132\017.m" +
-      "odel.MsgErrorH\000\022&\n\005keyEx\030\n \001(\0132\025.model.M" +
-      "sgKeyExchangeH\000\022\"\n\010chatData\030\013 \001(\0132\016.mode" +
-      "l.MsgChatH\000\022(\n\tchatReply\030\014 \001(\0132\023.model.M" +
-      "sgChatReplyH\000\022&\n\013commonQuery\030\r \001(\0132\017.mod" +
-      "el.MsgQueryH\000\022/\n\016commonQueryRet\030\016 \001(\0132\025." +
-      "model.MsgQueryResultH\000\022(\n\tuploadReq\030\025 \001(" +
-      "\0132\023.model.MsgUploadReqH\000\022,\n\013downloadReq\030" +
-      "\026 \001(\0132\025.model.MsgDownloadReqH\000\022,\n\013upload" +
-      "Reply\030\027 \001(\0132\025.model.MsgUploadReplyH\000\0220\n\r" +
-      "downloadReply\030\030 \001(\0132\027.model.MsgDownloadR" +
-      "eplyH\000\022\"\n\006userOp\030\037 \001(\0132\020.model.UserOpReq" +
-      "H\000\022(\n\tuserOpRet\030  \001(\0132\023.model.UserOpResu" +
-      "ltH\000\022&\n\010friendOp\030! \001(\0132\022.model.FriendOpR" +
-      "eqH\000\022,\n\013friendOpRet\030\" \001(\0132\025.model.Friend" +
-      "OpResultH\000\022$\n\007groupOp\030# \001(\0132\021.model.Grou" +
-      "pOpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132\024.model.Gro" +
-      "upOpResultH\000\022\026\n\014otherTypeMsg\030d \001(\014H\000B\t\n\007" +
-      "message\"\263\001\n\003Msg\022\017\n\007version\030\001 \001(\005\022\024\n\010keyP" +
-      "rint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020\001\022\"\n\007msgTyp" +
-      "e\030\004 \001(\0162\021.model.ComMsgType\022\017\n\007subType\030\005 " +
-      "\001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plainMsg\030\014 \001(\0132" +
-      "\017.model.MsgPlainH\000B\t\n\007message*,\n\013MsgPrio" +
-      "rity\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004HIGH\020\002*X\n\rC" +
-      "hatMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004SENT\020\001\022\n\n\006F" +
-      "AILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004READ\020\004\022\013\n\007DELE" +
-      "TED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020" +
-      "\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006DEL" +
-      "ETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n\013EncryptTyp" +
-      "e\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010CHACHA20\020\002\022\013" +
-      "\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010ChatType\022\020\n\014Chat" +
-      "TypeNone\020\000\022\017\n\013ChatTypeP2P\020\001\022\021\n\rChatTypeG" +
-      "roup\020\002*{\n\rQueryDataType\022\031\n\025QueryDataType" +
-      "ChatData\020\000\022\032\n\026QueryDataTypeChatReply\020\001\022\031" +
-      "\n\025QueryDataTypeFriendOP\020\002\022\030\n\024QueryDataTy" +
-      "peGroupOP\020\003*F\n\007SynType\022\022\n\016SynTypeForward" +
-      "\020\000\022\023\n\017SynTypeBackward\020\001\022\022\n\016SynTypeBetwee" +
-      "n\020\002*\210\003\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013Er" +
-      "rTVersion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTRed" +
-      "irect\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrongCo" +
-      "de\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020\007\022" +
-      "\017\n\013ErrTEncType\020\010\022\024\n\020ErrTServerInside\020\t\022\r" +
-      "\n\tErrTStage\020\n\022\021\n\rErrTPublicKey\020\013\022\023\n\017ErrT" +
-      "KeyConflict\020\014\022\021\n\rErrTCheckData\020\r\022\022\n\016ErrT" +
-      "MsgContent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025\n\021ErrTNo" +
-      "tPermission\020\020\022\020\n\014ErrTDisabled\020\021\022\017\n\013ErrTD" +
-      "eleted\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tErrTPhone\020\024*\366" +
-      "\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHel" +
-      "lo\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023" +
-      "\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\r" +
-      "MsgTChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQu" +
-      "eryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownl" +
-      "oad\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDownlo" +
-      "adReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpR" +
-      "et\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOpRe" +
-      "t\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$" +
-      "\022\r\n\tMsgTOther\020d23\n\nMsgService\022%\n\013ClientE" +
-      "vent\022\n.model.Msg\032\n.model.MsgB\020Z\016server/p" +
-      "bmodelb\006proto3"
+      "shType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\t\022\014\n\004data\030\007" +
+      " \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\022\021\n\tch" +
+      "unkSize\030\n \001(\005\022\022\n\nchunkCount\030\013 \001(\005\022\022\n\nchu" +
+      "nkIndex\030\014 \001(\005\022\016\n\006result\030\r \001(\t\022\016\n\006detail\030" +
+      "\016 \001(\t\"\204\001\n\010MsgError\022\014\n\004code\030\001 \001(\005\022\016\n\006deta" +
+      "il\030\002 \001(\t\022+\n\006params\030\t \003(\0132\033.model.MsgErro" +
+      "r.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hel" +
+      "lo\030\007 \001(\0132\017.model.MsgHelloH\000\022(\n\theartBeat" +
+      "\030\010 \001(\0132\023.model.MsgHeartBeatH\000\022#\n\010errorMs" +
+      "g\030\t \001(\0132\017.model.MsgErrorH\000\022&\n\005keyEx\030\n \001(" +
+      "\0132\025.model.MsgKeyExchangeH\000\022\"\n\010chatData\030\013" +
+      " \001(\0132\016.model.MsgChatH\000\022(\n\tchatReply\030\014 \001(" +
+      "\0132\023.model.MsgChatReplyH\000\022&\n\013commonQuery\030" +
+      "\r \001(\0132\017.model.MsgQueryH\000\022/\n\016commonQueryR" +
+      "et\030\016 \001(\0132\025.model.MsgQueryResultH\000\022(\n\tupl" +
+      "oadReq\030\025 \001(\0132\023.model.MsgUploadReqH\000\022,\n\013d" +
+      "ownloadReq\030\026 \001(\0132\025.model.MsgDownloadReqH" +
+      "\000\022,\n\013uploadReply\030\027 \001(\0132\025.model.MsgUpload" +
+      "ReplyH\000\0220\n\rdownloadReply\030\030 \001(\0132\027.model.M" +
+      "sgDownloadReplyH\000\022\"\n\006userOp\030\037 \001(\0132\020.mode" +
+      "l.UserOpReqH\000\022(\n\tuserOpRet\030  \001(\0132\023.model" +
+      ".UserOpResultH\000\022&\n\010friendOp\030! \001(\0132\022.mode" +
+      "l.FriendOpReqH\000\022,\n\013friendOpRet\030\" \001(\0132\025.m" +
+      "odel.FriendOpResultH\000\022$\n\007groupOp\030# \001(\0132\021" +
+      ".model.GroupOpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132" +
+      "\024.model.GroupOpResultH\000\022\026\n\014otherTypeMsg\030" +
+      "d \001(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017\n\007version\030\001 " +
+      "\001(\005\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020" +
+      "\001\022\"\n\007msgType\030\004 \001(\0162\021.model.ComMsgType\022\017\n" +
+      "\007subType\030\005 \001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plai" +
+      "nMsg\030\014 \001(\0132\017.model.MsgPlainH\000B\t\n\007message" +
+      "*,\n\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004" +
+      "HIGH\020\002*X\n\rChatMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004" +
+      "SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004REA" +
+      "D\020\004\022\013\n\007DELETED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020" +
+      "\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FI" +
+      "LE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n" +
+      "\013EncryptType\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010C" +
+      "HACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010ChatT" +
+      "ype\022\020\n\014ChatTypeNone\020\000\022\017\n\013ChatTypeP2P\020\001\022\021" +
+      "\n\rChatTypeGroup\020\002*{\n\rQueryDataType\022\031\n\025Qu" +
+      "eryDataTypeChatData\020\000\022\032\n\026QueryDataTypeCh" +
+      "atReply\020\001\022\031\n\025QueryDataTypeFriendOP\020\002\022\030\n\024" +
+      "QueryDataTypeGroupOP\020\003*F\n\007SynType\022\022\n\016Syn" +
+      "TypeForward\020\000\022\023\n\017SynTypeBackward\020\001\022\022\n\016Sy" +
+      "nTypeBetween\020\002*\210\003\n\014ErrorMsgType\022\014\n\010ErrTN" +
+      "one\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014ErrTKeyPrint\020\002" +
+      "\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\r" +
+      "ErrTWrongCode\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013Err" +
+      "TTempKey\020\007\022\017\n\013ErrTEncType\020\010\022\024\n\020ErrTServe" +
+      "rInside\020\t\022\r\n\tErrTStage\020\n\022\021\n\rErrTPublicKe" +
+      "y\020\013\022\023\n\017ErrTKeyConflict\020\014\022\021\n\rErrTCheckDat" +
+      "a\020\r\022\022\n\016ErrTMsgContent\020\016\022\020\n\014ErrTNotLogin\020" +
+      "\017\022\025\n\021ErrTNotPermission\020\020\022\020\n\014ErrTDisabled" +
+      "\020\021\022\017\n\013ErrTDeleted\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tEr" +
+      "rTPhone\020\024*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000" +
+      "\022\r\n\tMsgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMs" +
+      "gTError\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTCh" +
+      "atMsg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020" +
+      "\r\022\023\n\017MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020" +
+      "\n\014MsgTDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n" +
+      "\021MsgTDownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\r" +
+      "MsgTUserOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017Msg" +
+      "TFriendOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTG" +
+      "roupOpRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService" +
+      "\022%\n\013ClientEvent\022\n.model.Msg\032\n.model.MsgB" +
+      "\020Z\016server/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -28823,7 +29447,7 @@ java.lang.String defaultValue);
     internal_static_model_MsgDownloadReply_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_MsgDownloadReply_descriptor,
-        new java.lang.String[] { "SendId", "FileName", "RealName", "FileType", "HashType", "HashCode", "Data", "Size", "Offset", });
+        new java.lang.String[] { "SendId", "FileName", "RealName", "FileType", "HashType", "HashCode", "Data", "Size", "Offset", "ChunkSize", "ChunkCount", "ChunkIndex", "Result", "Detail", });
     internal_static_model_MsgError_descriptor =
       getDescriptor().getMessageTypes().get(11);
     internal_static_model_MsgError_fieldAccessorTable = new

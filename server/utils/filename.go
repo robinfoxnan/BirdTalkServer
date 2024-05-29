@@ -5,7 +5,35 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"runtime"
 )
+
+// GetAbsolutePath 获取相对路径的绝对路径
+func GetAbsolutePath(relativePath string) (string, error) {
+	// 检查输入路径是否是绝对路径
+	if filepath.IsAbs(relativePath) {
+		return relativePath, nil
+	}
+
+	// 获取当前可执行文件的路径
+	exePath, err := os.Executable()
+	if err != nil {
+		return "", err
+	}
+
+	// 判断操作系统类型
+	var absPath string
+	if runtime.GOOS == "windows" {
+		// 如果是 Windows，使用 filepath.Join 拼接路径
+		absPath = filepath.Join(filepath.Dir(exePath), relativePath)
+	} else {
+		// 如果是 Linux，直接拼接路径
+		absPath = filepath.Join(filepath.Dir(exePath), relativePath)
+	}
+
+	// 返回绝对路径
+	return absPath, nil
+}
 
 // 雪花算法一般不会出现小于4字节，雪花算法按照36进制序列化，
 // 文件名取前2个为1级目录，那么就是1600个目录，二级也是2个字符，所以2级就是100万个目录；
