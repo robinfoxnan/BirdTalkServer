@@ -106,7 +106,7 @@ enum ChatType{
 // 聊天存储的基本信息
 message MsgChat {
   int64 msgId = 1  [jstype = JS_STRING];               // 消息的全网唯一标识，服务端使用雪花算法生成，因为客户端生成的不可靠
-  int64 userId = 2  [jstype = JS_STRING];              // 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+  int64 userId = 2  [jstype = JS_STRING];              // 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段标记给谁
 
   int64 fromId = 3  [jstype = JS_STRING];              // 发送消息的用户 ID
   int64 toId = 4  [jstype = JS_STRING];                // 接收消息的用户 ID（对方的用户 ID）
@@ -139,9 +139,9 @@ message MsgChat {
 message MsgChatReply {
   int64 msgId = 1 [jstype = JS_STRING];        // 要确认的消息ID
   int64 sendId = 2 [jstype = JS_STRING];
-  bool sendOk = 3;                             // 确认是否成功
-  bool recvOk = 4;
-  bool readOk = 5;
+  int64 sendOk = 3 [jstype = JS_STRING];      // 确认是否成功
+  int64 recvOk = 4 [jstype = JS_STRING];
+  int64 readOk = 5 [jstype = JS_STRING];
   string extraMsg = 6;
   int64 userId = 7 [jstype = JS_STRING];        // 应答应该发送给谁
   int64 fromId = 8 [jstype = JS_STRING];        // 从谁那的应答
@@ -274,6 +274,7 @@ enum ErrorMsgType{
   ErrTDeleted = 18;   // 用户或者消息被删除了
   ErrTEmail = 19;     // 邮件验证码发送错误
   ErrTPhone = 20;     // 手机验证码发送错误
+  ErrTNotFriend = 21; // 不是好友
 }
 
 message MsgError{

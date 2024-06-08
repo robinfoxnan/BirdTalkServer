@@ -1177,6 +1177,14 @@ public final class MsgOuterClass {
      * <code>ErrTPhone = 20;</code>
      */
     ErrTPhone(20),
+    /**
+     * <pre>
+     * 不是好友
+     * </pre>
+     *
+     * <code>ErrTNotFriend = 21;</code>
+     */
+    ErrTNotFriend(21),
     UNRECOGNIZED(-1),
     ;
 
@@ -1328,6 +1336,14 @@ public final class MsgOuterClass {
      * <code>ErrTPhone = 20;</code>
      */
     public static final int ErrTPhone_VALUE = 20;
+    /**
+     * <pre>
+     * 不是好友
+     * </pre>
+     *
+     * <code>ErrTNotFriend = 21;</code>
+     */
+    public static final int ErrTNotFriend_VALUE = 21;
 
 
     public final int getNumber() {
@@ -1375,6 +1391,7 @@ public final class MsgOuterClass {
         case 18: return ErrTDeleted;
         case 19: return ErrTEmail;
         case 20: return ErrTPhone;
+        case 21: return ErrTNotFriend;
         default: return null;
       }
     }
@@ -5538,7 +5555,7 @@ java.lang.String defaultValue);
 
     /**
      * <pre>
-     * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+     * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段标记给谁
      * </pre>
      *
      * <code>int64 userId = 2 [jstype = JS_STRING];</code>
@@ -6043,7 +6060,7 @@ java.lang.String defaultValue);
     private long userId_;
     /**
      * <pre>
-     * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+     * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段标记给谁
      * </pre>
      *
      * <code>int64 userId = 2 [jstype = JS_STRING];</code>
@@ -7196,7 +7213,7 @@ java.lang.String defaultValue);
       private long userId_ ;
       /**
        * <pre>
-       * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+       * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段标记给谁
        * </pre>
        *
        * <code>int64 userId = 2 [jstype = JS_STRING];</code>
@@ -7208,7 +7225,7 @@ java.lang.String defaultValue);
       }
       /**
        * <pre>
-       * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+       * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段标记给谁
        * </pre>
        *
        * <code>int64 userId = 2 [jstype = JS_STRING];</code>
@@ -7223,7 +7240,7 @@ java.lang.String defaultValue);
       }
       /**
        * <pre>
-       * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段
+       * 用于存储的clusterKey，因为一份消息要存储2次，要转发，需要有这个字段标记给谁
        * </pre>
        *
        * <code>int64 userId = 2 [jstype = JS_STRING];</code>
@@ -8386,22 +8403,22 @@ java.lang.String defaultValue);
      * 确认是否成功
      * </pre>
      *
-     * <code>bool sendOk = 3;</code>
+     * <code>int64 sendOk = 3 [jstype = JS_STRING];</code>
      * @return The sendOk.
      */
-    boolean getSendOk();
+    long getSendOk();
 
     /**
-     * <code>bool recvOk = 4;</code>
+     * <code>int64 recvOk = 4 [jstype = JS_STRING];</code>
      * @return The recvOk.
      */
-    boolean getRecvOk();
+    long getRecvOk();
 
     /**
-     * <code>bool readOk = 5;</code>
+     * <code>int64 readOk = 5 [jstype = JS_STRING];</code>
      * @return The readOk.
      */
-    boolean getReadOk();
+    long getReadOk();
 
     /**
      * <code>string extraMsg = 6;</code>
@@ -8534,17 +8551,17 @@ java.lang.String defaultValue);
             }
             case 24: {
 
-              sendOk_ = input.readBool();
+              sendOk_ = input.readInt64();
               break;
             }
             case 32: {
 
-              recvOk_ = input.readBool();
+              recvOk_ = input.readInt64();
               break;
             }
             case 40: {
 
-              readOk_ = input.readBool();
+              readOk_ = input.readInt64();
               break;
             }
             case 50: {
@@ -8649,39 +8666,39 @@ java.lang.String defaultValue);
     }
 
     public static final int SENDOK_FIELD_NUMBER = 3;
-    private boolean sendOk_;
+    private long sendOk_;
     /**
      * <pre>
      * 确认是否成功
      * </pre>
      *
-     * <code>bool sendOk = 3;</code>
+     * <code>int64 sendOk = 3 [jstype = JS_STRING];</code>
      * @return The sendOk.
      */
     @java.lang.Override
-    public boolean getSendOk() {
+    public long getSendOk() {
       return sendOk_;
     }
 
     public static final int RECVOK_FIELD_NUMBER = 4;
-    private boolean recvOk_;
+    private long recvOk_;
     /**
-     * <code>bool recvOk = 4;</code>
+     * <code>int64 recvOk = 4 [jstype = JS_STRING];</code>
      * @return The recvOk.
      */
     @java.lang.Override
-    public boolean getRecvOk() {
+    public long getRecvOk() {
       return recvOk_;
     }
 
     public static final int READOK_FIELD_NUMBER = 5;
-    private boolean readOk_;
+    private long readOk_;
     /**
-     * <code>bool readOk = 5;</code>
+     * <code>int64 readOk = 5 [jstype = JS_STRING];</code>
      * @return The readOk.
      */
     @java.lang.Override
-    public boolean getReadOk() {
+    public long getReadOk() {
       return readOk_;
     }
 
@@ -8854,14 +8871,14 @@ java.lang.String defaultValue);
       if (sendId_ != 0L) {
         output.writeInt64(2, sendId_);
       }
-      if (sendOk_ != false) {
-        output.writeBool(3, sendOk_);
+      if (sendOk_ != 0L) {
+        output.writeInt64(3, sendOk_);
       }
-      if (recvOk_ != false) {
-        output.writeBool(4, recvOk_);
+      if (recvOk_ != 0L) {
+        output.writeInt64(4, recvOk_);
       }
-      if (readOk_ != false) {
-        output.writeBool(5, readOk_);
+      if (readOk_ != 0L) {
+        output.writeInt64(5, readOk_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(extraMsg_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 6, extraMsg_);
@@ -8895,17 +8912,17 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(2, sendId_);
       }
-      if (sendOk_ != false) {
+      if (sendOk_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, sendOk_);
+          .computeInt64Size(3, sendOk_);
       }
-      if (recvOk_ != false) {
+      if (recvOk_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, recvOk_);
+          .computeInt64Size(4, recvOk_);
       }
-      if (readOk_ != false) {
+      if (readOk_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(5, readOk_);
+          .computeInt64Size(5, readOk_);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(extraMsg_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(6, extraMsg_);
@@ -8979,13 +8996,13 @@ java.lang.String defaultValue);
       hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getSendId());
       hash = (37 * hash) + SENDOK_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getSendOk());
       hash = (37 * hash) + RECVOK_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getRecvOk());
       hash = (37 * hash) + READOK_FIELD_NUMBER;
-      hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
           getReadOk());
       hash = (37 * hash) + EXTRAMSG_FIELD_NUMBER;
       hash = (53 * hash) + getExtraMsg().hashCode();
@@ -9162,11 +9179,11 @@ java.lang.String defaultValue);
 
         sendId_ = 0L;
 
-        sendOk_ = false;
+        sendOk_ = 0L;
 
-        recvOk_ = false;
+        recvOk_ = 0L;
 
-        readOk_ = false;
+        readOk_ = 0L;
 
         extraMsg_ = "";
 
@@ -9266,13 +9283,13 @@ java.lang.String defaultValue);
         if (other.getSendId() != 0L) {
           setSendId(other.getSendId());
         }
-        if (other.getSendOk() != false) {
+        if (other.getSendOk() != 0L) {
           setSendOk(other.getSendOk());
         }
-        if (other.getRecvOk() != false) {
+        if (other.getRecvOk() != 0L) {
           setRecvOk(other.getRecvOk());
         }
-        if (other.getReadOk() != false) {
+        if (other.getReadOk() != 0L) {
           setReadOk(other.getReadOk());
         }
         if (!other.getExtraMsg().isEmpty()) {
@@ -9391,17 +9408,17 @@ java.lang.String defaultValue);
         return this;
       }
 
-      private boolean sendOk_ ;
+      private long sendOk_ ;
       /**
        * <pre>
        * 确认是否成功
        * </pre>
        *
-       * <code>bool sendOk = 3;</code>
+       * <code>int64 sendOk = 3 [jstype = JS_STRING];</code>
        * @return The sendOk.
        */
       @java.lang.Override
-      public boolean getSendOk() {
+      public long getSendOk() {
         return sendOk_;
       }
       /**
@@ -9409,11 +9426,11 @@ java.lang.String defaultValue);
        * 确认是否成功
        * </pre>
        *
-       * <code>bool sendOk = 3;</code>
+       * <code>int64 sendOk = 3 [jstype = JS_STRING];</code>
        * @param value The sendOk to set.
        * @return This builder for chaining.
        */
-      public Builder setSendOk(boolean value) {
+      public Builder setSendOk(long value) {
         
         sendOk_ = value;
         onChanged();
@@ -9424,74 +9441,74 @@ java.lang.String defaultValue);
        * 确认是否成功
        * </pre>
        *
-       * <code>bool sendOk = 3;</code>
+       * <code>int64 sendOk = 3 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearSendOk() {
         
-        sendOk_ = false;
+        sendOk_ = 0L;
         onChanged();
         return this;
       }
 
-      private boolean recvOk_ ;
+      private long recvOk_ ;
       /**
-       * <code>bool recvOk = 4;</code>
+       * <code>int64 recvOk = 4 [jstype = JS_STRING];</code>
        * @return The recvOk.
        */
       @java.lang.Override
-      public boolean getRecvOk() {
+      public long getRecvOk() {
         return recvOk_;
       }
       /**
-       * <code>bool recvOk = 4;</code>
+       * <code>int64 recvOk = 4 [jstype = JS_STRING];</code>
        * @param value The recvOk to set.
        * @return This builder for chaining.
        */
-      public Builder setRecvOk(boolean value) {
+      public Builder setRecvOk(long value) {
         
         recvOk_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bool recvOk = 4;</code>
+       * <code>int64 recvOk = 4 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearRecvOk() {
         
-        recvOk_ = false;
+        recvOk_ = 0L;
         onChanged();
         return this;
       }
 
-      private boolean readOk_ ;
+      private long readOk_ ;
       /**
-       * <code>bool readOk = 5;</code>
+       * <code>int64 readOk = 5 [jstype = JS_STRING];</code>
        * @return The readOk.
        */
       @java.lang.Override
-      public boolean getReadOk() {
+      public long getReadOk() {
         return readOk_;
       }
       /**
-       * <code>bool readOk = 5;</code>
+       * <code>int64 readOk = 5 [jstype = JS_STRING];</code>
        * @param value The readOk to set.
        * @return This builder for chaining.
        */
-      public Builder setReadOk(boolean value) {
+      public Builder setReadOk(long value) {
         
         readOk_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>bool readOk = 5;</code>
+       * <code>int64 readOk = 5 [jstype = JS_STRING];</code>
        * @return This builder for chaining.
        */
       public Builder clearReadOk() {
         
-        readOk_ = false;
+        readOk_ = 0L;
         onChanged();
         return this;
       }
@@ -29238,114 +29255,115 @@ java.lang.String defaultValue);
       "odel.ChatType\022\022\n\nsubMsgType\030\022 \001(\005\022\024\n\010key" +
       "Print\030\023 \001(\003B\0020\001\022*\n\006params\030\036 \003(\0132\032.model." +
       "MsgChat.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\377\001\n\014MsgChatRe" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\213\002\n\014MsgChatRe" +
       "ply\022\021\n\005msgId\030\001 \001(\003B\0020\001\022\022\n\006sendId\030\002 \001(\003B\002" +
-      "0\001\022\016\n\006sendOk\030\003 \001(\010\022\016\n\006recvOk\030\004 \001(\010\022\016\n\006re" +
-      "adOk\030\005 \001(\010\022\020\n\010extraMsg\030\006 \001(\t\022\022\n\006userId\030\007" +
-      " \001(\003B\0020\001\022\022\n\006fromId\030\010 \001(\003B\0020\001\022/\n\006params\030\036" +
-      " \003(\0132\037.model.MsgChatReply.ParamsEntry\032-\n" +
-      "\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t" +
-      ":\0028\001\"\265\002\n\010MsgQuery\022\022\n\006userId\030\001 \001(\003B\0020\001\022\023\n" +
-      "\007groupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 \001(\003B\0020\001\022\024\n" +
-      "\010littleId\030\004 \001(\003B\0020\001\022\037\n\007synType\030\005 \001(\0162\016.m" +
-      "odel.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001\022!\n\010chatType" +
-      "\030\007 \001(\0162\017.model.ChatType\022\'\n\tqueryType\030\010 \001" +
-      "(\0162\024.model.QueryDataType\022+\n\006params\030\t \003(\013" +
-      "2\033.model.MsgQuery.ParamsEntry\032-\n\013ParamsE" +
-      "ntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\361\003\n" +
-      "\016MsgQueryResult\022\022\n\006userId\030\001 \001(\003B\0020\001\022\023\n\007g" +
-      "roupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 \001(\003B\0020\001\022\024\n\010l" +
-      "ittleId\030\004 \001(\003B\0020\001\022\037\n\007synType\030\005 \001(\0162\016.mod" +
-      "el.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001\022!\n\010chatType\030\007" +
-      " \001(\0162\017.model.ChatType\022\'\n\tqueryType\030\010 \001(\016" +
-      "2\024.model.QueryDataType\022$\n\014chatDataList\030\013" +
-      " \003(\0132\016.model.MsgChat\022*\n\rchatReplyList\030\014 " +
-      "\003(\0132\023.model.MsgChatReply\022.\n\017friendOpRetL" +
-      "ist\030\r \003(\0132\025.model.FriendOpResult\022,\n\016grou" +
-      "pOpRetList\030\016 \003(\0132\024.model.GroupOpResult\0221" +
-      "\n\006params\030\036 \003(\0132!.model.MsgQueryResult.Pa" +
+      "0\001\022\022\n\006sendOk\030\003 \001(\003B\0020\001\022\022\n\006recvOk\030\004 \001(\003B\002" +
+      "0\001\022\022\n\006readOk\030\005 \001(\003B\0020\001\022\020\n\010extraMsg\030\006 \001(\t" +
+      "\022\022\n\006userId\030\007 \001(\003B\0020\001\022\022\n\006fromId\030\010 \001(\003B\0020\001" +
+      "\022/\n\006params\030\036 \003(\0132\037.model.MsgChatReply.Pa" +
       "ramsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n" +
-      "\005value\030\002 \001(\t:\0028\001\"\326\001\n\014MsgUploadReq\022\020\n\010fil" +
-      "eName\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\020\n\010fileDat" +
-      "a\030\003 \001(\014\022\020\n\010hashType\030\004 \001(\t\022\020\n\010hashCode\030\005 " +
-      "\001(\t\022\020\n\010fileType\030\006 \001(\t\022\016\n\006sendId\030\007 \001(\003\022\022\n" +
-      "\nchunkIndex\030\010 \001(\005\022\022\n\nchunkCount\030\t \001(\005\022\021\n" +
-      "\tchunkSize\030\n \001(\005\022\017\n\007groupId\030\013 \001(\003\"x\n\016Msg" +
-      "UploadReply\022\020\n\010fileName\030\001 \001(\t\022\016\n\006sendId\030" +
-      "\002 \001(\003\022\020\n\010uuidName\030\003 \001(\t\022\022\n\nchunkIndex\030\004 " +
-      "\001(\005\022\016\n\006result\030\005 \001(\t\022\016\n\006detail\030\006 \001(\t\"B\n\016M" +
-      "sgDownloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileNam" +
-      "e\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\203\002\n\020MsgDownloadR" +
-      "eply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001(\t\022\020" +
-      "\n\010realName\030\003 \001(\t\022\020\n\010fileType\030\004 \001(\t\022\020\n\010ha" +
-      "shType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\t\022\014\n\004data\030\007" +
-      " \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\022\021\n\tch" +
-      "unkSize\030\n \001(\005\022\022\n\nchunkCount\030\013 \001(\005\022\022\n\nchu" +
-      "nkIndex\030\014 \001(\005\022\016\n\006result\030\r \001(\t\022\016\n\006detail\030" +
-      "\016 \001(\t\"\204\001\n\010MsgError\022\014\n\004code\030\001 \001(\005\022\016\n\006deta" +
-      "il\030\002 \001(\t\022+\n\006params\030\t \003(\0132\033.model.MsgErro" +
-      "r.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
-      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hel" +
-      "lo\030\007 \001(\0132\017.model.MsgHelloH\000\022(\n\theartBeat" +
-      "\030\010 \001(\0132\023.model.MsgHeartBeatH\000\022#\n\010errorMs" +
-      "g\030\t \001(\0132\017.model.MsgErrorH\000\022&\n\005keyEx\030\n \001(" +
-      "\0132\025.model.MsgKeyExchangeH\000\022\"\n\010chatData\030\013" +
-      " \001(\0132\016.model.MsgChatH\000\022(\n\tchatReply\030\014 \001(" +
-      "\0132\023.model.MsgChatReplyH\000\022&\n\013commonQuery\030" +
-      "\r \001(\0132\017.model.MsgQueryH\000\022/\n\016commonQueryR" +
-      "et\030\016 \001(\0132\025.model.MsgQueryResultH\000\022(\n\tupl" +
-      "oadReq\030\025 \001(\0132\023.model.MsgUploadReqH\000\022,\n\013d" +
-      "ownloadReq\030\026 \001(\0132\025.model.MsgDownloadReqH" +
-      "\000\022,\n\013uploadReply\030\027 \001(\0132\025.model.MsgUpload" +
-      "ReplyH\000\0220\n\rdownloadReply\030\030 \001(\0132\027.model.M" +
-      "sgDownloadReplyH\000\022\"\n\006userOp\030\037 \001(\0132\020.mode" +
-      "l.UserOpReqH\000\022(\n\tuserOpRet\030  \001(\0132\023.model" +
-      ".UserOpResultH\000\022&\n\010friendOp\030! \001(\0132\022.mode" +
-      "l.FriendOpReqH\000\022,\n\013friendOpRet\030\" \001(\0132\025.m" +
-      "odel.FriendOpResultH\000\022$\n\007groupOp\030# \001(\0132\021" +
-      ".model.GroupOpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132" +
-      "\024.model.GroupOpResultH\000\022\026\n\014otherTypeMsg\030" +
-      "d \001(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017\n\007version\030\001 " +
-      "\001(\005\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020" +
-      "\001\022\"\n\007msgType\030\004 \001(\0162\021.model.ComMsgType\022\017\n" +
-      "\007subType\030\005 \001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plai" +
-      "nMsg\030\014 \001(\0132\017.model.MsgPlainH\000B\t\n\007message" +
-      "*,\n\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004" +
-      "HIGH\020\002*X\n\rChatMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004" +
-      "SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004REA" +
-      "D\020\004\022\013\n\007DELETED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020" +
-      "\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FI" +
-      "LE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n" +
-      "\013EncryptType\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010C" +
-      "HACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010ChatT" +
-      "ype\022\020\n\014ChatTypeNone\020\000\022\017\n\013ChatTypeP2P\020\001\022\021" +
-      "\n\rChatTypeGroup\020\002*{\n\rQueryDataType\022\031\n\025Qu" +
-      "eryDataTypeChatData\020\000\022\032\n\026QueryDataTypeCh" +
-      "atReply\020\001\022\031\n\025QueryDataTypeFriendOP\020\002\022\030\n\024" +
-      "QueryDataTypeGroupOP\020\003*F\n\007SynType\022\022\n\016Syn" +
-      "TypeForward\020\000\022\023\n\017SynTypeBackward\020\001\022\022\n\016Sy" +
-      "nTypeBetween\020\002*\210\003\n\014ErrorMsgType\022\014\n\010ErrTN" +
-      "one\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014ErrTKeyPrint\020\002" +
-      "\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\r" +
-      "ErrTWrongCode\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013Err" +
-      "TTempKey\020\007\022\017\n\013ErrTEncType\020\010\022\024\n\020ErrTServe" +
-      "rInside\020\t\022\r\n\tErrTStage\020\n\022\021\n\rErrTPublicKe" +
-      "y\020\013\022\023\n\017ErrTKeyConflict\020\014\022\021\n\rErrTCheckDat" +
-      "a\020\r\022\022\n\016ErrTMsgContent\020\016\022\020\n\014ErrTNotLogin\020" +
-      "\017\022\025\n\021ErrTNotPermission\020\020\022\020\n\014ErrTDisabled" +
-      "\020\021\022\017\n\013ErrTDeleted\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tEr" +
-      "rTPhone\020\024*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000" +
-      "\022\r\n\tMsgTHello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMs" +
-      "gTError\020\003\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTCh" +
-      "atMsg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020" +
-      "\r\022\023\n\017MsgTQueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020" +
-      "\n\014MsgTDownload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n" +
-      "\021MsgTDownloadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\r" +
-      "MsgTUserOpRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017Msg" +
-      "TFriendOpRet\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTG" +
-      "roupOpRet\020$\022\r\n\tMsgTOther\020d23\n\nMsgService" +
-      "\022%\n\013ClientEvent\022\n.model.Msg\032\n.model.MsgB" +
-      "\020Z\016server/pbmodelb\006proto3"
+      "\005value\030\002 \001(\t:\0028\001\"\265\002\n\010MsgQuery\022\022\n\006userId\030" +
+      "\001 \001(\003B\0020\001\022\023\n\007groupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030" +
+      "\003 \001(\003B\0020\001\022\024\n\010littleId\030\004 \001(\003B\0020\001\022\037\n\007synTy" +
+      "pe\030\005 \001(\0162\016.model.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001" +
+      "\022!\n\010chatType\030\007 \001(\0162\017.model.ChatType\022\'\n\tq" +
+      "ueryType\030\010 \001(\0162\024.model.QueryDataType\022+\n\006" +
+      "params\030\t \003(\0132\033.model.MsgQuery.ParamsEntr" +
+      "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
+      " \001(\t:\0028\001\"\361\003\n\016MsgQueryResult\022\022\n\006userId\030\001 " +
+      "\001(\003B\0020\001\022\023\n\007groupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 " +
+      "\001(\003B\0020\001\022\024\n\010littleId\030\004 \001(\003B\0020\001\022\037\n\007synType" +
+      "\030\005 \001(\0162\016.model.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001\022!" +
+      "\n\010chatType\030\007 \001(\0162\017.model.ChatType\022\'\n\tque" +
+      "ryType\030\010 \001(\0162\024.model.QueryDataType\022$\n\014ch" +
+      "atDataList\030\013 \003(\0132\016.model.MsgChat\022*\n\rchat" +
+      "ReplyList\030\014 \003(\0132\023.model.MsgChatReply\022.\n\017" +
+      "friendOpRetList\030\r \003(\0132\025.model.FriendOpRe" +
+      "sult\022,\n\016groupOpRetList\030\016 \003(\0132\024.model.Gro" +
+      "upOpResult\0221\n\006params\030\036 \003(\0132!.model.MsgQu" +
+      "eryResult.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003" +
+      "key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\326\001\n\014MsgUplo" +
+      "adReq\022\020\n\010fileName\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(" +
+      "\003\022\020\n\010fileData\030\003 \001(\014\022\020\n\010hashType\030\004 \001(\t\022\020\n" +
+      "\010hashCode\030\005 \001(\t\022\020\n\010fileType\030\006 \001(\t\022\016\n\006sen" +
+      "dId\030\007 \001(\003\022\022\n\nchunkIndex\030\010 \001(\005\022\022\n\nchunkCo" +
+      "unt\030\t \001(\005\022\021\n\tchunkSize\030\n \001(\005\022\017\n\007groupId\030" +
+      "\013 \001(\003\"x\n\016MsgUploadReply\022\020\n\010fileName\030\001 \001(" +
+      "\t\022\016\n\006sendId\030\002 \001(\003\022\020\n\010uuidName\030\003 \001(\t\022\022\n\nc" +
+      "hunkIndex\030\004 \001(\005\022\016\n\006result\030\005 \001(\t\022\016\n\006detai" +
+      "l\030\006 \001(\t\"B\n\016MsgDownloadReq\022\016\n\006sendId\030\001 \001(" +
+      "\t\022\020\n\010fileName\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\203\002\n\020" +
+      "MsgDownloadReply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010file" +
+      "Name\030\002 \001(\t\022\020\n\010realName\030\003 \001(\t\022\020\n\010fileType" +
+      "\030\004 \001(\t\022\020\n\010hashType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001" +
+      "(\t\022\014\n\004data\030\007 \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset" +
+      "\030\t \001(\003\022\021\n\tchunkSize\030\n \001(\005\022\022\n\nchunkCount\030" +
+      "\013 \001(\005\022\022\n\nchunkIndex\030\014 \001(\005\022\016\n\006result\030\r \001(" +
+      "\t\022\016\n\006detail\030\016 \001(\t\"\204\001\n\010MsgError\022\014\n\004code\030\001" +
+      " \001(\005\022\016\n\006detail\030\002 \001(\t\022+\n\006params\030\t \003(\0132\033.m" +
+      "odel.MsgError.ParamsEntry\032-\n\013ParamsEntry" +
+      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010Msg" +
+      "Plain\022 \n\005hello\030\007 \001(\0132\017.model.MsgHelloH\000\022" +
+      "(\n\theartBeat\030\010 \001(\0132\023.model.MsgHeartBeatH" +
+      "\000\022#\n\010errorMsg\030\t \001(\0132\017.model.MsgErrorH\000\022&" +
+      "\n\005keyEx\030\n \001(\0132\025.model.MsgKeyExchangeH\000\022\"" +
+      "\n\010chatData\030\013 \001(\0132\016.model.MsgChatH\000\022(\n\tch" +
+      "atReply\030\014 \001(\0132\023.model.MsgChatReplyH\000\022&\n\013" +
+      "commonQuery\030\r \001(\0132\017.model.MsgQueryH\000\022/\n\016" +
+      "commonQueryRet\030\016 \001(\0132\025.model.MsgQueryRes" +
+      "ultH\000\022(\n\tuploadReq\030\025 \001(\0132\023.model.MsgUplo" +
+      "adReqH\000\022,\n\013downloadReq\030\026 \001(\0132\025.model.Msg" +
+      "DownloadReqH\000\022,\n\013uploadReply\030\027 \001(\0132\025.mod" +
+      "el.MsgUploadReplyH\000\0220\n\rdownloadReply\030\030 \001" +
+      "(\0132\027.model.MsgDownloadReplyH\000\022\"\n\006userOp\030" +
+      "\037 \001(\0132\020.model.UserOpReqH\000\022(\n\tuserOpRet\030 " +
+      " \001(\0132\023.model.UserOpResultH\000\022&\n\010friendOp\030" +
+      "! \001(\0132\022.model.FriendOpReqH\000\022,\n\013friendOpR" +
+      "et\030\" \001(\0132\025.model.FriendOpResultH\000\022$\n\007gro" +
+      "upOp\030# \001(\0132\021.model.GroupOpReqH\000\022*\n\ngroup" +
+      "OpRet\030$ \001(\0132\024.model.GroupOpResultH\000\022\026\n\014o" +
+      "therTypeMsg\030d \001(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017" +
+      "\n\007version\030\001 \001(\005\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n" +
+      "\002tm\030\003 \001(\003B\0020\001\022\"\n\007msgType\030\004 \001(\0162\021.model.C" +
+      "omMsgType\022\017\n\007subType\030\005 \001(\005\022\020\n\006cipher\030\013 \001" +
+      "(\014H\000\022#\n\010plainMsg\030\014 \001(\0132\017.model.MsgPlainH" +
+      "\000B\t\n\007message*,\n\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006" +
+      "NORMAL\020\001\022\010\n\004HIGH\020\002*X\n\rChatMsgStatus\022\013\n\007S" +
+      "ENDING\020\000\022\010\n\004SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVE" +
+      "RED\020\003\022\010\n\004READ\020\004\022\013\n\007DELETED\020\005*c\n\013ChatMsgT" +
+      "ype\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005V" +
+      "IDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n" +
+      "\006PLUGIN\020d*H\n\013EncryptType\022\t\n\005PLAIN\020\000\022\n\n\006C" +
+      "USTOM\020\001\022\014\n\010CHACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AE" +
+      "S\020\004*@\n\010ChatType\022\020\n\014ChatTypeNone\020\000\022\017\n\013Cha" +
+      "tTypeP2P\020\001\022\021\n\rChatTypeGroup\020\002*{\n\rQueryDa" +
+      "taType\022\031\n\025QueryDataTypeChatData\020\000\022\032\n\026Que" +
+      "ryDataTypeChatReply\020\001\022\031\n\025QueryDataTypeFr" +
+      "iendOP\020\002\022\030\n\024QueryDataTypeGroupOP\020\003*F\n\007Sy" +
+      "nType\022\022\n\016SynTypeForward\020\000\022\023\n\017SynTypeBack" +
+      "ward\020\001\022\022\n\016SynTypeBetween\020\002*\233\003\n\014ErrorMsgT" +
+      "ype\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014Er" +
+      "rTKeyPrint\020\002\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTWr" +
+      "ongPwd\020\004\022\021\n\rErrTWrongCode\020\005\022\020\n\014ErrTRsaPr" +
+      "int\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013ErrTEncType\020\010\022" +
+      "\024\n\020ErrTServerInside\020\t\022\r\n\tErrTStage\020\n\022\021\n\r" +
+      "ErrTPublicKey\020\013\022\023\n\017ErrTKeyConflict\020\014\022\021\n\r" +
+      "ErrTCheckData\020\r\022\022\n\016ErrTMsgContent\020\016\022\020\n\014E" +
+      "rrTNotLogin\020\017\022\025\n\021ErrTNotPermission\020\020\022\020\n\014" +
+      "ErrTDisabled\020\021\022\017\n\013ErrTDeleted\020\022\022\r\n\tErrTE" +
+      "mail\020\023\022\r\n\tErrTPhone\020\024\022\021\n\rErrTNotFriend\020\025" +
+      "*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTH" +
+      "ello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003" +
+      "\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021" +
+      "\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgT" +
+      "QueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDow" +
+      "nload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDown" +
+      "loadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserO" +
+      "pRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOp" +
+      "Ret\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet" +
+      "\020$\022\r\n\tMsgTOther\020d23\n\nMsgService\022%\n\013Clien" +
+      "tEvent\022\n.model.Msg\032\n.model.MsgB\020Z\016server" +
+      "/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

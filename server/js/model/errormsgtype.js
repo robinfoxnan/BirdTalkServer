@@ -37,6 +37,7 @@ proto.model.ErrorMsgType = {
   ERRTDISABLED: 17,
   ERRTDELETED: 18,
   ERRTEMAIL: 19,
-  ERRTPHONE: 20
+  ERRTPHONE: 20,
+  ERRTNOTFRIEND: 21
 };
 

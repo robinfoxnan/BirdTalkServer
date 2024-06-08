@@ -73,9 +73,9 @@ proto.model.MsgChatReply.toObject = function(includeInstance, msg) {
   var f, obj = {
     msgid: jspb.Message.getFieldWithDefault(msg, 1, "0"),
     sendid: jspb.Message.getFieldWithDefault(msg, 2, "0"),
-    sendok: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
-    recvok: jspb.Message.getBooleanFieldWithDefault(msg, 4, false),
-    readok: jspb.Message.getBooleanFieldWithDefault(msg, 5, false),
+    sendok: jspb.Message.getFieldWithDefault(msg, 3, "0"),
+    recvok: jspb.Message.getFieldWithDefault(msg, 4, "0"),
+    readok: jspb.Message.getFieldWithDefault(msg, 5, "0"),
     extramsg: jspb.Message.getFieldWithDefault(msg, 6, ""),
     userid: jspb.Message.getFieldWithDefault(msg, 7, "0"),
     fromid: jspb.Message.getFieldWithDefault(msg, 8, "0"),
@@ -125,15 +125,15 @@ proto.model.MsgChatReply.deserializeBinaryFromReader = function(msg, reader) {
       msg.setSendid(value);
       break;
     case 3:
-      var value = /** @type {boolean} */ (reader.readBool());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setSendok(value);
       break;
     case 4:
-      var value = /** @type {boolean} */ (reader.readBool());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setRecvok(value);
       break;
     case 5:
-      var value = /** @type {boolean} */ (reader.readBool());
+      var value = /** @type {string} */ (reader.readInt64String());
       msg.setReadok(value);
       break;
     case 6:
@@ -198,22 +198,22 @@ proto.model.MsgChatReply.serializeBinaryToWriter = function(message, writer) {
     );
   }
   f = message.getSendok();
-  if (f) {
-    writer.writeBool(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       3,
       f
     );
   }
   f = message.getRecvok();
-  if (f) {
-    writer.writeBool(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       4,
       f
     );
   }
   f = message.getReadok();
-  if (f) {
-    writer.writeBool(
+  if (parseInt(f, 10) !== 0) {
+    writer.writeInt64String(
       5,
       f
     );
@@ -283,56 +283,56 @@ proto.model.MsgChatReply.prototype.setSendid = function(value) {
 
 
 /**
- * optional bool sendOk = 3;
- * @return {boolean}
+ * optional int64 sendOk = 3;
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getSendok = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 3, "0"));
 };
 
 
 /**
- * @param {boolean} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setSendok = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 3, value);
+  return jspb.Message.setProto3StringIntField(this, 3, value);
 };
 
 
 /**
- * optional bool recvOk = 4;
- * @return {boolean}
+ * optional int64 recvOk = 4;
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getRecvok = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 4, false));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, "0"));
 };
 
 
 /**
- * @param {boolean} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setRecvok = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 4, value);
+  return jspb.Message.setProto3StringIntField(this, 4, value);
 };
 
 
 /**
- * optional bool readOk = 5;
- * @return {boolean}
+ * optional int64 readOk = 5;
+ * @return {string}
  */
 proto.model.MsgChatReply.prototype.getReadok = function() {
-  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 5, false));
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 5, "0"));
 };
 
 
 /**
- * @param {boolean} value
+ * @param {string} value
  * @return {!proto.model.MsgChatReply} returns this
  */
 proto.model.MsgChatReply.prototype.setReadok = function(value) {
-  return jspb.Message.setProto3BooleanField(this, 5, value);
+  return jspb.Message.setProto3StringIntField(this, 5, value);
 };
 
 

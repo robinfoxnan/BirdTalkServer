@@ -24,7 +24,7 @@ var metaGroupChatData = table.Metadata{
 }
 
 // 写2次，首先是发方A，然后是收方B
-func (me *Scylla) SavePChatData(msg *model.PChatDataStore, pk2 int) error {
+func (me *Scylla) SavePChatData(msg *model.PChatDataStore, pk2 int16) error {
 	// 同时加入粉丝表
 	// 创建 Batch
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
@@ -42,6 +42,26 @@ func (me *Scylla) SavePChatData(msg *model.PChatDataStore, pk2 int) error {
 	insertSecond := qb.Insert(PrivateChatTableName).Columns(metaPrivateChatData.Columns...).Query(me.session).Consistency(gocql.One)
 	defer insertSecond.Release()
 	batch.Query(insertSecond.Statement(), pk2, msg.Uid2, msg.Uid1,
+		msg.Id, msg.Usid, msg.Tm, msg.Tm1, msg.Tm2,
+		model.ChatDataIOIn, msg.St, msg.Ct, msg.Mt,
+		msg.Print, msg.Ref, msg.Draf)
+
+	if err := me.session.ExecuteBatch(batch); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *Scylla) SavePChatSelfData(msg *model.PChatDataStore) error {
+	// 同时加入粉丝表
+	// 创建 Batch
+	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
+	batch.Cons = gocql.LocalOne
+
+	// 收方
+	insertFirst := qb.Insert(PrivateChatTableName).Columns(metaPrivateChatData.Columns...).Query(me.session).Consistency(gocql.One)
+	defer insertFirst.Release()
+	batch.Query(insertFirst.Statement(), msg.Pk, msg.Uid1, msg.Uid2,
 		msg.Id, msg.Usid, msg.Tm, msg.Tm1, msg.Tm2,
 		model.ChatDataIOIn, msg.St, msg.Ct, msg.Mt,
 		msg.Print, msg.Ref, msg.Draf)
