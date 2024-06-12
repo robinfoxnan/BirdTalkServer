@@ -11685,6 +11685,30 @@ java.lang.String defaultValue);
         int index);
 
     /**
+     * <code>string result = 15;</code>
+     * @return The result.
+     */
+    java.lang.String getResult();
+    /**
+     * <code>string result = 15;</code>
+     * @return The bytes for result.
+     */
+    com.google.protobuf.ByteString
+        getResultBytes();
+
+    /**
+     * <code>string detail = 16;</code>
+     * @return The detail.
+     */
+    java.lang.String getDetail();
+    /**
+     * <code>string detail = 16;</code>
+     * @return The bytes for detail.
+     */
+    com.google.protobuf.ByteString
+        getDetailBytes();
+
+    /**
      * <code>map&lt;string, string&gt; params = 30;</code>
      */
     int getParamsCount();
@@ -11744,6 +11768,8 @@ java.lang.String defaultValue);
       chatReplyList_ = java.util.Collections.emptyList();
       friendOpRetList_ = java.util.Collections.emptyList();
       groupOpRetList_ = java.util.Collections.emptyList();
+      result_ = "";
+      detail_ = "";
     }
 
     @java.lang.Override
@@ -11854,6 +11880,18 @@ java.lang.String defaultValue);
               }
               groupOpRetList_.add(
                   input.readMessage(model.User.GroupOpResult.parser(), extensionRegistry));
+              break;
+            }
+            case 122: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              result_ = s;
+              break;
+            }
+            case 130: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              detail_ = s;
               break;
             }
             case 242: {
@@ -12239,6 +12277,82 @@ java.lang.String defaultValue);
       return groupOpRetList_.get(index);
     }
 
+    public static final int RESULT_FIELD_NUMBER = 15;
+    private volatile java.lang.Object result_;
+    /**
+     * <code>string result = 15;</code>
+     * @return The result.
+     */
+    @java.lang.Override
+    public java.lang.String getResult() {
+      java.lang.Object ref = result_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        result_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string result = 15;</code>
+     * @return The bytes for result.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getResultBytes() {
+      java.lang.Object ref = result_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        result_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DETAIL_FIELD_NUMBER = 16;
+    private volatile java.lang.Object detail_;
+    /**
+     * <code>string detail = 16;</code>
+     * @return The detail.
+     */
+    @java.lang.Override
+    public java.lang.String getDetail() {
+      java.lang.Object ref = detail_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        detail_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string detail = 16;</code>
+     * @return The bytes for detail.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getDetailBytes() {
+      java.lang.Object ref = detail_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        detail_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     public static final int PARAMS_FIELD_NUMBER = 30;
     private static final class ParamsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
@@ -12370,6 +12484,12 @@ java.lang.String defaultValue);
       for (int i = 0; i < groupOpRetList_.size(); i++) {
         output.writeMessage(14, groupOpRetList_.get(i));
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(result_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 15, result_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(detail_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 16, detail_);
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
@@ -12433,6 +12553,12 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(14, groupOpRetList_.get(i));
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(result_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(15, result_);
+      }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(detail_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(16, detail_);
+      }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetParams().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
@@ -12479,6 +12605,10 @@ java.lang.String defaultValue);
           .equals(other.getFriendOpRetListList())) return false;
       if (!getGroupOpRetListList()
           .equals(other.getGroupOpRetListList())) return false;
+      if (!getResult()
+          .equals(other.getResult())) return false;
+      if (!getDetail()
+          .equals(other.getDetail())) return false;
       if (!internalGetParams().equals(
           other.internalGetParams())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -12529,6 +12659,10 @@ java.lang.String defaultValue);
         hash = (37 * hash) + GROUPOPRETLIST_FIELD_NUMBER;
         hash = (53 * hash) + getGroupOpRetListList().hashCode();
       }
+      hash = (37 * hash) + RESULT_FIELD_NUMBER;
+      hash = (53 * hash) + getResult().hashCode();
+      hash = (37 * hash) + DETAIL_FIELD_NUMBER;
+      hash = (53 * hash) + getDetail().hashCode();
       if (!internalGetParams().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetParams().hashCode();
@@ -12736,6 +12870,10 @@ java.lang.String defaultValue);
         } else {
           groupOpRetListBuilder_.clear();
         }
+        result_ = "";
+
+        detail_ = "";
+
         internalGetMutableParams().clear();
         return this;
       }
@@ -12808,6 +12946,8 @@ java.lang.String defaultValue);
         } else {
           result.groupOpRetList_ = groupOpRetListBuilder_.build();
         }
+        result.result_ = result_;
+        result.detail_ = detail_;
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
         onBuilt();
@@ -12985,6 +13125,14 @@ java.lang.String defaultValue);
               groupOpRetListBuilder_.addAllMessages(other.groupOpRetList_);
             }
           }
+        }
+        if (!other.getResult().isEmpty()) {
+          result_ = other.result_;
+          onChanged();
+        }
+        if (!other.getDetail().isEmpty()) {
+          detail_ = other.detail_;
+          onChanged();
         }
         internalGetMutableParams().mergeFrom(
             other.internalGetParams());
@@ -14401,6 +14549,158 @@ java.lang.String defaultValue);
           groupOpRetList_ = null;
         }
         return groupOpRetListBuilder_;
+      }
+
+      private java.lang.Object result_ = "";
+      /**
+       * <code>string result = 15;</code>
+       * @return The result.
+       */
+      public java.lang.String getResult() {
+        java.lang.Object ref = result_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          result_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string result = 15;</code>
+       * @return The bytes for result.
+       */
+      public com.google.protobuf.ByteString
+          getResultBytes() {
+        java.lang.Object ref = result_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          result_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string result = 15;</code>
+       * @param value The result to set.
+       * @return This builder for chaining.
+       */
+      public Builder setResult(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        result_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string result = 15;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearResult() {
+        
+        result_ = getDefaultInstance().getResult();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string result = 15;</code>
+       * @param value The bytes for result to set.
+       * @return This builder for chaining.
+       */
+      public Builder setResultBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        result_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object detail_ = "";
+      /**
+       * <code>string detail = 16;</code>
+       * @return The detail.
+       */
+      public java.lang.String getDetail() {
+        java.lang.Object ref = detail_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          detail_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>string detail = 16;</code>
+       * @return The bytes for detail.
+       */
+      public com.google.protobuf.ByteString
+          getDetailBytes() {
+        java.lang.Object ref = detail_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          detail_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string detail = 16;</code>
+       * @param value The detail to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDetail(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        detail_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string detail = 16;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearDetail() {
+        
+        detail_ = getDefaultInstance().getDetail();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string detail = 16;</code>
+       * @param value The bytes for detail to set.
+       * @return This builder for chaining.
+       */
+      public Builder setDetailBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        detail_ = value;
+        onChanged();
+        return this;
       }
 
       private com.google.protobuf.MapField<
@@ -29270,7 +29570,7 @@ java.lang.String defaultValue);
       "ueryType\030\010 \001(\0162\024.model.QueryDataType\022+\n\006" +
       "params\030\t \003(\0132\033.model.MsgQuery.ParamsEntr" +
       "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"\361\003\n\016MsgQueryResult\022\022\n\006userId\030\001 " +
+      " \001(\t:\0028\001\"\221\004\n\016MsgQueryResult\022\022\n\006userId\030\001 " +
       "\001(\003B\0020\001\022\023\n\007groupId\030\002 \001(\003B\0020\001\022\021\n\005bigId\030\003 " +
       "\001(\003B\0020\001\022\024\n\010littleId\030\004 \001(\003B\0020\001\022\037\n\007synType" +
       "\030\005 \001(\0162\016.model.SynType\022\016\n\002tm\030\006 \001(\003B\0020\001\022!" +
@@ -29280,90 +29580,91 @@ java.lang.String defaultValue);
       "ReplyList\030\014 \003(\0132\023.model.MsgChatReply\022.\n\017" +
       "friendOpRetList\030\r \003(\0132\025.model.FriendOpRe" +
       "sult\022,\n\016groupOpRetList\030\016 \003(\0132\024.model.Gro" +
-      "upOpResult\0221\n\006params\030\036 \003(\0132!.model.MsgQu" +
-      "eryResult.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003" +
-      "key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\326\001\n\014MsgUplo" +
-      "adReq\022\020\n\010fileName\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(" +
-      "\003\022\020\n\010fileData\030\003 \001(\014\022\020\n\010hashType\030\004 \001(\t\022\020\n" +
-      "\010hashCode\030\005 \001(\t\022\020\n\010fileType\030\006 \001(\t\022\016\n\006sen" +
-      "dId\030\007 \001(\003\022\022\n\nchunkIndex\030\010 \001(\005\022\022\n\nchunkCo" +
-      "unt\030\t \001(\005\022\021\n\tchunkSize\030\n \001(\005\022\017\n\007groupId\030" +
-      "\013 \001(\003\"x\n\016MsgUploadReply\022\020\n\010fileName\030\001 \001(" +
-      "\t\022\016\n\006sendId\030\002 \001(\003\022\020\n\010uuidName\030\003 \001(\t\022\022\n\nc" +
-      "hunkIndex\030\004 \001(\005\022\016\n\006result\030\005 \001(\t\022\016\n\006detai" +
-      "l\030\006 \001(\t\"B\n\016MsgDownloadReq\022\016\n\006sendId\030\001 \001(" +
-      "\t\022\020\n\010fileName\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\203\002\n\020" +
-      "MsgDownloadReply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010file" +
-      "Name\030\002 \001(\t\022\020\n\010realName\030\003 \001(\t\022\020\n\010fileType" +
-      "\030\004 \001(\t\022\020\n\010hashType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001" +
-      "(\t\022\014\n\004data\030\007 \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset" +
-      "\030\t \001(\003\022\021\n\tchunkSize\030\n \001(\005\022\022\n\nchunkCount\030" +
-      "\013 \001(\005\022\022\n\nchunkIndex\030\014 \001(\005\022\016\n\006result\030\r \001(" +
-      "\t\022\016\n\006detail\030\016 \001(\t\"\204\001\n\010MsgError\022\014\n\004code\030\001" +
-      " \001(\005\022\016\n\006detail\030\002 \001(\t\022+\n\006params\030\t \003(\0132\033.m" +
-      "odel.MsgError.ParamsEntry\032-\n\013ParamsEntry" +
-      "\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010Msg" +
-      "Plain\022 \n\005hello\030\007 \001(\0132\017.model.MsgHelloH\000\022" +
-      "(\n\theartBeat\030\010 \001(\0132\023.model.MsgHeartBeatH" +
-      "\000\022#\n\010errorMsg\030\t \001(\0132\017.model.MsgErrorH\000\022&" +
-      "\n\005keyEx\030\n \001(\0132\025.model.MsgKeyExchangeH\000\022\"" +
-      "\n\010chatData\030\013 \001(\0132\016.model.MsgChatH\000\022(\n\tch" +
-      "atReply\030\014 \001(\0132\023.model.MsgChatReplyH\000\022&\n\013" +
-      "commonQuery\030\r \001(\0132\017.model.MsgQueryH\000\022/\n\016" +
-      "commonQueryRet\030\016 \001(\0132\025.model.MsgQueryRes" +
-      "ultH\000\022(\n\tuploadReq\030\025 \001(\0132\023.model.MsgUplo" +
-      "adReqH\000\022,\n\013downloadReq\030\026 \001(\0132\025.model.Msg" +
-      "DownloadReqH\000\022,\n\013uploadReply\030\027 \001(\0132\025.mod" +
-      "el.MsgUploadReplyH\000\0220\n\rdownloadReply\030\030 \001" +
-      "(\0132\027.model.MsgDownloadReplyH\000\022\"\n\006userOp\030" +
-      "\037 \001(\0132\020.model.UserOpReqH\000\022(\n\tuserOpRet\030 " +
-      " \001(\0132\023.model.UserOpResultH\000\022&\n\010friendOp\030" +
-      "! \001(\0132\022.model.FriendOpReqH\000\022,\n\013friendOpR" +
-      "et\030\" \001(\0132\025.model.FriendOpResultH\000\022$\n\007gro" +
-      "upOp\030# \001(\0132\021.model.GroupOpReqH\000\022*\n\ngroup" +
-      "OpRet\030$ \001(\0132\024.model.GroupOpResultH\000\022\026\n\014o" +
-      "therTypeMsg\030d \001(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017" +
-      "\n\007version\030\001 \001(\005\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n" +
-      "\002tm\030\003 \001(\003B\0020\001\022\"\n\007msgType\030\004 \001(\0162\021.model.C" +
-      "omMsgType\022\017\n\007subType\030\005 \001(\005\022\020\n\006cipher\030\013 \001" +
-      "(\014H\000\022#\n\010plainMsg\030\014 \001(\0132\017.model.MsgPlainH" +
-      "\000B\t\n\007message*,\n\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006" +
-      "NORMAL\020\001\022\010\n\004HIGH\020\002*X\n\rChatMsgStatus\022\013\n\007S" +
-      "ENDING\020\000\022\010\n\004SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVE" +
-      "RED\020\003\022\010\n\004READ\020\004\022\013\n\007DELETED\020\005*c\n\013ChatMsgT" +
-      "ype\022\010\n\004TEXT\020\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005V" +
-      "IDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n" +
-      "\006PLUGIN\020d*H\n\013EncryptType\022\t\n\005PLAIN\020\000\022\n\n\006C" +
-      "USTOM\020\001\022\014\n\010CHACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AE" +
-      "S\020\004*@\n\010ChatType\022\020\n\014ChatTypeNone\020\000\022\017\n\013Cha" +
-      "tTypeP2P\020\001\022\021\n\rChatTypeGroup\020\002*{\n\rQueryDa" +
-      "taType\022\031\n\025QueryDataTypeChatData\020\000\022\032\n\026Que" +
-      "ryDataTypeChatReply\020\001\022\031\n\025QueryDataTypeFr" +
-      "iendOP\020\002\022\030\n\024QueryDataTypeGroupOP\020\003*F\n\007Sy" +
-      "nType\022\022\n\016SynTypeForward\020\000\022\023\n\017SynTypeBack" +
-      "ward\020\001\022\022\n\016SynTypeBetween\020\002*\233\003\n\014ErrorMsgT" +
-      "ype\022\014\n\010ErrTNone\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014Er" +
-      "rTKeyPrint\020\002\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTWr" +
-      "ongPwd\020\004\022\021\n\rErrTWrongCode\020\005\022\020\n\014ErrTRsaPr" +
-      "int\020\006\022\017\n\013ErrTTempKey\020\007\022\017\n\013ErrTEncType\020\010\022" +
-      "\024\n\020ErrTServerInside\020\t\022\r\n\tErrTStage\020\n\022\021\n\r" +
-      "ErrTPublicKey\020\013\022\023\n\017ErrTKeyConflict\020\014\022\021\n\r" +
-      "ErrTCheckData\020\r\022\022\n\016ErrTMsgContent\020\016\022\020\n\014E" +
-      "rrTNotLogin\020\017\022\025\n\021ErrTNotPermission\020\020\022\020\n\014" +
-      "ErrTDisabled\020\021\022\017\n\013ErrTDeleted\020\022\022\r\n\tErrTE" +
-      "mail\020\023\022\r\n\tErrTPhone\020\024\022\021\n\rErrTNotFriend\020\025" +
-      "*\366\002\n\nComMsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTH" +
-      "ello\020\001\022\021\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003" +
-      "\022\023\n\017MsgTKeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021" +
-      "\n\rMsgTChatReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgT" +
-      "QueryResult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDow" +
-      "nload\020\026\022\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDown" +
-      "loadReply\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserO" +
-      "pRet\020 \022\020\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOp" +
-      "Ret\020\"\022\017\n\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet" +
-      "\020$\022\r\n\tMsgTOther\020d23\n\nMsgService\022%\n\013Clien" +
-      "tEvent\022\n.model.Msg\032\n.model.MsgB\020Z\016server" +
-      "/pbmodelb\006proto3"
+      "upOpResult\022\016\n\006result\030\017 \001(\t\022\016\n\006detail\030\020 \001" +
+      "(\t\0221\n\006params\030\036 \003(\0132!.model.MsgQueryResul" +
+      "t.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\326\001\n\014MsgUploadReq\022\020\n" +
+      "\010fileName\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\020\n\010fil" +
+      "eData\030\003 \001(\014\022\020\n\010hashType\030\004 \001(\t\022\020\n\010hashCod" +
+      "e\030\005 \001(\t\022\020\n\010fileType\030\006 \001(\t\022\016\n\006sendId\030\007 \001(" +
+      "\003\022\022\n\nchunkIndex\030\010 \001(\005\022\022\n\nchunkCount\030\t \001(" +
+      "\005\022\021\n\tchunkSize\030\n \001(\005\022\017\n\007groupId\030\013 \001(\003\"x\n" +
+      "\016MsgUploadReply\022\020\n\010fileName\030\001 \001(\t\022\016\n\006sen" +
+      "dId\030\002 \001(\003\022\020\n\010uuidName\030\003 \001(\t\022\022\n\nchunkInde" +
+      "x\030\004 \001(\005\022\016\n\006result\030\005 \001(\t\022\016\n\006detail\030\006 \001(\t\"" +
+      "B\n\016MsgDownloadReq\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fil" +
+      "eName\030\002 \001(\t\022\016\n\006offset\030\003 \001(\003\"\203\002\n\020MsgDownl" +
+      "oadReply\022\016\n\006sendId\030\001 \001(\t\022\020\n\010fileName\030\002 \001" +
+      "(\t\022\020\n\010realName\030\003 \001(\t\022\020\n\010fileType\030\004 \001(\t\022\020" +
+      "\n\010hashType\030\005 \001(\t\022\020\n\010hashCode\030\006 \001(\t\022\014\n\004da" +
+      "ta\030\007 \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\022\021" +
+      "\n\tchunkSize\030\n \001(\005\022\022\n\nchunkCount\030\013 \001(\005\022\022\n" +
+      "\nchunkIndex\030\014 \001(\005\022\016\n\006result\030\r \001(\t\022\016\n\006det" +
+      "ail\030\016 \001(\t\"\204\001\n\010MsgError\022\014\n\004code\030\001 \001(\005\022\016\n\006" +
+      "detail\030\002 \001(\t\022+\n\006params\030\t \003(\0132\033.model.Msg" +
+      "Error.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030" +
+      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n" +
+      "\005hello\030\007 \001(\0132\017.model.MsgHelloH\000\022(\n\theart" +
+      "Beat\030\010 \001(\0132\023.model.MsgHeartBeatH\000\022#\n\010err" +
+      "orMsg\030\t \001(\0132\017.model.MsgErrorH\000\022&\n\005keyEx\030" +
+      "\n \001(\0132\025.model.MsgKeyExchangeH\000\022\"\n\010chatDa" +
+      "ta\030\013 \001(\0132\016.model.MsgChatH\000\022(\n\tchatReply\030" +
+      "\014 \001(\0132\023.model.MsgChatReplyH\000\022&\n\013commonQu" +
+      "ery\030\r \001(\0132\017.model.MsgQueryH\000\022/\n\016commonQu" +
+      "eryRet\030\016 \001(\0132\025.model.MsgQueryResultH\000\022(\n" +
+      "\tuploadReq\030\025 \001(\0132\023.model.MsgUploadReqH\000\022" +
+      ",\n\013downloadReq\030\026 \001(\0132\025.model.MsgDownload" +
+      "ReqH\000\022,\n\013uploadReply\030\027 \001(\0132\025.model.MsgUp" +
+      "loadReplyH\000\0220\n\rdownloadReply\030\030 \001(\0132\027.mod" +
+      "el.MsgDownloadReplyH\000\022\"\n\006userOp\030\037 \001(\0132\020." +
+      "model.UserOpReqH\000\022(\n\tuserOpRet\030  \001(\0132\023.m" +
+      "odel.UserOpResultH\000\022&\n\010friendOp\030! \001(\0132\022." +
+      "model.FriendOpReqH\000\022,\n\013friendOpRet\030\" \001(\013" +
+      "2\025.model.FriendOpResultH\000\022$\n\007groupOp\030# \001" +
+      "(\0132\021.model.GroupOpReqH\000\022*\n\ngroupOpRet\030$ " +
+      "\001(\0132\024.model.GroupOpResultH\000\022\026\n\014otherType" +
+      "Msg\030d \001(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017\n\007versio" +
+      "n\030\001 \001(\005\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(" +
+      "\003B\0020\001\022\"\n\007msgType\030\004 \001(\0162\021.model.ComMsgTyp" +
+      "e\022\017\n\007subType\030\005 \001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010" +
+      "plainMsg\030\014 \001(\0132\017.model.MsgPlainH\000B\t\n\007mes" +
+      "sage*,\n\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001" +
+      "\022\010\n\004HIGH\020\002*X\n\rChatMsgStatus\022\013\n\007SENDING\020\000" +
+      "\022\010\n\004SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n" +
+      "\004READ\020\004\022\013\n\007DELETED\020\005*c\n\013ChatMsgType\022\010\n\004T" +
+      "EXT\020\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010" +
+      "\n\004FILE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020" +
+      "d*H\n\013EncryptType\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022" +
+      "\014\n\010CHACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010C" +
+      "hatType\022\020\n\014ChatTypeNone\020\000\022\017\n\013ChatTypeP2P" +
+      "\020\001\022\021\n\rChatTypeGroup\020\002*{\n\rQueryDataType\022\031" +
+      "\n\025QueryDataTypeChatData\020\000\022\032\n\026QueryDataTy" +
+      "peChatReply\020\001\022\031\n\025QueryDataTypeFriendOP\020\002" +
+      "\022\030\n\024QueryDataTypeGroupOP\020\003*F\n\007SynType\022\022\n" +
+      "\016SynTypeForward\020\000\022\023\n\017SynTypeBackward\020\001\022\022" +
+      "\n\016SynTypeBetween\020\002*\233\003\n\014ErrorMsgType\022\014\n\010E" +
+      "rrTNone\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014ErrTKeyPri" +
+      "nt\020\002\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTWrongPwd\020\004" +
+      "\022\021\n\rErrTWrongCode\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n" +
+      "\013ErrTTempKey\020\007\022\017\n\013ErrTEncType\020\010\022\024\n\020ErrTS" +
+      "erverInside\020\t\022\r\n\tErrTStage\020\n\022\021\n\rErrTPubl" +
+      "icKey\020\013\022\023\n\017ErrTKeyConflict\020\014\022\021\n\rErrTChec" +
+      "kData\020\r\022\022\n\016ErrTMsgContent\020\016\022\020\n\014ErrTNotLo" +
+      "gin\020\017\022\025\n\021ErrTNotPermission\020\020\022\020\n\014ErrTDisa" +
+      "bled\020\021\022\017\n\013ErrTDeleted\020\022\022\r\n\tErrTEmail\020\023\022\r" +
+      "\n\tErrTPhone\020\024\022\021\n\rErrTNotFriend\020\025*\366\002\n\nCom" +
+      "MsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001\022\021" +
+      "\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgT" +
+      "KeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgTCh" +
+      "atReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQueryRes" +
+      "ult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownload\020\026\022" +
+      "\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDownloadRepl" +
+      "y\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpRet\020 \022\020" +
+      "\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOpRet\020\"\022\017\n" +
+      "\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\tMs" +
+      "gTOther\020d23\n\nMsgService\022%\n\013ClientEvent\022\n" +
+      ".model.Msg\032\n.model.MsgB\020Z\016server/pbmodel" +
+      "b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -29435,7 +29736,7 @@ java.lang.String defaultValue);
     internal_static_model_MsgQueryResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_MsgQueryResult_descriptor,
-        new java.lang.String[] { "UserId", "GroupId", "BigId", "LittleId", "SynType", "Tm", "ChatType", "QueryType", "ChatDataList", "ChatReplyList", "FriendOpRetList", "GroupOpRetList", "Params", });
+        new java.lang.String[] { "UserId", "GroupId", "BigId", "LittleId", "SynType", "Tm", "ChatType", "QueryType", "ChatDataList", "ChatReplyList", "FriendOpRetList", "GroupOpRetList", "Result", "Detail", "Params", });
     internal_static_model_MsgQueryResult_ParamsEntry_descriptor =
       internal_static_model_MsgQueryResult_descriptor.getNestedTypes().get(0);
     internal_static_model_MsgQueryResult_ParamsEntry_fieldAccessorTable = new

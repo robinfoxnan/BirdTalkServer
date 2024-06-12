@@ -101,6 +101,8 @@ proto.model.MsgQueryResult.toObject = function(includeInstance, msg) {
     proto.model.FriendOpResult.toObject, includeInstance),
     groupopretlistList: jspb.Message.toObjectList(msg.getGroupopretlistList(),
     proto.model.GroupOpResult.toObject, includeInstance),
+    result: jspb.Message.getFieldWithDefault(msg, 15, ""),
+    detail: jspb.Message.getFieldWithDefault(msg, 16, ""),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -189,6 +191,14 @@ proto.model.MsgQueryResult.deserializeBinaryFromReader = function(msg, reader) {
       var value = new proto.model.GroupOpResult;
       reader.readMessage(value,proto.model.GroupOpResult.deserializeBinaryFromReader);
       msg.addGroupopretlist(value);
+      break;
+    case 15:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setResult(value);
+      break;
+    case 16:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setDetail(value);
       break;
     case 30:
       var value = msg.getParamsMap();
@@ -311,6 +321,20 @@ proto.model.MsgQueryResult.serializeBinaryToWriter = function(message, writer) {
       14,
       f,
       proto.model.GroupOpResult.serializeBinaryToWriter
+    );
+  }
+  f = message.getResult();
+  if (f.length > 0) {
+    writer.writeString(
+      15,
+      f
+    );
+  }
+  f = message.getDetail();
+  if (f.length > 0) {
+    writer.writeString(
+      16,
+      f
     );
   }
   f = message.getParamsMap(true);
@@ -613,6 +637,42 @@ proto.model.MsgQueryResult.prototype.addGroupopretlist = function(opt_value, opt
  */
 proto.model.MsgQueryResult.prototype.clearGroupopretlistList = function() {
   return this.setGroupopretlistList([]);
+};
+
+
+/**
+ * optional string result = 15;
+ * @return {string}
+ */
+proto.model.MsgQueryResult.prototype.getResult = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 15, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.model.MsgQueryResult} returns this
+ */
+proto.model.MsgQueryResult.prototype.setResult = function(value) {
+  return jspb.Message.setProto3StringField(this, 15, value);
+};
+
+
+/**
+ * optional string detail = 16;
+ * @return {string}
+ */
+proto.model.MsgQueryResult.prototype.getDetail = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 16, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.model.MsgQueryResult} returns this
+ */
+proto.model.MsgQueryResult.prototype.setDetail = function(value) {
+  return jspb.Message.setProto3StringField(this, 16, value);
 };
 
 

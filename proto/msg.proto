@@ -193,6 +193,8 @@ message MsgQueryResult{
   repeated MsgChatReply chatReplyList = 12;
   repeated FriendOpResult friendOpRetList = 13;
   repeated GroupOpResult groupOpRetList = 14;
+  string result = 15;
+  string detail = 16;
 
   map<string, string> params = 30;
 }

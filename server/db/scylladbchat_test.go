@@ -59,21 +59,26 @@ func TestSetPMsgDelete(t *testing.T) {
 
 func TestSetPMsgReply(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
 	if err != nil {
-		fmt.Println(err)
+		//fmt.Println("----------------------")
+		//fmt.Println(err)
 		return
 	}
-	err = client.SetPChatRecvReply(1001, 1002, 1001, 1002, 693649456985411584, time.Now().UTC().UnixMilli())
-	fmt.Println(err)
+	err = client.SetPChatRecvReply(1001, 1002, 1001, 1002, 693649529777557504, time.Now().UTC().UnixMilli())
+	if err != nil {
+		fmt.Println("recv reply err:", err)
+	}
 
-	err = client.SetPChatReadReply(1001, 1002, 1001, 1002, 693649456985411584, time.Now().UTC().UnixMilli())
-	fmt.Println(err)
+	err = client.SetPChatReadReply(1001, 1002, 1001, 1002, 693649529777557504, time.Now().UTC().UnixMilli())
+	if err != nil {
+		fmt.Println("read reply err:", err)
+	}
 }
 
 func TestSetPMsgReply1(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -2,6 +2,7 @@ package db
 
 import (
 	"birdtalk/server/model"
+	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -94,12 +95,12 @@ func (me *Scylla) SavePChatDataSystem(msg *model.PChatDataStore) error {
 }
 
 // 对发送方设置回执，收方不需要设置
-func (me *Scylla) SetPChatRecvReply(pk1, pk2, uid1, uid2, msgId, tm1 int64) error {
+func (me *Scylla) SetPChatRecvReply(pk1, pk2 int16, uid1, uid2, msgId, tm1 int64) error {
 	builder := qb.Update(PrivateChatTableName)
 
 	builder.Set("tm1")
 
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id")).Existing()
 
 	query := builder.Query(me.session)
 	defer query.Release()
@@ -107,16 +108,29 @@ func (me *Scylla) SetPChatRecvReply(pk1, pk2, uid1, uid2, msgId, tm1 int64) erro
 	query.Consistency(gocql.One)
 	query.Bind(tm1, pk1, uid1, msgId)
 
-	err := query.Exec()
-	return err
+	// 执行查询并检查是否应用更新
+	applied, err := query.ExecCAS()
+	if err != nil {
+		return fmt.Errorf("error executing update: %w", err)
+	}
+
+	// Check if the update was applied, if not, return an error
+	if !applied {
+		return errors.New("primary key not found, update not applied")
+	}
+
+	return nil
+
+	//err := query.Exec()
+	//return err
 }
 
-func (me *Scylla) SetPChatReadReply(pk1, pk2, uid1, uid2, msgId, tm2 int64) error {
+func (me *Scylla) SetPChatReadReply(pk1, pk2 int16, uid1, uid2, msgId, tm2 int64) error {
 	builder := qb.Update(PrivateChatTableName)
 
 	builder.Set("tm2")
 
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id")).Existing()
 
 	query := builder.Query(me.session)
 	defer query.Release()
@@ -124,16 +138,26 @@ func (me *Scylla) SetPChatReadReply(pk1, pk2, uid1, uid2, msgId, tm2 int64) erro
 	query.Consistency(gocql.One)
 	query.Bind(tm2, pk1, uid1, msgId)
 
-	err := query.Exec()
-	return err
+	// 执行查询并检查是否应用更新
+	applied, err := query.ExecCAS()
+	if err != nil {
+		return fmt.Errorf("error executing update: %w", err)
+	}
+
+	// Check if the update was applied, if not, return an error
+	if !applied {
+		return errors.New("primary key not found, update not applied")
+	}
+
+	return nil
 }
 
-func (me *Scylla) SetPChatRecvReadReply(pk1, pk2, uid1, uid2, msgId, tm1, tm2 int64) error {
+func (me *Scylla) SetPChatRecvReadReply(pk1, pk2 int16, uid1, uid2, msgId, tm1, tm2 int64) error {
 	builder := qb.Update(PrivateChatTableName)
 
 	builder.Set("tm1", "tm2")
 
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id")).Existing()
 
 	query := builder.Query(me.session)
 	defer query.Release()
@@ -141,18 +165,28 @@ func (me *Scylla) SetPChatRecvReadReply(pk1, pk2, uid1, uid2, msgId, tm1, tm2 in
 	query.Consistency(gocql.One)
 	query.Bind(tm1, tm2, pk1, uid1, msgId)
 
-	err := query.Exec()
-	return err
+	// 执行查询并检查是否应用更新
+	applied, err := query.ExecCAS()
+	if err != nil {
+		return fmt.Errorf("error executing update: %w", err)
+	}
+
+	// Check if the update was applied, if not, return an error
+	if !applied {
+		return errors.New("primary key not found, update not applied")
+	}
+
+	return nil
 }
 
 // 设置删除，不可逆
-func (me *Scylla) SetPChatMsgDeleted(pk1, pk2, uid1, uid2, msgId int64) error {
+func (me *Scylla) SetPChatMsgDeleted(pk1, pk2 int16, uid1, uid2, msgId int64) error {
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
 	batch.Cons = gocql.LocalOne
 
 	// 发方的DrafStateDel
 	builder1 := qb.Update(PrivateChatTableName)
-	builder1.Set("st").Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id"))
+	builder1.Set("st").Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id")).Existing()
 	query1 := builder1.Query(me.session)
 	defer query1.Release()
 	batch.Query(query1.Statement(), model.DrafStateDel, pk1, uid1, msgId)
@@ -169,7 +203,7 @@ func (me *Scylla) SetPChatMsgDeleted(pk1, pk2, uid1, uid2, msgId int64) error {
 }
 
 // 正向查找，如果从头开始查找，那么设置为littleId = 0
-func (me *Scylla) FindPChatMsgForward(pk, uid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
+func (me *Scylla) FindPChatMsgForward(pk int16, uid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
 
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))
@@ -198,7 +232,7 @@ func (me *Scylla) FindPChatMsgForward(pk, uid, littleId int64, pageSize uint) ([
 }
 
 // 正序查找，设置边界范围
-func (me *Scylla) FindPChatMsgForwardBetween(pk, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+func (me *Scylla) FindPChatMsgForwardBetween(pk int16, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
 
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"), qb.LtOrEq("id"))
@@ -254,7 +288,7 @@ func (me *Scylla) FindPChatMsgBackward(pk, uid, pageSize uint) ([]model.PChatDat
 }
 
 // 从某一点开始向之前的历史数据反向查找,即 所有小于bigId 的
-func (me *Scylla) FindPChatMsgBackwardFrom(pk, uid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+func (me *Scylla) FindPChatMsgBackwardFrom(pk int16, uid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"))
 
@@ -310,7 +344,7 @@ func (me *Scylla) FindPChatMsgBackwardTo(pk, uid, littleId int64, pageSize uint)
 }
 
 // 向之前的历史数据反向查找
-func (me *Scylla) FindPChatMsgBackwardBetween(pk, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+func (me *Scylla) FindPChatMsgBackwardBetween(pk int16, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"), qb.GtOrEq("id"))
 
@@ -364,7 +398,7 @@ func (me *Scylla) SetGChatMsgDeleted(pk, gid, msgId int64) error {
 }
 
 // 正向查找
-func (me *Scylla) FindGChatMsgForward(pk, gid, littleId int64, pageSize uint) ([]model.GChatDataStore, error) {
+func (me *Scylla) FindGChatMsgForward(pk int16, gid, littleId int64, pageSize uint) ([]model.GChatDataStore, error) {
 	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.GtOrEq("id"))
 
@@ -392,7 +426,7 @@ func (me *Scylla) FindGChatMsgForward(pk, gid, littleId int64, pageSize uint) ([
 }
 
 // 正向查找，设置某个边界范围内
-func (me *Scylla) FindGChatMsgForwardBetween(pk, gid, littleId, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
+func (me *Scylla) FindGChatMsgForwardBetween(pk int16, gid, littleId, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
 	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.GtOrEq("id"), qb.LtOrEq("id"))
 
@@ -420,7 +454,7 @@ func (me *Scylla) FindGChatMsgForwardBetween(pk, gid, littleId, bigId int64, pag
 }
 
 // 倒序，反向历史数据方向查找
-func (me *Scylla) FindGChatMsgBackwardFrom(pk, gid, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
+func (me *Scylla) FindGChatMsgBackwardFrom(pk int16, gid, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
 	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.LtOrEq("id"))
 
