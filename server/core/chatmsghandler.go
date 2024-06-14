@@ -76,37 +76,53 @@ func onSelfChatMessage(msg *pbmodel.Msg, session *Session) {
 func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 	msgPlain := msg.GetPlainMsg()
 	msgChat := msgPlain.GetChatData()
+
+	if msgChat.FromId != session.UserID {
+		msgChat.FromId = session.UserID
+	}
+
 	// 检查权限啊
 	fid := msgChat.ToId
-
-	// 检查权限啊
-	bFun, _ := checkFriendIsFan(fid, session.UserID)
-	if !bFun {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotFriend), "not friend", map[string]string{
-			"uid": strconv.FormatInt(fid, 64),
-		}, session)
-		sendBackChatMsgReply(false, "not friend", msgChat, session)
-		return
-	}
-
-	// 社区模式
-	if !Globals.Config.Server.FriendMode {
-		// 要不要显示次数
-	}
-
-	bOk := checkFriendPermission(session.UserID, fid, bFun, model.PermissionMaskChat)
-	if !bOk {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "not have chat permission", map[string]string{
-			"uid": strconv.FormatInt(fid, 64),
-		}, session)
-		sendBackChatMsgReply(false, "permission", msgChat, session)
-		return
-	}
-
-	// 保存消息
 	pk1 := db.ComputePk(msgChat.FromId)
 	pk2 := db.ComputePk(msgChat.ToId)
 	tm := time.Now().UTC().UnixMilli()
+
+	// 单独处理撤回消息
+	if msgChat.MsgType == pbmodel.ChatMsgType_DELETE {
+
+		err := Globals.scyllaCli.SetPChatMsgDeleted(pk1, pk2, session.UserID, msgChat.ToId, msgChat.RefMessageId)
+		if err != nil {
+			sendBackChatMsgReply(false, "ref error", msgChat, session)
+			return
+		}
+	} else {
+		// 检查权限啊
+		bFun, _ := checkFriendIsFan(fid, session.UserID)
+		if !bFun {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotFriend), "not friend", map[string]string{
+				"uid": strconv.FormatInt(fid, 64),
+			}, session)
+			sendBackChatMsgReply(false, "not friend", msgChat, session)
+			return
+		}
+
+		// 社区模式
+		if !Globals.Config.Server.FriendMode {
+			// 要不要显示次数
+		}
+
+		bOk := checkFriendPermission(session.UserID, fid, bFun, model.PermissionMaskChat)
+		if !bOk {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "not have chat permission", map[string]string{
+				"uid": strconv.FormatInt(fid, 64),
+			}, session)
+			sendBackChatMsgReply(false, "permission", msgChat, session)
+			return
+		}
+	}
+
+	// 保存消息
+
 	msgData := model.PChatDataStore{
 		Pk:    pk1,
 		Uid1:  msgChat.FromId,
@@ -133,6 +149,10 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 
 	msgChat.Tm = tm
 	sendBackChatMsgReply(true, "save data ok", msgChat, session)
+
+	// 先放到队列中
+	tryPushToUserMsgCache(msgChat.ToId, msgChat.MsgId, msg)
+	// 转发用户
 	trySendMsgToUser(msgChat.ToId, msg)
 	trySendMsgToMe(msgChat.ToId, msg, session)
 
@@ -193,6 +213,17 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 
 	// 保存消息
 	pk1 := db.ComputePk(msgChat.ToId)
+
+	// 单独处理删除消息
+	if msgChat.MsgType == pbmodel.ChatMsgType_DELETE {
+
+		err = Globals.scyllaCli.SetGChatMsgDeleted(pk1, msgChat.ToId, msgChat.RefMessageId)
+		if err != nil {
+			sendBackChatMsgReply(false, "ref error", msgChat, session)
+			return
+		}
+	}
+
 	msgData := model.GChatDataStore{
 		Pk:    pk1,
 		Gid:   msgChat.ToId,
@@ -230,6 +261,8 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 	pk2 := db.ComputePk(replyMsg.FromId)
 	var err error
 
+	user := session.GetUser()
+
 	if replyMsg.RecvOk > 0 && replyMsg.ReadOk > 0 {
 		err = Globals.scyllaCli.SetPChatRecvReadReply(pk1, pk2, replyMsg.UserId, replyMsg.FromId,
 			replyMsg.MsgId, time.Now().UTC().UnixMilli(), time.Now().UTC().UnixMilli())
@@ -242,6 +275,9 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 	} else {
 		return
 	}
+
+	// 收到回执后，从发送列表中删除
+	user.PopMsgInCache(replyMsg.MsgId)
 
 	// 没有找到合适的
 	if err != nil {
@@ -311,7 +347,7 @@ func onQueryP2PChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 				Data:         item.Draf,
 				Priority:     0,
 				RefMessageId: item.Ref,
-				Status:       0,
+				Status:       pbmodel.ChatMsgStatus(item.St),
 				SendReply:    item.Tm,
 				RecvReply:    item.Tm1,
 				ReadReply:    item.Tm2,
@@ -453,7 +489,7 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 				Data:         item.Draf,
 				Priority:     0,
 				RefMessageId: item.Ref,
-				Status:       0,
+				Status:       pbmodel.ChatMsgStatus(item.St),
 				SendReply:    item.Tm,
 				EncType:      0,
 				ChatType:     pbmodel.ChatType_ChatTypeGroup,
@@ -501,6 +537,159 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 
 }
 
+// 查询消息是否送达的回执
+// 对于没有给接收回执的消息需要重送，并使用发缓存跟踪
 func onQueryChatReply(queryMsg *pbmodel.MsgQuery, session *Session) {
+	pk := db.ComputePk(session.UserID)
+	var lst []model.PChatDataStore
+	var err error
+	switch queryMsg.SynType {
+	case pbmodel.SynType_SynTypeForward:
+		lst, err = Globals.scyllaCli.FindPChatMsgForward(pk, session.UserID, queryMsg.LittleId, 100)
+	case pbmodel.SynType_SynTypeBackward:
+		lst, err = Globals.scyllaCli.FindPChatMsgBackwardFrom(pk, session.UserID, queryMsg.BigId, 100)
+	case pbmodel.SynType_SynTypeBetween:
+		lst, err = Globals.scyllaCli.FindPChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, 100)
+	}
+	if err != nil {
+		Globals.Logger.Error("find p2p chat msg error", zap.Error(err))
+	}
+
+	var littleId, bigId int64 = 0, 0
+	var fromId int64
+	var userId int64
+	var chatReplyList []*pbmodel.MsgChatReply = nil
+
+	if lst != nil && len(lst) > 0 {
+		chatReplyList = make([]*pbmodel.MsgChatReply, len(lst))
+		littleId = lst[0].Id
+		bigId = lst[len(lst)-1].Id
+
+		for index, item := range lst {
+			// 自己发出去的
+			if item.Io == model.ChatDataIOOut {
+				fromId = item.Uid2
+				userId = item.Uid1
+			} else {
+				continue
+			}
+			// 检查是否需要重发
+			resendChatMsg(&item, session)
+
+			data := pbmodel.MsgChatReply{
+				MsgId:  item.Id,
+				SendId: item.Usid,
+
+				UserId: userId,
+				FromId: fromId,
+
+				SendOk:   item.Tm,
+				RecvOk:   item.Tm1,
+				ReadOk:   item.Tm2,
+				ExtraMsg: "",
+				Params:   nil,
+			}
+			chatReplyList[index] = &data
+		}
+	}
+
+	chatDataRet := pbmodel.MsgQueryResult{
+		UserId:          session.UserID,
+		GroupId:         0,
+		BigId:           bigId,
+		LittleId:        littleId,
+		SynType:         queryMsg.SynType,
+		Tm:              utils.GetTimeStamp(),
+		ChatType:        pbmodel.ChatType_ChatTypeP2P,
+		QueryType:       pbmodel.QueryDataType_QueryDataTypeChatReply,
+		ChatDataList:    nil,
+		ChatReplyList:   chatReplyList,
+		FriendOpRetList: nil,
+		GroupOpRetList:  nil,
+		Result:          "ok",
+		Params:          nil,
+	}
+
+	msgPlain := pbmodel.MsgPlain{
+		Message: &pbmodel.MsgPlain_CommonQueryRet{
+			CommonQueryRet: &chatDataRet,
+		},
+	}
+
+	msg := pbmodel.Msg{
+		Version:  int32(ProtocolVersion),
+		KeyPrint: 0,
+		Tm:       utils.GetTimeStamp(),
+		MsgType:  pbmodel.ComMsgType_MsgTQueryResult,
+		SubType:  0,
+		Message: &pbmodel.Msg_PlainMsg{
+			PlainMsg: &msgPlain,
+		},
+	}
+	session.SendMessage(msg)
+}
+
+// 重发消息
+func resendChatMsg(msgStore *model.PChatDataStore, session *Session) {
+	if msgStore.Tm1 > 0 || msgStore.Tm2 > 0 {
+		return
+	}
+
+	if msgStore.Io == model.ChatDataIOIn {
+		return
+	}
+
+	if msgStore.Uid1 != session.UserID {
+		Globals.Logger.Fatal("resendChatMsg()  uid1 not equal with session user",
+			zap.Int64("userid", session.UserID),
+			zap.Int64("uid1", msgStore.Uid1))
+		return
+	}
+
+	fid := msgStore.Uid2
+	item := msgStore
+
+	msgChat := pbmodel.MsgChat{
+		MsgId:        item.Id,
+		UserId:       session.UserID,
+		FromId:       item.Uid1,
+		ToId:         fid,
+		Tm:           item.Tm,
+		DevId:        "",
+		SendId:       item.Usid,
+		MsgType:      pbmodel.ChatMsgType(item.Mt),
+		Data:         item.Draf,
+		Priority:     0,
+		RefMessageId: item.Ref,
+		Status:       0,
+		SendReply:    item.Tm,
+		RecvReply:    item.Tm1,
+		ReadReply:    item.Tm2,
+		EncType:      0,
+		ChatType:     pbmodel.ChatType_ChatTypeP2P,
+		SubMsgType:   0,
+		KeyPrint:     0,
+		Params:       nil,
+	}
+
+	msgPlain := pbmodel.MsgPlain{
+		Message: &pbmodel.MsgPlain_ChatData{
+			ChatData: &msgChat,
+		},
+	}
+
+	msg := pbmodel.Msg{
+		Version:  int32(ProtocolVersion),
+		KeyPrint: 0,
+		Tm:       utils.GetTimeStamp(),
+		MsgType:  pbmodel.ComMsgType_MsgTQueryResult,
+		SubType:  0,
+		Message: &pbmodel.Msg_PlainMsg{
+			PlainMsg: &msgPlain,
+		},
+	}
+
+	tryPushToUserMsgCache(fid, msgStore.Id, &msg)
+	trySendMsgToUser(fid, &msg)
 
 }

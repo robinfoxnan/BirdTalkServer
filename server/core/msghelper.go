@@ -2,6 +2,13 @@ package core
 
 import "birdtalk/server/pbmodel"
 
+func tryPushToUserMsgCache(uid int64, msgId int64, msg *pbmodel.Msg) {
+	user, ok := Globals.uc.GetUser(uid)
+	if ok && user != nil {
+		user.PushMsgInCache(msgId, msg)
+	}
+}
+
 // 尝试发送到对方用户
 func trySendMsgToUser(uid int64, msg *pbmodel.Msg) {
 	// 现在本机查找

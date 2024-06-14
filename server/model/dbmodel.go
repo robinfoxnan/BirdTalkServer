@@ -45,14 +45,6 @@ type UserInGStore struct {
 	Gid int64
 }
 
-const (
-	DrafStateNormal = 1 << iota // 常规 1
-	DrafStateArrive             // 送达 2
-	DrafStateRead               // 已读 4
-	DrafStateDel                // 撤回 8
-
-)
-
 const ChatDataIOOut = 0
 const ChatDataIOIn = 1
 

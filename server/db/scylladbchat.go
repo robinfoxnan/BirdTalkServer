@@ -2,6 +2,7 @@ package db
 
 import (
 	"birdtalk/server/model"
+	"birdtalk/server/pbmodel"
 	"errors"
 	"fmt"
 	"github.com/gocql/gocql"
@@ -181,25 +182,48 @@ func (me *Scylla) SetPChatRecvReadReply(pk1, pk2 int16, uid1, uid2, msgId, tm1, 
 
 // 设置删除，不可逆
 func (me *Scylla) SetPChatMsgDeleted(pk1, pk2 int16, uid1, uid2, msgId int64) error {
-	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
-	batch.Cons = gocql.LocalOne
+	// Update 发方的 DrafStateDel
+	builder1 := qb.Update(PrivateChatTableName).
+		Set("st").
+		Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id")).
+		Existing()
 
-	// 发方的DrafStateDel
-	builder1 := qb.Update(PrivateChatTableName)
-	builder1.Set("st").Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("id")).Existing()
 	query1 := builder1.Query(me.session)
 	defer query1.Release()
-	batch.Query(query1.Statement(), model.DrafStateDel, pk1, uid1, msgId)
 
-	// 收方DrafStateDel
+	query1.Consistency(gocql.One)
+	query1.Bind(pbmodel.ChatMsgStatus_DELETED, pk1, uid1, msgId)
+
+	// 执行查询并检查是否应用更新
+	applied, err := query1.ExecCAS()
+	if err != nil {
+		return fmt.Errorf("error executing update: %w", err)
+	}
+
+	// Check if the update was applied, if not, return an error
+	if !applied {
+		return errors.New("primary key not found, update not applied")
+	}
+	////////////////////////////////////////////////////////////
 	query2 := builder1.Query(me.session)
 	defer query2.Release()
-	batch.Query(query2.Statement(), model.DrafStateDel, pk2, uid2, msgId)
 
-	if err := me.session.ExecuteBatch(batch); err != nil {
-		return err
+	query2.Consistency(gocql.One)
+	query2.Bind(pbmodel.ChatMsgStatus_DELETED, pk2, uid2, msgId)
+
+	// 执行查询并检查是否应用更新
+	applied, err = query2.ExecCAS()
+	if err != nil {
+		return fmt.Errorf("error executing update: %w", err)
 	}
+
+	// Check if the update was applied, if not, return an error
+	if !applied {
+		return errors.New("primary key not found, update not applied")
+	}
+
 	return nil
+
 }
 
 // 正向查找，如果从头开始查找，那么设置为littleId = 0
@@ -384,17 +408,25 @@ func (me *Scylla) SaveGChatData(msg *model.GChatDataStore) error {
 }
 
 // 设置删除，不可逆
-func (me *Scylla) SetGChatMsgDeleted(pk, gid, msgId int64) error {
+func (me *Scylla) SetGChatMsgDeleted(pk int16, gid, msgId int64) error {
 
 	builder := qb.Update(GroupChatTableName)
-	builder.Set("st").Where(qb.Eq("pk"), qb.Eq("gid"), qb.Eq("id"))
+	builder.Set("st").Where(qb.Eq("pk"), qb.Eq("gid"), qb.Eq("id")).Existing()
 	query := builder.Query(me.session)
 	defer query.Release()
 
 	query.Consistency(gocql.One)
-	query.Bind(model.DrafStateDel, pk, gid, msgId)
-	err := query.Exec()
-	return err
+	query.Bind(pbmodel.ChatMsgStatus_DELETED, pk, gid, msgId)
+	applied, err := query.ExecCAS()
+	if err != nil {
+		return fmt.Errorf("error executing update: %w", err)
+	}
+
+	// Check if the update was applied, if not, return an error
+	if !applied {
+		return errors.New("primary key not found, update not applied")
+	}
+	return nil
 }
 
 // 正向查找

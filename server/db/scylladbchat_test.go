@@ -10,7 +10,7 @@ import (
 
 func TestAddPMsg(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -48,12 +48,12 @@ func TestAddPMsg(t *testing.T) {
 
 func TestSetPMsgDelete(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	err = client.SetPChatMsgDeleted(1001, 1002, 1001, 1002, 693649456985411584)
+	err = client.SetPChatMsgDeleted(1001, 1002, 1001, 1002, 721534965707313152)
 	fmt.Println(err)
 }
 
@@ -146,13 +146,13 @@ func TestAddGroupMsg(t *testing.T) {
 
 func TestSetGroupMsgDel(t *testing.T) {
 
-	client, err := NewScyllaClient([]string{"127.0.0.1:9042"}, "cassandra", "123456")
+	client, err := NewScyllaClient([]string{"8.140.203.92:9042"}, "cassandra", "Tjj.31415")
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	err = client.SetGChatMsgDeleted(101, 101, 321313213)
+	err = client.SetGChatMsgDeleted(101, 101, 693645558363066368)
 	fmt.Println(err)
 }
 

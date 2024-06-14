@@ -3,6 +3,7 @@ package model
 import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"github.com/elliotchance/orderedmap"
 	"strconv"
 	"sync"
 )
@@ -94,6 +95,9 @@ type User struct {
 
 	LastActiveTm int64
 
+	MsgCache *orderedmap.OrderedMap // 发给这个用户的消息都需要缓存，等待回执到达服务器
+	// 对于用户来说，这是一个收队列，但是当多个终端登录时候，保证有一个终端肯定收到了。
+
 	Mu sync.Mutex
 }
 
@@ -120,12 +124,83 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		Groups:       make(map[int64]bool),
 		SessionDis:   make(map[int64]int32),
 		LastActiveTm: utils.GetTimeStamp(),
+		MsgCache:     orderedmap.NewOrderedMap(),
 	}
 }
 
 func (u *User) IsSystemUser() bool {
 	return u.UserId < 1000
 }
+
+// 将消息压入缓存
+func (u *User) PushMsgInCache(id int64, msg *pbmodel.Msg) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	if msg == nil {
+		return
+	}
+	u.MsgCache.Set(id, msg)
+
+}
+
+func (u *User) PopMsgInCache(id int64) bool {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	return u.MsgCache.Delete(id)
+}
+
+// 遍历一个消息列表，判断是否需要发消息
+func (u *User) CheckMsgNeedResend(timeOut int64) []*pbmodel.Msg {
+
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	lst := make([]*pbmodel.Msg, 0)
+
+	now := utils.GetTimeStamp()
+
+	for el := u.MsgCache.Front(); el != nil; el = el.Next() {
+		//key, ok := el.Key.(int64)
+		//if !ok {
+		//	continue
+		//}
+		value, ok := el.Value.(*pbmodel.Msg)
+		if !ok {
+			continue
+		}
+		delta := now - value.Tm
+		if delta > timeOut {
+			lst = append(lst, value)
+		}
+
+	}
+	return lst
+}
+
+// 标记回执
+//func (u *User) MarkCacheRecvReply(id int64) bool {
+//	u.Mu.Lock()
+//	defer u.Mu.Unlock()
+//	value, ok := u.MsgCache.Get(id)
+//	if !ok {
+//		return false
+//	}
+//
+//	msg, ok := value.(*pbmodel.Msg)
+//	if !ok {
+//		return false
+//	}
+//	msg.GetPlainMsg().
+//	return ok
+//}
+//
+//func (u *User) MarkCacheReadReply(id int64) bool {
+//
+//}
+//
+//func (u *User) MarkCacheRecvReadReply(id int64) bool {
+//
+//}
 
 // 用于给用户返回的数据
 func (u *User) GetUserInfo() *pbmodel.UserInfo {

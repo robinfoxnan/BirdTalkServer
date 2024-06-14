@@ -25,6 +25,7 @@ require (
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
 	github.com/disintegration/imaging v1.6.2 // indirect
 	github.com/disintegration/letteravatar v0.0.0-20160912210445-1a457b860450 // indirect
+	github.com/elliotchance/orderedmap v1.6.0 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
