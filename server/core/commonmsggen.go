@@ -35,7 +35,7 @@ func sendBackHeartMsg(session *Session) {
 }
 func sendBackErrorMsg(errCode int, detail string, params map[string]string, session *Session) {
 
-	Globals.Logger.Fatal(detail, zap.Int64("user id", session.UserID), zap.Int("err code", errCode))
+	Globals.Logger.Error(detail, zap.Int64("user id", session.UserID), zap.Int("err code", errCode))
 	// 创建一个 MsgError 消息
 	errorMsg := pbmodel.MsgError{
 		Code:   int32(errCode),

@@ -17,6 +17,7 @@ import (
 var defaultFont *truetype.Font = nil
 
 func InitFont(filepath string) error {
+	fmt.Println("font path", filepath)
 	font, err := loadFontToMemory(filepath)
 	if err != nil {
 		return err
@@ -29,7 +30,7 @@ func initFont() {
 	if defaultFont != nil {
 		return
 	}
-	strFilePath := "../ttf/SourceHanSans-VF.ttf"
+	strFilePath := "./ttf/SourceHanSans-VF.ttf"
 	//strFilePath = "C:\\Windows\\Fonts\\simfang.ttf"
 	font, err := loadFontToMemory(strFilePath)
 	if err != nil {

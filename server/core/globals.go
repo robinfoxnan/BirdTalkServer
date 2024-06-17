@@ -44,11 +44,6 @@ func init() {
 	Globals.Logger = utils.CreateLogger()
 	Globals.segment = utils.NewSegment()
 
-	err := utils.InitFont(Globals.Config.Server.AvatarFont)
-	if err != nil {
-		Globals.Logger.Error("load font error", zap.Error(err))
-	}
-
 }
 
 // 加载配置
@@ -66,6 +61,11 @@ func (g *GlobalVars) InitWithConfig() error {
 		n = 2
 	}
 	g.emailWorkerManager = NewEmailWorkerManager(n)
+
+	err := utils.InitFont(Globals.Config.Server.AvatarFont)
+	if err != nil {
+		Globals.Logger.Error("load font error", zap.Error(err))
+	}
 
 	return nil
 }

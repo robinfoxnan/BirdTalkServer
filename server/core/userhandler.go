@@ -764,8 +764,8 @@ func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm 
 	tmData, err := decryptDataAuto(cipher, session)
 	if err != nil {
 		//fmt.Println("check data error", err)
-		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+err.Error(), nil, session)
+		Globals.Logger.Info("decrypt hello check data error: ", zap.ByteString("data", tmData), zap.Error(err))
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check hello check data  decrypt error", nil, session)
 		session.UserID = 0
 		session.KeyEx = nil
 		return false
@@ -778,7 +778,7 @@ func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm 
 
 	if tmStr != decryptedTm {
 		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+string(tmData), nil, session)
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: "+string(checkTokenData), nil, session)
 		session.UserID = 0
 		session.KeyEx = nil
 		return false

@@ -36,6 +36,7 @@ func (cli *RedisClient) LoadToken(id int64) (int64, *utils.KeyExchange, error) {
 
 	var ok bool
 	KeyEx.EncType, ok = data["enc"]
+	
 	tempStr, ok := data["key"]
 	if !ok {
 		return 0, nil, errors.New("not has field share key")

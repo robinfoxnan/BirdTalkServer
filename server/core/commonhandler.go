@@ -256,11 +256,19 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 		tmStr := string(tmData)
 		tm := strconv.FormatInt(msg.GetTm(), 10)
 		// 如果指纹不一样，或者
-		if remoteKeyPrint != session.KeyEx.SharedKeyPrint || tmStr != tm {
+		if remoteKeyPrint != session.KeyEx.SharedKeyPrint {
+			//fmt.Println("check data error:", " key print or data not same")
+			//fmt.Printf("tm = %v, tmstr= %v \n", tm, tmStr)
+			Globals.Logger.Info("check data error: ", zap.Int64("print", session.KeyEx.SharedKeyPrint), zap.Int64("check print", remoteKeyPrint))
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check print error: key print not same", nil, session)
+			return
+		}
+
+		if tmStr != tm {
 			//fmt.Println("check data error:", " key print or data not same")
 			//fmt.Printf("tm = %v, tmstr= %v \n", tm, tmStr)
 			Globals.Logger.Info("check data error: ", zap.String("tm", tm), zap.String("check tm", tmStr))
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error: key print or data not same", nil, session)
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTCheckData), "check data error:  data not same", nil, session)
 			return
 		}
 
