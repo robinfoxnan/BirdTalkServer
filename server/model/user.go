@@ -109,7 +109,7 @@ func NewUser() *User {
 
 // New 函数用于创建一个 User 实例
 func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
-	return &User{
+	user := &User{
 		UserInfo:  *userInfo,        // 使用传入的 *pbmodel.UserInfo 参数
 		SessionId: make([]int64, 0), // 初始化 sessionId 切片
 		Status:    UserStatusNone,
@@ -125,11 +125,53 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		SessionDis:   make(map[int64]int32),
 		LastActiveTm: utils.GetTimeStamp(),
 		MsgCache:     orderedmap.NewOrderedMap(),
+		NumFollow:    0,
+		NumFans:      0,
 	}
+
+	// 解析数据
+	if user.UserInfo.Params != nil {
+		str, ok := user.UserInfo.Params["follows"]
+		if ok {
+			user.NumFollow, _ = strconv.ParseInt(str, 10, 64)
+		}
+
+		str, ok = user.UserInfo.Params["fans"]
+		if ok {
+			user.NumFans, _ = strconv.ParseInt(str, 10, 64)
+		}
+
+	}
+
+	return user
 }
 
 func (u *User) IsSystemUser() bool {
 	return u.UserId < 1000
+}
+
+func (u *User) IncFansNum() {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.NumFans++
+}
+
+func (u *User) DecFansNum() {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.NumFans--
+}
+
+func (u *User) IncFollowsNum() {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.NumFollow++
+}
+
+func (u *User) DecFollowsNum() {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.NumFollow--
 }
 
 // 将消息压入缓存
@@ -205,7 +247,14 @@ func (u *User) CheckMsgNeedResend(timeOut int64) []*pbmodel.Msg {
 // 用于给用户返回的数据
 func (u *User) GetUserInfo() *pbmodel.UserInfo {
 	uinfo := u.UserInfo
-	delete(uinfo.Params, "pwd")
+	if uinfo.Params != nil {
+
+		delete(uinfo.Params, "pwd")
+		delete(uinfo.Params, "friendaddmode")
+		delete(uinfo.Params, "friendaddanswer")
+
+	}
+
 	return &uinfo
 }
 

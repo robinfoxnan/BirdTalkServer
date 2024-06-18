@@ -76,6 +76,12 @@ func (cli *RedisClient) UpdateUserInfoPart(id int64, setData map[string]interfac
 	return err
 }
 
+func (cli *RedisClient) IncUserInfoFiledByInt(id int64, field string, num int64) (int64, error) {
+	keyName := GetUserInfoKey(id)
+	n, err := cli.AddHashKeyInt(keyName, field, num)
+	return n, err
+}
+
 // ////////////////////////////////////////////////////////////////////////
 // 设置关注列表, 这个参数与操作数据库的结构一样，保存数据库后直接添加到redis里
 func (cli *RedisClient) setFriendsStores(key string, friends []model.FriendStore) error {
@@ -195,6 +201,11 @@ func (cli *RedisClient) ExistFans(uid int64) (bool, error) {
 
 func (cli *RedisClient) ExistPermission(uid int64) (bool, error) {
 	keyName := GetUserBlockKey(uid)
+	return cli.HasKey(keyName, DefaultUserTTL)
+}
+
+func (cli *RedisClient) ExistUserInfo(uid int64) (bool, error) {
+	keyName := GetUserInfoKey(uid)
 	return cli.HasKey(keyName, DefaultUserTTL)
 }
 

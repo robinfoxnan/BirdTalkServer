@@ -45,6 +45,29 @@ func (me *Scylla) InsertFollowing(friend *model.FriendStore, fan *model.FriendSt
 	return nil
 }
 
+// 互相关注，而不再使用粉丝表
+func (me *Scylla) InsertFollowingFriendMode(friend *model.FriendStore, fan *model.FriendStore) error {
+
+	// 创建 Batch
+	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
+	batch.Cons = gocql.LocalOne
+
+	// 设置关注
+	insertFollowQry := qb.Insert(FollowingTableName).Columns(metaFriend.Columns...).Query(me.session).Consistency(gocql.One)
+	defer insertFollowQry.Release()
+	batch.Query(insertFollowQry.Statement(), friend.Pk, friend.Uid1, friend.Uid2, friend.Tm, friend.Nick)
+
+	// 设置粉丝
+	insertFanQry := qb.Insert(FollowingTableName).Columns(metaFriend.Columns...).Query(me.session).Consistency(gocql.One)
+	defer insertFanQry.Release()
+	batch.Query(insertFanQry.Statement(), fan.Pk, fan.Uid1, fan.Uid2, fan.Tm, fan.Nick)
+
+	if err := me.session.ExecuteBatch(batch); err != nil {
+		return err
+	}
+	return nil
+}
+
 // 拉黑或者设置权限
 func (me *Scylla) InsertBlock(friend *model.BlockStore) error {
 

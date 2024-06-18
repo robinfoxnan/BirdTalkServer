@@ -31,6 +31,9 @@ func handleFriendOp(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	// 附加一个唯一编号
+	friendOpMsg.MsgId = Globals.snow.GenerateID()
+
 	opCode := friendOpMsg.Operation
 	switch opCode {
 	case pbmodel.UserOperationType_FindUser:
@@ -62,31 +65,31 @@ func handleFriendOp(msg *pbmodel.Msg, session *Session) {
 
 // 用户回答的好友应答，需要转发
 func handleFriendOpRet(msg *pbmodel.Msg, session *Session) {
-	session.Ver = int(msg.GetVersion())   // 协议版本号
-	ok := checkProtoVersion(msg, session) // 错误会自动应答
-	if !ok {
-		return
-	}
-
-	// 目前先不考虑这里
-	keyPrint := msg.GetKeyPrint() // 加密传输的秘钥指纹，这里应该为0
-	errCode, errStr := checkKeyPrint(keyPrint)
-	if keyPrint != 0 { // 如果设置了秘钥，那么这里需要验证秘钥正确性
-		sendBackErrorMsg(errCode, errStr, nil, session)
-		return
-	}
-
-	UserOpMsg := msg.GetPlainMsg().GetUserOp()
-	opCode := UserOpMsg.Operation
-	switch opCode {
-	case pbmodel.UserOperationType_ApproveFriend: // 这个是处理并转发
-	default:
-		Globals.Logger.Info("receive unknown friend result op",
-			zap.Int64("sessionId", session.Sid),
-			zap.Int64("uid", session.UserID),
-			zap.String("opCode", opCode.String()),
-		)
-	}
+	//session.Ver = int(msg.GetVersion())   // 协议版本号
+	//ok := checkProtoVersion(msg, session) // 错误会自动应答
+	//if !ok {
+	//	return
+	//}
+	//
+	//// 目前先不考虑这里
+	//keyPrint := msg.GetKeyPrint() // 加密传输的秘钥指纹，这里应该为0
+	//errCode, errStr := checkKeyPrint(keyPrint)
+	//if keyPrint != 0 { // 如果设置了秘钥，那么这里需要验证秘钥正确性
+	//	sendBackErrorMsg(errCode, errStr, nil, session)
+	//	return
+	//}
+	//
+	//UserOpMsg := msg.GetPlainMsg().GetUserOp()
+	//opCode := UserOpMsg.Operation
+	//switch opCode {
+	//case pbmodel.UserOperationType_ApproveFriend: // 这个是处理并转发
+	//default:
+	//	Globals.Logger.Info("receive unknown friend result op",
+	//		zap.Int64("sessionId", session.Sid),
+	//		zap.Int64("uid", session.UserID),
+	//		zap.String("opCode", opCode.String()),
+	//	)
+	//}
 }
 
 // ////////////////////////////////////////////////////////////////
@@ -166,7 +169,7 @@ func handleFriendFind(msg *pbmodel.Msg, session *Session) {
 		"ok",
 		nil,
 		userList, nil,
-		session, friendOpMsg.SendId, Globals.snow.GenerateID())
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 }
 
 // 分为2种模式
@@ -175,7 +178,8 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 	//params := userOpMsg.GetParams()
 	userInfo := friendOpMsg.GetUser()
 	if userInfo == nil {
-
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must have a user info", nil, session)
+		return
 	}
 
 	uid2 := userInfo.UserId
@@ -192,12 +196,9 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 	}
 
 	filterUserInfo1(friendInfo, "")
-	friendOpMsg.MsgId = Globals.snow.GenerateID()
 
 	// 0.1 如果已经是好友了，应该直接返回；这里主要是为了方式客户端的错误，防止攻击造成计数异常；
-
-	// true为交友模式，否则为社区模式
-	if Globals.Config.Server.FriendMode {
+	if Globals.Config.Server.FriendMode { // true为交友模式，否则为社区模式
 		// 如果对方是自己的粉丝
 		bFan, _ := checkFriendIsFan(uid2, session.UserID)
 		if bFan {
@@ -242,21 +243,20 @@ func handleFriendApprove(msg *pbmodel.Msg, session *Session) {
 	// 保存记录
 	if strings.ToLower(result) == "ok" {
 
+		friendInfo := session.GetUser().GetUserInfo()
+		// 应答时候对方不一定在线了, 而且对方可能注销或者被禁用了
+		userInfo, _, _ := findUserInfo(reqUserInfo.UserId)
+		if userInfo == nil {
+			Globals.Logger.Error("handleFriendApprove() -> findUserInfo() return nil")
+			return
+		}
+		onAddFriendOkFriendMode(reqUserInfo.UserId, session.UserID, friendInfo, userInfo, sendId, msgId)
+
+		// 保存记录
 		updateFriendOpResult(reqUserInfo.UserId, session.UserID, msgId, true)
 	} else {
 		updateFriendOpResult(reqUserInfo.UserId, session.UserID, msgId, false)
 	}
-
-	user := session.GetUser()
-	// 向用户应答好友请求的结果
-	msgRet := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, strings.ToLower(result),
-		reqUserInfo,
-		[]*pbmodel.UserInfo{user.GetUserInfo()},
-		friendOpRetMsg.GetParams(),
-		sendId,
-		msgId)
-
-	trySendMsgToUser(reqUserInfo.UserId, msgRet)
 
 }
 
@@ -282,19 +282,38 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 	pk1 := db.ComputePk(session.UserID)
 	pk2 := db.ComputePk(userInfo.UserId)
 	uid1 := session.UserID
+
 	Globals.scyllaCli.DeleteFollowing(pk1, pk2, uid1, uid2)
 
 	// 更新redis
 	Globals.redisCli.RemoveUserFollowing(uid1, []int64{uid2})
 	Globals.redisCli.RemoveUserFans(uid2, []int64{uid1})
 
+	// 交友模式附加动作
+	if Globals.Config.Server.FriendMode {
+		Globals.scyllaCli.DeleteFollowing(pk2, pk1, uid2, uid1)
+
+		Globals.redisCli.RemoveUserFollowing(uid2, []int64{uid1})
+		Globals.redisCli.RemoveUserFans(uid1, []int64{uid2})
+		// 计数
+		decUserFollowsFriendMode(uid1, uid2)
+	} else {
+		decUserFollowsAndFans(uid1, uid2)
+	}
+
 	// 更新内存
 	meUser := session.GetUser()
 	meUser.SetFollow(uid2, false)
+	if Globals.Config.Server.FriendMode {
+		meUser.SetFan(uid2, false)
+	}
 
 	friendUser, ok := Globals.uc.GetUser(uid2)
 	if ok && friendUser != nil {
 		friendUser.SetFan(uid1, false)
+		if Globals.Config.Server.FriendMode {
+			friendUser.SetFollow(uid1, false)
+		}
 	} else {
 		// 集群模式
 		if Globals.Config.Server.FriendMode {
@@ -302,12 +321,22 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 		}
 	}
 
+	// 应答删除完毕
 	sendBackFriendOpResult(pbmodel.UserOperationType_RemoveFriend,
 		"ok",
 		userInfo,
 		nil,
 		nil,
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
+
+	// 交友模式，双方都直接移除对方，应该通知对方
+	if Globals.Config.Server.FriendMode {
+		msgNotify := newFriendOpResultMsg(pbmodel.UserOperationType_RemoveFriend, "notice", meUser.GetUserInfo(),
+			nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
+
+		// 多终端登录时候，转发到所有的消息
+		trySendMsgToUser(uid2, msgNotify)
+	}
 
 }
 
@@ -758,7 +787,7 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 
 	switch strings.ToLower(friendAddMode) {
 	case "direct":
-		onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg, session)
+		onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg.SendId, friendOpMsg.MsgId)
 	case "require":
 		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, session)
 	case "reject":
@@ -787,7 +816,7 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 		if friendOpMsg.GetParams() != nil {
 			answerInReq, ok := friendOpMsg.GetParams()["answer"]
 			if ok && answerInReq == answer {
-				onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg, session)
+				onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg.SendId, friendOpMsg.MsgId)
 				return
 			}
 		}
@@ -817,12 +846,12 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	var err error
 
 	// 1. 日志
-	err = saveAddFriendLog(uid1, uid2, friendOpMsg.SendId, Globals.snow.GenerateID(), true)
+	err = saveAddFriendLog(uid1, uid2, friendOpMsg.SendId, friendOpMsg.MsgId, true)
 	if err != nil {
 		return err
 	}
 
-	// 2. 保存双向 关注信息，和粉丝信息
+	// 2. 2条信息： 关注信息，和粉丝信息
 	friendName := userInfo.GetNickName()
 	if friendName == "" {
 		friendName = userInfo.GetUserName()
@@ -881,7 +910,7 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 
 	// 4.对方的粉丝信息是否保存需要同步到redis
 	var bHasRedisFan = false
-	bHasRedisFan, err = Globals.redisCli.ExistFollowing(uid2)
+	bHasRedisFan, err = Globals.redisCli.ExistFans(uid2)
 	// 如果存在，这里已经续命了
 	if bHasRedisFan {
 		err = Globals.redisCli.AddUserFans(uid2, []model.FriendStore{fan})
@@ -903,7 +932,7 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	trySendMsgToUser(uid2, msg)
 
 	// 应答回执
-	delete(friendInfo.Params, "pwd")
+	filterUserInfo1(friendInfo, "")
 	sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
 		"ok",
 		user.GetUserInfo(),
@@ -914,11 +943,12 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	return err
 }
 
-func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, friendOpMsg *pbmodel.FriendOpReq, session *Session) error {
+// 对于交友模式，如果同意了，就是理解为互相关注
+func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, sendId int64, msgId int64) error {
 	var err error
 
 	// 1. 日志
-	err = saveAddFriendLog(uid1, uid2, friendOpMsg.SendId, Globals.snow.GenerateID(), true)
+	err = saveAddFriendLog(uid1, uid2, sendId, msgId, true)
 	if err != nil {
 		return err
 	}
@@ -940,9 +970,9 @@ func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.Use
 	}
 
 	// 这里是绝对不应该是空的
-	user := session.GetUser()
+	user, _ := Globals.uc.GetUser(userInfo.UserId)
 	if user == nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "user not in cache", nil, session)
+		//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "user not in cache", nil, session)
 		return errors.New("user is not in  cache")
 	}
 
@@ -960,34 +990,36 @@ func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.Use
 		Nick: name,
 	}
 
+	// 备注：不需要使用fans表了
 	// 2. 保存到scyllaDb中
-	err = Globals.scyllaCli.InsertFollowing(&friend, &fan)
+	err = Globals.scyllaCli.InsertFollowingFriendMode(&friend, &fan)
 	if err != nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following and fans  to db fail", nil, session)
+		//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following and fans  to db fail", nil, session)
 		return err
 	}
 
-	// 应该补充，计算好友的个数和粉丝的个数
-	incUserFollowsAndFans(uid1, uid2)
+	// 计算好友的个数
+	incUserFollowsFriendMode(uid1, uid2)
 
 	// 3.关注信息同步到redis
 	// 这里登录时候已经加载了，如果一个好友没有，这个地方也是空的，不过这是第一个好友
 	err = Globals.redisCli.AddUserFollowing(uid1, []model.FriendStore{friend})
 	if err != nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following   to redis fail", nil, session)
+		//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following   to redis fail", nil, session)
 		return err
 	}
 	// 3.同步到本地的内存
 	user.SetFollow(uid2, true)
+	user.SetFan(uid2, true)
 
-	// 4.对方的粉丝信息是否保存需要同步到redis
+	// 4.对方的关注信息是否保存需要同步到redis
 	var bHasRedisFan = false
 	bHasRedisFan, err = Globals.redisCli.ExistFollowing(uid2)
 	// 如果存在，这里已经续命了
 	if bHasRedisFan {
-		err = Globals.redisCli.AddUserFans(uid2, []model.FriendStore{fan})
+		err = Globals.redisCli.AddUserFollowing(uid2, []model.FriendStore{fan})
 		if err != nil {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save peer fans  to redis fail", nil, session)
+			//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save peer fans  to redis fail", nil, session)
 			return err
 		}
 	}
@@ -996,22 +1028,19 @@ func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.Use
 	friendUser, b := Globals.uc.GetUser(uid2)
 	if b && friendUser != nil {
 		friendUser.SetFan(uid1, true)
+		friendUser.SetFollow(uid1, true)
 	}
 
-	// 6. 如果对方在线，则需要通知对方有新粉丝
+	// 6. 如果对方在线，则需要通知对方有新好友
+	// 应答回执
+	filterUserInfo1(friendInfo, "")
 	msg := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, "notify",
-		user.GetUserInfo(), nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
+		user.GetUserInfo(), []*pbmodel.UserInfo{friendInfo}, nil, sendId, msgId)
+
 	trySendMsgToUser(uid2, msg)
 
-	// 应答回执
-	delete(friendInfo.Params, "pwd")
-	sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
-		"ok",
-		user.GetUserInfo(),
-		[]*pbmodel.UserInfo{friendInfo},
-		nil,
-		session, friendOpMsg.SendId, friendOpMsg.MsgId)
-
+	msg.GetPlainMsg().GetFriendOpRet().Result = "ok"
+	trySendMsgToUser(uid1, msg)
 	return err
 }
 
@@ -1020,11 +1049,107 @@ func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.Use
 func incUserFollowsAndFans(userId, fid int64) {
 	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, userId)
 	Globals.mongoCli.UpdateUserFieldIncNum("params.fans", 1, fid)
-	//
+
+	// redis
+	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
+	if bHasUid1 {
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", 1)
+	}
+	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
+	if bHasUid2 {
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.fans", 1)
+	}
+
+	// 内存
+	user1, _ := Globals.uc.GetUser(userId)
+	if user1 != nil {
+		user1.IncFollowsNum()
+	}
+
+	user2, _ := Globals.uc.GetUser(fid)
+	if user2 != nil {
+		user2.IncFansNum()
+	}
+
+	// todo: 同步到所有服务器
+
 }
 
 func decUserFollowsAndFans(userId, fid int64) {
 	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, userId)
 	Globals.mongoCli.UpdateUserFieldIncNum("params.fans", -1, fid)
-	//
+	// redis
+	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
+	if bHasUid1 {
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", -1)
+	}
+	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
+	if bHasUid2 {
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.fans", -1)
+	}
+
+	// 内存
+	user1, _ := Globals.uc.GetUser(userId)
+	if user1 != nil {
+		user1.DecFollowsNum()
+	}
+
+	user2, _ := Globals.uc.GetUser(fid)
+	if user2 != nil {
+		user2.DecFansNum()
+	}
+
+	// todo: 同步到所有服务器
+}
+
+// 交友模式不再使用粉丝表，加好友后，双向关注，单侧执行删除即双向删除
+func incUserFollowsFriendMode(userId, fid int64) {
+	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, fid)
+	// redis
+	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
+	if bHasUid1 {
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", 1)
+	}
+	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
+	if bHasUid2 {
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.follows", 1)
+	}
+
+	// 内存
+	user1, _ := Globals.uc.GetUser(userId)
+	if user1 != nil {
+		user1.IncFollowsNum()
+	}
+
+	user2, _ := Globals.uc.GetUser(fid)
+	if user2 != nil {
+		user2.IncFollowsNum()
+	}
+
+	// todo: 同步到所有服务器
+}
+
+func decUserFollowsFriendMode(userId, fid int64) {
+	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, fid)
+	// redis
+	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
+	if bHasUid1 {
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", -1)
+	}
+	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
+	if bHasUid2 {
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.follows", -1)
+	}
+	// 内存
+	user1, _ := Globals.uc.GetUser(userId)
+	if user1 != nil {
+		user1.DecFollowsNum()
+	}
+
+	user2, _ := Globals.uc.GetUser(fid)
+	if user2 != nil {
+		user2.DecFollowsNum()
+	}
 }

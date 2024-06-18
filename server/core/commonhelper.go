@@ -488,6 +488,7 @@ func findUserMongoRedis(uid int64) ([]*pbmodel.UserInfo, error) {
 }
 
 // 后面会有各种地方需要找到好友的信息
+// 这个函数会造成加载内存
 func findUser(uid int64) (*model.User, bool, error) {
 	user, ok := Globals.uc.GetUser(uid)
 	if ok && user != nil {
@@ -504,6 +505,7 @@ func findUser(uid int64) (*model.User, bool, error) {
 	}
 }
 
+// 这个函数不会加载内存
 func findUserInfo(uid int64) (*pbmodel.UserInfo, bool, error) {
 	user, ok := Globals.uc.GetUser(uid)
 	if ok && user != nil {
@@ -699,11 +701,13 @@ func filterUserInfo(userList []*pbmodel.UserInfo, mode string) {
 func filterUserInfo1(p *pbmodel.UserInfo, mode string) {
 	if p.Params != nil {
 		delete(p.Params, "pwd")
-		if mode != "phone" {
-			p.Phone = "*"
-		}
-		if mode != "email" {
-			p.Email = "*"
-		}
+		delete(p.Params, "friendaddmode")
+		delete(p.Params, "friendaddanswer")
+	}
+	if mode != "phone" {
+		p.Phone = "*"
+	}
+	if mode != "email" {
+		p.Email = "*"
 	}
 }
