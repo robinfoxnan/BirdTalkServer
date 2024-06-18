@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"log"
 	"strings"
 	"time"
 )
@@ -38,8 +39,8 @@ func NewMongoDBExporter(connectionString, dbName string) (*MongoDBExporter, erro
 	// 创建 MongoDB 连接选项
 	clientOptions := options.Client().ApplyURI(connectionString)
 	clientOptions.SetConnectTimeout(10 * time.Second). // 设置连接超时时间为 10 秒
-		SetSocketTimeout(5 * time.Second). // 设置 Socket 超时时间为 5 秒
-		SetMaxPoolSize(100) // 设置连接池大小为 100
+								SetSocketTimeout(5 * time.Second). // 设置 Socket 超时时间为 5 秒
+								SetMaxPoolSize(100)                // 设置连接池大小为 100
 
 	// 连接到 MongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -362,6 +363,36 @@ func (me *MongoDBExporter) UpdateUserInfoPart(id int64, setData map[string]inter
 
 	fmt.Println("Matched:", result.MatchedCount, "Modified:", result.ModifiedCount)
 	return result.ModifiedCount, nil
+}
+
+// 更新用户的关注的个数
+func (me *MongoDBExporter) UpdateUserFieldIncNum(field string, num, id int64) bool {
+	collection := me.db.Collection(UserTableName)
+
+	// 创建一个上下文，设置操作超时
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// 自增操作
+	filter := bson.M{"userid": id} // 过滤条件
+	update := bson.M{"$inc": bson.M{field: num}}
+
+	// 更新文档，如果文档不存在则创建它
+	opts := options.Update().SetUpsert(true)
+	result, err := collection.UpdateOne(ctx, filter, update, opts)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if result.MatchedCount > 0 {
+		fmt.Println("Matched an existing document and incremented the count.")
+
+	} else if result.UpsertedCount > 0 {
+		fmt.Printf("Inserted a new document with ID %v and set the initial count.\n", result.UpsertedID)
+	}
+	fmt.Println(result)
+
+	return true
 }
 
 // ////////////////////////////////////////////////////////////////////////////////////

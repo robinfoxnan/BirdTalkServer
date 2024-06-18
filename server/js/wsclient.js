@@ -504,9 +504,18 @@ class WsClient {
 
             case proto.model.ComMsgType.MSGTUSEROP:   // 好友申请
                 break;
-            case proto.model.ComMsgType.MSGTUSEROPRET:  // 用户或者好友操作应答
-                this.onUserOpResult(msg)
+            case proto.model.ComMsgType.MSGTUSEROPRET:  // 用户
+                this.onUserOpResult(msg);
                 break;
+
+            case proto.model.ComMsgType.MSGTFRIENDOP:  // 好友申请
+                break;
+            case proto.model.ComMsgType.MSGTFRIENDOPRET: //好友操作应答
+                this.onFriendOpResult(msg);
+                break;
+
+
+
             default:
                 // 其他类型的消息处理
                 console.warn("Received unknown message type:", msgType);
@@ -643,6 +652,32 @@ class WsClient {
         const user = users[0];
         str += "user id: " + user.getUserid() + "\n" ;
         this.progressCallback(str);
+    }
+
+    // 朋友相关消息应答
+    async onFriendOpResult(msg){
+        const friendOpRet = msg.getPlainmsg().getFriendopret();
+        const op = friendOpRet.getOperation();
+        switch (op){
+            case proto.model.UserOperationType.FINDUSER:
+                break;
+        }
+
+        let str = "";
+        str += "Received friend operation result  message:\n" +
+            "OP: " + op.toLocaleString() + "\n" +
+            // "Status: " + friendOpRet.getStatus() + "\n" +
+            "Result: " + friendOpRet.getResult() + "\n" +
+            "User info: " + friendOpRet.getUsersList() + "\n";
+        const users = friendOpRet.getUsersList();
+        // const user = users[0];
+        // str += "user id: " + user.getUserid() + "\n" ;
+        this.progressCallback(str);
+    }
+
+    // 群聊消息应答
+    async onGroupOpResult(msg){
+
     }
     //////////////////////////////////////////////////////////////////////////////
 
@@ -1101,21 +1136,60 @@ class WsClient {
         this.sendObject(msg);
     }
 
+    // 10 查询好友，通过params设置查询的信息
+    sendFriendFindMessage(mode, id){
+        showMessage("查找好友")
+        const userInfo = new proto.model.UserInfo();
+
+
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.FINDUSER);
+        opReq.setUser(userInfo);
+        const params1 = opReq.getParamsMap()
+        params1.set("mode", mode)
+        params1.set("value", id)
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+
+        this.sendObject(msg);
+    }
+    // 11 请求添加好友
+    sendFriendAddMessage(id){
+        showMessage("请求添加好友")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(id)
+
+
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.ADDFRIEND);
+        opReq.setUser(userInfo);
+
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+
+        this.sendObject(msg);
+    }
+
 }
 
-// 创建 WsClient 实例并连接 WebSocket，并传递回调函数
-// const client = new WsClient(
-//     "MyClient",
-//     "ws://localhost:8080",
-//     (message) => console.log("Received message callback:", message),
-//     () => console.log("WebSocket connected"),
-//     () => console.log("WebSocket disconnected"),
-//     (error) => console.error("WebSocket error:", error)
-// );
-// client.connect();
-//
-// // 发送消息示例
-// client.sendMessage("Hello, WebSocket!");
 
-// 关闭连接示例
-// client.disconnect();

@@ -282,6 +282,9 @@ enum ErrorMsgType{
 message MsgError{
   int32  code = 1;
   string detail = 2;
+  int64  sendId = 3;
+  int64  msgId = 4;
+  ComMsgType msgType = 5;
   map<string, string> params = 9;
 }
 

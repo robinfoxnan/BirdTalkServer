@@ -20,6 +20,9 @@ func NewUserCache() *UserCache {
 func (uc *UserCache) GetUser(uid int64) (*User, bool) {
 
 	user, ok := uc.userMap.Get(uid)
+	if !ok {
+		return nil, ok
+	}
 	return user, ok
 }
 

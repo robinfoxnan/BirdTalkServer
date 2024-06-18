@@ -102,35 +102,42 @@
 <br>
 好友管理
 <hr/>
-<div><button onclick="sendUserLogoutMessage()">10 查找</button></div>
-<div><button onclick="sendUserLogoutMessage()">11 添加好友（关注）</button></div>
-<div><button onclick="sendUserLogoutMessage()">12 同意（拒绝）好友请求</button></div>
-<div><button onclick="sendUserLogoutMessage()">13 删除好友(关注)</button></div>
-<div><button onclick="sendUserLogoutMessage()">14.1 拉黑</button>
-    <button onclick="sendUserLogoutMessage()">14.2 解除拉黑</button>
+<div><button onclick="findUser()">10 查找</button>
+<button onclick="addFriend()">11 添加好友（关注）</button>
+<button onclick="acceptFriend()">12 同意（拒绝）好友请求</button>
 </div>
 
-<div><button onclick="sendUserLogoutMessage()">15 设置权限</button></div>
-<div><button onclick="sendUserLogoutMessage()">16 设置好友备注</button></div>
+<div><button onclick="removeFriend()">13 删除好友(关注)</button>
+<button onclick="blockFriend()">14.1 拉黑</button>
+    <button onclick="unblockFriend()">14.2 解除拉黑</button>
+</div>
+
+<div><button onclick="setPermissionFriend()">15 设置权限</button>
+<button onclick="setFriendMemo">16 设置好友备注</button></div>
 
 <br>
 群组管理
 <hr/>
 <div><button onclick="sendCreateGroupMessage()">1 创建群组</button></div>
-<div><button onclick="sendDisGroupMessage()">2 解散群组</button></div>
-<div><button onclick="sendSetGInfoMessage()">3 设置信息</button></div>
-<div><button onclick="sendKickGUserMessage()">4 踢人</button></div>
-<div><button onclick="sendGInviteMessage()">5 邀请</button></div>
-<div><button onclick="sendInviteAnswerMessage()">6 应答邀请（同意，拒绝）</button></div>
-<div><button onclick="sendGReqMessage()">7 请求加入</button></div>
-<div><button onclick="sendGReqReplyMessage()">8 请求批复（群管理员）</button></div>
-<div><button onclick="sendFindGroupMessage()">9 查找</button></div>
-<div><button onclick="sendGAddAdminMessage()">10 添加管理员</button></div>
-<div><button onclick="sendGRemoveAdminMessage()">11 删除管理员</button></div>
-<div><button onclick="sendGChangeOwnerMessage()">12 转让群主</button></div>
-<div><button onclick="sendGUserInfoMessage()">13 设置自身备注等信息</button></div>
-<div><button onclick="sendGFindUserMessage()">14 搜索群内成员 </button></div>
-<div><button onclick="sendGFindMsgMessage()">15  搜索群内消息 </button></div>
+<button onclick="sendDisGroupMessage()">2 解散群组</button>
+<button onclick="sendSetGInfoMessage()">3 设置信息</button></div>
+
+<div><button onclick="sendKickGUserMessage()">4 踢人</button>
+<button onclick="sendGInviteMessage()">5 邀请</button>
+<button onclick="sendInviteAnswerMessage()">6 应答邀请（同意，拒绝）</button>
+<button onclick="sendGReqMessage()">7 请求加入</button>
+    <button onclick="sendGReqReplyMessage()">8 请求批复（群管理员）</button>
+</div>
+
+
+<div><button onclick="sendFindGroupMessage()">9 查找群</button>
+<button onclick="sendGAddAdminMessage()">10 添加管理员</button>
+<button onclick="sendGRemoveAdminMessage()">11 删除管理员</button>
+<button onclick="sendGChangeOwnerMessage()">12 转让群主</button>
+<button onclick="sendGUserInfoMessage()">13 设置自身备注等信息</button></div>
+
+<div><button onclick="sendGFindUserMessage()">14 搜索群内成员 </button>
+<button onclick="sendGFindMsgMessage()">15  搜索群内消息 </button></div>
 <br>
 私聊消息
 <hr/>
@@ -366,6 +373,22 @@
     };
     ///////////////////////////////////////////////////////////////////////////////////
     // 好友相关操作
+    // 10. 搜索用户
+    function findUser(){
+        if (client) {
+            client.sendFriendFindMessage("id", "10002");
+            //client.sendFriendFindMessage("name", "robin");
+            //client.sendFriendFindMessage("email", "john@example.com");
+            //client.sendFriendFindMessage("phone", "456789");
+        }
+    }
+
+    // 11 添加好友
+    function  addFriend(){
+        if (client) {
+            client.sendFriendAddMessage(10001)
+        }
+    }
 
 
 </script>

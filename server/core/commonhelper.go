@@ -381,7 +381,7 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 	numFollow := 0
 	numFans := 0
 	if (mask & model.UserLoadStatusFans) > 0 {
-		fList, err := Globals.scyllaCli.FindFans(sess.UserID, sess.UserID, 0, db.MaxFriendCacheSize)
+		fList, err := Globals.scyllaCli.FindFans(db.ComputePk(sess.UserID), sess.UserID, 0, db.MaxFriendCacheSize)
 		if err != nil {
 			return err
 		}
@@ -391,7 +391,7 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 	}
 
 	if (mask & model.UserLoadStatusFollow) > 0 {
-		fList, err := Globals.scyllaCli.FindFollowing(sess.UserID, sess.UserID, 0, db.MaxFriendCacheSize)
+		fList, err := Globals.scyllaCli.FindFollowing(db.ComputePk(sess.UserID), sess.UserID, 0, db.MaxFriendCacheSize)
 		if err != nil {
 			return err
 		}
@@ -616,22 +616,23 @@ func checkFriendPermission(uid, fid int64, bFan bool, bits uint32) bool {
 // 检查内存，如果没有就检查redis,再没有查数据库，redis非粉丝设置nick为“”
 func checkFriendIsFan(fid, uid int64) (bool, error) {
 	user, ok := Globals.uc.GetUser(uid)
+
+	// 这个函数为通用函数，不一定是在线用户
 	if ok {
 		isFan, bHas := user.CheckFun(fid)
 		if bHas {
 			return isFan, nil
 		}
-	} else {
-		return false, errors.New("can't find user")
-		Globals.Logger.Fatal("checkFriendIsFan() can't find user in memory User cache", zap.Int64("uid", uid))
 	}
 
 	// 内存未设置，则应该从redis开始查找
 	bFan, err := Globals.redisCli.CheckUserFan(uid, fid)
 	// 主找到了，如果没好有找到，则err = redis: nil
 	if err == nil {
-		user.SetFan(fid, bFan)
-		return bFan, err
+		if user != nil {
+			user.SetFan(fid, bFan)
+		}
+		return bFan, nil
 	}
 
 	// 没有找到，则从数据库开始加载
@@ -649,12 +650,60 @@ func checkFriendIsFan(fid, uid int64) (bool, error) {
 			Nick: "##",
 		}
 		Globals.redisCli.AddUserFans(uid, []model.FriendStore{fan})
-		user.SetFan(fid, false)
+		if user != nil {
+			user.SetFan(fid, false)
+		}
 		return false, nil
 	}
 
 	// 数据库中找到了，那对方是自己的粉丝，自己是对方的朋友
 	Globals.redisCli.AddUserFans(uid, []model.FriendStore{*friend})
-	user.SetFan(fid, true)
+	if user != nil {
+		user.SetFan(fid, true)
+	}
 	return true, nil
+}
+
+// 格式转换
+func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
+	if lst == nil {
+		return nil
+	}
+	retLst := make([]*pbmodel.UserInfo, len(lst))
+	for index, f := range lst {
+		data := pbmodel.UserInfo{
+			UserId:   f.Uid1,
+			UserName: f.Nick,
+			NickName: f.Nick,
+			Email:    "",
+			Phone:    "",
+			Gender:   "",
+			Age:      0,
+			Region:   "",
+			Icon:     "",
+			Params:   nil,
+		}
+		retLst[index] = &data
+	}
+
+	return retLst
+}
+
+// 对应答的数据过滤掉多余的信息
+func filterUserInfo(userList []*pbmodel.UserInfo, mode string) {
+	for _, p := range userList {
+		filterUserInfo1(p, mode)
+	}
+}
+
+func filterUserInfo1(p *pbmodel.UserInfo, mode string) {
+	if p.Params != nil {
+		delete(p.Params, "pwd")
+		if mode != "phone" {
+			p.Phone = "*"
+		}
+		if mode != "email" {
+			p.Email = "*"
+		}
+	}
 }

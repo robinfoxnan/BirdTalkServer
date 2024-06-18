@@ -49,6 +49,8 @@ func handleFriendOp(msg *pbmodel.Msg, session *Session) {
 		handleFriendPermission(msg, session)
 	case pbmodel.UserOperationType_SetFriendMemo:
 		handleFriendSetMemo(msg, session)
+	case pbmodel.UserOperationType_ListFriends:
+		handleFriendList(msg, session)
 	default:
 		Globals.Logger.Info("receive unknown friend op",
 			zap.Int64("sessionId", session.Sid),
@@ -94,7 +96,7 @@ func handleFriendFind(msg *pbmodel.Msg, session *Session) {
 	params := friendOpMsg.GetParams()
 	if params == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-			"must hava Params field",
+			"FriendOpMsg  must hava Params field",
 			nil,
 			session)
 
@@ -151,12 +153,14 @@ func handleFriendFind(msg *pbmodel.Msg, session *Session) {
 	}
 
 	if err != nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
-			"searching in db meet error",
-			nil,
-			session)
+		//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
+		//	"searching in db meet error",
+		//	nil,
+		//	session)
 	}
 
+	// 过滤多余的信息
+	filterUserInfo(userList, strings.ToLower(mode))
 	// 应答数据
 	sendBackFriendOpResult(pbmodel.UserOperationType_FindUser,
 		"ok",
@@ -175,7 +179,7 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 	}
 
 	uid2 := userInfo.UserId
-	// 0. 检测好友是否存在
+	// 0.0 检测好友是否存在
 	friendInfo, _, _ := findUserInfo(uid2)
 	if friendInfo == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "user not in db", nil, session)
@@ -187,15 +191,40 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	delete(friendInfo.Params, "pwd")
+	filterUserInfo1(friendInfo, "")
 	friendOpMsg.MsgId = Globals.snow.GenerateID()
+
+	// 0.1 如果已经是好友了，应该直接返回；这里主要是为了方式客户端的错误，防止攻击造成计数异常；
 
 	// true为交友模式，否则为社区模式
 	if Globals.Config.Server.FriendMode {
+		// 如果对方是自己的粉丝
+		bFan, _ := checkFriendIsFan(uid2, session.UserID)
+		if bFan {
+			user := session.GetUser()
+			sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
+				"ok",
+				user.GetUserInfo(),
+				[]*pbmodel.UserInfo{friendInfo},
+				nil,
+				session, friendOpMsg.SendId, friendOpMsg.MsgId)
+			return
+		}
 		onAddFriendStage1(session.UserID, userInfo.UserId, friendInfo, userInfo, friendOpMsg, session)
 
 	} else {
-		// 社区模式，直接更新
+		// 社区模式，如果自己是对方的粉丝
+		bFan, _ := checkFriendIsFan(session.UserID, uid2)
+		if bFan {
+			user := session.GetUser()
+			sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
+				"ok",
+				user.GetUserInfo(),
+				[]*pbmodel.UserInfo{friendInfo},
+				nil,
+				session, friendOpMsg.SendId, friendOpMsg.MsgId)
+			return
+		}
 		onAddFriendOk(session.UserID, userInfo.UserId, friendInfo, userInfo, friendOpMsg, session)
 	}
 
@@ -231,7 +260,7 @@ func handleFriendApprove(msg *pbmodel.Msg, session *Session) {
 
 }
 
-// 删除好友
+// 删除好友，如果是交友模式，则双向删除
 func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 	friendOpMsg := msg.GetPlainMsg().GetFriendOp()
 	//params := userOpMsg.GetParams()
@@ -524,6 +553,48 @@ func handleFriendSetMemo(msg *pbmodel.Msg, session *Session) {
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 }
 
+// 查询好友列表
+func handleFriendList(msg *pbmodel.Msg, session *Session) {
+	friendOpMsg := msg.GetPlainMsg().GetFriendOp()
+	fromId := int64(0)
+	userinfo := friendOpMsg.GetUser()
+	if userinfo == nil {
+		fromId = 0
+	} else {
+		fromId = userinfo.UserId
+	}
+
+	params := friendOpMsg.GetParams()
+	if params == nil {
+		return
+	}
+
+	mode, ok := params["mode"]
+	pk := db.ComputePk(session.UserID)
+	var lst []model.FriendStore
+	var err error
+	if ok && strings.ToLower(mode) == "fans" {
+		lst, err = Globals.scyllaCli.FindFans(pk, session.UserID, fromId, db.MaxFriendCacheSize)
+
+	} else {
+		lst, err = Globals.scyllaCli.FindFollowing(pk, session.UserID, fromId, db.MaxFriendCacheSize)
+	}
+
+	if err != nil {
+		Globals.Logger.Error("handleFriendList() query scylladb error", zap.Error(err))
+	}
+	flst := FriendStore2UserInfo(lst)
+	filterUserInfo(flst, "")
+
+	sendBackFriendOpResult(pbmodel.UserOperationType_SetFriendMemo,
+		"ok",
+		nil,
+		flst,
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
+
+}
+
 // 转发信息，这里主要是用于转发用户好友申请
 func sendForwardFriendOpReq(fid int64, params map[string]string, sendId, msgId int64, session *Session) {
 
@@ -583,7 +654,7 @@ func newFriendOpResultMsg(opCode pbmodel.UserOperationType,
 		Version:  int32(ProtocolVersion),
 		KeyPrint: 0,
 		Tm:       utils.GetTimeStamp(),
-		MsgType:  pbmodel.ComMsgType_MsgTUserOpRet,
+		MsgType:  pbmodel.ComMsgType_MsgTFriendOpRet,
 		SubType:  0,
 		Message: &pbmodel.Msg_PlainMsg{
 			PlainMsg: &msgPlain,
@@ -687,7 +758,7 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 
 	switch strings.ToLower(friendAddMode) {
 	case "direct":
-		onAddFriendOk(uid1, uid2, friendInfo, userInfo, friendOpMsg, session)
+		onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg, session)
 	case "require":
 		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, session)
 	case "reject":
@@ -716,7 +787,7 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 		if friendOpMsg.GetParams() != nil {
 			answerInReq, ok := friendOpMsg.GetParams()["answer"]
 			if ok && answerInReq == answer {
-				onAddFriendOk(uid1, uid2, friendInfo, userInfo, friendOpMsg, session)
+				onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg, session)
 				return
 			}
 		}
@@ -788,12 +859,15 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 		Nick: name,
 	}
 
-	// 2.
+	// 2. 保存到scyllaDb中
 	err = Globals.scyllaCli.InsertFollowing(&friend, &fan)
 	if err != nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following and fans  to db fail", nil, session)
 		return err
 	}
+
+	// 应该补充，计算好友的个数和粉丝的个数
+	incUserFollowsAndFans(uid1, uid2)
 
 	// 3.关注信息同步到redis
 	// 这里登录时候已经加载了，如果一个好友没有，这个地方也是空的，不过这是第一个好友
@@ -838,4 +912,119 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 
 	return err
+}
+
+func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, friendOpMsg *pbmodel.FriendOpReq, session *Session) error {
+	var err error
+
+	// 1. 日志
+	err = saveAddFriendLog(uid1, uid2, friendOpMsg.SendId, Globals.snow.GenerateID(), true)
+	if err != nil {
+		return err
+	}
+
+	// 2. 保存双向 关注信息，和粉丝信息
+	friendName := userInfo.GetNickName()
+	if friendName == "" {
+		friendName = userInfo.GetUserName()
+		if len(friendName) == 0 {
+			friendName = friendInfo.NickName
+		}
+	}
+	friend := model.FriendStore{
+		Pk:   db.ComputePk(uid1),
+		Uid1: uid1,
+		Uid2: uid2,
+		Tm:   time.Now().UTC().UnixMilli(),
+		Nick: friendName,
+	}
+
+	// 这里是绝对不应该是空的
+	user := session.GetUser()
+	if user == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "user not in cache", nil, session)
+		return errors.New("user is not in  cache")
+	}
+
+	name := "momo"
+	name = user.GetNickName()
+	if name == "" {
+		name = user.GetUserName()
+	}
+
+	fan := model.FriendStore{
+		Pk:   db.ComputePk(uid2),
+		Uid1: uid2,
+		Uid2: uid1,
+		Tm:   time.Now().UTC().UnixMilli(),
+		Nick: name,
+	}
+
+	// 2. 保存到scyllaDb中
+	err = Globals.scyllaCli.InsertFollowing(&friend, &fan)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following and fans  to db fail", nil, session)
+		return err
+	}
+
+	// 应该补充，计算好友的个数和粉丝的个数
+	incUserFollowsAndFans(uid1, uid2)
+
+	// 3.关注信息同步到redis
+	// 这里登录时候已经加载了，如果一个好友没有，这个地方也是空的，不过这是第一个好友
+	err = Globals.redisCli.AddUserFollowing(uid1, []model.FriendStore{friend})
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save following   to redis fail", nil, session)
+		return err
+	}
+	// 3.同步到本地的内存
+	user.SetFollow(uid2, true)
+
+	// 4.对方的粉丝信息是否保存需要同步到redis
+	var bHasRedisFan = false
+	bHasRedisFan, err = Globals.redisCli.ExistFollowing(uid2)
+	// 如果存在，这里已经续命了
+	if bHasRedisFan {
+		err = Globals.redisCli.AddUserFans(uid2, []model.FriendStore{fan})
+		if err != nil {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save peer fans  to redis fail", nil, session)
+			return err
+		}
+	}
+
+	// 5 是否同步到对方的内存
+	friendUser, b := Globals.uc.GetUser(uid2)
+	if b && friendUser != nil {
+		friendUser.SetFan(uid1, true)
+	}
+
+	// 6. 如果对方在线，则需要通知对方有新粉丝
+	msg := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, "notify",
+		user.GetUserInfo(), nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
+	trySendMsgToUser(uid2, msg)
+
+	// 应答回执
+	delete(friendInfo.Params, "pwd")
+	sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
+		"ok",
+		user.GetUserInfo(),
+		[]*pbmodel.UserInfo{friendInfo},
+		nil,
+		session, friendOpMsg.SendId, friendOpMsg.MsgId)
+
+	return err
+}
+
+// 设置好友关系时候应该，同步更新用户的好友和粉丝个数
+// todo: 同步到redis和内存中
+func incUserFollowsAndFans(userId, fid int64) {
+	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("params.fans", 1, fid)
+	//
+}
+
+func decUserFollowsAndFans(userId, fid int64) {
+	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("params.fans", -1, fid)
+	//
 }

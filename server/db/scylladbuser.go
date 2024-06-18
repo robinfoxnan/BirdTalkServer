@@ -111,11 +111,11 @@ func (me *Scylla) DeleteBlock(pk int16, uid1, uid2 int64) error {
 	return nil
 }
 
-func (me *Scylla) FindFollowing(pk, uid1, from int64, pageSize uint) ([]model.FriendStore, error) {
+func (me *Scylla) FindFollowing(pk int16, uid1, from int64, pageSize uint) ([]model.FriendStore, error) {
 	return me.FindFriendStore(pk, uid1, from, pageSize, FollowingTableName)
 }
 
-func (me *Scylla) FindFans(pk, uid1, from int64, pageSize uint) ([]model.FriendStore, error) {
+func (me *Scylla) FindFans(pk int16, uid1, from int64, pageSize uint) ([]model.FriendStore, error) {
 	return me.FindFriendStore(pk, uid1, from, pageSize, FansTableName)
 }
 
@@ -157,7 +157,7 @@ func (me *Scylla) FindFriendStoreExact(pk int16, uid1, uid2 int64, table string)
 // 查询关注
 // 数据库不支持偏移，但是可以按照用户id排序，当返回数量少于分页，说明都取完了，
 // 否则，则需要按照最后一个ID继续
-func (me *Scylla) FindFriendStore(pk, uid1, uid2 int64, pageSize uint, table string) ([]model.FriendStore, error) {
+func (me *Scylla) FindFriendStore(pk int16, uid1, uid2 int64, pageSize uint, table string) ([]model.FriendStore, error) {
 	//chatTable := table.New(pchatMetadata)
 	builder := qb.Select(table).Columns(metaFriend.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Gt("uid2"))
