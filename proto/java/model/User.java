@@ -911,10 +911,46 @@ public final class User {
 
     /**
      * <pre>
+     * 介绍
+     * </pre>
+     *
+     * <code>string intro = 10;</code>
+     * @return The intro.
+     */
+    java.lang.String getIntro();
+    /**
+     * <pre>
+     * 介绍
+     * </pre>
+     *
+     * <code>string intro = 10;</code>
+     * @return The bytes for intro.
+     */
+    com.google.protobuf.ByteString
+        getIntroBytes();
+
+    /**
+     * <pre>
+     * 关注个数
+     * </pre>
+     *
+     * <code>int64 follows = 11;</code>
+     * @return The follows.
+     */
+    long getFollows();
+
+    /**
+     * <code>int64 fans = 12;</code>
+     * @return The fans.
+     */
+    long getFans();
+
+    /**
+     * <pre>
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
     int getParamsCount();
     /**
@@ -922,7 +958,7 @@ public final class User {
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
     boolean containsParams(
         java.lang.String key);
@@ -937,7 +973,7 @@ public final class User {
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
     java.util.Map<java.lang.String, java.lang.String>
     getParamsMap();
@@ -946,7 +982,7 @@ public final class User {
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
 
     /* nullable */
@@ -959,10 +995,66 @@ java.lang.String defaultValue);
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
 
     java.lang.String getParamsOrThrow(
+        java.lang.String key);
+
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+    int getPrivacyCount();
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+    boolean containsPrivacy(
+        java.lang.String key);
+    /**
+     * Use {@link #getPrivacyMap()} instead.
+     */
+    @java.lang.Deprecated
+    java.util.Map<java.lang.String, java.lang.String>
+    getPrivacy();
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+    java.util.Map<java.lang.String, java.lang.String>
+    getPrivacyMap();
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+
+    /* nullable */
+java.lang.String getPrivacyOrDefault(
+        java.lang.String key,
+        /* nullable */
+java.lang.String defaultValue);
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+
+    java.lang.String getPrivacyOrThrow(
         java.lang.String key);
   }
   /**
@@ -990,6 +1082,7 @@ java.lang.String defaultValue);
       gender_ = "";
       region_ = "";
       icon_ = "";
+      intro_ = "";
     }
 
     @java.lang.Override
@@ -1076,6 +1169,22 @@ java.lang.String defaultValue);
               break;
             }
             case 82: {
+              java.lang.String s = input.readStringRequireUtf8();
+
+              intro_ = s;
+              break;
+            }
+            case 88: {
+
+              follows_ = input.readInt64();
+              break;
+            }
+            case 96: {
+
+              fans_ = input.readInt64();
+              break;
+            }
+            case 162: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 params_ = com.google.protobuf.MapField.newMapField(
                     ParamsDefaultEntryHolder.defaultEntry);
@@ -1086,6 +1195,19 @@ java.lang.String defaultValue);
                   ParamsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
               params_.getMutableMap().put(
                   params__.getKey(), params__.getValue());
+              break;
+            }
+            case 170: {
+              if (!((mutable_bitField0_ & 0x00000002) != 0)) {
+                privacy_ = com.google.protobuf.MapField.newMapField(
+                    PrivacyDefaultEntryHolder.defaultEntry);
+                mutable_bitField0_ |= 0x00000002;
+              }
+              com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+              privacy__ = input.readMessage(
+                  PrivacyDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
+              privacy_.getMutableMap().put(
+                  privacy__.getKey(), privacy__.getValue());
               break;
             }
             default: {
@@ -1119,8 +1241,10 @@ java.lang.String defaultValue);
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 10:
+        case 20:
           return internalGetParams();
+        case 21:
+          return internalGetPrivacy();
         default:
           throw new RuntimeException(
               "Invalid map field number: " + number);
@@ -1486,7 +1610,79 @@ java.lang.String defaultValue);
       }
     }
 
-    public static final int PARAMS_FIELD_NUMBER = 10;
+    public static final int INTRO_FIELD_NUMBER = 10;
+    private volatile java.lang.Object intro_;
+    /**
+     * <pre>
+     * 介绍
+     * </pre>
+     *
+     * <code>string intro = 10;</code>
+     * @return The intro.
+     */
+    @java.lang.Override
+    public java.lang.String getIntro() {
+      java.lang.Object ref = intro_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        intro_ = s;
+        return s;
+      }
+    }
+    /**
+     * <pre>
+     * 介绍
+     * </pre>
+     *
+     * <code>string intro = 10;</code>
+     * @return The bytes for intro.
+     */
+    @java.lang.Override
+    public com.google.protobuf.ByteString
+        getIntroBytes() {
+      java.lang.Object ref = intro_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        intro_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int FOLLOWS_FIELD_NUMBER = 11;
+    private long follows_;
+    /**
+     * <pre>
+     * 关注个数
+     * </pre>
+     *
+     * <code>int64 follows = 11;</code>
+     * @return The follows.
+     */
+    @java.lang.Override
+    public long getFollows() {
+      return follows_;
+    }
+
+    public static final int FANS_FIELD_NUMBER = 12;
+    private long fans_;
+    /**
+     * <code>int64 fans = 12;</code>
+     * @return The fans.
+     */
+    @java.lang.Override
+    public long getFans() {
+      return fans_;
+    }
+
+    public static final int PARAMS_FIELD_NUMBER = 20;
     private static final class ParamsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, java.lang.String> defaultEntry =
@@ -1517,7 +1713,7 @@ java.lang.String defaultValue);
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
 
     @java.lang.Override
@@ -1539,7 +1735,7 @@ java.lang.String defaultValue);
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
     @java.lang.Override
 
@@ -1551,7 +1747,7 @@ java.lang.String defaultValue);
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
     @java.lang.Override
 
@@ -1568,7 +1764,7 @@ java.lang.String defaultValue);
      * 其他参数，使用map存储比如，title, pwd, sid, icon
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 10;</code>
+     * <code>map&lt;string, string&gt; params = 20;</code>
      */
     @java.lang.Override
 
@@ -1577,6 +1773,103 @@ java.lang.String defaultValue);
       if (key == null) { throw new NullPointerException("map key"); }
       java.util.Map<java.lang.String, java.lang.String> map =
           internalGetParams().getMap();
+      if (!map.containsKey(key)) {
+        throw new java.lang.IllegalArgumentException();
+      }
+      return map.get(key);
+    }
+
+    public static final int PRIVACY_FIELD_NUMBER = 21;
+    private static final class PrivacyDefaultEntryHolder {
+      static final com.google.protobuf.MapEntry<
+          java.lang.String, java.lang.String> defaultEntry =
+              com.google.protobuf.MapEntry
+              .<java.lang.String, java.lang.String>newDefaultInstance(
+                  model.User.internal_static_model_UserInfo_PrivacyEntry_descriptor, 
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "",
+                  com.google.protobuf.WireFormat.FieldType.STRING,
+                  "");
+    }
+    private com.google.protobuf.MapField<
+        java.lang.String, java.lang.String> privacy_;
+    private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+    internalGetPrivacy() {
+      if (privacy_ == null) {
+        return com.google.protobuf.MapField.emptyMapField(
+            PrivacyDefaultEntryHolder.defaultEntry);
+      }
+      return privacy_;
+    }
+
+    public int getPrivacyCount() {
+      return internalGetPrivacy().getMap().size();
+    }
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+
+    @java.lang.Override
+    public boolean containsPrivacy(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      return internalGetPrivacy().getMap().containsKey(key);
+    }
+    /**
+     * Use {@link #getPrivacyMap()} instead.
+     */
+    @java.lang.Override
+    @java.lang.Deprecated
+    public java.util.Map<java.lang.String, java.lang.String> getPrivacy() {
+      return getPrivacyMap();
+    }
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+    @java.lang.Override
+
+    public java.util.Map<java.lang.String, java.lang.String> getPrivacyMap() {
+      return internalGetPrivacy().getMap();
+    }
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getPrivacyOrDefault(
+        java.lang.String key,
+        java.lang.String defaultValue) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetPrivacy().getMap();
+      return map.containsKey(key) ? map.get(key) : defaultValue;
+    }
+    /**
+     * <pre>
+     * 私有的一些设置
+     * </pre>
+     *
+     * <code>map&lt;string, string&gt; privacy = 21;</code>
+     */
+    @java.lang.Override
+
+    public java.lang.String getPrivacyOrThrow(
+        java.lang.String key) {
+      if (key == null) { throw new NullPointerException("map key"); }
+      java.util.Map<java.lang.String, java.lang.String> map =
+          internalGetPrivacy().getMap();
       if (!map.containsKey(key)) {
         throw new java.lang.IllegalArgumentException();
       }
@@ -1624,12 +1917,27 @@ java.lang.String defaultValue);
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(icon_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 9, icon_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(intro_)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 10, intro_);
+      }
+      if (follows_ != 0L) {
+        output.writeInt64(11, follows_);
+      }
+      if (fans_ != 0L) {
+        output.writeInt64(12, fans_);
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetParams(),
           ParamsDefaultEntryHolder.defaultEntry,
-          10);
+          20);
+      com.google.protobuf.GeneratedMessageV3
+        .serializeStringMapTo(
+          output,
+          internalGetPrivacy(),
+          PrivacyDefaultEntryHolder.defaultEntry,
+          21);
       unknownFields.writeTo(output);
     }
 
@@ -1668,6 +1976,17 @@ java.lang.String defaultValue);
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(icon_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, icon_);
       }
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(intro_)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(10, intro_);
+      }
+      if (follows_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(11, follows_);
+      }
+      if (fans_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(12, fans_);
+      }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetParams().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
@@ -1676,7 +1995,17 @@ java.lang.String defaultValue);
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(10, params__);
+            .computeMessageSize(20, params__);
+      }
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetPrivacy().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        privacy__ = PrivacyDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(21, privacy__);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1711,8 +2040,16 @@ java.lang.String defaultValue);
           .equals(other.getRegion())) return false;
       if (!getIcon()
           .equals(other.getIcon())) return false;
+      if (!getIntro()
+          .equals(other.getIntro())) return false;
+      if (getFollows()
+          != other.getFollows()) return false;
+      if (getFans()
+          != other.getFans()) return false;
       if (!internalGetParams().equals(
           other.internalGetParams())) return false;
+      if (!internalGetPrivacy().equals(
+          other.internalGetPrivacy())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -1743,9 +2080,21 @@ java.lang.String defaultValue);
       hash = (53 * hash) + getRegion().hashCode();
       hash = (37 * hash) + ICON_FIELD_NUMBER;
       hash = (53 * hash) + getIcon().hashCode();
+      hash = (37 * hash) + INTRO_FIELD_NUMBER;
+      hash = (53 * hash) + getIntro().hashCode();
+      hash = (37 * hash) + FOLLOWS_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getFollows());
+      hash = (37 * hash) + FANS_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getFans());
       if (!internalGetParams().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetParams().hashCode();
+      }
+      if (!internalGetPrivacy().getMap().isEmpty()) {
+        hash = (37 * hash) + PRIVACY_FIELD_NUMBER;
+        hash = (53 * hash) + internalGetPrivacy().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1863,8 +2212,10 @@ java.lang.String defaultValue);
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 10:
+          case 20:
             return internalGetParams();
+          case 21:
+            return internalGetPrivacy();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -1874,8 +2225,10 @@ java.lang.String defaultValue);
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 10:
+          case 20:
             return internalGetMutableParams();
+          case 21:
+            return internalGetMutablePrivacy();
           default:
             throw new RuntimeException(
                 "Invalid map field number: " + number);
@@ -1925,7 +2278,14 @@ java.lang.String defaultValue);
 
         icon_ = "";
 
+        intro_ = "";
+
+        follows_ = 0L;
+
+        fans_ = 0L;
+
         internalGetMutableParams().clear();
+        internalGetMutablePrivacy().clear();
         return this;
       }
 
@@ -1962,8 +2322,13 @@ java.lang.String defaultValue);
         result.age_ = age_;
         result.region_ = region_;
         result.icon_ = icon_;
+        result.intro_ = intro_;
+        result.follows_ = follows_;
+        result.fans_ = fans_;
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
+        result.privacy_ = internalGetPrivacy();
+        result.privacy_.makeImmutable();
         onBuilt();
         return result;
       }
@@ -2046,8 +2411,20 @@ java.lang.String defaultValue);
           icon_ = other.icon_;
           onChanged();
         }
+        if (!other.getIntro().isEmpty()) {
+          intro_ = other.intro_;
+          onChanged();
+        }
+        if (other.getFollows() != 0L) {
+          setFollows(other.getFollows());
+        }
+        if (other.getFans() != 0L) {
+          setFans(other.getFans());
+        }
         internalGetMutableParams().mergeFrom(
             other.internalGetParams());
+        internalGetMutablePrivacy().mergeFrom(
+            other.internalGetPrivacy());
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -2836,6 +3213,176 @@ java.lang.String defaultValue);
         return this;
       }
 
+      private java.lang.Object intro_ = "";
+      /**
+       * <pre>
+       * 介绍
+       * </pre>
+       *
+       * <code>string intro = 10;</code>
+       * @return The intro.
+       */
+      public java.lang.String getIntro() {
+        java.lang.Object ref = intro_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          intro_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <pre>
+       * 介绍
+       * </pre>
+       *
+       * <code>string intro = 10;</code>
+       * @return The bytes for intro.
+       */
+      public com.google.protobuf.ByteString
+          getIntroBytes() {
+        java.lang.Object ref = intro_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          intro_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <pre>
+       * 介绍
+       * </pre>
+       *
+       * <code>string intro = 10;</code>
+       * @param value The intro to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIntro(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        intro_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 介绍
+       * </pre>
+       *
+       * <code>string intro = 10;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearIntro() {
+        
+        intro_ = getDefaultInstance().getIntro();
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 介绍
+       * </pre>
+       *
+       * <code>string intro = 10;</code>
+       * @param value The bytes for intro to set.
+       * @return This builder for chaining.
+       */
+      public Builder setIntroBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        intro_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long follows_ ;
+      /**
+       * <pre>
+       * 关注个数
+       * </pre>
+       *
+       * <code>int64 follows = 11;</code>
+       * @return The follows.
+       */
+      @java.lang.Override
+      public long getFollows() {
+        return follows_;
+      }
+      /**
+       * <pre>
+       * 关注个数
+       * </pre>
+       *
+       * <code>int64 follows = 11;</code>
+       * @param value The follows to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFollows(long value) {
+        
+        follows_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 关注个数
+       * </pre>
+       *
+       * <code>int64 follows = 11;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFollows() {
+        
+        follows_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long fans_ ;
+      /**
+       * <code>int64 fans = 12;</code>
+       * @return The fans.
+       */
+      @java.lang.Override
+      public long getFans() {
+        return fans_;
+      }
+      /**
+       * <code>int64 fans = 12;</code>
+       * @param value The fans to set.
+       * @return This builder for chaining.
+       */
+      public Builder setFans(long value) {
+        
+        fans_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 fans = 12;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearFans() {
+        
+        fans_ = 0L;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.MapField<
           java.lang.String, java.lang.String> params_;
       private com.google.protobuf.MapField<java.lang.String, java.lang.String>
@@ -2867,7 +3414,7 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
 
       @java.lang.Override
@@ -2889,7 +3436,7 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
       @java.lang.Override
 
@@ -2901,7 +3448,7 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
       @java.lang.Override
 
@@ -2918,7 +3465,7 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
       @java.lang.Override
 
@@ -2943,7 +3490,7 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
 
       public Builder removeParams(
@@ -2966,7 +3513,7 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
       public Builder putParams(
           java.lang.String key,
@@ -2985,12 +3532,171 @@ java.lang.String defaultValue);
        * 其他参数，使用map存储比如，title, pwd, sid, icon
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 10;</code>
+       * <code>map&lt;string, string&gt; params = 20;</code>
        */
 
       public Builder putAllParams(
           java.util.Map<java.lang.String, java.lang.String> values) {
         internalGetMutableParams().getMutableMap()
+            .putAll(values);
+        return this;
+      }
+
+      private com.google.protobuf.MapField<
+          java.lang.String, java.lang.String> privacy_;
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetPrivacy() {
+        if (privacy_ == null) {
+          return com.google.protobuf.MapField.emptyMapField(
+              PrivacyDefaultEntryHolder.defaultEntry);
+        }
+        return privacy_;
+      }
+      private com.google.protobuf.MapField<java.lang.String, java.lang.String>
+      internalGetMutablePrivacy() {
+        onChanged();;
+        if (privacy_ == null) {
+          privacy_ = com.google.protobuf.MapField.newMapField(
+              PrivacyDefaultEntryHolder.defaultEntry);
+        }
+        if (!privacy_.isMutable()) {
+          privacy_ = privacy_.copy();
+        }
+        return privacy_;
+      }
+
+      public int getPrivacyCount() {
+        return internalGetPrivacy().getMap().size();
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+
+      @java.lang.Override
+      public boolean containsPrivacy(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        return internalGetPrivacy().getMap().containsKey(key);
+      }
+      /**
+       * Use {@link #getPrivacyMap()} instead.
+       */
+      @java.lang.Override
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String> getPrivacy() {
+        return getPrivacyMap();
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+      @java.lang.Override
+
+      public java.util.Map<java.lang.String, java.lang.String> getPrivacyMap() {
+        return internalGetPrivacy().getMap();
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+      @java.lang.Override
+
+      public java.lang.String getPrivacyOrDefault(
+          java.lang.String key,
+          java.lang.String defaultValue) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetPrivacy().getMap();
+        return map.containsKey(key) ? map.get(key) : defaultValue;
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+      @java.lang.Override
+
+      public java.lang.String getPrivacyOrThrow(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        java.util.Map<java.lang.String, java.lang.String> map =
+            internalGetPrivacy().getMap();
+        if (!map.containsKey(key)) {
+          throw new java.lang.IllegalArgumentException();
+        }
+        return map.get(key);
+      }
+
+      public Builder clearPrivacy() {
+        internalGetMutablePrivacy().getMutableMap()
+            .clear();
+        return this;
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+
+      public Builder removePrivacy(
+          java.lang.String key) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        internalGetMutablePrivacy().getMutableMap()
+            .remove(key);
+        return this;
+      }
+      /**
+       * Use alternate mutation accessors instead.
+       */
+      @java.lang.Deprecated
+      public java.util.Map<java.lang.String, java.lang.String>
+      getMutablePrivacy() {
+        return internalGetMutablePrivacy().getMutableMap();
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+      public Builder putPrivacy(
+          java.lang.String key,
+          java.lang.String value) {
+        if (key == null) { throw new NullPointerException("map key"); }
+        if (value == null) {
+  throw new NullPointerException("map value");
+}
+
+        internalGetMutablePrivacy().getMutableMap()
+            .put(key, value);
+        return this;
+      }
+      /**
+       * <pre>
+       * 私有的一些设置
+       * </pre>
+       *
+       * <code>map&lt;string, string&gt; privacy = 21;</code>
+       */
+
+      public Builder putAllPrivacy(
+          java.util.Map<java.lang.String, java.lang.String> values) {
+        internalGetMutablePrivacy().getMutableMap()
             .putAll(values);
         return this;
       }
@@ -17043,6 +17749,11 @@ java.lang.String defaultValue);
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_model_UserInfo_ParamsEntry_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_model_UserInfo_PrivacyEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_model_UserInfo_PrivacyEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_model_UserOpReq_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
@@ -17131,82 +17842,85 @@ java.lang.String defaultValue);
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\nuser.proto\022\005model\"\363\001\n\010UserInfo\022\016\n\006user" +
+      "\n\nuser.proto\022\005model\"\200\003\n\010UserInfo\022\016\n\006user" +
       "Id\030\001 \001(\003\022\020\n\010userName\030\002 \001(\t\022\020\n\010nickName\030\003" +
       " \001(\t\022\r\n\005email\030\004 \001(\t\022\r\n\005phone\030\005 \001(\t\022\016\n\006ge" +
       "nder\030\006 \001(\t\022\013\n\003age\030\007 \001(\005\022\016\n\006region\030\010 \001(\t\022" +
-      "\014\n\004icon\030\t \001(\t\022+\n\006params\030\n \003(\0132\033.model.Us" +
-      "erInfo.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key" +
-      "\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\264\001\n\tUserOpReq\022" +
-      "+\n\toperation\030\001 \001(\0162\030.model.UserOperation" +
-      "Type\022\035\n\004user\030\002 \001(\0132\017.model.UserInfo\022,\n\006p" +
-      "arams\030\003 \003(\0132\034.model.UserOpReq.ParamsEntr" +
-      "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"\333\001\n\014UserOpResult\022+\n\toperation\030\001" +
-      " \001(\0162\030.model.UserOperationType\022\016\n\006result" +
-      "\030\002 \001(\t\022\016\n\006status\030\003 \001(\t\022\036\n\005users\030\004 \003(\0132\017." +
-      "model.UserInfo\022/\n\006params\030\005 \003(\0132\037.model.U" +
-      "serOpResult.ParamsEntry\032-\n\013ParamsEntry\022\013" +
-      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\327\001\n\013Frien" +
-      "dOpReq\022+\n\toperation\030\001 \001(\0162\030.model.UserOp" +
-      "erationType\022\035\n\004user\030\002 \001(\0132\017.model.UserIn" +
-      "fo\022\016\n\006sendId\030\003 \001(\003\022\r\n\005msgId\030\004 \001(\003\022.\n\006par" +
-      "ams\030\005 \003(\0132\036.model.FriendOpReq.ParamsEntr" +
-      "y\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002" +
-      " \001(\t:\0028\001\"\215\002\n\016FriendOpResult\022+\n\toperation" +
-      "\030\001 \001(\0162\030.model.UserOperationType\022\016\n\006resu" +
-      "lt\030\002 \001(\t\022\035\n\004user\030\003 \001(\0132\017.model.UserInfo\022" +
-      "\036\n\005users\030\004 \003(\0132\017.model.UserInfo\022\016\n\006sendI" +
-      "d\030\005 \001(\003\022\r\n\005msgId\030\006 \001(\003\0221\n\006params\030\007 \003(\0132!" +
-      ".model.FriendOpResult.ParamsEntry\032-\n\013Par" +
-      "amsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001" +
-      "\"\267\001\n\013GroupMember\022\016\n\006userId\030\001 \001(\003\022\014\n\004nick" +
-      "\030\002 \001(\t\022\014\n\004icon\030\003 \001(\t\022\014\n\004role\030\004 \001(\t\022\017\n\007gr" +
-      "oupId\030\005 \001(\003\022.\n\006params\030\006 \003(\0132\036.model.Grou" +
-      "pMember.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
-      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\255\001\n\tGroupInfo" +
-      "\022\017\n\007groupId\030\001 \001(\003\022\014\n\004tags\030\002 \003(\t\022\021\n\tgroup" +
-      "Name\030\003 \001(\t\022\021\n\tgroupType\030\004 \001(\t\022,\n\006params\030" +
-      "\005 \003(\0132\034.model.GroupInfo.ParamsEntry\032-\n\013P" +
-      "aramsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
-      "8\001\"\241\002\n\nGroupOpReq\022,\n\toperation\030\001 \001(\0162\031.m" +
-      "odel.GroupOperationType\022\"\n\006ReqMem\030\002 \001(\0132" +
-      "\022.model.GroupMember\022\037\n\005group\030\003 \001(\0132\020.mod" +
-      "el.GroupInfo\022#\n\007members\030\004 \003(\0132\022.model.Gr" +
-      "oupMember\022\016\n\006sendId\030\006 \001(\003\022\r\n\005msgId\030\007 \001(\003" +
-      "\022-\n\006params\030\010 \003(\0132\035.model.GroupOpReq.Para" +
-      "msEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v" +
-      "alue\030\002 \001(\t:\0028\001\"\351\002\n\rGroupOpResult\022,\n\toper" +
-      "ation\030\001 \001(\0162\031.model.GroupOperationType\022\"" +
-      "\n\006ReqMem\030\002 \001(\0132\022.model.GroupMember\022\016\n\006re" +
-      "sult\030\003 \001(\t\022\016\n\006detail\030\004 \001(\t\022\037\n\005group\030\005 \001(" +
-      "\0132\020.model.GroupInfo\022\016\n\006sendId\030\006 \001(\003\022\r\n\005m" +
-      "sgId\030\007 \001(\003\022#\n\007members\030\010 \003(\0132\022.model.Grou" +
-      "pMember\0220\n\006params\030\t \003(\0132 .model.GroupOpR" +
-      "esult.ParamsEntry\022 \n\006groups\030\n \003(\0132\020.mode" +
-      "l.GroupInfo\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022" +
-      "\r\n\005value\030\002 \001(\t:\0028\001*\324\002\n\021UserOperationType" +
-      "\022\022\n\016UserNoneAction\020\000\022\020\n\014RegisterUser\020\001\022\022" +
-      "\n\016UnregisterUser\020\002\022\017\n\013DisableUser\020\003\022\017\n\013R" +
-      "ecoverUser\020\004\022\017\n\013SetUserInfo\020\005\022\030\n\024RealNam" +
-      "eVerification\020\006\022\t\n\005Login\020\007\022\n\n\006Logout\020\010\022\014" +
-      "\n\010FindUser\020\t\022\r\n\tAddFriend\020\n\022\021\n\rApproveFr" +
-      "iend\020\013\022\020\n\014RemoveFriend\020\014\022\017\n\013BlockFriend\020" +
-      "\r\022\021\n\rUnBlockFriend\020\016\022\027\n\023SetFriendPermiss" +
-      "ion\020\017\022\021\n\rSetFriendMemo\020\020\022\017\n\013ListFriends\020" +
-      "\021*\333\002\n\022GroupOperationType\022\023\n\017GroupNoneAct" +
-      "ion\020\000\022\017\n\013GroupCreate\020\001\022\021\n\rGroupDissolve\020" +
-      "\002\022\020\n\014GroupSetInfo\020\003\022\023\n\017GroupKickMember\020\004" +
-      "\022\026\n\022GroupInviteRequest\020\005\022\025\n\021GroupInviteA" +
-      "nswer\020\006\022\024\n\020GroupJoinRequest\020\007\022\023\n\017GroupJo" +
-      "inAnswer\020\010\022\r\n\tGroupQuit\020\t\022\021\n\rGroupAddAdm" +
-      "in\020\n\022\021\n\rGroupDelAdmin\020\013\022\026\n\022GroupTransfer" +
-      "Owner\020\014\022\026\n\022GroupSetMemberInfo\020\r\022\017\n\013Group" +
-      "Search\020\016\022\025\n\021GroupSearchMember\020\017*t\n\030Group" +
-      "OperationResultType\022\034\n\030GroupOperationRes" +
-      "ultNone\020\000\022\032\n\026GroupOperationResultOk\020\001\022\036\n" +
-      "\032GroupOperationResultRefuse\020\002B\020Z\016server/" +
-      "pbmodelb\006proto3"
+      "\014\n\004icon\030\t \001(\t\022\r\n\005intro\030\n \001(\t\022\017\n\007follows\030" +
+      "\013 \001(\003\022\014\n\004fans\030\014 \001(\003\022+\n\006params\030\024 \003(\0132\033.mo" +
+      "del.UserInfo.ParamsEntry\022-\n\007privacy\030\025 \003(" +
+      "\0132\034.model.UserInfo.PrivacyEntry\032-\n\013Param" +
+      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032." +
+      "\n\014PrivacyEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
+      "(\t:\0028\001\"\264\001\n\tUserOpReq\022+\n\toperation\030\001 \001(\0162" +
+      "\030.model.UserOperationType\022\035\n\004user\030\002 \001(\0132" +
+      "\017.model.UserInfo\022,\n\006params\030\003 \003(\0132\034.model" +
+      ".UserOpReq.ParamsEntry\032-\n\013ParamsEntry\022\013\n" +
+      "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\333\001\n\014UserOp" +
+      "Result\022+\n\toperation\030\001 \001(\0162\030.model.UserOp" +
+      "erationType\022\016\n\006result\030\002 \001(\t\022\016\n\006status\030\003 " +
+      "\001(\t\022\036\n\005users\030\004 \003(\0132\017.model.UserInfo\022/\n\006p" +
+      "arams\030\005 \003(\0132\037.model.UserOpResult.ParamsE" +
+      "ntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu" +
+      "e\030\002 \001(\t:\0028\001\"\327\001\n\013FriendOpReq\022+\n\toperation" +
+      "\030\001 \001(\0162\030.model.UserOperationType\022\035\n\004user" +
+      "\030\002 \001(\0132\017.model.UserInfo\022\016\n\006sendId\030\003 \001(\003\022" +
+      "\r\n\005msgId\030\004 \001(\003\022.\n\006params\030\005 \003(\0132\036.model.F" +
+      "riendOpReq.ParamsEntry\032-\n\013ParamsEntry\022\013\n" +
+      "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\215\002\n\016Friend" +
+      "OpResult\022+\n\toperation\030\001 \001(\0162\030.model.User" +
+      "OperationType\022\016\n\006result\030\002 \001(\t\022\035\n\004user\030\003 " +
+      "\001(\0132\017.model.UserInfo\022\036\n\005users\030\004 \003(\0132\017.mo" +
+      "del.UserInfo\022\016\n\006sendId\030\005 \001(\003\022\r\n\005msgId\030\006 " +
+      "\001(\003\0221\n\006params\030\007 \003(\0132!.model.FriendOpResu" +
+      "lt.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001" +
+      "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\267\001\n\013GroupMember\022\016\n" +
+      "\006userId\030\001 \001(\003\022\014\n\004nick\030\002 \001(\t\022\014\n\004icon\030\003 \001(" +
+      "\t\022\014\n\004role\030\004 \001(\t\022\017\n\007groupId\030\005 \001(\003\022.\n\006para" +
+      "ms\030\006 \003(\0132\036.model.GroupMember.ParamsEntry" +
+      "\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
+      "\001(\t:\0028\001\"\255\001\n\tGroupInfo\022\017\n\007groupId\030\001 \001(\003\022\014" +
+      "\n\004tags\030\002 \003(\t\022\021\n\tgroupName\030\003 \001(\t\022\021\n\tgroup" +
+      "Type\030\004 \001(\t\022,\n\006params\030\005 \003(\0132\034.model.Group" +
+      "Info.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001" +
+      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\241\002\n\nGroupOpReq\022," +
+      "\n\toperation\030\001 \001(\0162\031.model.GroupOperation" +
+      "Type\022\"\n\006ReqMem\030\002 \001(\0132\022.model.GroupMember" +
+      "\022\037\n\005group\030\003 \001(\0132\020.model.GroupInfo\022#\n\007mem" +
+      "bers\030\004 \003(\0132\022.model.GroupMember\022\016\n\006sendId" +
+      "\030\006 \001(\003\022\r\n\005msgId\030\007 \001(\003\022-\n\006params\030\010 \003(\0132\035." +
+      "model.GroupOpReq.ParamsEntry\032-\n\013ParamsEn" +
+      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\351\002\n\r" +
+      "GroupOpResult\022,\n\toperation\030\001 \001(\0162\031.model" +
+      ".GroupOperationType\022\"\n\006ReqMem\030\002 \001(\0132\022.mo" +
+      "del.GroupMember\022\016\n\006result\030\003 \001(\t\022\016\n\006detai" +
+      "l\030\004 \001(\t\022\037\n\005group\030\005 \001(\0132\020.model.GroupInfo" +
+      "\022\016\n\006sendId\030\006 \001(\003\022\r\n\005msgId\030\007 \001(\003\022#\n\007membe" +
+      "rs\030\010 \003(\0132\022.model.GroupMember\0220\n\006params\030\t" +
+      " \003(\0132 .model.GroupOpResult.ParamsEntry\022 " +
+      "\n\006groups\030\n \003(\0132\020.model.GroupInfo\032-\n\013Para" +
+      "msEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*" +
+      "\324\002\n\021UserOperationType\022\022\n\016UserNoneAction\020" +
+      "\000\022\020\n\014RegisterUser\020\001\022\022\n\016UnregisterUser\020\002\022" +
+      "\017\n\013DisableUser\020\003\022\017\n\013RecoverUser\020\004\022\017\n\013Set" +
+      "UserInfo\020\005\022\030\n\024RealNameVerification\020\006\022\t\n\005" +
+      "Login\020\007\022\n\n\006Logout\020\010\022\014\n\010FindUser\020\t\022\r\n\tAdd" +
+      "Friend\020\n\022\021\n\rApproveFriend\020\013\022\020\n\014RemoveFri" +
+      "end\020\014\022\017\n\013BlockFriend\020\r\022\021\n\rUnBlockFriend\020" +
+      "\016\022\027\n\023SetFriendPermission\020\017\022\021\n\rSetFriendM" +
+      "emo\020\020\022\017\n\013ListFriends\020\021*\333\002\n\022GroupOperatio" +
+      "nType\022\023\n\017GroupNoneAction\020\000\022\017\n\013GroupCreat" +
+      "e\020\001\022\021\n\rGroupDissolve\020\002\022\020\n\014GroupSetInfo\020\003" +
+      "\022\023\n\017GroupKickMember\020\004\022\026\n\022GroupInviteRequ" +
+      "est\020\005\022\025\n\021GroupInviteAnswer\020\006\022\024\n\020GroupJoi" +
+      "nRequest\020\007\022\023\n\017GroupJoinAnswer\020\010\022\r\n\tGroup" +
+      "Quit\020\t\022\021\n\rGroupAddAdmin\020\n\022\021\n\rGroupDelAdm" +
+      "in\020\013\022\026\n\022GroupTransferOwner\020\014\022\026\n\022GroupSet" +
+      "MemberInfo\020\r\022\017\n\013GroupSearch\020\016\022\025\n\021GroupSe" +
+      "archMember\020\017*t\n\030GroupOperationResultType" +
+      "\022\034\n\030GroupOperationResultNone\020\000\022\032\n\026GroupO" +
+      "perationResultOk\020\001\022\036\n\032GroupOperationResu" +
+      "ltRefuse\020\002B\020Z\016server/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -17217,12 +17931,18 @@ java.lang.String defaultValue);
     internal_static_model_UserInfo_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_UserInfo_descriptor,
-        new java.lang.String[] { "UserId", "UserName", "NickName", "Email", "Phone", "Gender", "Age", "Region", "Icon", "Params", });
+        new java.lang.String[] { "UserId", "UserName", "NickName", "Email", "Phone", "Gender", "Age", "Region", "Icon", "Intro", "Follows", "Fans", "Params", "Privacy", });
     internal_static_model_UserInfo_ParamsEntry_descriptor =
       internal_static_model_UserInfo_descriptor.getNestedTypes().get(0);
     internal_static_model_UserInfo_ParamsEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_UserInfo_ParamsEntry_descriptor,
+        new java.lang.String[] { "Key", "Value", });
+    internal_static_model_UserInfo_PrivacyEntry_descriptor =
+      internal_static_model_UserInfo_descriptor.getNestedTypes().get(1);
+    internal_static_model_UserInfo_PrivacyEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_model_UserInfo_PrivacyEntry_descriptor,
         new java.lang.String[] { "Key", "Value", });
     internal_static_model_UserOpReq_descriptor =
       getDescriptor().getMessageTypes().get(1);

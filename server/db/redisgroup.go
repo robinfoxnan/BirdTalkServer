@@ -34,6 +34,9 @@ func (cli *RedisClient) GetGroupInfoById(gid int64) (*pbmodel.GroupInfo, error) 
 		return nil, err
 	}
 	//fmt.Println("from redis get the map = ", data)
+	if data == nil || len(data) == 0 {
+		return nil, nil
+	}
 
 	group := pbmodel.GroupInfo{}
 	err = utils.FromMapString(data, &group)
@@ -145,14 +148,21 @@ func (cli *RedisClient) GetGroupMembers(gid int64) ([]model.GroupMemberStore, er
 	lst := make([]model.GroupMemberStore, len(dataMap))
 	index := 0
 	for k, v := range dataMap {
-		uid, _ := strconv.ParseInt(k, 10, 64)
+		//fmt.Println(v)
+		uid, err := strconv.ParseInt(k, 10, 64)
+		if err != nil || uid == 0 {
+			fmt.Println("GetGroupMembers() parse uid err", err)
+			continue
+		}
 		role := model.RoleGroupMember
 		nick := v
-		if strings.HasSuffix(v, "*|") {
+		if strings.HasPrefix(v, "*|") {
+			//fmt.Println("find *")
 			role = model.RoleGroupAdmin
 			nick = strings.TrimLeft(v, "*|")
 
-		} else if strings.HasSuffix(v, "#|") {
+		} else if strings.HasPrefix(v, "#|") {
+			//fmt.Println("find #")
 			role = model.RoleGroupOwner
 			nick = strings.TrimLeft(v, "#|")
 		}
@@ -163,6 +173,8 @@ func (cli *RedisClient) GetGroupMembers(gid int64) ([]model.GroupMemberStore, er
 			Role: int16(role),
 			Nick: nick,
 		}
+		index++
+
 	}
 
 	return lst, nil

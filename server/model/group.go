@@ -3,6 +3,7 @@ package model
 import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"fmt"
 	"strings"
 	"sync"
 )
@@ -35,6 +36,19 @@ type Group struct {
 	Mu sync.Mutex
 }
 
+func (g *Group) DebugPrint() {
+	fmt.Println(g.GroupInfo)
+	fmt.Println("成员表")
+	for i, item := range g.Members {
+		fmt.Printf("\t%d -> %v\n", i, item)
+	}
+	fmt.Println("管理员表")
+	for i, item := range g.Members {
+		fmt.Printf("\t%d -> %v\n", i, item)
+	}
+
+	fmt.Printf("\t群主 %d\n", g.Owner)
+}
 func CheckGroupInfoIsPrivate(g *pbmodel.GroupInfo) bool {
 	if g.Params == nil {
 		return false
@@ -147,7 +161,7 @@ func (g *Group) HasMember(uid int64) (string, bool) {
 	return "", false
 }
 
-// 加载数据库的内容
+// 从数据库，或者从redis得到的成员列表
 func (g *Group) SetMembers(lst []GroupMemberStore) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()

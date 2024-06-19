@@ -104,33 +104,36 @@
 <hr/>
 <div><button onclick="findUser()">10 查找</button>
 <button onclick="addFriend()">11 添加好友（关注）</button>
+    <button onclick="listFriends()">好友列表</button>
 <button onclick="acceptFriend()">12 同意（拒绝）好友请求</button>
 </div>
 
-<div><button onclick="removeFriend()">13 删除好友(关注)</button>
-<button onclick="blockFriend()">14.1 拉黑</button>
-    <button onclick="unblockFriend()">14.2 解除拉黑</button>
+<div><button onclick="delFollow()">13 删除好友(关注)</button>
+<button onclick="setBlock()">14.1 拉黑</button>
+    <button onclick="unsetBlock()">14.2 解除拉黑</button>
 </div>
 
-<div><button onclick="setPermissionFriend()">15 设置权限</button>
-<button onclick="setFriendMemo">16 设置好友备注</button></div>
+<div><button onclick="setPermission()">15 设置权限</button>
+<button onclick="setFriendMemo()">16 设置好友备注</button></div>
 
 <br>
 群组管理
 <hr/>
-<div><button onclick="sendCreateGroupMessage()">1 创建群组</button></div>
-<button onclick="sendDisGroupMessage()">2 解散群组</button>
-<button onclick="sendSetGInfoMessage()">3 设置信息</button></div>
+<div><button onclick="createGroup()">1 创建群组</button></div>
+<button onclick="delGroup()">2 解散群组</button>
+<button onclick="findGroup()">9 查找群</button>
+<button onclick="setGroupMemo()">3 设置信息</button></div>
 
-<div><button onclick="sendKickGUserMessage()">4 踢人</button>
-<button onclick="sendGInviteMessage()">5 邀请</button>
+<div><button onclick="joinGroup()">7 请求加入</button>
+    <button onclick="sendKickGUserMessage()">4 踢人</button>
+<button onclick="">5 邀请</button>
 <button onclick="sendInviteAnswerMessage()">6 应答邀请（同意，拒绝）</button>
-<button onclick="sendGReqMessage()">7 请求加入</button>
+
     <button onclick="sendGReqReplyMessage()">8 请求批复（群管理员）</button>
 </div>
 
 
-<div><button onclick="sendFindGroupMessage()">9 查找群</button>
+<div>
 <button onclick="sendGAddAdminMessage()">10 添加管理员</button>
 <button onclick="sendGRemoveAdminMessage()">11 删除管理员</button>
 <button onclick="sendGChangeOwnerMessage()">12 转让群主</button>
@@ -240,8 +243,6 @@
         }
         console.log(hexString.trim());
     }
-
-
 
 
     // 1.hello包
@@ -376,7 +377,7 @@
     // 10. 搜索用户
     function findUser(){
         if (client) {
-            client.sendFriendFindMessage("id", "10002");
+            client.sendFriendFindMessage("id", "10004");
             //client.sendFriendFindMessage("name", "robin");
             //client.sendFriendFindMessage("email", "john@example.com");
             //client.sendFriendFindMessage("phone", "456789");
@@ -386,9 +387,61 @@
     // 11 添加好友
     function  addFriend(){
         if (client) {
-            client.sendFriendAddMessage(10001)
+            client.sendFriendAddMessage(10004);
         }
     }
+
+    // 13删除关注
+    function delFollow(){
+        client.sendRemoveFollow(10004);
+    }
+
+    function setBlock(){
+        client.sendBlockFollow(10004);
+    }
+
+    function unsetBlock(){
+        client.sendUnBlockFollow(10004);
+    }
+
+    function setPermission(){
+        client.sendSetPermission(10004, "7")
+    }
+
+    function setFriendMemo(){
+        client.sendSetFriendMemo(10003, "fans", "momo——粉丝")
+    }
+
+    function listFriends(){
+        client.sendListFriend("fans");
+        client.sendListFriend("follows");
+    }
+    /////////////////////////////////////////////////////////
+
+    //1 创建组
+    function  createGroup(){
+        client.sendCrateGroupMessage("一个测试群", "public")
+    }
+    function findGroup(){
+        // client.sendFindGroupMessage("1002");
+        client.sendFindGroupMessage("画画");
+    }
+
+    function  delGroup(){
+
+    }
+
+    // 设置基础信息
+    function setGroupMemo(){
+        client.sendSetgroupMemo(1008, ["画画", "化妆"], "简介。。。", "图标链接")
+    }
+
+    // 申请加入群
+    function joinGroup(){
+        client.sendJoinGroupReq(1008);
+    }
+
+
 
 
 </script>

@@ -183,6 +183,10 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 	}
 
 	uid2 := userInfo.UserId
+	if uid2 == session.UserID {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "can't add your self", nil, session)
+		return
+	}
 	// 0.0 检测好友是否存在
 	friendInfo, _, _ := findUserInfo(uid2)
 	if friendInfo == nil {
@@ -271,6 +275,11 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 	}
 
 	uid2 := userInfo.UserId
+	if uid2 == session.UserID {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "userinfo is your self", nil, session)
+		return
+	}
+
 	// 0. 检测好友是否存在
 	friendInfo, _, _ := findUserInfo(uid2)
 	if friendInfo == nil {
@@ -352,6 +361,11 @@ func handleFriendBlock(msg *pbmodel.Msg, session *Session) {
 	}
 
 	uid2 := userInfo.UserId
+	if uid2 == session.UserID {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "can't block yourself", nil, session)
+		return
+	}
+
 	// 0. 检测对方是否存在
 	friendInfo, _, _ := findUserInfo(uid2)
 	if friendInfo == nil {
@@ -418,6 +432,12 @@ func handleFriendUnBlock(msg *pbmodel.Msg, session *Session) {
 
 	uid1 := session.UserID
 	uid2 := userInfo.UserId
+
+	if uid2 == session.UserID {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "can't block yourself", nil, session)
+		return
+	}
+
 	// 0. 检测对方是否存在
 	friendInfo, _, _ := findUserInfo(uid2)
 	if friendInfo == nil {
@@ -472,6 +492,11 @@ func handleFriendPermission(msg *pbmodel.Msg, session *Session) {
 
 	uid1 := session.UserID
 	uid2 := userInfo.UserId
+
+	if uid2 == session.UserID {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "can't block yourself", nil, session)
+		return
+	}
 
 	// 0. 检测对方是否存在
 	friendInfo, _, _ := findUserInfo(uid2)
@@ -553,7 +578,8 @@ func handleFriendSetMemo(msg *pbmodel.Msg, session *Session) {
 
 	userInfo := friendOpMsg.GetUser()
 	if userInfo == nil {
-
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "user id is null", nil, session)
+		return
 	}
 	nickName := userInfo.NickName
 	if len(nickName) == 0 {
@@ -564,12 +590,27 @@ func handleFriendSetMemo(msg *pbmodel.Msg, session *Session) {
 	uid1 := session.UserID
 	uid2 := userInfo.UserId
 
+	if uid2 == session.UserID {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "can't memo yourself", nil, session)
+		return
+	}
+
 	// 更新数据库和redis,不用更新内存
-	if ModeIndex == 1 {
+	if ModeIndex == 1 { // follows
+		bFollow, _ := checkFriendIsFan(uid1, uid2)
+		if !bFollow {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "not followed user", nil, session)
+			return
+		}
 		Globals.scyllaCli.SetFollowingNick(pk1, uid1, uid2, nickName)
 		Globals.redisCli.SetUserFollowingNick(uid1, uid2, nickName)
 
-	} else {
+	} else { // fans
+		bFans, _ := checkFriendIsFan(uid2, uid1)
+		if !bFans {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "not your fans", nil, session)
+			return
+		}
 		Globals.scyllaCli.SetFansNick(pk1, uid1, uid2, nickName)
 		Globals.redisCli.SetUserFansNick(uid1, uid2, nickName)
 	}
@@ -593,16 +634,19 @@ func handleFriendList(msg *pbmodel.Msg, session *Session) {
 		fromId = userinfo.UserId
 	}
 
+	mode := "follows"
 	params := friendOpMsg.GetParams()
-	if params == nil {
-		return
+	if params != nil {
+		str, ok := params["mode"]
+		if ok {
+			mode = str
+		}
 	}
 
-	mode, ok := params["mode"]
 	pk := db.ComputePk(session.UserID)
 	var lst []model.FriendStore
 	var err error
-	if ok && strings.ToLower(mode) == "fans" {
+	if strings.ToLower(mode) == "fans" {
 		lst, err = Globals.scyllaCli.FindFans(pk, session.UserID, fromId, db.MaxFriendCacheSize)
 
 	} else {
@@ -1047,17 +1091,17 @@ func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.Use
 // 设置好友关系时候应该，同步更新用户的好友和粉丝个数
 // todo: 同步到redis和内存中
 func incUserFollowsAndFans(userId, fid int64) {
-	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, userId)
-	Globals.mongoCli.UpdateUserFieldIncNum("params.fans", 1, fid)
+	Globals.mongoCli.UpdateUserFieldIncNum("follows", 1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("fans", 1, fid)
 
 	// redis
 	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
 	if bHasUid1 {
-		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", 1)
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Follows", 1)
 	}
 	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
 	if bHasUid2 {
-		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.fans", 1)
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Fans", 1)
 	}
 
 	// 内存
@@ -1076,16 +1120,16 @@ func incUserFollowsAndFans(userId, fid int64) {
 }
 
 func decUserFollowsAndFans(userId, fid int64) {
-	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, userId)
-	Globals.mongoCli.UpdateUserFieldIncNum("params.fans", -1, fid)
+	Globals.mongoCli.UpdateUserFieldIncNum("follows", -1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("fans", -1, fid)
 	// redis
 	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
 	if bHasUid1 {
-		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", -1)
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Follows", -1)
 	}
 	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
 	if bHasUid2 {
-		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.fans", -1)
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Fans", -1)
 	}
 
 	// 内存
@@ -1104,16 +1148,16 @@ func decUserFollowsAndFans(userId, fid int64) {
 
 // 交友模式不再使用粉丝表，加好友后，双向关注，单侧执行删除即双向删除
 func incUserFollowsFriendMode(userId, fid int64) {
-	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, userId)
-	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", 1, fid)
+	Globals.mongoCli.UpdateUserFieldIncNum("follows", 1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("follows", 1, fid)
 	// redis
 	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
 	if bHasUid1 {
-		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", 1)
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Follows", 1)
 	}
 	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
 	if bHasUid2 {
-		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.follows", 1)
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Follows", 1)
 	}
 
 	// 内存
@@ -1131,16 +1175,16 @@ func incUserFollowsFriendMode(userId, fid int64) {
 }
 
 func decUserFollowsFriendMode(userId, fid int64) {
-	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, userId)
-	Globals.mongoCli.UpdateUserFieldIncNum("params.follows", -1, fid)
+	Globals.mongoCli.UpdateUserFieldIncNum("follows", -1, userId)
+	Globals.mongoCli.UpdateUserFieldIncNum("follows", -1, fid)
 	// redis
 	bHasUid1, _ := Globals.redisCli.ExistUserInfo(userId)
 	if bHasUid1 {
-		Globals.redisCli.IncUserInfoFiledByInt(userId, "Params.follows", -1)
+		Globals.redisCli.IncUserInfoFiledByInt(userId, "Follows", -1)
 	}
 	bHasUid2, _ := Globals.redisCli.ExistUserInfo(fid)
 	if bHasUid2 {
-		Globals.redisCli.IncUserInfoFiledByInt(fid, "Params.follows", -1)
+		Globals.redisCli.IncUserInfoFiledByInt(fid, "Follows", -1)
 	}
 	// 内存
 	user1, _ := Globals.uc.GetUser(userId)

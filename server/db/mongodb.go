@@ -226,6 +226,7 @@ func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([
 	for cursor.Next(context.Background()) {
 		var user pbmodel.UserInfo
 		if err = cursor.Decode(&user); err != nil {
+			fmt.Println(err)
 			continue
 		}
 		users = append(users, &user)
@@ -408,10 +409,9 @@ func (me *MongoDBExporter) CreateNewGroup(g *pbmodel.GroupInfo) error {
 		return err
 	}
 
-	fmt.Println("Group information has been saved successfully.")
+	//fmt.Println("Group information has been saved successfully.")
 	return nil
 
-	return nil
 }
 
 // 更新群基础信息，用的不会太多
@@ -423,7 +423,7 @@ func (me *MongoDBExporter) UpdateGroupInfo(g *pbmodel.GroupInfo) (int64, error) 
 		"$set": bson.M{
 			"groupname": g.GroupName,
 			//"grouptype": g.GroupType,
-			"grouptags": g.Tags,
+			"tags": g.Tags,
 		},
 	}
 
@@ -530,7 +530,7 @@ func (me *MongoDBExporter) FindGroupByKeyword(key string, bFilter bool) ([]*pbmo
 			bson.M{"tags": key},      // 精确匹配 tags
 		},
 		"$and": []bson.M{
-			bson.M{"params.v": bson.M{"$ne": "pri"}}, // 未设置为pri 私有
+			bson.M{"params.visibility": bson.M{"$ne": "private"}}, // 未设置为pri 私有
 		},
 	}
 
@@ -551,6 +551,7 @@ func (me *MongoDBExporter) FindGroupByKeyword(key string, bFilter bool) ([]*pbmo
 	for cursor.Next(context.Background()) {
 		var group pbmodel.GroupInfo
 		if err = cursor.Decode(&group); err != nil {
+			fmt.Println(err)
 			continue
 		}
 		// 过滤掉私有的

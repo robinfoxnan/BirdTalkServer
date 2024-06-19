@@ -125,7 +125,7 @@ func TestFindUserByName(t *testing.T) {
 		return
 	}
 
-	userInfos, err := MongoClient.FindUserByName("robin")
+	userInfos, err := MongoClient.FindUserByName("Robin.fox")
 	if err == nil {
 		for _, u := range userInfos {
 			b, _ := json.Marshal(u)
@@ -241,7 +241,7 @@ func TestFindGroupByTag(t *testing.T) {
 		return
 	}
 
-	grps, err := MongoClient.FindGroupByKeyword("test1", true)
+	grps, err := MongoClient.FindGroupByKeyword("飞鸟和鱼鱼", true)
 	if grps != nil {
 		for _, g := range grps {
 			b, _ := json.Marshal(g)

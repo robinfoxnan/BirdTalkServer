@@ -80,7 +80,11 @@ proto.model.UserInfo.toObject = function(includeInstance, msg) {
     age: jspb.Message.getFieldWithDefault(msg, 7, 0),
     region: jspb.Message.getFieldWithDefault(msg, 8, ""),
     icon: jspb.Message.getFieldWithDefault(msg, 9, ""),
-    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
+    intro: jspb.Message.getFieldWithDefault(msg, 10, ""),
+    follows: jspb.Message.getFieldWithDefault(msg, 11, 0),
+    fans: jspb.Message.getFieldWithDefault(msg, 12, 0),
+    paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : [],
+    privacyMap: (f = msg.getPrivacyMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
   if (includeInstance) {
@@ -154,7 +158,25 @@ proto.model.UserInfo.deserializeBinaryFromReader = function(msg, reader) {
       msg.setIcon(value);
       break;
     case 10:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setIntro(value);
+      break;
+    case 11:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setFollows(value);
+      break;
+    case 12:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setFans(value);
+      break;
+    case 20:
       var value = msg.getParamsMap();
+      reader.readMessage(value, function(message, reader) {
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
+         });
+      break;
+    case 21:
+      var value = msg.getPrivacyMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
          });
@@ -251,9 +273,34 @@ proto.model.UserInfo.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
+  f = message.getIntro();
+  if (f.length > 0) {
+    writer.writeString(
+      10,
+      f
+    );
+  }
+  f = message.getFollows();
+  if (f !== 0) {
+    writer.writeInt64(
+      11,
+      f
+    );
+  }
+  f = message.getFans();
+  if (f !== 0) {
+    writer.writeInt64(
+      12,
+      f
+    );
+  }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(10, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(20, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+  }
+  f = message.getPrivacyMap(true);
+  if (f && f.getLength() > 0) {
+    f.serializeBinary(21, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -421,14 +468,68 @@ proto.model.UserInfo.prototype.setIcon = function(value) {
 
 
 /**
- * map<string, string> params = 10;
+ * optional string intro = 10;
+ * @return {string}
+ */
+proto.model.UserInfo.prototype.getIntro = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 10, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.model.UserInfo} returns this
+ */
+proto.model.UserInfo.prototype.setIntro = function(value) {
+  return jspb.Message.setProto3StringField(this, 10, value);
+};
+
+
+/**
+ * optional int64 follows = 11;
+ * @return {number}
+ */
+proto.model.UserInfo.prototype.getFollows = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 11, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.UserInfo} returns this
+ */
+proto.model.UserInfo.prototype.setFollows = function(value) {
+  return jspb.Message.setProto3IntField(this, 11, value);
+};
+
+
+/**
+ * optional int64 fans = 12;
+ * @return {number}
+ */
+proto.model.UserInfo.prototype.getFans = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 12, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.UserInfo} returns this
+ */
+proto.model.UserInfo.prototype.setFans = function(value) {
+  return jspb.Message.setProto3IntField(this, 12, value);
+};
+
+
+/**
+ * map<string, string> params = 20;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.UserInfo.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 10, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 20, opt_noLazyCreate,
       null));
 };
 
@@ -439,6 +540,28 @@ proto.model.UserInfo.prototype.getParamsMap = function(opt_noLazyCreate) {
  */
 proto.model.UserInfo.prototype.clearParamsMap = function() {
   this.getParamsMap().clear();
+  return this;};
+
+
+/**
+ * map<string, string> privacy = 21;
+ * @param {boolean=} opt_noLazyCreate Do not create the map if
+ * empty, instead returning `undefined`
+ * @return {!jspb.Map<string,string>}
+ */
+proto.model.UserInfo.prototype.getPrivacyMap = function(opt_noLazyCreate) {
+  return /** @type {!jspb.Map<string,string>} */ (
+      jspb.Message.getMapField(this, 21, opt_noLazyCreate,
+      null));
+};
+
+
+/**
+ * Clears values from the map. The map will be non-null.
+ * @return {!proto.model.UserInfo} returns this
+ */
+proto.model.UserInfo.prototype.clearPrivacyMap = function() {
+  this.getPrivacyMap().clear();
   return this;};
 
 

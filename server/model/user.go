@@ -90,9 +90,6 @@ type User struct {
 	Groups     map[int64]bool   // 群组
 	SessionDis map[int64]int32  // 会话分布表
 
-	NumFans   int64
-	NumFollow int64
-
 	LastActiveTm int64
 
 	MsgCache *orderedmap.OrderedMap // 发给这个用户的消息都需要缓存，等待回执到达服务器
@@ -125,22 +122,6 @@ func NewUserFromInfo(userInfo *pbmodel.UserInfo) *User {
 		SessionDis:   make(map[int64]int32),
 		LastActiveTm: utils.GetTimeStamp(),
 		MsgCache:     orderedmap.NewOrderedMap(),
-		NumFollow:    0,
-		NumFans:      0,
-	}
-
-	// 解析数据
-	if user.UserInfo.Params != nil {
-		str, ok := user.UserInfo.Params["follows"]
-		if ok {
-			user.NumFollow, _ = strconv.ParseInt(str, 10, 64)
-		}
-
-		str, ok = user.UserInfo.Params["fans"]
-		if ok {
-			user.NumFans, _ = strconv.ParseInt(str, 10, 64)
-		}
-
 	}
 
 	return user
@@ -153,25 +134,25 @@ func (u *User) IsSystemUser() bool {
 func (u *User) IncFansNum() {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-	u.NumFans++
+	u.UserInfo.Fans++
 }
 
 func (u *User) DecFansNum() {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-	u.NumFans--
+	u.UserInfo.Fans--
 }
 
 func (u *User) IncFollowsNum() {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-	u.NumFollow++
+	u.UserInfo.Follows++
 }
 
 func (u *User) DecFollowsNum() {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
-	u.NumFollow--
+	u.UserInfo.Follows--
 }
 
 // 将消息压入缓存

@@ -30,6 +30,8 @@ func handleGroupOp(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	groupOpMsg.MsgId = Globals.snow.GenerateID()
+
 	opCode := groupOpMsg.Operation
 	switch opCode {
 	case pbmodel.GroupOperationType_GroupCreate: // 创建
@@ -117,7 +119,8 @@ func handleGroupOpRet(msg *pbmodel.Msg, session *Session) {
 
 // 创建群
 func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
-	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	groupOpMsg := msg.GetPlainMsg().GetGroupOp()
+	groupInfo := groupOpMsg.GetGroup()
 	if groupInfo == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group create operation group info is null", nil, session)
 		return
@@ -175,60 +178,60 @@ func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 	// 保存到数据库
 	group, err := saveNewGroup(groupInfo, session)
 	if group == nil || err != nil {
-
+		Globals.Logger.Error("saveNewGroup()", zap.Error(err))
 		return
 	}
 
 	// 如果设置了初始用户，则需要
 	groupMems := msg.GetPlainMsg().GetGroupOp().GetMembers()
-	if groupMems == nil || len(groupMems) == 0 {
-		return
+	if groupMems != nil && len(groupMems) > 0 {
+		//members := make([]model.GroupMemberStore, len(groupMems))
+
+		for _, mem := range groupMems {
+
+			memUser, b, _ := findUserInfo(mem.UserId)
+			if memUser == nil || b == false {
+				continue
+			}
+
+			member := model.GroupMemberStore{
+				Pk:   db.ComputePk(groupInfo.GroupId),
+				Gid:  groupInfo.GroupId,
+				Uid:  session.UserID,
+				Tm:   utils.GetTimeStamp(),
+				Role: model.RoleGroupMember,
+				Nick: memUser.NickName,
+			}
+
+			item := model.UserInGStore{
+				Pk:  db.ComputePk(session.UserID),
+				Uid: session.UserID,
+				Gid: groupInfo.GroupId,
+			}
+
+			// 保存数据库
+			Globals.scyllaCli.InsertGroupMember(&member, &item)
+
+			// redis, 用户所在群
+			Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, memUser.NickName)
+
+			// 添加到内存
+			group.AddMember(memUser.UserId, memUser.NickName)
+		}
 	}
-
-	//members := make([]model.GroupMemberStore, len(groupMems))
-
-	for _, mem := range groupMems {
-
-		memUser, b, _ := findUserInfo(mem.UserId)
-		if memUser == nil || b == false {
-			continue
-		}
-
-		member := model.GroupMemberStore{
-			Pk:   db.ComputePk(groupInfo.GroupId),
-			Gid:  groupInfo.GroupId,
-			Uid:  session.UserID,
-			Tm:   utils.GetTimeStamp(),
-			Role: model.RoleGroupMember,
-			Nick: memUser.NickName,
-		}
-
-		item := model.UserInGStore{
-			Pk:  db.ComputePk(session.UserID),
-			Uid: session.UserID,
-			Gid: groupInfo.GroupId,
-		}
-
-		// 保存数据库
-		Globals.scyllaCli.InsertGroupMember(&member, &item)
-
-		// redis, 用户所在群
-		Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, memUser.NickName)
-
-		// 添加到内存
-		group.AddMember(memUser.UserId, memUser.NickName)
-	}
-
 	// todo:保存操作记录
 
 	// 通知相关用户，建立了新群
 	retMsg := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupCreate,
 		groupInfo,
-		msg.GetPlainMsg().GetGroupOp().ReqMem,
-		msg.GetPlainMsg().GetGroupOp().Members,
-		msg.GetPlainMsg().GetGroupOpRet().SendId,
-		Globals.snow.GenerateID(),
+		groupOpMsg.GetReqMem(),
+		groupOpMsg.GetMembers(),
+		groupOpMsg.SendId,
+		groupOpMsg.MsgId,
 		"ok", "", session)
+
+	Globals.Logger.Debug("return create group ret", zap.Any("msg", retMsg))
+	//fmt.Println(retMsg)
 
 	notifyGroupMembers(groupInfo.GroupId, retMsg)
 
@@ -316,7 +319,8 @@ func handleGroupDissolveOp(msg *pbmodel.Msg, session *Session) {
 
 // 设置基础信息，这个也是只有管理员才可以设置，不同于微信的
 func handleGroupSetBasicInfo(msg *pbmodel.Msg, session *Session) {
-	groupInfo := msg.GetPlainMsg().GetGroupOp().GetGroup()
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	groupInfo := msgOp.GetGroup()
 	if groupInfo == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group set info operation group info is null", nil, session)
 		return
@@ -360,8 +364,8 @@ func handleGroupSetBasicInfo(msg *pbmodel.Msg, session *Session) {
 		group.GetGroupInfo(),
 		reqMem,
 		nil,
-		msg.GetPlainMsg().GetGroupOpRet().SendId,
-		Globals.snow.GenerateID(),
+		msgOp.SendId,
+		msgOp.MsgId,
 		"ok",
 		"", session)
 
@@ -630,6 +634,14 @@ func handleGroupJoinReq(msg *pbmodel.Msg, session *Session) {
 	group, _ := findGroup(groupInfo.GroupId)
 	if group == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		return
+	}
+	// 调试
+	group.DebugPrint()
+
+	_, bHas := group.HasMember(session.UserID)
+	if bHas {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "already joined the group", nil, session)
 		return
 	}
 
@@ -1161,32 +1173,32 @@ func handleGroupSearch(msg *pbmodel.Msg, session *Session) {
 	if err == nil {
 		group, _ := findGroup(id)
 		if group == nil {
-			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearch,
 				nil,
 				nil,
 				nil,
-				msg.GetPlainMsg().GetGroupOpRet().SendId,
-				Globals.snow.GenerateID(),
+				msgOp.SendId,
+				msgOp.MsgId,
 				"fail",
 				"not find id", session)
 
 		} else {
 			if group.IsPrivate() {
-				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearch,
 					nil,
 					nil,
 					nil,
-					msg.GetPlainMsg().GetGroupOpRet().SendId,
-					Globals.snow.GenerateID(),
+					msgOp.SendId,
+					msgOp.MsgId,
 					"fail",
 					"not find id", session)
 			} else {
-				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearch,
 					nil,
 					nil,
 					nil,
-					msg.GetPlainMsg().GetGroupOpRet().SendId,
-					Globals.snow.GenerateID(),
+					msgOp.SendId,
+					msgOp.MsgId,
 					"ok",
 					"find it", session)
 				msgRet.GetPlainMsg().GetGroupOpRet().Groups = []*pbmodel.GroupInfo{group.GetGroupInfo()}
@@ -1197,22 +1209,22 @@ func handleGroupSearch(msg *pbmodel.Msg, session *Session) {
 		bFilter := !session.GetUser().IsSystemUser()
 		lst, err := Globals.mongoCli.FindGroupByKeyword(keyword, bFilter)
 		if lst == nil || err != nil {
-			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearch,
 				nil,
 				nil,
 				nil,
-				msg.GetPlainMsg().GetGroupOpRet().SendId,
-				Globals.snow.GenerateID(),
+				msgOp.SendId,
+				msgOp.MsgId,
 				"fail",
 				"not find id", session)
 		} else {
 
-			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+			msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearch,
 				nil,
 				nil,
 				nil,
-				msg.GetPlainMsg().GetGroupOpRet().SendId,
-				Globals.snow.GenerateID(),
+				msgOp.SendId,
+				msgOp.MsgId,
 				"ok",
 				"find it", session)
 			msgRet.GetPlainMsg().GetGroupOpRet().Groups = lst
@@ -1347,7 +1359,7 @@ func saveNewGroup(groupInfo *pbmodel.GroupInfo, session *Session) (*model.Group,
 	err = Globals.scyllaCli.InsertGroupMember(&mem, &item)
 
 	// redis中
-	Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, user.GetNickName())
+	Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, "#|"+user.GetNickName())
 
 	// 将群信息添加到内存
 	g := model.NewGroupFromInfo(groupInfo)
@@ -1444,11 +1456,12 @@ func findGroup(gid int64) (*model.Group, error) {
 
 	lst, err := Globals.mongoCli.FindGroupById(gid)
 	if lst == nil || len(lst) == 0 {
+		Globals.Logger.Error("findGroup() ->FindGroupById() err", zap.Int64("gid", gid), zap.Error(err))
 		return nil, err
 	}
 
 	if len(lst) > 1 {
-		Globals.Logger.Fatal("find more than one group by id", zap.Int64("gid", gid))
+		Globals.Logger.Error("find more than one group by id", zap.Int64("gid", gid))
 		return nil, errors.New("find more than one group by id")
 	}
 
@@ -1488,7 +1501,7 @@ func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, sessi
 		Uid: session.UserID,
 		Gid: group.GroupId,
 	}
-	// 保存数据库
+	// 数据库中加入成员，同时， 保存成员所属的群
 	err := Globals.scyllaCli.InsertGroupMember(&mem, &item)
 	if err != nil {
 		Globals.Logger.Fatal("InsertGroupMember() err", zap.Error(err))
@@ -1525,7 +1538,7 @@ func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, sessi
 		[]*pbmodel.GroupMember{
 			addedMember,
 		},
-		msg.GetPlainMsg().GetGroupOpRet().SendId,
+		msg.GetPlainMsg().GetGroupOp().SendId,
 		Globals.snow.GenerateID(),
 		"ok",
 		fromWays, session)

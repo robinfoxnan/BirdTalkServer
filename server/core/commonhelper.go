@@ -318,25 +318,19 @@ func tryLoadUserFromRedis(sess *Session) (*model.User, uint32, error) {
 	}
 
 	// 3 & 4 关注和粉丝都是仅仅检查一下redis中是否有；
-	off, fMap, err := Globals.redisCli.GetUserFollowing(sess.UserID, 0)
-	if err == nil {
-
-		user.SetLoadMask(model.UserLoadStatusFollow)
-		if len(fMap) < db.MaxFriendBatchSize {
-			user.NumFollow = int64(len(fMap))
-		}
-		mask = model.UserLoadStatusAll & (^model.UserLoadStatusFollow)
-	}
-
-	off, fMap, err = Globals.redisCli.GetUserFans(sess.UserID, 0)
-	if err == nil {
-
-		user.SetLoadMask(model.UserLoadStatusFans)
-		if len(fMap) < db.MaxFriendBatchSize {
-			user.NumFans = int64(len(fMap))
-		}
-		mask = model.UserLoadStatusAll & (^model.UserLoadStatusFans)
-	}
+	//off, fMap, err := Globals.redisCli.GetUserFollowing(sess.UserID, 0)
+	//if err == nil {
+	//
+	//	user.SetLoadMask(model.UserLoadStatusFollow)
+	//	mask = model.UserLoadStatusAll & (^model.UserLoadStatusFollow)
+	//}
+	//
+	//off, fMap, err = Globals.redisCli.GetUserFans(sess.UserID, 0)
+	//if err == nil {
+	//
+	//	user.SetLoadMask(model.UserLoadStatusFans)
+	//	mask = model.UserLoadStatusAll & (^model.UserLoadStatusFans)
+	//}
 
 	// 用户在组中的
 	gList, err := Globals.redisCli.GetUserInGroupAll(sess.UserID)
@@ -365,7 +359,7 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 			return err
 		}
 		if len(userInfos) != 1 {
-			Globals.Logger.Error("loadUserFromDb() load user err, find count of user", zap.Int("userCount", len(userInfos)))
+			Globals.Logger.Error("loadUserFromDb() load user err, find count of user", zap.Int64("userid", sess.UserID), zap.Int("userCount", len(userInfos)))
 			return errors.New("load user count is not 1")
 		}
 		userInfo := userInfos[0]
@@ -378,14 +372,14 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 		user = Globals.uc.SetOrUpdateUser(sess.UserID, loadedUser) // 插入或者合并
 	}
 
-	numFollow := 0
-	numFans := 0
+	//numFollow := 0
+	//numFans := 0
 	if (mask & model.UserLoadStatusFans) > 0 {
 		fList, err := Globals.scyllaCli.FindFans(db.ComputePk(sess.UserID), sess.UserID, 0, db.MaxFriendCacheSize)
 		if err != nil {
 			return err
 		}
-		numFans = len(fList)
+		//numFans = len(fList)
 
 		Globals.redisCli.SetUserFans(sess.UserID, fList) // 同步到redis
 	}
@@ -395,19 +389,20 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 		if err != nil {
 			return err
 		}
-		numFollow = len(fList)
+		//numFollow = len(fList)
 
 		Globals.redisCli.SetUserFollowing(sess.UserID, fList) // 同步到redis
 	}
 
+	// 改为记录在用户的mongo中
 	// 如果加载全了，则同步到缓存，入股不全就不同步了，
-	if numFollow < db.MaxFriendCacheSize && numFans < db.MaxFriendCacheSize {
-		Globals.redisCli.SetUserFriendNum(sess.UserID, int64(numFollow), int64(numFans))
-		user.NumFans = int64(numFans)
-		user.NumFollow = int64(numFollow)
-	} else {
-		user.NumFollow, user.NumFans, _ = Globals.redisCli.GetUserFriendNum(sess.UserID)
-	}
+	//if numFollow < db.MaxFriendCacheSize && numFans < db.MaxFriendCacheSize {
+	//	Globals.redisCli.SetUserFriendNum(sess.UserID, int64(numFollow), int64(numFans))
+	//	user.NumFans = int64(numFans)
+	//	user.NumFollow = int64(numFollow)
+	//} else {
+	//	user.NumFollow, user.NumFans, _ = Globals.redisCli.GetUserFriendNum(sess.UserID)
+	//}
 
 	if (mask & model.UserLoadStatusPermission) > 0 {
 		count := 0
@@ -460,6 +455,7 @@ func LoadUserLogin(session *Session) error {
 		return nil
 	}
 	user, mask, err := tryLoadUserFromRedis(session)
+	fmt.Println("tryLoadUserFromRedis() mask=", mask)
 	if err != nil {
 		//
 	}
@@ -675,7 +671,7 @@ func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
 	for index, f := range lst {
 		data := pbmodel.UserInfo{
 			UserId:   f.Uid1,
-			UserName: f.Nick,
+			UserName: "",
 			NickName: f.Nick,
 			Email:    "",
 			Phone:    "",

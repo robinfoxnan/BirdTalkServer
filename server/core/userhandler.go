@@ -830,7 +830,7 @@ func onLoginSuccess(session *Session, bSaveToken bool) {
 	err := LoadUserLogin(session)
 	if err != nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
-			"load user meet error",
+			"onLoginSuccess() load user meet error",
 			map[string]string{"error": err.Error()},
 			session)
 		return
@@ -839,7 +839,7 @@ func onLoginSuccess(session *Session, bSaveToken bool) {
 
 	// 通知用户免登录
 	SendBackUserOp(pbmodel.UserOperationType_Login,
-		session.TempUserInfo,
+		session.GetUser().GetUserInfo(),
 		true, "loginok", session)
 	session.SetStatus(model.UserStatusOk)
 }

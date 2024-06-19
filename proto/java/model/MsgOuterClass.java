@@ -21256,6 +21256,29 @@ java.lang.String defaultValue);
         getDetailBytes();
 
     /**
+     * <code>int64 sendId = 3;</code>
+     * @return The sendId.
+     */
+    long getSendId();
+
+    /**
+     * <code>int64 msgId = 4;</code>
+     * @return The msgId.
+     */
+    long getMsgId();
+
+    /**
+     * <code>.model.ComMsgType msgType = 5;</code>
+     * @return The enum numeric value on the wire for msgType.
+     */
+    int getMsgTypeValue();
+    /**
+     * <code>.model.ComMsgType msgType = 5;</code>
+     * @return The msgType.
+     */
+    model.MsgOuterClass.ComMsgType getMsgType();
+
+    /**
      * <code>map&lt;string, string&gt; params = 9;</code>
      */
     int getParamsCount();
@@ -21305,6 +21328,7 @@ java.lang.String defaultValue);
     }
     private MsgError() {
       detail_ = "";
+      msgType_ = 0;
     }
 
     @java.lang.Override
@@ -21347,6 +21371,22 @@ java.lang.String defaultValue);
               java.lang.String s = input.readStringRequireUtf8();
 
               detail_ = s;
+              break;
+            }
+            case 24: {
+
+              sendId_ = input.readInt64();
+              break;
+            }
+            case 32: {
+
+              msgId_ = input.readInt64();
+              break;
+            }
+            case 40: {
+              int rawValue = input.readEnum();
+
+              msgType_ = rawValue;
               break;
             }
             case 74: {
@@ -21457,6 +21497,47 @@ java.lang.String defaultValue);
       }
     }
 
+    public static final int SENDID_FIELD_NUMBER = 3;
+    private long sendId_;
+    /**
+     * <code>int64 sendId = 3;</code>
+     * @return The sendId.
+     */
+    @java.lang.Override
+    public long getSendId() {
+      return sendId_;
+    }
+
+    public static final int MSGID_FIELD_NUMBER = 4;
+    private long msgId_;
+    /**
+     * <code>int64 msgId = 4;</code>
+     * @return The msgId.
+     */
+    @java.lang.Override
+    public long getMsgId() {
+      return msgId_;
+    }
+
+    public static final int MSGTYPE_FIELD_NUMBER = 5;
+    private int msgType_;
+    /**
+     * <code>.model.ComMsgType msgType = 5;</code>
+     * @return The enum numeric value on the wire for msgType.
+     */
+    @java.lang.Override public int getMsgTypeValue() {
+      return msgType_;
+    }
+    /**
+     * <code>.model.ComMsgType msgType = 5;</code>
+     * @return The msgType.
+     */
+    @java.lang.Override public model.MsgOuterClass.ComMsgType getMsgType() {
+      @SuppressWarnings("deprecation")
+      model.MsgOuterClass.ComMsgType result = model.MsgOuterClass.ComMsgType.valueOf(msgType_);
+      return result == null ? model.MsgOuterClass.ComMsgType.UNRECOGNIZED : result;
+    }
+
     public static final int PARAMS_FIELD_NUMBER = 9;
     private static final class ParamsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
@@ -21558,6 +21639,15 @@ java.lang.String defaultValue);
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(detail_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, detail_);
       }
+      if (sendId_ != 0L) {
+        output.writeInt64(3, sendId_);
+      }
+      if (msgId_ != 0L) {
+        output.writeInt64(4, msgId_);
+      }
+      if (msgType_ != model.MsgOuterClass.ComMsgType.MsgTUnused.getNumber()) {
+        output.writeEnum(5, msgType_);
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
@@ -21579,6 +21669,18 @@ java.lang.String defaultValue);
       }
       if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(detail_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, detail_);
+      }
+      if (sendId_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, sendId_);
+      }
+      if (msgId_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, msgId_);
+      }
+      if (msgType_ != model.MsgOuterClass.ComMsgType.MsgTUnused.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(5, msgType_);
       }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetParams().getMap().entrySet()) {
@@ -21609,6 +21711,11 @@ java.lang.String defaultValue);
           != other.getCode()) return false;
       if (!getDetail()
           .equals(other.getDetail())) return false;
+      if (getSendId()
+          != other.getSendId()) return false;
+      if (getMsgId()
+          != other.getMsgId()) return false;
+      if (msgType_ != other.msgType_) return false;
       if (!internalGetParams().equals(
           other.internalGetParams())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -21626,6 +21733,14 @@ java.lang.String defaultValue);
       hash = (53 * hash) + getCode();
       hash = (37 * hash) + DETAIL_FIELD_NUMBER;
       hash = (53 * hash) + getDetail().hashCode();
+      hash = (37 * hash) + SENDID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getSendId());
+      hash = (37 * hash) + MSGID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getMsgId());
+      hash = (37 * hash) + MSGTYPE_FIELD_NUMBER;
+      hash = (53 * hash) + msgType_;
       if (!internalGetParams().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetParams().hashCode();
@@ -21789,6 +21904,12 @@ java.lang.String defaultValue);
 
         detail_ = "";
 
+        sendId_ = 0L;
+
+        msgId_ = 0L;
+
+        msgType_ = 0;
+
         internalGetMutableParams().clear();
         return this;
       }
@@ -21819,6 +21940,9 @@ java.lang.String defaultValue);
         int from_bitField0_ = bitField0_;
         result.code_ = code_;
         result.detail_ = detail_;
+        result.sendId_ = sendId_;
+        result.msgId_ = msgId_;
+        result.msgType_ = msgType_;
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
         onBuilt();
@@ -21875,6 +21999,15 @@ java.lang.String defaultValue);
         if (!other.getDetail().isEmpty()) {
           detail_ = other.detail_;
           onChanged();
+        }
+        if (other.getSendId() != 0L) {
+          setSendId(other.getSendId());
+        }
+        if (other.getMsgId() != 0L) {
+          setMsgId(other.getMsgId());
+        }
+        if (other.msgType_ != 0) {
+          setMsgTypeValue(other.getMsgTypeValue());
         }
         internalGetMutableParams().mergeFrom(
             other.internalGetParams());
@@ -22011,6 +22144,122 @@ java.lang.String defaultValue);
   checkByteStringIsUtf8(value);
         
         detail_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long sendId_ ;
+      /**
+       * <code>int64 sendId = 3;</code>
+       * @return The sendId.
+       */
+      @java.lang.Override
+      public long getSendId() {
+        return sendId_;
+      }
+      /**
+       * <code>int64 sendId = 3;</code>
+       * @param value The sendId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSendId(long value) {
+        
+        sendId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 sendId = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSendId() {
+        
+        sendId_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long msgId_ ;
+      /**
+       * <code>int64 msgId = 4;</code>
+       * @return The msgId.
+       */
+      @java.lang.Override
+      public long getMsgId() {
+        return msgId_;
+      }
+      /**
+       * <code>int64 msgId = 4;</code>
+       * @param value The msgId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsgId(long value) {
+        
+        msgId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 msgId = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMsgId() {
+        
+        msgId_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private int msgType_ = 0;
+      /**
+       * <code>.model.ComMsgType msgType = 5;</code>
+       * @return The enum numeric value on the wire for msgType.
+       */
+      @java.lang.Override public int getMsgTypeValue() {
+        return msgType_;
+      }
+      /**
+       * <code>.model.ComMsgType msgType = 5;</code>
+       * @param value The enum numeric value on the wire for msgType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsgTypeValue(int value) {
+        
+        msgType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.model.ComMsgType msgType = 5;</code>
+       * @return The msgType.
+       */
+      @java.lang.Override
+      public model.MsgOuterClass.ComMsgType getMsgType() {
+        @SuppressWarnings("deprecation")
+        model.MsgOuterClass.ComMsgType result = model.MsgOuterClass.ComMsgType.valueOf(msgType_);
+        return result == null ? model.MsgOuterClass.ComMsgType.UNRECOGNIZED : result;
+      }
+      /**
+       * <code>.model.ComMsgType msgType = 5;</code>
+       * @param value The msgType to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsgType(model.MsgOuterClass.ComMsgType value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        
+        msgType_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>.model.ComMsgType msgType = 5;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMsgType() {
+        
+        msgType_ = 0;
         onChanged();
         return this;
       }
@@ -29600,71 +29849,72 @@ java.lang.String defaultValue);
       "ta\030\007 \001(\014\022\014\n\004size\030\010 \001(\003\022\016\n\006offset\030\t \001(\003\022\021" +
       "\n\tchunkSize\030\n \001(\005\022\022\n\nchunkCount\030\013 \001(\005\022\022\n" +
       "\nchunkIndex\030\014 \001(\005\022\016\n\006result\030\r \001(\t\022\016\n\006det" +
-      "ail\030\016 \001(\t\"\204\001\n\010MsgError\022\014\n\004code\030\001 \001(\005\022\016\n\006" +
-      "detail\030\002 \001(\t\022+\n\006params\030\t \003(\0132\033.model.Msg" +
-      "Error.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030" +
-      "\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n" +
-      "\005hello\030\007 \001(\0132\017.model.MsgHelloH\000\022(\n\theart" +
-      "Beat\030\010 \001(\0132\023.model.MsgHeartBeatH\000\022#\n\010err" +
-      "orMsg\030\t \001(\0132\017.model.MsgErrorH\000\022&\n\005keyEx\030" +
-      "\n \001(\0132\025.model.MsgKeyExchangeH\000\022\"\n\010chatDa" +
-      "ta\030\013 \001(\0132\016.model.MsgChatH\000\022(\n\tchatReply\030" +
-      "\014 \001(\0132\023.model.MsgChatReplyH\000\022&\n\013commonQu" +
-      "ery\030\r \001(\0132\017.model.MsgQueryH\000\022/\n\016commonQu" +
-      "eryRet\030\016 \001(\0132\025.model.MsgQueryResultH\000\022(\n" +
-      "\tuploadReq\030\025 \001(\0132\023.model.MsgUploadReqH\000\022" +
-      ",\n\013downloadReq\030\026 \001(\0132\025.model.MsgDownload" +
-      "ReqH\000\022,\n\013uploadReply\030\027 \001(\0132\025.model.MsgUp" +
-      "loadReplyH\000\0220\n\rdownloadReply\030\030 \001(\0132\027.mod" +
-      "el.MsgDownloadReplyH\000\022\"\n\006userOp\030\037 \001(\0132\020." +
-      "model.UserOpReqH\000\022(\n\tuserOpRet\030  \001(\0132\023.m" +
-      "odel.UserOpResultH\000\022&\n\010friendOp\030! \001(\0132\022." +
-      "model.FriendOpReqH\000\022,\n\013friendOpRet\030\" \001(\013" +
-      "2\025.model.FriendOpResultH\000\022$\n\007groupOp\030# \001" +
-      "(\0132\021.model.GroupOpReqH\000\022*\n\ngroupOpRet\030$ " +
-      "\001(\0132\024.model.GroupOpResultH\000\022\026\n\014otherType" +
-      "Msg\030d \001(\014H\000B\t\n\007message\"\263\001\n\003Msg\022\017\n\007versio" +
-      "n\030\001 \001(\005\022\024\n\010keyPrint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(" +
-      "\003B\0020\001\022\"\n\007msgType\030\004 \001(\0162\021.model.ComMsgTyp" +
-      "e\022\017\n\007subType\030\005 \001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010" +
-      "plainMsg\030\014 \001(\0132\017.model.MsgPlainH\000B\t\n\007mes" +
-      "sage*,\n\013MsgPriority\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001" +
-      "\022\010\n\004HIGH\020\002*X\n\rChatMsgStatus\022\013\n\007SENDING\020\000" +
-      "\022\010\n\004SENT\020\001\022\n\n\006FAILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n" +
-      "\004READ\020\004\022\013\n\007DELETED\020\005*c\n\013ChatMsgType\022\010\n\004T" +
-      "EXT\020\000\022\t\n\005IMAGE\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010" +
-      "\n\004FILE\020\004\022\n\n\006DELETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020" +
-      "d*H\n\013EncryptType\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022" +
-      "\014\n\010CHACHA20\020\002\022\013\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010C" +
-      "hatType\022\020\n\014ChatTypeNone\020\000\022\017\n\013ChatTypeP2P" +
-      "\020\001\022\021\n\rChatTypeGroup\020\002*{\n\rQueryDataType\022\031" +
-      "\n\025QueryDataTypeChatData\020\000\022\032\n\026QueryDataTy" +
-      "peChatReply\020\001\022\031\n\025QueryDataTypeFriendOP\020\002" +
-      "\022\030\n\024QueryDataTypeGroupOP\020\003*F\n\007SynType\022\022\n" +
-      "\016SynTypeForward\020\000\022\023\n\017SynTypeBackward\020\001\022\022" +
-      "\n\016SynTypeBetween\020\002*\233\003\n\014ErrorMsgType\022\014\n\010E" +
-      "rrTNone\020\000\022\017\n\013ErrTVersion\020\001\022\020\n\014ErrTKeyPri" +
-      "nt\020\002\022\020\n\014ErrTRedirect\020\003\022\020\n\014ErrTWrongPwd\020\004" +
-      "\022\021\n\rErrTWrongCode\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n" +
-      "\013ErrTTempKey\020\007\022\017\n\013ErrTEncType\020\010\022\024\n\020ErrTS" +
-      "erverInside\020\t\022\r\n\tErrTStage\020\n\022\021\n\rErrTPubl" +
-      "icKey\020\013\022\023\n\017ErrTKeyConflict\020\014\022\021\n\rErrTChec" +
-      "kData\020\r\022\022\n\016ErrTMsgContent\020\016\022\020\n\014ErrTNotLo" +
-      "gin\020\017\022\025\n\021ErrTNotPermission\020\020\022\020\n\014ErrTDisa" +
-      "bled\020\021\022\017\n\013ErrTDeleted\020\022\022\r\n\tErrTEmail\020\023\022\r" +
-      "\n\tErrTPhone\020\024\022\021\n\rErrTNotFriend\020\025*\366\002\n\nCom" +
-      "MsgType\022\016\n\nMsgTUnused\020\000\022\r\n\tMsgTHello\020\001\022\021" +
-      "\n\rMsgTHeartBeat\020\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgT" +
-      "KeyExchange\020\004\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgTCh" +
-      "atReply\020\014\022\r\n\tMsgTQuery\020\r\022\023\n\017MsgTQueryRes" +
-      "ult\020\016\022\016\n\nMsgTUpload\020\025\022\020\n\014MsgTDownload\020\026\022" +
-      "\023\n\017MsgTUploadReply\020\027\022\025\n\021MsgTDownloadRepl" +
-      "y\020\030\022\016\n\nMsgTUserOp\020\037\022\021\n\rMsgTUserOpRet\020 \022\020" +
-      "\n\014MsgTFriendOp\020!\022\023\n\017MsgTFriendOpRet\020\"\022\017\n" +
-      "\013MsgTGroupOp\020#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\tMs" +
-      "gTOther\020d23\n\nMsgService\022%\n\013ClientEvent\022\n" +
-      ".model.Msg\032\n.model.MsgB\020Z\016server/pbmodel" +
-      "b\006proto3"
+      "ail\030\016 \001(\t\"\307\001\n\010MsgError\022\014\n\004code\030\001 \001(\005\022\016\n\006" +
+      "detail\030\002 \001(\t\022\016\n\006sendId\030\003 \001(\003\022\r\n\005msgId\030\004 " +
+      "\001(\003\022\"\n\007msgType\030\005 \001(\0162\021.model.ComMsgType\022" +
+      "+\n\006params\030\t \003(\0132\033.model.MsgError.ParamsE" +
+      "ntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu" +
+      "e\030\002 \001(\t:\0028\001\"\233\006\n\010MsgPlain\022 \n\005hello\030\007 \001(\0132" +
+      "\017.model.MsgHelloH\000\022(\n\theartBeat\030\010 \001(\0132\023." +
+      "model.MsgHeartBeatH\000\022#\n\010errorMsg\030\t \001(\0132\017" +
+      ".model.MsgErrorH\000\022&\n\005keyEx\030\n \001(\0132\025.model" +
+      ".MsgKeyExchangeH\000\022\"\n\010chatData\030\013 \001(\0132\016.mo" +
+      "del.MsgChatH\000\022(\n\tchatReply\030\014 \001(\0132\023.model" +
+      ".MsgChatReplyH\000\022&\n\013commonQuery\030\r \001(\0132\017.m" +
+      "odel.MsgQueryH\000\022/\n\016commonQueryRet\030\016 \001(\0132" +
+      "\025.model.MsgQueryResultH\000\022(\n\tuploadReq\030\025 " +
+      "\001(\0132\023.model.MsgUploadReqH\000\022,\n\013downloadRe" +
+      "q\030\026 \001(\0132\025.model.MsgDownloadReqH\000\022,\n\013uplo" +
+      "adReply\030\027 \001(\0132\025.model.MsgUploadReplyH\000\0220" +
+      "\n\rdownloadReply\030\030 \001(\0132\027.model.MsgDownloa" +
+      "dReplyH\000\022\"\n\006userOp\030\037 \001(\0132\020.model.UserOpR" +
+      "eqH\000\022(\n\tuserOpRet\030  \001(\0132\023.model.UserOpRe" +
+      "sultH\000\022&\n\010friendOp\030! \001(\0132\022.model.FriendO" +
+      "pReqH\000\022,\n\013friendOpRet\030\" \001(\0132\025.model.Frie" +
+      "ndOpResultH\000\022$\n\007groupOp\030# \001(\0132\021.model.Gr" +
+      "oupOpReqH\000\022*\n\ngroupOpRet\030$ \001(\0132\024.model.G" +
+      "roupOpResultH\000\022\026\n\014otherTypeMsg\030d \001(\014H\000B\t" +
+      "\n\007message\"\263\001\n\003Msg\022\017\n\007version\030\001 \001(\005\022\024\n\010ke" +
+      "yPrint\030\002 \001(\003B\0020\001\022\016\n\002tm\030\003 \001(\003B\0020\001\022\"\n\007msgT" +
+      "ype\030\004 \001(\0162\021.model.ComMsgType\022\017\n\007subType\030" +
+      "\005 \001(\005\022\020\n\006cipher\030\013 \001(\014H\000\022#\n\010plainMsg\030\014 \001(" +
+      "\0132\017.model.MsgPlainH\000B\t\n\007message*,\n\013MsgPr" +
+      "iority\022\007\n\003LOW\020\000\022\n\n\006NORMAL\020\001\022\010\n\004HIGH\020\002*X\n" +
+      "\rChatMsgStatus\022\013\n\007SENDING\020\000\022\010\n\004SENT\020\001\022\n\n" +
+      "\006FAILED\020\002\022\r\n\tDELIVERED\020\003\022\010\n\004READ\020\004\022\013\n\007DE" +
+      "LETED\020\005*c\n\013ChatMsgType\022\010\n\004TEXT\020\000\022\t\n\005IMAG" +
+      "E\020\001\022\t\n\005VOICE\020\002\022\t\n\005VIDEO\020\003\022\010\n\004FILE\020\004\022\n\n\006D" +
+      "ELETE\020\005\022\007\n\003KEY\020\006\022\n\n\006PLUGIN\020d*H\n\013EncryptT" +
+      "ype\022\t\n\005PLAIN\020\000\022\n\n\006CUSTOM\020\001\022\014\n\010CHACHA20\020\002" +
+      "\022\013\n\007TWOFISH\020\003\022\007\n\003AES\020\004*@\n\010ChatType\022\020\n\014Ch" +
+      "atTypeNone\020\000\022\017\n\013ChatTypeP2P\020\001\022\021\n\rChatTyp" +
+      "eGroup\020\002*{\n\rQueryDataType\022\031\n\025QueryDataTy" +
+      "peChatData\020\000\022\032\n\026QueryDataTypeChatReply\020\001" +
+      "\022\031\n\025QueryDataTypeFriendOP\020\002\022\030\n\024QueryData" +
+      "TypeGroupOP\020\003*F\n\007SynType\022\022\n\016SynTypeForwa" +
+      "rd\020\000\022\023\n\017SynTypeBackward\020\001\022\022\n\016SynTypeBetw" +
+      "een\020\002*\233\003\n\014ErrorMsgType\022\014\n\010ErrTNone\020\000\022\017\n\013" +
+      "ErrTVersion\020\001\022\020\n\014ErrTKeyPrint\020\002\022\020\n\014ErrTR" +
+      "edirect\020\003\022\020\n\014ErrTWrongPwd\020\004\022\021\n\rErrTWrong" +
+      "Code\020\005\022\020\n\014ErrTRsaPrint\020\006\022\017\n\013ErrTTempKey\020" +
+      "\007\022\017\n\013ErrTEncType\020\010\022\024\n\020ErrTServerInside\020\t" +
+      "\022\r\n\tErrTStage\020\n\022\021\n\rErrTPublicKey\020\013\022\023\n\017Er" +
+      "rTKeyConflict\020\014\022\021\n\rErrTCheckData\020\r\022\022\n\016Er" +
+      "rTMsgContent\020\016\022\020\n\014ErrTNotLogin\020\017\022\025\n\021ErrT" +
+      "NotPermission\020\020\022\020\n\014ErrTDisabled\020\021\022\017\n\013Err" +
+      "TDeleted\020\022\022\r\n\tErrTEmail\020\023\022\r\n\tErrTPhone\020\024" +
+      "\022\021\n\rErrTNotFriend\020\025*\366\002\n\nComMsgType\022\016\n\nMs" +
+      "gTUnused\020\000\022\r\n\tMsgTHello\020\001\022\021\n\rMsgTHeartBe" +
+      "at\020\002\022\r\n\tMsgTError\020\003\022\023\n\017MsgTKeyExchange\020\004" +
+      "\022\017\n\013MsgTChatMsg\020\013\022\021\n\rMsgTChatReply\020\014\022\r\n\t" +
+      "MsgTQuery\020\r\022\023\n\017MsgTQueryResult\020\016\022\016\n\nMsgT" +
+      "Upload\020\025\022\020\n\014MsgTDownload\020\026\022\023\n\017MsgTUpload" +
+      "Reply\020\027\022\025\n\021MsgTDownloadReply\020\030\022\016\n\nMsgTUs" +
+      "erOp\020\037\022\021\n\rMsgTUserOpRet\020 \022\020\n\014MsgTFriendO" +
+      "p\020!\022\023\n\017MsgTFriendOpRet\020\"\022\017\n\013MsgTGroupOp\020" +
+      "#\022\022\n\016MsgTGroupOpRet\020$\022\r\n\tMsgTOther\020d23\n\n" +
+      "MsgService\022%\n\013ClientEvent\022\n.model.Msg\032\n." +
+      "model.MsgB\020Z\016server/pbmodelb\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -29772,7 +30022,7 @@ java.lang.String defaultValue);
     internal_static_model_MsgError_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_MsgError_descriptor,
-        new java.lang.String[] { "Code", "Detail", "Params", });
+        new java.lang.String[] { "Code", "Detail", "SendId", "MsgId", "MsgType", "Params", });
     internal_static_model_MsgError_ParamsEntry_descriptor =
       internal_static_model_MsgError_descriptor.getNestedTypes().get(0);
     internal_static_model_MsgError_ParamsEntry_fieldAccessorTable = new

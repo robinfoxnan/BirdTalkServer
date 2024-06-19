@@ -24,17 +24,16 @@ var metaUserInGroups = table.Metadata{
 // 用户加入组时候，在组成员表中加一条，在用户所属组中加一条
 func (me *Scylla) InsertGroupMember(gmem *model.GroupMemberStore, uing *model.UserInGStore) error {
 
-	// 同时加入粉丝表
 	// 创建 Batch
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
 	batch.Cons = gocql.LocalOne
 
-	// 设置关注
+	// 群成员
 	insertGroupMemQry := qb.Insert(GroupMemberTableName).Columns(metaGroupMembers.Columns...).Query(me.session).Consistency(gocql.One)
 	defer insertGroupMemQry.Release()
 	batch.Query(insertGroupMemQry.Statement(), gmem.Pk, gmem.Gid, gmem.Uid, gmem.Tm, gmem.Role, gmem.Nick)
 
-	// 设置粉丝
+	// 个人所属组
 	insertUseringQry := qb.Insert(UserInGroupTableName).Columns(metaUserInGroups.Columns...).Query(me.session).Consistency(gocql.One)
 	defer insertUseringQry.Release()
 	batch.Query(insertUseringQry.Statement(), uing.Pk, uing.Uid, uing.Gid)

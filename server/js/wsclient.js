@@ -457,7 +457,7 @@ class WsClient {
     sendWs(message) {
         if (this.webSocket && this.webSocket.readyState === WebSocket.OPEN) {
             this.webSocket.send(message);
-            console.log(`Sent message: ${message}`);
+            //console.log(`Sent message: ${message}`);
         } else {
             console.error("WebSocket is not connected or ready to send messages.");
         }
@@ -490,6 +490,7 @@ class WsClient {
         // this.progressCallback(msgType);
 
         // 根据消息类型进行相应处理
+        //console.warn("recv message type:", msgType);
         var str = "";
         switch (msgType) {
             case proto.model.ComMsgType.MSGTHELLO:
@@ -502,8 +503,6 @@ class WsClient {
                 this.onKeyExchangeMsg(msg);
                 break;
 
-            case proto.model.ComMsgType.MSGTUSEROP:   // 好友申请
-                break;
             case proto.model.ComMsgType.MSGTUSEROPRET:  // 用户
                 this.onUserOpResult(msg);
                 break;
@@ -513,8 +512,11 @@ class WsClient {
             case proto.model.ComMsgType.MSGTFRIENDOPRET: //好友操作应答
                 this.onFriendOpResult(msg);
                 break;
-
-
+            case proto.model.ComMsgType.MSGTGROUPOP:  // 需要管理员确认
+                break;
+            case proto.model.ComMsgType.MSGTGROUPOPRET: // 群操作应答
+                this.onGroupOpResult(msg);
+                break;
 
             default:
                 // 其他类型的消息处理
@@ -524,7 +526,7 @@ class WsClient {
     }
 
     sendObject(msg){
-        this.progressCallback(msg.toString()) // 字符串表示
+        this.progressCallback(msg) ;// 字符串表示
         const binMsg = msg.serializeBinary();
         //this.progressCallback(binMsg)
         //var jsonStr =  JSON.stringify(msg);
@@ -647,7 +649,7 @@ class WsClient {
             "OP: " + op.toLocaleString() + "\n" +
             "Status: " + userOpRet.getStatus() + "\n" +
             "Result: " + userOpRet.getResult() + "\n" +
-            "User info: " + userOpRet.getUsersList() + "\n";
+            "Users info: " + userOpRet.getUsersList() + "\n";
         const users = userOpRet.getUsersList();
         const user = users[0];
         str += "user id: " + user.getUserid() + "\n" ;
@@ -677,7 +679,25 @@ class WsClient {
 
     // 群聊消息应答
     async onGroupOpResult(msg){
+        const grpOpRet = msg.getPlainmsg().getGroupopret();
+        const op = grpOpRet.getOperation();
+        switch (op){
+            case proto.model.GroupOperationType.GROUPCREATE:
+                break;
+        }
 
+        let str = "";
+        str += "Received group operation result  message:\n" +
+            "OP: " + op.toLocaleString() + "\n" +
+            // "Status: " + friendOpRet.getStatus() + "\n" +
+            "Result: " + grpOpRet.getResult() + "\n" +
+            "group info: " + grpOpRet.getGroup()+ "\n" +
+            "group list: " + grpOpRet.getGroupsList()+ "\n";
+
+        //const users = grpOpRet.getUsersList();
+        // const user = users[0];
+        // str += "user id: " + user.getUserid() + "\n" ;
+        this.progressCallback(str);
     }
     //////////////////////////////////////////////////////////////////////////////
 
@@ -968,6 +988,7 @@ class WsClient {
         paramsMap.set("UserName", "Robin.fox");
         paramsMap.set("NickName", "飞鸟真人");
         paramsMap.set("Age", "35");
+        paramsMap.set("Intro", "我是一个爱运动的博主>_<...");
         paramsMap.set("Gender", "男");
         paramsMap.set("Region", "北京");
         paramsMap.set("Icon", "飞鸟真人");
@@ -1147,9 +1168,9 @@ class WsClient {
         const opReq = new proto.model.FriendOpReq();
         opReq.setOperation(proto.model.UserOperationType.FINDUSER);
         opReq.setUser(userInfo);
-        const params1 = opReq.getParamsMap()
-        params1.set("mode", mode)
-        params1.set("value", id)
+        const params1 = opReq.getParamsMap();
+        params1.set("mode", mode);
+        params1.set("value", id);
 
 
         const plainMsg = new proto.model.MsgPlain();
@@ -1169,14 +1190,10 @@ class WsClient {
         const userInfo = new proto.model.UserInfo();
         userInfo.setUserid(id)
 
-
-
         //
         const opReq = new proto.model.FriendOpReq();
         opReq.setOperation(proto.model.UserOperationType.ADDFRIEND);
         opReq.setUser(userInfo);
-
-
 
         const plainMsg = new proto.model.MsgPlain();
         plainMsg.setFriendop(opReq);
@@ -1187,6 +1204,248 @@ class WsClient {
         msg.setVersion(1);
         msg.setPlainmsg(plainMsg);
 
+        this.sendObject(msg);
+    }
+
+    // 同意好友
+
+    //13 删除关注
+    sendRemoveFollow(id){
+        showMessage("删除好友")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(id)
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.REMOVEFRIEND);
+        opReq.setUser(userInfo);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 拉黑
+    sendBlockFollow(id){
+        showMessage("拉黑好友")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(id)
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.BLOCKFRIEND);
+        opReq.setUser(userInfo);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 解除拉黑
+    sendUnBlockFollow(id){
+        showMessage("解除拉黑好友")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(id)
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.UNBLOCKFRIEND);
+        opReq.setUser(userInfo);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendSetPermission(id, mask){
+        showMessage("设置权限")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(id)
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.SETFRIENDPERMISSION);
+        opReq.setUser(userInfo);
+        const params = opReq.getParamsMap();
+        params["permission"]= mask
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendSetFriendMemo(id, mode, nick){
+        showMessage("设置备注")
+        const userInfo = new proto.model.UserInfo();
+        userInfo.setUserid(id);
+        userInfo.setNickname(nick);
+
+        //
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.SETFRIENDMEMO);
+        opReq.setUser(userInfo);
+        const params = opReq.getParamsMap();
+        params.set("mode", mode)
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendListFriend(mode){
+        showMessage("列出好友")
+        //
+        // const userInfo = new proto.model.UserInfo();
+        // userInfo.setUserid(10003);
+        //
+
+        const opReq = new proto.model.FriendOpReq();
+        opReq.setOperation(proto.model.UserOperationType.LISTFRIENDS);
+        const params1 = opReq.getParamsMap();
+        params1.set("mode", mode);
+        //opReq.setUser(userInfo);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setFriendop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTFRIENDOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    ////////////////////////////////////////////////////////
+    sendCrateGroupMessage(name, visibility){
+        showMessage("创建群");
+
+        const group = new proto.model.GroupInfo();
+        group.setGroupname(name);
+        const params = group.getParamsMap();
+        params.set("visibility", visibility)
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPCREATE);
+        opReq.setGroup(group);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 查找群
+    sendFindGroupMessage(keyword){
+        showMessage("搜索群");
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPSEARCH);
+        const params = opReq.getParamsMap();
+        params.set("keyword", keyword);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 设置群信息
+    sendSetgroupMemo(id, tags, brief, icon){
+        showMessage("更新群");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+        group.setGroupname("飞鸟和鱼鱼");
+        group.setTagsList(tags);
+        const params = group.getParamsMap();
+        params.set("icon", icon);
+        params.set("brief", brief);
+        params.set("jointype", "any")
+        // params.set("jointype", "admin")
+        // params.set("jointype", "invite")
+        // params.set("jointype", "question")
+
+        //params["jointype"] = "any" | "invite" | "admin" | "question"
+
+
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPSETINFO);
+        opReq.setGroup(group);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+    // 请求加入群
+    sendJoinGroupReq(id){
+        showMessage("尝试加入群");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPJOINREQUEST);
+        opReq.setGroup(group);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
         this.sendObject(msg);
     }
 

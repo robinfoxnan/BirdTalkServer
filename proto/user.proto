@@ -18,7 +18,11 @@ message UserInfo {
   int32 age = 7;           // 年龄
   string region = 8;       // 地区
   string icon = 9;         // 头像
-  map<string, string> params = 10;  // 其他参数，使用map存储比如，title, pwd, sid, icon
+  string intro = 10;       // 介绍
+  int64  follows = 11;     // 关注个数
+  int64  fans = 12;
+  map<string, string> params = 20;  // 其他参数，使用map存储比如，title, pwd, sid, icon
+  map<string, string> privacy = 21;    // 私有的一些设置
 }
 
 
