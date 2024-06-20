@@ -403,6 +403,14 @@ public final class User {
      * <code>GroupSearchMember = 15;</code>
      */
     GroupSearchMember(15),
+    /**
+     * <pre>
+     * 列出当前用户所在的所有群
+     * </pre>
+     *
+     * <code>GroupListIn = 16;</code>
+     */
+    GroupListIn(16),
     UNRECOGNIZED(-1),
     ;
 
@@ -530,6 +538,14 @@ public final class User {
      * <code>GroupSearchMember = 15;</code>
      */
     public static final int GroupSearchMember_VALUE = 15;
+    /**
+     * <pre>
+     * 列出当前用户所在的所有群
+     * </pre>
+     *
+     * <code>GroupListIn = 16;</code>
+     */
+    public static final int GroupListIn_VALUE = 16;
 
 
     public final int getNumber() {
@@ -572,6 +588,7 @@ public final class User {
         case 13: return GroupSetMemberInfo;
         case 14: return GroupSearch;
         case 15: return GroupSearchMember;
+        case 16: return GroupListIn;
         default: return null;
       }
     }
@@ -3805,10 +3822,30 @@ java.lang.String defaultValue);
 
     /**
      * <pre>
+     * 用户发给服务器的时候带着，主要是有可能对方离线
+     * </pre>
+     *
+     * <code>int64 sendId = 3;</code>
+     * @return The sendId.
+     */
+    long getSendId();
+
+    /**
+     * <pre>
+     * 转发给用户的时候才有
+     * </pre>
+     *
+     * <code>int64 msgId = 4;</code>
+     * @return The msgId.
+     */
+    long getMsgId();
+
+    /**
+     * <pre>
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
     int getParamsCount();
     /**
@@ -3816,7 +3853,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
     boolean containsParams(
         java.lang.String key);
@@ -3831,7 +3868,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
     java.util.Map<java.lang.String, java.lang.String>
     getParamsMap();
@@ -3840,7 +3877,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
 
     /* nullable */
@@ -3853,7 +3890,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
 
     java.lang.String getParamsOrThrow(
@@ -3929,7 +3966,17 @@ java.lang.String defaultValue);
 
               break;
             }
-            case 26: {
+            case 24: {
+
+              sendId_ = input.readInt64();
+              break;
+            }
+            case 32: {
+
+              msgId_ = input.readInt64();
+              break;
+            }
+            case 42: {
               if (!((mutable_bitField0_ & 0x00000001) != 0)) {
                 params_ = com.google.protobuf.MapField.newMapField(
                     ParamsDefaultEntryHolder.defaultEntry);
@@ -3973,7 +4020,7 @@ java.lang.String defaultValue);
     protected com.google.protobuf.MapField internalGetMapField(
         int number) {
       switch (number) {
-        case 3:
+        case 5:
           return internalGetParams();
         default:
           throw new RuntimeException(
@@ -4053,7 +4100,37 @@ java.lang.String defaultValue);
       return getUser();
     }
 
-    public static final int PARAMS_FIELD_NUMBER = 3;
+    public static final int SENDID_FIELD_NUMBER = 3;
+    private long sendId_;
+    /**
+     * <pre>
+     * 用户发给服务器的时候带着，主要是有可能对方离线
+     * </pre>
+     *
+     * <code>int64 sendId = 3;</code>
+     * @return The sendId.
+     */
+    @java.lang.Override
+    public long getSendId() {
+      return sendId_;
+    }
+
+    public static final int MSGID_FIELD_NUMBER = 4;
+    private long msgId_;
+    /**
+     * <pre>
+     * 转发给用户的时候才有
+     * </pre>
+     *
+     * <code>int64 msgId = 4;</code>
+     * @return The msgId.
+     */
+    @java.lang.Override
+    public long getMsgId() {
+      return msgId_;
+    }
+
+    public static final int PARAMS_FIELD_NUMBER = 5;
     private static final class ParamsDefaultEntryHolder {
       static final com.google.protobuf.MapEntry<
           java.lang.String, java.lang.String> defaultEntry =
@@ -4084,7 +4161,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
 
     @java.lang.Override
@@ -4106,7 +4183,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
     @java.lang.Override
 
@@ -4118,7 +4195,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
     @java.lang.Override
 
@@ -4135,7 +4212,7 @@ java.lang.String defaultValue);
      * 比如申请好友的附加消息
      * </pre>
      *
-     * <code>map&lt;string, string&gt; params = 3;</code>
+     * <code>map&lt;string, string&gt; params = 5;</code>
      */
     @java.lang.Override
 
@@ -4170,12 +4247,18 @@ java.lang.String defaultValue);
       if (user_ != null) {
         output.writeMessage(2, getUser());
       }
+      if (sendId_ != 0L) {
+        output.writeInt64(3, sendId_);
+      }
+      if (msgId_ != 0L) {
+        output.writeInt64(4, msgId_);
+      }
       com.google.protobuf.GeneratedMessageV3
         .serializeStringMapTo(
           output,
           internalGetParams(),
           ParamsDefaultEntryHolder.defaultEntry,
-          3);
+          5);
       unknownFields.writeTo(output);
     }
 
@@ -4193,6 +4276,14 @@ java.lang.String defaultValue);
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getUser());
       }
+      if (sendId_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(3, sendId_);
+      }
+      if (msgId_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, msgId_);
+      }
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetParams().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
@@ -4201,7 +4292,7 @@ java.lang.String defaultValue);
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(3, params__);
+            .computeMessageSize(5, params__);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -4224,6 +4315,10 @@ java.lang.String defaultValue);
         if (!getUser()
             .equals(other.getUser())) return false;
       }
+      if (getSendId()
+          != other.getSendId()) return false;
+      if (getMsgId()
+          != other.getMsgId()) return false;
       if (!internalGetParams().equals(
           other.internalGetParams())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
@@ -4243,6 +4338,12 @@ java.lang.String defaultValue);
         hash = (37 * hash) + USER_FIELD_NUMBER;
         hash = (53 * hash) + getUser().hashCode();
       }
+      hash = (37 * hash) + SENDID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getSendId());
+      hash = (37 * hash) + MSGID_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getMsgId());
       if (!internalGetParams().getMap().isEmpty()) {
         hash = (37 * hash) + PARAMS_FIELD_NUMBER;
         hash = (53 * hash) + internalGetParams().hashCode();
@@ -4362,7 +4463,7 @@ java.lang.String defaultValue);
       protected com.google.protobuf.MapField internalGetMapField(
           int number) {
         switch (number) {
-          case 3:
+          case 5:
             return internalGetParams();
           default:
             throw new RuntimeException(
@@ -4373,7 +4474,7 @@ java.lang.String defaultValue);
       protected com.google.protobuf.MapField internalGetMutableMapField(
           int number) {
         switch (number) {
-          case 3:
+          case 5:
             return internalGetMutableParams();
           default:
             throw new RuntimeException(
@@ -4414,6 +4515,10 @@ java.lang.String defaultValue);
           user_ = null;
           userBuilder_ = null;
         }
+        sendId_ = 0L;
+
+        msgId_ = 0L;
+
         internalGetMutableParams().clear();
         return this;
       }
@@ -4448,6 +4553,8 @@ java.lang.String defaultValue);
         } else {
           result.user_ = userBuilder_.build();
         }
+        result.sendId_ = sendId_;
+        result.msgId_ = msgId_;
         result.params_ = internalGetParams();
         result.params_.makeImmutable();
         onBuilt();
@@ -4503,6 +4610,12 @@ java.lang.String defaultValue);
         }
         if (other.hasUser()) {
           mergeUser(other.getUser());
+        }
+        if (other.getSendId() != 0L) {
+          setSendId(other.getSendId());
+        }
+        if (other.getMsgId() != 0L) {
+          setMsgId(other.getMsgId());
         }
         internalGetMutableParams().mergeFrom(
             other.internalGetParams());
@@ -4765,6 +4878,92 @@ java.lang.String defaultValue);
         return userBuilder_;
       }
 
+      private long sendId_ ;
+      /**
+       * <pre>
+       * 用户发给服务器的时候带着，主要是有可能对方离线
+       * </pre>
+       *
+       * <code>int64 sendId = 3;</code>
+       * @return The sendId.
+       */
+      @java.lang.Override
+      public long getSendId() {
+        return sendId_;
+      }
+      /**
+       * <pre>
+       * 用户发给服务器的时候带着，主要是有可能对方离线
+       * </pre>
+       *
+       * <code>int64 sendId = 3;</code>
+       * @param value The sendId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setSendId(long value) {
+        
+        sendId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 用户发给服务器的时候带着，主要是有可能对方离线
+       * </pre>
+       *
+       * <code>int64 sendId = 3;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearSendId() {
+        
+        sendId_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long msgId_ ;
+      /**
+       * <pre>
+       * 转发给用户的时候才有
+       * </pre>
+       *
+       * <code>int64 msgId = 4;</code>
+       * @return The msgId.
+       */
+      @java.lang.Override
+      public long getMsgId() {
+        return msgId_;
+      }
+      /**
+       * <pre>
+       * 转发给用户的时候才有
+       * </pre>
+       *
+       * <code>int64 msgId = 4;</code>
+       * @param value The msgId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMsgId(long value) {
+        
+        msgId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <pre>
+       * 转发给用户的时候才有
+       * </pre>
+       *
+       * <code>int64 msgId = 4;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMsgId() {
+        
+        msgId_ = 0L;
+        onChanged();
+        return this;
+      }
+
       private com.google.protobuf.MapField<
           java.lang.String, java.lang.String> params_;
       private com.google.protobuf.MapField<java.lang.String, java.lang.String>
@@ -4796,7 +4995,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
 
       @java.lang.Override
@@ -4818,7 +5017,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
       @java.lang.Override
 
@@ -4830,7 +5029,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
       @java.lang.Override
 
@@ -4847,7 +5046,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
       @java.lang.Override
 
@@ -4872,7 +5071,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
 
       public Builder removeParams(
@@ -4895,7 +5094,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
       public Builder putParams(
           java.lang.String key,
@@ -4914,7 +5113,7 @@ java.lang.String defaultValue);
        * 比如申请好友的附加消息
        * </pre>
        *
-       * <code>map&lt;string, string&gt; params = 3;</code>
+       * <code>map&lt;string, string&gt; params = 5;</code>
        */
 
       public Builder putAllParams(
@@ -17852,75 +18051,77 @@ java.lang.String defaultValue);
       "\0132\034.model.UserInfo.PrivacyEntry\032-\n\013Param" +
       "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\032." +
       "\n\014PrivacyEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001" +
-      "(\t:\0028\001\"\264\001\n\tUserOpReq\022+\n\toperation\030\001 \001(\0162" +
+      "(\t:\0028\001\"\323\001\n\tUserOpReq\022+\n\toperation\030\001 \001(\0162" +
       "\030.model.UserOperationType\022\035\n\004user\030\002 \001(\0132" +
-      "\017.model.UserInfo\022,\n\006params\030\003 \003(\0132\034.model" +
-      ".UserOpReq.ParamsEntry\032-\n\013ParamsEntry\022\013\n" +
-      "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\333\001\n\014UserOp" +
-      "Result\022+\n\toperation\030\001 \001(\0162\030.model.UserOp" +
-      "erationType\022\016\n\006result\030\002 \001(\t\022\016\n\006status\030\003 " +
-      "\001(\t\022\036\n\005users\030\004 \003(\0132\017.model.UserInfo\022/\n\006p" +
-      "arams\030\005 \003(\0132\037.model.UserOpResult.ParamsE" +
-      "ntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005valu" +
-      "e\030\002 \001(\t:\0028\001\"\327\001\n\013FriendOpReq\022+\n\toperation" +
-      "\030\001 \001(\0162\030.model.UserOperationType\022\035\n\004user" +
-      "\030\002 \001(\0132\017.model.UserInfo\022\016\n\006sendId\030\003 \001(\003\022" +
-      "\r\n\005msgId\030\004 \001(\003\022.\n\006params\030\005 \003(\0132\036.model.F" +
-      "riendOpReq.ParamsEntry\032-\n\013ParamsEntry\022\013\n" +
-      "\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\215\002\n\016Friend" +
-      "OpResult\022+\n\toperation\030\001 \001(\0162\030.model.User" +
-      "OperationType\022\016\n\006result\030\002 \001(\t\022\035\n\004user\030\003 " +
-      "\001(\0132\017.model.UserInfo\022\036\n\005users\030\004 \003(\0132\017.mo" +
-      "del.UserInfo\022\016\n\006sendId\030\005 \001(\003\022\r\n\005msgId\030\006 " +
-      "\001(\003\0221\n\006params\030\007 \003(\0132!.model.FriendOpResu" +
-      "lt.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001" +
-      "(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\267\001\n\013GroupMember\022\016\n" +
-      "\006userId\030\001 \001(\003\022\014\n\004nick\030\002 \001(\t\022\014\n\004icon\030\003 \001(" +
-      "\t\022\014\n\004role\030\004 \001(\t\022\017\n\007groupId\030\005 \001(\003\022.\n\006para" +
-      "ms\030\006 \003(\0132\036.model.GroupMember.ParamsEntry" +
-      "\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 " +
-      "\001(\t:\0028\001\"\255\001\n\tGroupInfo\022\017\n\007groupId\030\001 \001(\003\022\014" +
-      "\n\004tags\030\002 \003(\t\022\021\n\tgroupName\030\003 \001(\t\022\021\n\tgroup" +
-      "Type\030\004 \001(\t\022,\n\006params\030\005 \003(\0132\034.model.Group" +
-      "Info.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001" +
-      " \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\241\002\n\nGroupOpReq\022," +
-      "\n\toperation\030\001 \001(\0162\031.model.GroupOperation" +
-      "Type\022\"\n\006ReqMem\030\002 \001(\0132\022.model.GroupMember" +
-      "\022\037\n\005group\030\003 \001(\0132\020.model.GroupInfo\022#\n\007mem" +
-      "bers\030\004 \003(\0132\022.model.GroupMember\022\016\n\006sendId" +
-      "\030\006 \001(\003\022\r\n\005msgId\030\007 \001(\003\022-\n\006params\030\010 \003(\0132\035." +
-      "model.GroupOpReq.ParamsEntry\032-\n\013ParamsEn" +
-      "try\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\351\002\n\r" +
-      "GroupOpResult\022,\n\toperation\030\001 \001(\0162\031.model" +
-      ".GroupOperationType\022\"\n\006ReqMem\030\002 \001(\0132\022.mo" +
-      "del.GroupMember\022\016\n\006result\030\003 \001(\t\022\016\n\006detai" +
-      "l\030\004 \001(\t\022\037\n\005group\030\005 \001(\0132\020.model.GroupInfo" +
-      "\022\016\n\006sendId\030\006 \001(\003\022\r\n\005msgId\030\007 \001(\003\022#\n\007membe" +
-      "rs\030\010 \003(\0132\022.model.GroupMember\0220\n\006params\030\t" +
-      " \003(\0132 .model.GroupOpResult.ParamsEntry\022 " +
-      "\n\006groups\030\n \003(\0132\020.model.GroupInfo\032-\n\013Para" +
-      "msEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*" +
-      "\324\002\n\021UserOperationType\022\022\n\016UserNoneAction\020" +
-      "\000\022\020\n\014RegisterUser\020\001\022\022\n\016UnregisterUser\020\002\022" +
-      "\017\n\013DisableUser\020\003\022\017\n\013RecoverUser\020\004\022\017\n\013Set" +
-      "UserInfo\020\005\022\030\n\024RealNameVerification\020\006\022\t\n\005" +
-      "Login\020\007\022\n\n\006Logout\020\010\022\014\n\010FindUser\020\t\022\r\n\tAdd" +
-      "Friend\020\n\022\021\n\rApproveFriend\020\013\022\020\n\014RemoveFri" +
-      "end\020\014\022\017\n\013BlockFriend\020\r\022\021\n\rUnBlockFriend\020" +
-      "\016\022\027\n\023SetFriendPermission\020\017\022\021\n\rSetFriendM" +
-      "emo\020\020\022\017\n\013ListFriends\020\021*\333\002\n\022GroupOperatio" +
-      "nType\022\023\n\017GroupNoneAction\020\000\022\017\n\013GroupCreat" +
-      "e\020\001\022\021\n\rGroupDissolve\020\002\022\020\n\014GroupSetInfo\020\003" +
-      "\022\023\n\017GroupKickMember\020\004\022\026\n\022GroupInviteRequ" +
-      "est\020\005\022\025\n\021GroupInviteAnswer\020\006\022\024\n\020GroupJoi" +
-      "nRequest\020\007\022\023\n\017GroupJoinAnswer\020\010\022\r\n\tGroup" +
-      "Quit\020\t\022\021\n\rGroupAddAdmin\020\n\022\021\n\rGroupDelAdm" +
-      "in\020\013\022\026\n\022GroupTransferOwner\020\014\022\026\n\022GroupSet" +
-      "MemberInfo\020\r\022\017\n\013GroupSearch\020\016\022\025\n\021GroupSe" +
-      "archMember\020\017*t\n\030GroupOperationResultType" +
-      "\022\034\n\030GroupOperationResultNone\020\000\022\032\n\026GroupO" +
-      "perationResultOk\020\001\022\036\n\032GroupOperationResu" +
-      "ltRefuse\020\002B\020Z\016server/pbmodelb\006proto3"
+      "\017.model.UserInfo\022\016\n\006sendId\030\003 \001(\003\022\r\n\005msgI" +
+      "d\030\004 \001(\003\022,\n\006params\030\005 \003(\0132\034.model.UserOpRe" +
+      "q.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\333\001\n\014UserOpResult\022+\n" +
+      "\toperation\030\001 \001(\0162\030.model.UserOperationTy" +
+      "pe\022\016\n\006result\030\002 \001(\t\022\016\n\006status\030\003 \001(\t\022\036\n\005us" +
+      "ers\030\004 \003(\0132\017.model.UserInfo\022/\n\006params\030\005 \003" +
+      "(\0132\037.model.UserOpResult.ParamsEntry\032-\n\013P" +
+      "aramsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\002" +
+      "8\001\"\327\001\n\013FriendOpReq\022+\n\toperation\030\001 \001(\0162\030." +
+      "model.UserOperationType\022\035\n\004user\030\002 \001(\0132\017." +
+      "model.UserInfo\022\016\n\006sendId\030\003 \001(\003\022\r\n\005msgId\030" +
+      "\004 \001(\003\022.\n\006params\030\005 \003(\0132\036.model.FriendOpRe" +
+      "q.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(" +
+      "\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\215\002\n\016FriendOpResult\022" +
+      "+\n\toperation\030\001 \001(\0162\030.model.UserOperation" +
+      "Type\022\016\n\006result\030\002 \001(\t\022\035\n\004user\030\003 \001(\0132\017.mod" +
+      "el.UserInfo\022\036\n\005users\030\004 \003(\0132\017.model.UserI" +
+      "nfo\022\016\n\006sendId\030\005 \001(\003\022\r\n\005msgId\030\006 \001(\003\0221\n\006pa" +
+      "rams\030\007 \003(\0132!.model.FriendOpResult.Params" +
+      "Entry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005val" +
+      "ue\030\002 \001(\t:\0028\001\"\267\001\n\013GroupMember\022\016\n\006userId\030\001" +
+      " \001(\003\022\014\n\004nick\030\002 \001(\t\022\014\n\004icon\030\003 \001(\t\022\014\n\004role" +
+      "\030\004 \001(\t\022\017\n\007groupId\030\005 \001(\003\022.\n\006params\030\006 \003(\0132" +
+      "\036.model.GroupMember.ParamsEntry\032-\n\013Param" +
+      "sEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\255" +
+      "\001\n\tGroupInfo\022\017\n\007groupId\030\001 \001(\003\022\014\n\004tags\030\002 " +
+      "\003(\t\022\021\n\tgroupName\030\003 \001(\t\022\021\n\tgroupType\030\004 \001(" +
+      "\t\022,\n\006params\030\005 \003(\0132\034.model.GroupInfo.Para" +
+      "msEntry\032-\n\013ParamsEntry\022\013\n\003key\030\001 \001(\t\022\r\n\005v" +
+      "alue\030\002 \001(\t:\0028\001\"\241\002\n\nGroupOpReq\022,\n\toperati" +
+      "on\030\001 \001(\0162\031.model.GroupOperationType\022\"\n\006R" +
+      "eqMem\030\002 \001(\0132\022.model.GroupMember\022\037\n\005group" +
+      "\030\003 \001(\0132\020.model.GroupInfo\022#\n\007members\030\004 \003(" +
+      "\0132\022.model.GroupMember\022\016\n\006sendId\030\006 \001(\003\022\r\n" +
+      "\005msgId\030\007 \001(\003\022-\n\006params\030\010 \003(\0132\035.model.Gro" +
+      "upOpReq.ParamsEntry\032-\n\013ParamsEntry\022\013\n\003ke" +
+      "y\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\351\002\n\rGroupOpRe" +
+      "sult\022,\n\toperation\030\001 \001(\0162\031.model.GroupOpe" +
+      "rationType\022\"\n\006ReqMem\030\002 \001(\0132\022.model.Group" +
+      "Member\022\016\n\006result\030\003 \001(\t\022\016\n\006detail\030\004 \001(\t\022\037" +
+      "\n\005group\030\005 \001(\0132\020.model.GroupInfo\022\016\n\006sendI" +
+      "d\030\006 \001(\003\022\r\n\005msgId\030\007 \001(\003\022#\n\007members\030\010 \003(\0132" +
+      "\022.model.GroupMember\0220\n\006params\030\t \003(\0132 .mo" +
+      "del.GroupOpResult.ParamsEntry\022 \n\006groups\030" +
+      "\n \003(\0132\020.model.GroupInfo\032-\n\013ParamsEntry\022\013" +
+      "\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001*\324\002\n\021UserO" +
+      "perationType\022\022\n\016UserNoneAction\020\000\022\020\n\014Regi" +
+      "sterUser\020\001\022\022\n\016UnregisterUser\020\002\022\017\n\013Disabl" +
+      "eUser\020\003\022\017\n\013RecoverUser\020\004\022\017\n\013SetUserInfo\020" +
+      "\005\022\030\n\024RealNameVerification\020\006\022\t\n\005Login\020\007\022\n" +
+      "\n\006Logout\020\010\022\014\n\010FindUser\020\t\022\r\n\tAddFriend\020\n\022" +
+      "\021\n\rApproveFriend\020\013\022\020\n\014RemoveFriend\020\014\022\017\n\013" +
+      "BlockFriend\020\r\022\021\n\rUnBlockFriend\020\016\022\027\n\023SetF" +
+      "riendPermission\020\017\022\021\n\rSetFriendMemo\020\020\022\017\n\013" +
+      "ListFriends\020\021*\354\002\n\022GroupOperationType\022\023\n\017" +
+      "GroupNoneAction\020\000\022\017\n\013GroupCreate\020\001\022\021\n\rGr" +
+      "oupDissolve\020\002\022\020\n\014GroupSetInfo\020\003\022\023\n\017Group" +
+      "KickMember\020\004\022\026\n\022GroupInviteRequest\020\005\022\025\n\021" +
+      "GroupInviteAnswer\020\006\022\024\n\020GroupJoinRequest\020" +
+      "\007\022\023\n\017GroupJoinAnswer\020\010\022\r\n\tGroupQuit\020\t\022\021\n" +
+      "\rGroupAddAdmin\020\n\022\021\n\rGroupDelAdmin\020\013\022\026\n\022G" +
+      "roupTransferOwner\020\014\022\026\n\022GroupSetMemberInf" +
+      "o\020\r\022\017\n\013GroupSearch\020\016\022\025\n\021GroupSearchMembe" +
+      "r\020\017\022\017\n\013GroupListIn\020\020*t\n\030GroupOperationRe" +
+      "sultType\022\034\n\030GroupOperationResultNone\020\000\022\032" +
+      "\n\026GroupOperationResultOk\020\001\022\036\n\032GroupOpera" +
+      "tionResultRefuse\020\002B\020Z\016server/pbmodelb\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -17949,7 +18150,7 @@ java.lang.String defaultValue);
     internal_static_model_UserOpReq_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_model_UserOpReq_descriptor,
-        new java.lang.String[] { "Operation", "User", "Params", });
+        new java.lang.String[] { "Operation", "User", "SendId", "MsgId", "Params", });
     internal_static_model_UserOpReq_ParamsEntry_descriptor =
       internal_static_model_UserOpReq_descriptor.getNestedTypes().get(0);
     internal_static_model_UserOpReq_ParamsEntry_fieldAccessorTable = new

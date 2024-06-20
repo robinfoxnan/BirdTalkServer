@@ -75,6 +75,8 @@ proto.model.UserOpReq.toObject = function(includeInstance, msg) {
   var f, obj = {
     operation: jspb.Message.getFieldWithDefault(msg, 1, 0),
     user: (f = msg.getUser()) && proto.model.UserInfo.toObject(includeInstance, f),
+    sendid: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    msgid: jspb.Message.getFieldWithDefault(msg, 4, 0),
     paramsMap: (f = msg.getParamsMap()) ? f.toObject(includeInstance, undefined) : []
   };
 
@@ -122,6 +124,14 @@ proto.model.UserOpReq.deserializeBinaryFromReader = function(msg, reader) {
       msg.setUser(value);
       break;
     case 3:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setSendid(value);
+      break;
+    case 4:
+      var value = /** @type {number} */ (reader.readInt64());
+      msg.setMsgid(value);
+      break;
+    case 5:
       var value = msg.getParamsMap();
       reader.readMessage(value, function(message, reader) {
         jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
@@ -171,9 +181,23 @@ proto.model.UserOpReq.serializeBinaryToWriter = function(message, writer) {
       proto.model.UserInfo.serializeBinaryToWriter
     );
   }
+  f = message.getSendid();
+  if (f !== 0) {
+    writer.writeInt64(
+      3,
+      f
+    );
+  }
+  f = message.getMsgid();
+  if (f !== 0) {
+    writer.writeInt64(
+      4,
+      f
+    );
+  }
   f = message.getParamsMap(true);
   if (f && f.getLength() > 0) {
-    f.serializeBinary(3, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
+    f.serializeBinary(5, writer, jspb.BinaryWriter.prototype.writeString, jspb.BinaryWriter.prototype.writeString);
   }
 };
 
@@ -234,14 +258,50 @@ proto.model.UserOpReq.prototype.hasUser = function() {
 
 
 /**
- * map<string, string> params = 3;
+ * optional int64 sendId = 3;
+ * @return {number}
+ */
+proto.model.UserOpReq.prototype.getSendid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.UserOpReq} returns this
+ */
+proto.model.UserOpReq.prototype.setSendid = function(value) {
+  return jspb.Message.setProto3IntField(this, 3, value);
+};
+
+
+/**
+ * optional int64 msgId = 4;
+ * @return {number}
+ */
+proto.model.UserOpReq.prototype.getMsgid = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 4, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.model.UserOpReq} returns this
+ */
+proto.model.UserOpReq.prototype.setMsgid = function(value) {
+  return jspb.Message.setProto3IntField(this, 4, value);
+};
+
+
+/**
+ * map<string, string> params = 5;
  * @param {boolean=} opt_noLazyCreate Do not create the map if
  * empty, instead returning `undefined`
  * @return {!jspb.Map<string,string>}
  */
 proto.model.UserOpReq.prototype.getParamsMap = function(opt_noLazyCreate) {
   return /** @type {!jspb.Map<string,string>} */ (
-      jspb.Message.getMapField(this, 3, opt_noLazyCreate,
+      jspb.Message.getMapField(this, 5, opt_noLazyCreate,
       null));
 };
 

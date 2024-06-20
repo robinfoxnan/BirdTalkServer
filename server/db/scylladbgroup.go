@@ -95,7 +95,7 @@ func (me *Scylla) SetGroupMemberRole(pk int16, gid, uid int64, role int32) error
 
 // from 是查询起点，第一页应该从0开始
 // 查询用户所在的群列表
-func (me *Scylla) FindUserInGroups(pk, uid, from int64, pageSize uint) ([]model.UserInGStore, error) {
+func (me *Scylla) FindUserInGroups(pk int16, uid, from int64, pageSize uint) ([]model.UserInGStore, error) {
 	builder := qb.Select(UserInGroupTableName).Columns(metaUserInGroups.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid"), qb.Gt("gid"))
 

@@ -314,6 +314,11 @@ func (cli *RedisClient) SetUserInGroup(uid int64, gidList []int64) error {
 	return cli.SetIntSet(keyUserInG, gidList)
 }
 
+func (cli *RedisClient) HasUserInGroup(uid int64) (bool, error) {
+	keyUserInG := GetUseringKey(uid)
+	return cli.HasKey(keyUserInG, DefaultUserTTL)
+}
+
 // 用户加入的群组个数
 func (cli *RedisClient) GetUserInGroupCount(uid int64) (int64, error) {
 	keyUserInG := GetUseringKey(uid)

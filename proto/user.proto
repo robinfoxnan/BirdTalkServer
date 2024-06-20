@@ -53,7 +53,9 @@ enum UserOperationType {
 message UserOpReq {
   UserOperationType operation = 1;     // 操作类型，例如：注册用户、注销、禁用、恢复、设置信息、实名验证、登录、退出、查找用户
   UserInfo user = 2;        // 涉及的用户信息
-  map<string, string> params = 3;  // 比如申请好友的附加消息
+  int64 sendId = 3;               // 用户发给服务器的时候带着，主要是有可能对方离线
+  int64 msgId = 4;                // 转发给用户的时候才有
+  map<string, string> params = 5;  // 比如申请好友的附加消息
 }
 
 // 用户操作结果消息
@@ -124,6 +126,7 @@ enum GroupOperationType {
   GroupSetMemberInfo = 13;    // 设置自己在群中的信息
   GroupSearch = 14;           // 搜素群组
   GroupSearchMember = 15;     // 人员过多时候，不能全部同步到客户端，需要搜索或者分页
+  GroupListIn = 16;           // 列出当前用户所在的所有群
 }
 
 enum GroupOperationResultType{

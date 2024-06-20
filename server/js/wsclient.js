@@ -688,10 +688,13 @@ class WsClient {
 
         let str = "";
         str += "Received group operation result  message:\n" +
-            "OP: " + op.toLocaleString() + "\n" +
+            "OP: " + op.toString() + "\n" +
             // "Status: " + friendOpRet.getStatus() + "\n" +
             "Result: " + grpOpRet.getResult() + "\n" +
+            "Detail: " + grpOpRet.getDetail() + "\n" +
             "group info: " + grpOpRet.getGroup()+ "\n" +
+            "req Mem: " + grpOpRet.getReqmem() + "\n" +
+            "group members: " + grpOpRet.getMembersList() +"\n" +
             "group list: " + grpOpRet.getGroupsList()+ "\n";
 
         //const users = grpOpRet.getUsersList();
@@ -1428,7 +1431,7 @@ class WsClient {
         this.sendObject(msg);
     }
     // 请求加入群
-    sendJoinGroupReq(id){
+    sendJoinGroupReq(id) {
         showMessage("尝试加入群");
         const group = new proto.model.GroupInfo();
         group.setGroupid(id);
@@ -1440,6 +1443,155 @@ class WsClient {
         const plainMsg = new proto.model.MsgPlain();
         plainMsg.setGroupop(opReq);
 
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+
+    }
+
+    // 从某一个UID开始查询群列表，最多返回100个，下次再分页
+    sendListGroupMemberMessage(id){
+        showMessage("查询群成员列表群");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPSEARCHMEMBER);
+        opReq.setGroup(group);
+        const params = opReq.getParamsMap();
+        params.set("uid", "100");
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 添加管理员
+    sendAddGroupAdminMessage(id){
+        showMessage("添加管理员");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPADDADMIN);
+        opReq.setGroup(group);
+
+        const mem = new proto.model.GroupMember();
+        mem.setUserid(10005);
+        const memList = opReq.getMembersList();
+        memList.push(mem);
+
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+
+    }
+    // 移除管理员
+    sendRemoveGroupAdminMessage(id){
+        showMessage("添加管理员");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPDELADMIN);
+        opReq.setGroup(group);
+
+        const mem = new proto.model.GroupMember();
+        mem.setUserid(10005);
+        const memList = opReq.getMembersList();
+        memList.push(mem);
+
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+    // 转让群主
+    sendTranferGroupOwnerMessage(){
+
+    }
+    // 设置自己的昵称
+    sendSetGroupMemberNickMessage(id, nick){
+        showMessage("设置自己的群昵称");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPSETMEMBERINFO);
+        opReq.setGroup(group);
+        const params = opReq.getParamsMap();
+        params.set("nick", nick);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendQuitGroupMessage(id){
+        showMessage("退群");
+        const group = new proto.model.GroupInfo();
+        group.setGroupid(id);
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPQUIT);
+        opReq.setGroup(group);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
+
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTGROUPOP);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendUingMessage(){
+        showMessage("查询自己加入了多少群");
+
+        const opReq = new proto.model.GroupOpReq();
+        opReq.setOperation(proto.model.GroupOperationType.GROUPLISTIN);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setGroupop(opReq);
 
         // 封装为通用消息
         const msg = new proto.model.Msg();

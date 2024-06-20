@@ -125,7 +125,7 @@
 <button onclick="setGroupMemo()">3 设置信息</button></div>
 
 <div><button onclick="joinGroup()">7 请求加入</button>
-    <button onclick="sendKickGUserMessage()">4 踢人</button>
+<button onclick="sendKickGUserMessage()">4 踢人</button>
 <button onclick="">5 邀请</button>
 <button onclick="sendInviteAnswerMessage()">6 应答邀请（同意，拒绝）</button>
 
@@ -134,12 +134,15 @@
 
 
 <div>
-<button onclick="sendGAddAdminMessage()">10 添加管理员</button>
-<button onclick="sendGRemoveAdminMessage()">11 删除管理员</button>
-<button onclick="sendGChangeOwnerMessage()">12 转让群主</button>
-<button onclick="sendGUserInfoMessage()">13 设置自身备注等信息</button></div>
+<button onclick="addAdmin()">10 添加管理员</button>
+<button onclick="delAdmin()">11 删除管理员</button>
+<button onclick="">12 转让群主</button>
+<button onclick="setGroupMemberInfo()">13 设置自身备注等信息</button>
+<button onclick="quitGroup()">17 退群</button>
+    <button onclick="queryUing()">18 查询自己所在的所有群</button>
+</div>
 
-<div><button onclick="sendGFindUserMessage()">14 搜索群内成员 </button>
+<div><button onclick="findGroupMembers()">14 搜索群内成员 </button>
 <button onclick="sendGFindMsgMessage()">15  搜索群内消息 </button></div>
 <br>
 私聊消息
@@ -441,7 +444,31 @@
         client.sendJoinGroupReq(1008);
     }
 
+    //
+    function findGroupMembers(){
+        client.sendListGroupMemberMessage(1008);
+    }
 
+    // 添加管理员
+    function addAdmin(){
+        client.sendAddGroupAdminMessage(1008);
+    }
+
+    function delAdmin(){
+        client.sendRemoveGroupAdminMessage(1008);
+    }
+    // 更改昵称
+    function setGroupMemberInfo(){
+        client.sendSetGroupMemberNickMessage(1008, "东方不败1");
+    }
+
+    function quitGroup(){
+        client.sendQuitGroupMessage(1008);
+    }
+    
+    function queryUing() {
+        client.sendUingMessage();
+    }
 
 
 </script>

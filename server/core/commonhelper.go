@@ -428,7 +428,7 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 	}
 
 	if (mask & model.UserLoadStatusGroups) > 0 {
-		gList, err := Globals.scyllaCli.FindUserInGroups(sess.UserID, sess.UserID, 0, db.MaxFriendCacheSize)
+		gList, err := Globals.scyllaCli.FindUserInGroups(db.ComputePk(sess.UserID), sess.UserID, 0, db.MaxFriendCacheSize)
 		if err != nil {
 			return err
 		}
@@ -670,7 +670,7 @@ func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
 	retLst := make([]*pbmodel.UserInfo, len(lst))
 	for index, f := range lst {
 		data := pbmodel.UserInfo{
-			UserId:   f.Uid1,
+			UserId:   f.Uid2,
 			UserName: "",
 			NickName: f.Nick,
 			Email:    "",

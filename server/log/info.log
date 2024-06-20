@@ -430,3 +430,104 @@
 2024-06-19T13:31:16.887+0800	[34mINFO[0m	server/main.go:82	server started here...
 2024-06-19T13:31:23.877+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723409572605333504,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
 2024-06-19T13:31:23.964+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-19T15:59:08.442+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-19T15:59:44.166+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723446884542320640,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-19T15:59:44.245+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-19T16:13:03.772+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-19T16:13:15.558+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723450303860576256,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-19T16:13:15.646+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-19T16:14:33.731+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723450631947423744,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-19T16:15:35.697+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-19T16:15:43.034+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723450923833233408,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-19T16:15:43.108+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-19T16:17:20.398+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723451336577912832,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-19T16:20:29.573+0800	[35mDEBUG[0m	core/commonhelper.go:43	decode public key from msg:	{"publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2h3+TtzOqKWcfVee2IZIV92rIaq1IKZz/f9pZiSGHv4IX1QacAMk2IiJMvFlsE7a3d4s16Ni1R3lrT9ihqTc6Q==\n-----END PUBLIC KEY-----\n", "session": 723452122368184320}
+2024-06-19T16:20:29.579+0800	[35mDEBUG[0m	core/commonhandler.go:277	check data ok!	{"tm": "1718785229578", "check tm": "1718785229578"}
+2024-06-20T07:52:51.384+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T07:54:01.646+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723687053493145600,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T07:54:01.732+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T07:54:18.030+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723687126201405440,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T07:54:18.080+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T07:55:12.813+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723687353520099328,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T07:57:08.758+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723687845675536384,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:02:10.038+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:02:16.207+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723689134048284672,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:02:16.294+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:02:21.494+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723689156928212992,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:02:21.545+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:09:11.829+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:09:16.826+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723690899426643968,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:09:16.908+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:09:25.411+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723690935447326720,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:09:25.458+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:10:27.699+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723691194068111360,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:19:06.115+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:19:11.745+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723693389601705984,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:19:11.839+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:19:19.715+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723693427220418560,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:19:19.769+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:20:55.547+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:21:00.475+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723693850945785856,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:21:00.549+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:21:06.596+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723693875205640192,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:21:06.642+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:43:22.064+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:43:32.463+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723699521112117248,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:43:32.566+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:43:38.823+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723699544407281664,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:43:38.864+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:46:28.486+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:46:34.844+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723700283821133824,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:46:34.909+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:46:41.305+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723700313420337152,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:46:41.336+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:46:45.466+0800	[35mDEBUG[0m	model/group.go:54	{{{} [] [] <nil>} 0 [] 1008 [画画 化妆] 飞鸟和鱼鱼 chat map[brief:简介。。。 icon:图标链接 visibility:public]}
+成员表:
+
+	10005 -> &{robin}
+	10004 -> &{东方不败1}
+管理员表:
+
+	%d -> %v
+ 10005 &{robin}
+群主: 10004
+
+2024-06-20T08:49:46.167+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:50:08.625+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723701178705252352,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:50:08.704+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:50:20.695+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723701221432627200,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:50:20.731+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T08:50:35.436+0800	[35mDEBUG[0m	model/group.go:54	{{{} [] [] <nil>} 0 [] 1008 [画画 化妆] 飞鸟和鱼鱼 chat map[brief:简介。。。 icon:图标链接 visibility:public]}
+成员表:
+	10005 -> &{robin}
+	10004 -> &{东方不败1}
+管理员表:
+	10005 -> &{robin}
+群主: 10004
+
+2024-06-20T08:51:14.086+0800	[35mDEBUG[0m	model/group.go:54	{{{} [] [] <nil>} 0 [] 1008 [画画 化妆] 飞鸟和鱼鱼 chat map[brief:简介。。。 icon:图标链接 visibility:public]}
+成员表:
+	10004 -> &{东方不败1}
+	10005 -> &{robin}
+管理员表:
+	10005 -> &{robin}
+群主: 10004
+
+2024-06-20T08:53:06.915+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T08:53:13.693+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723701952235573248,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:53:13.757+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T08:54:16.800+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723702222369722368,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T08:54:16.839+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T09:27:18.732+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T09:27:24.433+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723710561233276928,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T09:27:24.510+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T09:29:01.760+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T09:29:07.644+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723710991820525568,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T09:29:07.707+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T09:31:34.953+0800	[34mINFO[0m	server/main.go:82	server started here...
+2024-06-20T09:31:45.875+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723711654222761984,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T09:31:46.073+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10004, "count": 0}
+2024-06-20T09:31:54.699+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723711694156730368,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T09:31:54.743+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10003, "count": 0}
+2024-06-20T09:32:20.215+0800	[35mDEBUG[0m	core/commonhandler.go:139	handle client hello msg	{"session": {"UserID":0,"Sid":723711797122699264,"DeviceID":"uuid","Platf":"web","Lang":"","CountryCode":"","CodeType":"plain","RemoteAddr":"127.0.0.1","Params":{"ClientVersion":"1.0","Stage":"clienthello"},"Files":null,"TempUserInfo":null,"Status":0,"KeyEx":null,"Ver":1}}
+2024-06-20T09:32:20.264+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10005, "count": 0}

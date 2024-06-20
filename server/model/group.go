@@ -4,6 +4,7 @@ import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"fmt"
+	"go.uber.org/zap"
 	"strings"
 	"sync"
 )
@@ -36,18 +37,21 @@ type Group struct {
 	Mu sync.Mutex
 }
 
-func (g *Group) DebugPrint() {
-	fmt.Println(g.GroupInfo)
-	fmt.Println("成员表")
+func (g *Group) DebugPrint(logger *zap.Logger) {
+	str := ""
+	str += fmt.Sprintln(g.GroupInfo)
+
+	str += fmt.Sprintln("成员表:")
 	for i, item := range g.Members {
-		fmt.Printf("\t%d -> %v\n", i, item)
+		str += fmt.Sprintf("\t%d -> %v\n", i, item)
 	}
-	fmt.Println("管理员表")
-	for i, item := range g.Members {
-		fmt.Printf("\t%d -> %v\n", i, item)
+	str += fmt.Sprintln("管理员表:")
+	for i, item := range g.Admins {
+		str += fmt.Sprintf("\t%d -> %v\n", i, item)
 	}
 
-	fmt.Printf("\t群主 %d\n", g.Owner)
+	str += fmt.Sprintf("群主: %d\n", g.Owner)
+	logger.Debug(str)
 }
 func CheckGroupInfoIsPrivate(g *pbmodel.GroupInfo) bool {
 	if g.Params == nil {
