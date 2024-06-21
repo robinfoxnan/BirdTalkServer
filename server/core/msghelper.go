@@ -61,7 +61,32 @@ func trySendMsgToUserList(uidList []int64, msg *pbmodel.Msg) {
 	}
 }
 
-// 将消息转发给所有的群组用户
+// 将消息转发给所有的群组用户，除了自己的会话，防止
+func sendToGroupMembersExceptMe(groupId int64, msg *pbmodel.Msg, session *Session) {
+	group, _ := Globals.grc.GetGroup(groupId)
+	if group == nil {
+		return
+	}
+
+	// 集群模式需要检查各个用户的分布情况
+	if Globals.Config.Server.ClusterMode {
+
+	} else {
+		// 单机模式直接转发在线的用户
+		members := group.GetMembers()
+		for _, mId := range members {
+			if mId == session.UserID {
+				trySendMsgToMe(mId, msg, session)
+			} else {
+				trySendMsgToUser(mId, msg)
+			}
+
+		}
+	}
+
+}
+
+// 群回执，每个用户都有份
 func notifyGroupMembers(groupId int64, msg *pbmodel.Msg) {
 	group, _ := Globals.grc.GetGroup(groupId)
 	if group == nil {

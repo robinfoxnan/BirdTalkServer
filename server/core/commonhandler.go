@@ -14,7 +14,10 @@ import (
 // 用户与群组消息一共是6大类，
 func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 
-	//fmt.Println(msg)
+	if msg.MsgType != pbmodel.ComMsgType_MsgTUpload {
+		fmt.Println(msg)
+	}
+
 	keyPrint := msg.GetKeyPrint() // 加密指纹，明文传输需要先检查类型是否正确
 	if keyPrint == 0 {
 		msgPlain := msg.GetPlainMsg()

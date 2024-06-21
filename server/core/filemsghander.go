@@ -5,9 +5,11 @@ import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
 	"crypto/md5"
+	"encoding/binary"
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"go.uber.org/zap"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -27,9 +29,16 @@ func handleFileUpload(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	if uploadMsg.HashCode == "" {
+	if len(uploadMsg.HashCode) < 16 {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "hash code can not be nil", nil, session)
 		return
+	}
+
+	if uploadMsg.FileData == nil {
+		{
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "data can not be nil", nil, session)
+			return
+		}
 	}
 
 	// 第一片
@@ -135,7 +144,7 @@ func createUpLoadRetMsg(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result
 		Version:  int32(ProtocolVersion),
 		KeyPrint: 0,
 		Tm:       utils.GetTimeStamp(),
-		MsgType:  pbmodel.ComMsgType_MsgTUpload,
+		MsgType:  pbmodel.ComMsgType_MsgTUploadReply,
 		SubType:  0,
 		Message: &pbmodel.Msg_PlainMsg{
 			PlainMsg: &msgPlain,
@@ -174,7 +183,7 @@ func createDownloadRetMsg(downloadRet *pbmodel.MsgDownloadReq, fileName, result,
 		Version:  int32(ProtocolVersion),
 		KeyPrint: 0,
 		Tm:       utils.GetTimeStamp(),
-		MsgType:  pbmodel.ComMsgType_MsgTDownload,
+		MsgType:  pbmodel.ComMsgType_MsgTDownloadReply,
 		SubType:  0,
 		Message: &pbmodel.Msg_PlainMsg{
 			PlainMsg: &msgPlain,
@@ -185,11 +194,23 @@ func createDownloadRetMsg(downloadRet *pbmodel.MsgDownloadReq, fileName, result,
 }
 
 // 计算流水号文件名
-func getUUIDFileName(fileName string) string {
-	id := uint64(Globals.snow.GenerateID())
-	filename := strconv.FormatUint(id, 36)
-	ext := filepath.Ext(filename)
-	return filename + ext
+// 示例哈希字符串
+// hashString := "b58f6e861b4f82a6f8a86b0d1b646216be2f5489d70595cb91c4a2c97a18ff67"
+func getUUIDFileName(fileName string, fileHash string) (string, error) {
+	ext := filepath.Ext(fileName)
+	// 将哈希字符串转换为字节数组
+	id := uint64(0)
+	hashBytes, err := hex.DecodeString(fileHash)
+	if err != nil {
+		id = uint64(Globals.snow.GenerateID())
+	} else {
+		// 使用 binary.LittleEndian 解析字节数组为 int64
+		id = uint64(binary.LittleEndian.Uint64(hashBytes[:8])) // 取前8字节转换为 int64
+	}
+
+	idName := strconv.FormatUint(id, 36)
+
+	return idName + ext, err
 }
 
 func sendBackFileUploadErr(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result string, detail string, session *Session) {
@@ -255,6 +276,10 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		}
 	}
 
+	idName, err := getUUIDFileName(uploadMsg.FileName, uploadMsg.HashCode)
+	if err != nil {
+		Globals.Logger.Error("hash is invalid")
+	}
 	// 会话重建立一个结构
 	sFile := &SessionFile{
 		File:       nil,
@@ -262,13 +287,13 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		FileName:   uploadMsg.FileName,
 		FullPath:   "",
 		Gid:        uploadMsg.GroupId,
-		UniqName:   getUUIDFileName(uploadMsg.FileName),
+		UniqName:   idName,
 		HashCode:   uploadMsg.HashCode,
 		FileSize:   uploadMsg.FileSize,
 		Hash:       md5.New(),
 		Lock:       sync.Mutex{},
 		ChunkSize:  uploadMsg.ChunkSize,
-		ChunkIndex: 1,
+		ChunkIndex: 0,
 		ChunkCount: uploadMsg.ChunkCount,
 	}
 
@@ -278,6 +303,7 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		return
 	}
 	sFile.FullPath = fullPath
+	fmt.Println(fullPath)
 
 	sFile.File, err = os.Create(fullPath)
 	if err != nil {
@@ -299,9 +325,10 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		// 计算MD5
 		hashInBytes := sFile.Hash.Sum(nil)
 		hashString := hex.EncodeToString(hashInBytes)
-		fmt.Printf("接收的md5 = %s \n", hashString)
+		//fmt.Printf("本地计算的md5 = %s \n", hashString)
 		if hashString != sFile.HashCode {
 			cleanSFile(sFile, session)
+			Globals.Logger.Error("md5 not same", zap.String("file", hashString), zap.String("remote", sFile.HashCode))
 			sendBackFileUploadErr("", uploadMsg, "fail", "md5 hash code is not same", session)
 			return
 		}
@@ -313,7 +340,7 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 	} else {
 		// 保存到
 		session.SetFile(uploadMsg.FileName, sFile)
-		msgRet := createUpLoadRetMsg("", uploadMsg, "trunkok", "wait next truck")
+		msgRet := createUpLoadRetMsg("", uploadMsg, "chunkok", "wait next truck")
 		session.SendMessage(msgRet)
 	}
 
@@ -371,7 +398,10 @@ func writeToFile(data []byte, sFile *SessionFile) error {
 	}
 
 	//fmt.Println("数据写入文件成功")
-	sFile.Hash.Write(data)
+	if _, err := sFile.Hash.Write(data); err != nil {
+		fmt.Printf("Error writing to hash: %v\n", err)
+
+	}
 
 	return nil
 }
@@ -404,6 +434,7 @@ func onHandleUploadTrunkOther(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		fmt.Printf("接收的md5 = %s \n", hashString)
 		if hashString != sFile.HashCode {
 			cleanSFile(sFile, session)
+			Globals.Logger.Error("md5 not same", zap.String("file", hashString), zap.String("remote", sFile.HashCode))
 			sendBackFileUploadErr("", uploadMsg, "fail", "md5 hash code is not same", session)
 			return
 		}
@@ -412,7 +443,7 @@ func onHandleUploadTrunkOther(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		msgRet := createUpLoadRetMsg(sFile.UniqName, uploadMsg, "fileok", "finish")
 		session.SendMessage(msgRet)
 	} else {
-		msgRet := createUpLoadRetMsg("", uploadMsg, "trunkok", "wait next")
+		msgRet := createUpLoadRetMsg("", uploadMsg, "chunkok", "wait next")
 		session.SendMessage(msgRet)
 	}
 

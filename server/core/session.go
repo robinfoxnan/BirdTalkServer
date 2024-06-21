@@ -149,6 +149,7 @@ func NewSession(conn *websocket.Conn, sid, uid int64, code string) *Session {
 		Params: make(map[string]string),
 		KeyEx:  nil,
 		Status: model.UserStatusNone,
+		Files:  map[string]*SessionFile{},
 	}
 	if sid == 0 {
 		s.Sid = Globals.snow.GenerateID()
@@ -405,7 +406,7 @@ func (s *Session) dispatchRaw(messageType int, rawMsg []byte) {
 		encoder := BinEncoder{}
 		msg, err := encoder.DecodeMsg(rawMsg)
 		if err == nil {
-			fmt.Println("收到消息：", msg)
+			//fmt.Println("收到消息：", msg)
 			HandleCommonMsg(msg, s)
 		}
 

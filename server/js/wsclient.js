@@ -382,6 +382,92 @@ async function decryptAES_CTR(ciphertext, key) {
     return plaintext;
 }
 ///////////////////////////////////////////////////////////////////////////////////////
+class FileUploader{
+    constructor(ws, file, cz){
+        this.ws = ws;
+        this.file = file;
+        this.chunkSize = cz;
+        this.currentIndex = 0;
+        this.totalChunks = Math.ceil(file.size / this.chunkSize);
+        this.hashCode = "";
+    }
+
+    // 计算MD5
+    async calculateFileMd5Hash(file) {
+        return new Promise((resolve, reject) => {
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    const arrayBuffer = e.target.result;
+                    const spark = new SparkMD5.ArrayBuffer();
+                    spark.append(arrayBuffer);
+                    const md5Hash = spark.end();
+                    resolve(md5Hash);
+                };
+
+                reader.onerror = function() {
+                    reject(new Error("File reading has failed"));
+                };
+
+                reader.readAsArrayBuffer(file);
+            } else {
+                reject(new Error("No file provided"));
+            }
+        });
+    }
+
+    async readFileChunkAsArrayBuffer(chunk) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                resolve(e.target.result);
+            };
+            reader.onerror = function() {
+                reject(new Error("Chunk reading has failed"));
+            };
+            reader.readAsArrayBuffer(chunk);
+        });
+    }
+    // 开始传递第一块，看看能够秒传
+    async uploadFirstTrunk(){
+        this.hashCode = await this.calculateFileMd5Hash(this.file);
+        const start = 0;
+        const end = Math.min(start + this.chunkSize, this.file.size);
+        const chunk = this.file.slice(start, end);
+        try {
+            const chunkBuffer = await this.readFileChunkAsArrayBuffer(chunk);
+            // Convert ArrayBuffer to Uint8Array
+            const chunkUint8Array = new Uint8Array(chunkBuffer);
+            this.ws.sendUploadMessage(this.file.name, "file", this.file.size, this.chunkSize,
+                this.totalChunks, 0,  chunkUint8Array, this.hashCode);
+        } catch (error) {
+            console.error('Error processing chunk:', error);
+
+            return;
+        }
+    }
+
+    // 如果不能秒传，传递其他的部分
+    async uploadOther(index){
+        this.currentIndex = index;
+        const start = index * this.chunkSize;
+        const end = Math.min(start + this.chunkSize, this.file.size);
+        const chunk = this.file.slice(start, end);
+        try {
+            const chunkBuffer = await this.readFileChunkAsArrayBuffer(chunk);
+            // Convert ArrayBuffer to Uint8Array
+            const chunkUint8Array = new Uint8Array(chunkBuffer);
+            this.ws.sendUploadMessage(this.file.name, "file", this.file.size, this.chunkSize,
+                this.totalChunks, index,  chunkUint8Array, this.hashCode);
+        } catch (error) {
+            console.error('Error processing chunk:', error);
+
+            return;
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////
 //
 class WsClient {
     constructor(name, url, messageCallback, openCallback, closeCallback, errorCallback, progressCallback) {
@@ -396,6 +482,7 @@ class WsClient {
         this.progressCallback = progressCallback;
         this.shareKeyPrint = "";
         this.shareKey = null;
+        this.fileMap = new Map();  // 上传的开始
     }
 
     // 连接 WebSocket
@@ -518,6 +605,20 @@ class WsClient {
                 this.onGroupOpResult(msg);
                 break;
 
+            case proto.model.ComMsgType.MSGTUPLOADREPLY:
+                this.onUploadResult(msg);
+                break;
+
+            case proto.model.ComMsgType.MSGTCHATMSG:
+                this.onChatMsg(msg);
+                break;
+            case proto.model.ComMsgType.MSGTCHATREPLY:
+                this.onChatMsgReply(msg);
+                break;
+
+            case proto.model.ComMsgType.MSGTQUERYRESULT:
+                this.onQueryResult(msg)
+                break;
             default:
                 // 其他类型的消息处理
                 console.warn("Received unknown message type:", msgType);
@@ -526,7 +627,7 @@ class WsClient {
     }
 
     sendObject(msg){
-        this.progressCallback(msg) ;// 字符串表示
+        this.progressCallback("发送消息") ;// 字符串表示
         const binMsg = msg.serializeBinary();
         //this.progressCallback(binMsg)
         //var jsonStr =  JSON.stringify(msg);
@@ -700,6 +801,172 @@ class WsClient {
         //const users = grpOpRet.getUsersList();
         // const user = users[0];
         // str += "user id: " + user.getUserid() + "\n" ;
+        this.progressCallback(str);
+    }
+
+    onUploadResult(msg){
+        const OpRet = msg.getPlainmsg().getUploadreply();
+
+        let str = "";
+        str += "Received upload  result  message:\n" +
+            // "Status: " + friendOpRet.getStatus() + "\n" +
+            "Result: " + OpRet.getResult() + "\n" +
+            "Detail: " + OpRet.getDetail() + "\n" +
+            "chunk index: " + OpRet.getChunkindex()+ "\n" +
+            "name " + OpRet.getUuidname()+ "\n";
+
+        if (OpRet.getResult() == "sameok") {
+            this.progressCallback(OpRet.getFilename() + " 秒传完成 ");
+        }else if (OpRet.getResult() == "fail"){
+            this.progressCallback(OpRet.getFilename() + " 失败: " + OpRet.getDetail());
+        }else if (OpRet.getResult() == "chunkok"){
+            this.progressCallback(OpRet.getFilename() + " 分片完毕: " + OpRet.getChunkindex());
+            let uploader = this.fileMap.get(OpRet.getFilename());
+            if (uploader) {
+                uploader.uploadOther(OpRet.getChunkindex()+1);
+            }
+        }else if (OpRet.getResult() == "fileok"){
+            this.progressCallback(OpRet.getFilename() + "上传完毕:" + OpRet.getDetail());
+        }
+
+
+        //const users = grpOpRet.getUsersList();
+        // const user = users[0];
+        // str += "user id: " + user.getUserid() + "\n" ;
+        this.progressCallback(str);
+    }
+
+    onChatMsg(msg){
+        const chatdata = msg.getPlainmsg().getChatdata();
+
+        let str = "";
+        const data = chatdata.getData();
+        const dataStr = bytesToString(data);
+        str += "Received chat message:\n" +
+            // "Status: " + friendOpRet.getStatus() + "\n" +
+            "from: " + chatdata.getFromid() + "\n" +
+            "to: " + chatdata.getToid()  + "\n" +
+            "data: " + dataStr + "\n" +
+            "id " + chatdata.getMsgid() + "\n";
+
+        this.progressCallback(str);
+
+        if (chatdata.getChattype() == proto.model.ChatType.CHATTYPEP2P ){
+            this.progressCallback("应答回执");
+
+            const uid = chatdata.getToid();
+            const fid = chatdata.getFromid();
+            this.sendP2pMessageReply(uid, fid, chatdata.getSendid(),chatdata.getMsgid());
+        }
+
+
+    }
+
+    onChatMsgReply(msg){
+        const reply = msg.getPlainmsg().getChatreply();
+
+        let str = "";
+
+
+        str += "Received chatreply message:\n" +
+            // "Status: " + friendOpRet.getStatus() + "\n" +
+            "tm: " + reply.getSendok() + "\n" +
+            "tm1: " + reply.getRecvok() + "\n" +
+            "tm2 " + reply.getReadok() + "\n" +
+            "id "  + reply.getMsgid() + "\n";
+
+        this.progressCallback(str);
+
+    }
+
+    onQueryResult(msg){
+        const reply = msg.getPlainmsg().getCommonqueryret();
+        switch (reply.getQuerytype()){
+            case proto.model.QueryDataType.QUERYDATATYPECHATDATA:
+                this.onQueryChatData(reply);
+                break;
+        }
+
+    }
+
+    // 查询用户聊天的数据的应答
+    onQueryChatData(reply){
+        if (reply.getChattype() == proto.model.ChatType.CHATTYPEP2P){
+            this.onQueryP2pChatData(reply);
+        }else{
+            this.onQueryGroupChatData(reply);
+        }
+    }
+
+    formatTimestamp(timestamp) {
+        // 确保时间戳是数值类型
+        if (typeof timestamp !== 'number') {
+            return 'Invalid timestamp';
+        }
+
+        // 创建一个新的Date对象
+        const date = new Date(timestamp);
+
+        // 格式化日期和时间
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从0开始，所以要加1
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        // 拼接成时间字符串
+        const formattedTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+        // 返回时间字符串
+        return formattedTime;
+    }
+
+    // 同步私聊数据的结果
+    onQueryP2pChatData(reply){
+        let str = "";
+        str += "Received query chat data p2p message:\n";
+
+        const lst = reply.getChatdatalistList();
+        str += "count=" + lst.length +"\n-----------------------------\n";
+        for (let i = 0; i < lst.length; i++) {
+            const chatdata = lst[i];
+            const data = chatdata.getData();
+            const dataStr = bytesToString(data);
+            const tm = Number(chatdata.getTm());
+            str +=
+                "from: " + chatdata.getFromid() + "\n" +
+                "to: " + chatdata.getToid()  + "\n" +
+                "data: " + dataStr + "\n" +
+                "id " + chatdata.getMsgid() + "\n" +
+                "tm" + this.formatTimestamp(tm) + "\n\n";
+        }
+
+
+        this.progressCallback(str);
+    }
+
+    // 同步群聊数据的结果
+    onQueryGroupChatData(reply){
+        let str = "";
+        str += "Received query chat data p2p message:\n";
+
+        const lst = reply.getChatdatalistList();
+        str += "count=" + lst.length +"\n-----------------------------\n";
+        for (let i = 0; i < lst.length; i++) {
+            const chatdata = lst[i];
+            const data = chatdata.getData();
+            const dataStr = bytesToString(data);
+            const tm = Number(chatdata.getTm());
+            str +=
+                "from: " + chatdata.getFromid() + "\n" +
+                "to: " + chatdata.getToid()  + "\n" +
+                "data: " + dataStr + "\n" +
+                "id " + chatdata.getMsgid() + "\n" +
+                "tm" + this.formatTimestamp(tm) + "\n\n";
+        }
+
+
         this.progressCallback(str);
     }
     //////////////////////////////////////////////////////////////////////////////
@@ -1600,6 +1867,157 @@ class WsClient {
         msg.setPlainmsg(plainMsg);
         this.sendObject(msg);
     }
+
+    ///////////////////////////////////////////
+    sendUploadMessage( fileName, fileType, fileSize, chunkSize, chunkCount, chunkIndex,  data,  hashCode){
+
+        const uploadMsg = new proto.model.MsgUploadReq();
+        uploadMsg.setGroupid(0);
+        uploadMsg.setFilename(fileName);
+        uploadMsg.setFilesize(fileSize);
+        uploadMsg.setFiletype(fileType);
+        uploadMsg.setChunkindex(chunkIndex);
+        uploadMsg.setChunkcount(chunkCount);
+        uploadMsg.setChunksize(chunkSize);
+        uploadMsg.setFiledata(data);
+        uploadMsg.setHashtype("md5");
+        uploadMsg.setHashcode(hashCode);
+        uploadMsg.setSendid(1);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setUploadreq(uploadMsg);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTUPLOAD);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 开始传递文件，读取第一块并发送
+    async startUploadFile(file, tz){
+        const uploader = new FileUploader(this, file, tz)
+        this.fileMap.set(file.name, uploader);
+        uploader.uploadFirstTrunk();
+    }
+
+    // 发送私聊的消息
+    sendP2pMessage(uid, fid, txt){
+        const txtMsg = new proto.model.MsgChat();
+        txtMsg.setUserid(uid);
+        txtMsg.setFromid(uid);
+        txtMsg.setToid(fid);
+        txtMsg.setTm(getCurrentTimestamp());
+        txtMsg.setDevid("");
+        txtMsg.setSendid(1);
+        txtMsg.setMsgtype(proto.model.ChatMsgType.TEXT);
+
+        const data = stringToBytes(txt);
+        txtMsg.setData(data);
+        txtMsg.setRefmessageid(0);
+        txtMsg.setChattype(proto.model.ChatType.CHATTYPEP2P);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setChatdata(txtMsg);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTCHATMSG);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendP2pMessageReply(uid, fid, sendId, msgId){
+        const reply = new proto.model.MsgChatReply();
+        reply.setUserid(fid);
+        reply.setFromid(uid);
+        reply.setSendid(sendId);
+        reply.setMsgid(msgId);
+        reply.setRecvok(getCurrentTimestamp());
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setChatreply(reply);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTCHATREPLY);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    sendGroupMessage(uid, gid, txt){
+        const txtMsg = new proto.model.MsgChat();
+        txtMsg.setUserid(uid);
+        txtMsg.setFromid(uid);
+        txtMsg.setToid(gid);
+        txtMsg.setTm(getCurrentTimestamp());
+        txtMsg.setDevid("");
+        txtMsg.setSendid(1);
+        txtMsg.setMsgtype(proto.model.ChatMsgType.TEXT);
+
+        const data = stringToBytes(txt);
+        txtMsg.setData(data);
+        txtMsg.setRefmessageid(0);
+        txtMsg.setChattype(proto.model.ChatType.CHATTYPEGROUP);
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setChatdata(txtMsg);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTCHATMSG);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 同步当前的
+    sendSynP2pChatHistory(){
+        const query = new proto.model.MsgQuery();
+        query.setUserid(10004);
+        query.setGroupid(0);
+        query.setLittleid(0);
+        query.setSyntype(proto.model.SynType.SYNTYPEFORWARD);
+        query.setChattype(proto.model.ChatType.CHATTYPEP2P);
+        query.setQuerytype(proto.model.QueryDataType.QUERYDATATYPECHATDATA);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setCommonquery(query);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTQUERY);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
+    // 同步群聊历史数据
+    sendSynGroupChatHistory(gid){
+        const query = new proto.model.MsgQuery();
+        query.setUserid(10004);
+        query.setGroupid(gid);
+        query.setLittleid(0);
+        query.setSyntype(proto.model.SynType.SYNTYPEBACKWARD);
+        query.setChattype(proto.model.ChatType.CHATTYPEGROUP);
+        query.setQuerytype(proto.model.QueryDataType.QUERYDATATYPECHATDATA);
+
+
+        const plainMsg = new proto.model.MsgPlain();
+        plainMsg.setCommonquery(query);
+
+        // 封装为通用消息
+        const msg = new proto.model.Msg();
+        msg.setMsgtype(proto.model.ComMsgType.MSGTQUERY);
+        msg.setVersion(1);
+        msg.setPlainmsg(plainMsg);
+        this.sendObject(msg);
+    }
+
 
 }
 

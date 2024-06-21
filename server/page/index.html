@@ -46,6 +46,9 @@
     <script src="./js/model/useroperationtype.js"></script>
     <script src="./js/model/useropreq.js"></script>
     <script src="./js/model/useropresult.js"></script>
+    <script src="./js/model/syntype.js"></script>
+
+    <script src="js/spark-md5.min.js" defer></script>
 
 
 </head>
@@ -142,23 +145,23 @@
     <button onclick="queryUing()">18 查询自己所在的所有群</button>
 </div>
 
-<div><button onclick="findGroupMembers()">14 搜索群内成员 </button>
-<button onclick="sendGFindMsgMessage()">15  搜索群内消息 </button></div>
+<div><button onclick="findGroupMembers()">14 搜索群内成员 </button></div>>
 <br>
 私聊消息
 <hr/>
-<div><button onclick="sendCreateGroupMessage()">1 普通文本消息</button></div>
-<div><button onclick="sendCreateGroupMessage()">2 消息应答</button></div>
-<div><button onclick="sendCreateGroupMessage()">2 私聊消息同步</button></div>
+<div><button onclick="p2pChat()">1 普通文本消息</button></div>
+<div><button onclick="getP2pHistory()">2 私聊消息同步</button></div>
 <br>
 群组消息
 <hr/>
-<div><button onclick="sendCreateGroupMessage()">1 普通文本消息</button></div>
-<div><button onclick="sendCreateGroupMessage()">2 消息应答</button></div>
-<div><button onclick="sendCreateGroupMessage()">2 私聊消息同步</button></div>
+<div><button onclick="sendToGroup()">1 普通文本消息</button></div>
+<div><button onclick="getGroupHistory()">2 群消息同步</button></div>
 
 <br>
 上传文件消息
+<input type="file" id="fileInput" />
+<p id="hashOutput"></p>
+<button onclick="uploadFile()">Upload</button>
 <hr/>
 
 <br>
@@ -470,6 +473,49 @@
         client.sendUingMessage();
     }
 
+
+    // 引入 spark-md5 库
+    //import SparkMD5 from 'spark-md5';
+
+
+    async function uploadFile() {
+
+        const hashOutput = document.getElementById('hashOutput');
+        const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+        if (!file) {
+            alert('Please choose a file.');
+            return;
+        }
+
+        const chunkSize = 1024 * 1024; // 1MB chunks
+        await  client.startUploadFile(file, chunkSize);
+
+    }
+
+    // 发送私聊消息
+    function p2pChat(){
+        client.sendP2pMessage("10004", "10003", "hello, have a nice day!");
+    }
+
+    // 发送应答
+    function p2pReply(){
+
+    }
+
+    // 发送群聊消息
+    function sendToGroup(){
+        client.sendGroupMessage("10004", "1008", "hello, have a nice day!")
+    }
+
+    //
+    function getP2pHistory(){
+        client.sendSynP2pChatHistory();
+    }
+
+    function getGroupHistory(){
+        client.sendSynGroupChatHistory("1008");
+    }
 
 </script>
 </body>

@@ -154,7 +154,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 	tryPushToUserMsgCache(msgChat.ToId, msgChat.MsgId, msg)
 	// 转发用户
 	trySendMsgToUser(msgChat.ToId, msg)
-	trySendMsgToMe(msgChat.ToId, msg, session)
+	trySendMsgToMe(session.UserID, msg, session)
 
 }
 
@@ -190,7 +190,7 @@ func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, sess
 			PlainMsg: &msgPlain,
 		},
 	}
-	session.SendMessage(msg)
+	session.SendMessage(&msg)
 }
 
 // 群消息
@@ -245,15 +245,15 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	}
 
 	sendBackChatMsgReply(true, "ok", msgChat, session)
-	notifyGroupMembers(group.GroupId, msg)
+	sendToGroupMembersExceptMe(group.GroupId, msg, session)
 }
 
 // 6 消息应答：私聊消息需要确认
 func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 	// 直接更新数据库，并转发消息
 	replyMsg := msg.GetPlainMsg().GetChatReply()
-	if replyMsg != nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "", nil, session)
+	if replyMsg == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "reply is null", nil, session)
 		return
 	}
 
@@ -303,6 +303,10 @@ func onQueryP2PChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 	pk := db.ComputePk(session.UserID)
 	var lst []model.PChatDataStore
 	var err error
+	if queryMsg.BigId == 0 {
+		queryMsg.BigId = Globals.snow.GenerateID()
+	}
+
 	switch queryMsg.SynType {
 	case pbmodel.SynType_SynTypeForward:
 		lst, err = Globals.scyllaCli.FindPChatMsgForward(pk, session.UserID, queryMsg.LittleId, 100)
@@ -394,7 +398,7 @@ func onQueryP2PChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 			PlainMsg: &msgPlain,
 		},
 	}
-	session.SendMessage(msg)
+	session.SendMessage(&msg)
 
 }
 
@@ -433,7 +437,7 @@ func sendErrQueryChatDataResult(detail string, queryMsg *pbmodel.MsgQuery, sessi
 			PlainMsg: &msgPlain,
 		},
 	}
-	session.SendMessage(msg)
+	session.SendMessage(&msg)
 }
 
 // 查询群聊
@@ -449,6 +453,10 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "not a member", nil, session)
 		sendErrQueryChatDataResult("not member of group", queryMsg, session)
 		return
+	}
+
+	if queryMsg.BigId == 0 {
+		queryMsg.BigId = Globals.snow.GenerateID()
 	}
 
 	pk := db.ComputePk(queryMsg.GroupId)
@@ -533,7 +541,7 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 			PlainMsg: &msgPlain,
 		},
 	}
-	session.SendMessage(msg)
+	session.SendMessage(&msg)
 
 }
 
@@ -626,7 +634,7 @@ func onQueryChatReply(queryMsg *pbmodel.MsgQuery, session *Session) {
 			PlainMsg: &msgPlain,
 		},
 	}
-	session.SendMessage(msg)
+	session.SendMessage(&msg)
 }
 
 // 重发消息
