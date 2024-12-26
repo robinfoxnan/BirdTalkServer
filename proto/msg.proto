@@ -1,7 +1,7 @@
 syntax = "proto3";
 import "user.proto";
 // package com.birdfish.model;
-package model;
+package com.bird2fish.birdtalksdk.pbmodel;
 option go_package = "server/pbmodel";
 //option go_package = "client/pbmodel";
 // protoc -I. --go_out=../ --go-grpc_out=../ msg.proto
@@ -284,7 +284,7 @@ message MsgError{
   string detail = 2;
   int64  sendId = 3;
   int64  msgId = 4;
-  ComMsgType msgType = 5;
+  ErrorMsgType msgType = 5;
   map<string, string> params = 9;
 }
 

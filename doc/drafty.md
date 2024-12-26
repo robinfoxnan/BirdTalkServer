@@ -14,16 +14,38 @@
 > second [#hashtag](#)<br/>
 
 上面的格式可以用下面的方式描述:
+
+```
+draft: {txt: ' ',fmt: [{tp: 'null', at: 0, len: 1, key: 0}],ent: [{tp: 'IM', data: {ref=content://com.miui.gallery.open/raw/%2Fstorage%2Femulated%2F0%2FDCIM%2FCamera_XHS_1733128209586.jpg, size=844681, mime=image/jpeg, width=1270, height=1920}}]}
+```
+
+
+
 ```js
 {
    "txt":  "this is bold, code and italic, strike combined bold and italic an url: https://www.example.com/abc#fragment and another www.tinode.co this is a @mention and a #hashtag in a string second #hashtag",
    "fmt": [
-       { "at":8, "len":4,"tp":"ST" },{ "at":14, "len":4, "tp":"CO" },{ "at":23, "len":6, "tp":"EM"},
-       { "at":31, "len":6, "tp":"DL" },{ "tp":"BR", "len":1, "at":37 },{ "at":56, "len":6, "tp":"EM" },
-       { "at":47, "len":15, "tp":"ST" },{ "tp":"BR", "len":1, "at":62 },{ "at":120, "len":13, "tp":"EM" },
-       { "at":71, "len":36, "key":0 },{ "at":120, "len":13, "key":1 },{ "tp":"BR", "len":1, "at":133 },
-       { "at":144, "len":8, "key":2 },{ "at":159, "len":8, "key":3 },{ "tp":"BR", "len":1, "at":179 },
-       { "at":187, "len":8, "key":3 },{ "tp":"BR", "len":1, "at":195 }
+       { "at":8, "len":4,"tp":"ST" },
+       { "at":14, "len":4, "tp":"CO" },
+       { "at":23, "len":6, "tp":"EM"},
+       { "at":31, "len":6, "tp":"DL" },
+       { "tp":"BR", "len":1, "at":37 },
+       
+       { "at":56, "len":6, "tp":"EM" },
+       { "at":47, "len":15, "tp":"ST" },
+       { "tp":"BR", "len":1, "at":62 },
+       
+       { "at":120, "len":13, "tp":"EM" },
+       { "at":71, "len":36, "key":0 },
+       { "at":120, "len":13, "key":1 },
+       { "tp":"BR", "len":1, "at":133 },
+       
+       { "at":144, "len":8, "key":2 },
+       { "at":159, "len":8, "key":3 },
+       { "tp":"BR", "len":1, "at":179 },
+       
+       { "at":187, "len":8, "key":3 },
+       { "tp":"BR", "len":1, "at":195 }
    ],
    "ent": [
        { "tp":"LN", "data":{ "url":"https://www.example.com/abc#fragment" } },

@@ -1,6 +1,6 @@
 syntax = "proto3";
 //package com.birdfish.model;
-package model;
+package com.bird2fish.birdtalksdk.pbmodel;
 option go_package = "server/pbmodel";
 //option go_package = "client/pbmodel";
 // protoc -I. --go_out=../ --go-grpc_out=../ user.proto
