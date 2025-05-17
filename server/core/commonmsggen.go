@@ -119,6 +119,8 @@ func sendBackExchange2(session *Session) {
 	fmt.Println("local public key is:", string(session.KeyEx.PublicKey))
 	fmt.Println("share key is: ", session.KeyEx.SharedKeyHash)
 	fmt.Println("share key print is: ", session.KeyEx.SharedKeyPrint)
+	fmt.Println("tm string is: ", tmStr)
+	fmt.Println("tm temp data is: ", checkData)
 
 	msgPlain := pbmodel.MsgPlain{
 		Message: &pbmodel.MsgPlain_KeyEx{

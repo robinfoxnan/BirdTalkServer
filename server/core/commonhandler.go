@@ -277,7 +277,7 @@ func handleKeyExchange(msg *pbmodel.Msg, session *Session) {
 
 		// 保存指纹到redis
 		//fmt.Printf("check data ok! tm = %v, tmstr= %v \n", tm, tmStr)
-		Globals.Logger.Debug("check data ok!", zap.String("tm", tm), zap.String("check tm", tmStr))
+		Globals.Logger.Debug("key exchage stage3, check data ok!", zap.String("tm", tm), zap.String("check tm", tmStr))
 		err = Globals.redisCli.SaveToken(0, session.KeyEx)
 		if err != nil {
 			Globals.Logger.Error("exchange stage3 save token err.")

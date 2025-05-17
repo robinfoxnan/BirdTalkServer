@@ -2,7 +2,8 @@ redis:
     redis_host: 127.0.0.1:6379
     redis_pwd:
 mongoDb:
-    mongo_host: mongodb://admin:123456@127.0.0.1:27017
+    #mongo_host: mongodb://admin:123456@127.0.0.1:27017
+    mongo_host: mongodb://127.0.0.1:27017
     db_name: birdtalk
 scyllaDb:
     scylla_host: 8.140.203.92:9042

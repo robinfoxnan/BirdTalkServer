@@ -72,8 +72,13 @@ func startServer() {
 	//err := router.Run(":80")
 
 	// 启动HTTP/2服务器
+
+	ip := core.Globals.Config.Server.Host
+	port := core.Globals.Config.Server.Port
+	host := fmt.Sprintf("%s:%d", ip, port)
+	fmt.Println(host)
 	server := &http.Server{
-		Addr:    ":443",
+		Addr:    host, // 0.0.0.0:7817
 		Handler: router,
 		TLSConfig: &tls.Config{
 			InsecureSkipVerify: true, // 不验证客户端证书
@@ -95,6 +100,7 @@ func main() {
 		fmt.Println("load config err!")
 		return
 	}
+
 	//fmt.Printf("%v", core.Globals.Config)
 	core.Globals.InitWithConfig()
 

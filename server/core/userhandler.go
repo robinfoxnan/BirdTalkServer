@@ -157,6 +157,8 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 			userInfo,
 			true, "waitcode", session)
 		session.SetStatus(model.UserStatusRegister | model.UserStatusValidate)
+		// 2025-05-17 修正
+		return
 
 	} else {
 		// 如果设置了邮件，也需要检查，防止乱设置
@@ -626,10 +628,12 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 
 				lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
 				if err != nil || len(lst) < 1 {
-					sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-						"email is not correct, can't find a user using it",
-						map[string]string{"field": userInfo.Email},
-						session)
+					//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+					//	"email is not correct, can't find a user using it",
+					//	map[string]string{"field": userInfo.Email},
+					//	session)
+					// 2025-05-17 改为如果使用邮件登录，直接注册
+					handleUserRegister(msg, session)
 					return
 				}
 				userInfoDb = lst[0]
