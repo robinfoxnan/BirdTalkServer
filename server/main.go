@@ -46,6 +46,7 @@ func mapHTMLFiles(router *gin.Engine, dir string) {
 	}
 }
 
+// https://127.0.0.1:7817/index
 func startServer() {
 	router := gin.Default()
 
@@ -103,6 +104,10 @@ func main() {
 
 	//fmt.Printf("%v", core.Globals.Config)
 	core.Globals.InitWithConfig()
+
+	// test
+	//city, err := core.Globals.GeoHelper.GetCityByIP("8.140.203.92")
+	//fmt.Println(city)
 
 	// init db
 	err = core.Globals.InitDb()

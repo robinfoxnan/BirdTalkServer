@@ -325,7 +325,7 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 		// 计算MD5
 		hashInBytes := sFile.Hash.Sum(nil)
 		hashString := hex.EncodeToString(hashInBytes)
-		//fmt.Printf("本地计算的md5 = %s \n", hashString)
+		fmt.Printf("本地计算的md5 = %s, 对方的=%s \n", hashString, sFile.HashCode)
 		if hashString != sFile.HashCode {
 			cleanSFile(sFile, session)
 			Globals.Logger.Error("md5 not same", zap.String("file", hashString), zap.String("remote", sFile.HashCode))

@@ -16,6 +16,7 @@ require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/mattn/go-colorable v0.1.13
 	github.com/natefinch/lumberjack v2.0.0+incompatible
+	github.com/oschwald/geoip2-golang v1.13.0
 	github.com/scylladb/gocqlx/v2 v2.8.0
 	github.com/yanyiwu/gojieba v1.3.0
 	go.mongodb.org/mongo-driver v1.14.0
@@ -48,6 +49,7 @@ require (
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.32.0 // indirect
+	github.com/oschwald/maxminddb-golang v1.13.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/scylladb/go-reflectx v1.0.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
@@ -60,7 +62,7 @@ require (
 	golang.org/x/arch v0.3.0 // indirect
 	golang.org/x/net v0.20.0 // indirect
 	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240123012728-ef4313101c80 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect

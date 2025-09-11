@@ -51,6 +51,7 @@ type ServerConf struct {
 	ClusterMode  bool   `yaml:"cluster_mode"`
 	AvatarFont   string `yaml:"avatar_font"`
 	FileBasePath string `yaml:"file_base_path"`
+	GeoLite2Path string `yaml:"geolite2_path"` // ip 数据库
 }
 
 type LocalConfig struct {

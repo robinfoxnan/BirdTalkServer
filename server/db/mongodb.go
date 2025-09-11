@@ -339,26 +339,32 @@ func (me *MongoDBExporter) UpdateUserInfo(u *pbmodel.UserInfo) (int64, error) {
 
 // 注意，这里需要自己拼接params.key这样的关键字
 // 例如删除一个"params.ip"
+// 2025-09-11 updata ,这样的处理方式可以避免当prarams为null时候报错。
+// 要实现「params 为空时自动替换成 {} 再合并子字段」，必须用 update pipeline（MongoDB 4.2+ 支持）。
 func (me *MongoDBExporter) UpdateUserInfoPart(id int64, setData map[string]interface{}, unsetData []string) (int64, error) {
 	collection := me.db.Collection(UserTableName)
 	filter := bson.M{"userid": id} // 过滤条件
 
-	// 初始化 update 变量
 	update := bson.M{
 		"$set":   bson.M{},
 		"$unset": bson.M{},
 	}
+
 	for k, v := range setData {
-		update["$set"].(bson.M)[k] = v
+		if strings.HasPrefix(k, "params.") {
+			// 直接使用 "params.xxx" 形式
+			update["$set"].(bson.M)[k] = v
+		} else {
+			update["$set"].(bson.M)[k] = v
+		}
 	}
 
 	for _, k := range unsetData {
-		update["$unset"].(bson.M)[k] = nil
+		update["$unset"].(bson.M)[k] = ""
 	}
 
 	result, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		// 处理错误
 		return 0, err
 	}
 

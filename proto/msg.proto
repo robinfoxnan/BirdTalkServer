@@ -84,7 +84,7 @@ enum ChatMsgType {
   // 其他类型...
 }
 
-// 私聊的加密方式
+// 私聊的加密
 enum EncryptType{
   PLAIN = 0;
   CUSTOM = 1;

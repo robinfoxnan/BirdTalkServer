@@ -29,8 +29,9 @@ type GlobalVars struct {
 
 	emailWorkerManager *Manager[Task, *EmailWorker]
 
-	Logger *zap.Logger
-	Config *LocalConfig
+	Logger    *zap.Logger
+	Config    *LocalConfig
+	GeoHelper *GeoIPHelper
 }
 
 var Globals GlobalVars
@@ -43,6 +44,7 @@ func init() {
 	Globals.grc = model.NewGroupCache()
 	Globals.Logger = utils.CreateLogger()
 	Globals.segment = utils.NewSegment()
+	Globals.GeoHelper = nil
 
 }
 
@@ -67,6 +69,10 @@ func (g *GlobalVars) InitWithConfig() error {
 		Globals.Logger.Error("load font error", zap.Error(err))
 	}
 
+	g.GeoHelper, err = NewGeoIPHelper(Globals.Config.Server.GeoLite2Path)
+	if err != nil {
+		Globals.Logger.Error("load geolite2 error", zap.Error(err))
+	}
 	return nil
 }
 

@@ -451,6 +451,15 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 		session.SetStatus(model.UserStatusChangeInfo | model.UserStatusValidate)
 	}
 
+	// 通过IP来检查用户地区
+	if session.RemoteAddr != "" {
+		fmt.Println("remote addr:", session.RemoteAddr)
+		city, err := Globals.GeoHelper.GetCityByIP(session.RemoteAddr)
+		if err == nil {
+			setDataMongo["region"] = city.City
+		}
+	}
+
 	if len(setDataMongo) > 0 {
 		_, err := Globals.mongoCli.UpdateUserInfoPart(session.UserID, setDataMongo, nil)
 		if err != nil {
