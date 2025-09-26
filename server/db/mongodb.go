@@ -184,6 +184,10 @@ func (me *MongoDBExporter) FindUserByName(keyword string) ([]*pbmodel.UserInfo, 
 	return me.FindUserByField("username", keyword)
 }
 
+func (me *MongoDBExporter) FindUserByNick(keyword string) ([]*pbmodel.UserInfo, error) {
+	return me.FindUserByField("nickname", keyword)
+}
+
 func (me *MongoDBExporter) FindUserByEmail(keyword string) ([]*pbmodel.UserInfo, error) {
 	return me.FindUserByField("email", keyword)
 }

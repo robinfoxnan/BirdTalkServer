@@ -54,7 +54,7 @@
 </head>
 <body>
 <div>
-    连接地址：<input type="text" id="urlInput" style="width: 400px; height: 30px;" value="wss://127.0.0.1:7817/ws?code=plain">
+    连接地址：<input type="text" id="urlInput" style="width: 400px; height: 30px;" value="wss://192.168.1.2:7817/ws?code=plain">
     <button onclick="connectWebSocket()">连接</button>
 </div>
 
@@ -297,7 +297,7 @@
     // 4. 发送验证码
     function sendCode() {
         if (client) {
-            client.sendCodeMessage();
+            client.sendCodeMessage("robin-fox@sohu.com");
         }
     };
 

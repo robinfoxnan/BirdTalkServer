@@ -1141,10 +1141,11 @@ class WsClient {
     }
 
     // 4. 发送验证码，所有发送验证码的都是一样的，服务端跟踪当前
-    sendCodeMessage() {
+    sendCodeMessage(email) {
         showMessage("发送验证消息")
         const userInfo = new proto.model.UserInfo();
         userInfo.setUserid(0);
+        userInfo.setEmail(email);
 
         // 验证码
         const regOpReq = new proto.model.UserOpReq();

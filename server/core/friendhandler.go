@@ -139,6 +139,9 @@ func handleFriendFind(msg *pbmodel.Msg, session *Session) {
 		userList, err = findUserMongoRedis(id)
 	case "name":
 		userList, err = Globals.mongoCli.FindUserByName(value)
+		if err != nil || userList == nil || len(userList) == 0 {
+			userList, err = Globals.mongoCli.FindUserByNick(value)
+		}
 	case "email":
 		userList, err = Globals.mongoCli.FindUserByEmail(value)
 	case "phone":
@@ -659,11 +662,11 @@ func handleFriendList(msg *pbmodel.Msg, session *Session) {
 	flst := FriendStore2UserInfo(lst)
 	filterUserInfo(flst, "")
 
-	sendBackFriendOpResult(pbmodel.UserOperationType_SetFriendMemo,
+	sendBackFriendOpResult(pbmodel.UserOperationType_ListFriends,
 		"ok",
 		nil,
 		flst,
-		nil,
+		params,
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 
 }

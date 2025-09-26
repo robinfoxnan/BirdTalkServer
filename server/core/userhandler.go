@@ -635,47 +635,79 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 					return
 				}
 
-				lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
-				if err != nil || len(lst) < 1 {
-					//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
-					//	"email is not correct, can't find a user using it",
-					//	map[string]string{"field": userInfo.Email},
-					//	session)
-					// 2025-05-17 改为如果使用邮件登录，直接注册
-					handleUserRegister(msg, session)
-					return
-				}
-				userInfoDb = lst[0]
-				session.UserID = userInfoDb.UserId
-				session.TempUserInfo = userInfoDb
-				// 检查是否可以用
-				ret := checkUserUsable(userInfoDb, session)
-				if !ret {
-					return
-				}
-
-				// 生成临时
-				code := utils.GenerateCheckCode(5)
-
-				session.SetKeyValue("code", code)
-				// 使用后台将验证码发送给用户
-				SendEmailCode(session, userInfoDb.Email, code)
-
-				session.SetStatus(model.UserStatusLogin | model.UserStatusValidate)
-				// 通知用户, 这里还不能通知用户真实数据
-				//if userInfoDb.Params != nil {
-				//	delete(userInfoDb.Params, "pwd")
-				//}
-				SendBackUserOp(pbmodel.UserOperationType_Login,
-					userInfo,
-					true, "waitcode", session)
-				return
 			case "phone":
 				loginMode = 3
 
 			default:
 				loginMode = 1
 			}
+		}
+	}
+
+	// 处理填写的邮件名
+	if loginMode == 2 {
+		lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
+		if err != nil || len(lst) < 1 {
+			//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+			//	"email is not correct, can't find a user using it",
+			//	map[string]string{"field": userInfo.Email},
+			//	session)
+			// 2025-05-17 改为如果使用邮件登录，直接注册
+			handleUserRegister(msg, session)
+			return
+		}
+		userInfoDb = lst[0]
+		session.UserID = userInfoDb.UserId
+		session.TempUserInfo = userInfoDb
+		// 检查是否可以用
+		ret := checkUserUsable(userInfoDb, session)
+		if !ret {
+			return
+		}
+
+		// 尝试使用口令登录
+		pwdUser, okPwd := userInfo.Params["pwd"]
+
+		if okPwd {
+			pwdDb, okDbPwd := userInfoDb.Params["pwd"]
+			if !okDbPwd {
+				sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+					"user pwd in db is nil",
+					map[string]string{"field": "pwd", "value": pwdUser},
+					session)
+				return
+			}
+			// 用户口令不对
+			if pwdUser != pwdDb {
+				sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
+					"pwd is not correct",
+					map[string]string{"field": "pwd", "value": pwdUser},
+					session)
+				return
+			}
+			session.UserID = userInfoDb.UserId
+			session.TempUserInfo = userInfoDb
+			onLoginSuccess(session, true)
+			return // 使用邮件和口令登录成功
+
+		} else {
+			// 没有密码就是使用验证码登录
+			// 生成临时
+			code := utils.GenerateCheckCode(5)
+
+			session.SetKeyValue("code", code)
+			// 使用后台将验证码发送给用户
+			SendEmailCode(session, userInfoDb.Email, code)
+
+			session.SetStatus(model.UserStatusLogin | model.UserStatusValidate)
+			// 通知用户, 这里还不能通知用户真实数据
+			//if userInfoDb.Params != nil {
+			//	delete(userInfoDb.Params, "pwd")
+			//}
+			SendBackUserOp(pbmodel.UserOperationType_Login,
+				userInfo,
+				true, "waitcode", session)
+			return
 		}
 	}
 
@@ -961,6 +993,8 @@ func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo
 			PlainMsg: &msgPlain,
 		},
 	}
+
+	Globals.Logger.Debug("user login ok", zap.Any("msg", msg))
 	session.SendMessage(msg)
 	return nil
 }

@@ -180,7 +180,7 @@ func createUser(userInfo *pbmodel.UserInfo, session *Session) error {
 	uid, err := Globals.redisCli.GetNextUserId()
 	if err != nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside),
-			"email is not correct",
+			"redis get next id err",
 			map[string]string{"field": userInfo.Email},
 			session)
 		Globals.Logger.Error("redis get next user id error")
@@ -662,7 +662,31 @@ func checkFriendIsFan(fid, uid int64) (bool, error) {
 	return true, nil
 }
 
-// 格式转换
+// 还是应该在服务器端将各个用户的信息汇总好，不然，太占用流量
+func fillFriendDetails(lst []*pbmodel.UserInfo) {
+	// 这个从redis输入更好些, 这里遍历时候使用的索引，需要更改内容，不要使用副本
+	for index, _ := range lst {
+		user, b, err := findUser(lst[index].UserId)
+		if b {
+			lst[index].Age = user.Age
+			lst[index].UserName = user.UserName
+			lst[index].NickName = user.NickName
+			lst[index].Region = user.Region
+			lst[index].Icon = user.Icon
+			lst[index].Intro = user.Intro
+			lst[index].Gender = user.Gender
+			lst[index].Email = user.Email
+			//lst[index].Phone = user.Phone
+
+		}
+		if err != nil {
+			Globals.Logger.Error("fillFriendDetails() -> findUser meet err", zap.Error(err))
+		}
+
+	}
+}
+
+// 默认查询到的是数据库中的信息，么有用户全部信息
 func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
 	if lst == nil {
 		return nil
@@ -683,6 +707,8 @@ func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
 		}
 		retLst[index] = &data
 	}
+
+	fillFriendDetails(retLst)
 
 	return retLst
 }
