@@ -14,9 +14,9 @@ import (
 // 用户与群组消息一共是6大类，
 func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 
-	if msg.MsgType != pbmodel.ComMsgType_MsgTUpload {
-		fmt.Println(msg)
-	}
+	//if msg.MsgType != pbmodel.ComMsgType_MsgTUpload && msg.MsgType != pbmodel.ComMsgType_MsgTChatMsg {
+	//	fmt.Sprintf("recv msg from:%d %v  \n", session.UserID, msg)
+	//}
 
 	keyPrint := msg.GetKeyPrint() // 加密指纹，明文传输需要先检查类型是否正确
 	if keyPrint == 0 {

@@ -19,6 +19,10 @@ import (
 
 func handleFileUpload(msg *pbmodel.Msg, session *Session) {
 	uploadMsg := msg.GetPlainMsg().GetUploadReq()
+
+	Globals.Logger.Debug("File Upload msg:", zap.Int64("user id", session.UserID),
+		zap.String("filename", uploadMsg.FileName), zap.String("hash", uploadMsg.HashCode), zap.Int64("send id", uploadMsg.SendId))
+
 	if uploadMsg == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "upload request is null", nil, session)
 		return

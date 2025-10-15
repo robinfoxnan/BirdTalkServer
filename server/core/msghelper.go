@@ -1,6 +1,9 @@
 package core
 
-import "birdtalk/server/pbmodel"
+import (
+	"birdtalk/server/pbmodel"
+	"fmt"
+)
 
 func tryPushToUserMsgCache(uid int64, msgId int64, msg *pbmodel.Msg) {
 	user, ok := Globals.uc.GetUser(uid)
@@ -12,16 +15,39 @@ func tryPushToUserMsgCache(uid int64, msgId int64, msg *pbmodel.Msg) {
 // 尝试发送到对方用户
 func trySendMsgToUser(uid int64, msg *pbmodel.Msg) {
 	// 现在本机查找
+	//Globals.Logger.Debug("enter funtion trySendMsgToUser()", zap.Int64("uid", uid))
+	//Globals.Logger.Debug("准备查询用户", zap.Int64("uid", uid))
 	user, ok := Globals.uc.GetUser(uid)
+	//Globals.Logger.Debug("查询用户完成", zap.Bool("ok", ok), zap.Any("user是否为空", user == nil))
+
 	if ok && user != nil {
+		if user.SessionId == nil || len(user.SessionId) == 0 {
+			txtInfo := fmt.Sprintf("user(%d) active session  list is null ", uid)
+			Globals.Logger.Debug(txtInfo)
+		}
+
 		for _, sid := range user.SessionId {
 
 			sess, b := Globals.ss.Get(sid)
 			if b && sess != nil {
+
+				// 打印函数
+				txtInfo := fmt.Sprintf("send to user(%d) %s", uid, msg.MsgType.String())
+				Globals.Logger.Info(txtInfo)
+				//Globals.Logger.Debug("send msg to user",
+				//	zap.Int64("user", uid),
+				//	zap.Any("msg", msg))
+
 				sess.SendMessage(msg)
+			} else {
+				txtInfo := fmt.Sprintf("can't find active session to user(%d)", uid)
+				Globals.Logger.Debug(txtInfo)
 			}
 		}
-		return
+
+	} else {
+		txtInfo := fmt.Sprintf("can't find user(%d) in cache!!", uid)
+		Globals.Logger.Debug(txtInfo)
 	}
 
 	// TODO: 如果是集群模式，则应该查找并转发

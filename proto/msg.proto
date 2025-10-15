@@ -212,7 +212,7 @@ message MsgUploadReq {
   int32  chunkIndex = 8;   // 块编号
   int32  chunkCount = 9;   // 总块数
   int32  chunkSize = 10;   // 切块大小
-  int64  groupId = 11;
+  int64  groupId = 11;     // 0是通用文件，否则为用户私聊，群组文件
 }
 
 // 上传文件的响应消息

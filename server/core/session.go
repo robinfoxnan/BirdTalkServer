@@ -214,7 +214,7 @@ func wsWrite(ws *websocket.Conn, mt int, msg interface{}) error {
 		case string:
 			bits = []byte(v)
 		case *pbmodel.Msg:
-			fmt.Println(msg)
+			//fmt.Println(msg)
 			bits, err = proto.Marshal(v)
 			if err != nil {
 				fmt.Println("Error marshaling message:", err)
@@ -376,7 +376,9 @@ func (sess *Session) ReadLoop() {
 				fmt.Println("Received message too big:", e)
 			} else {
 				// 其他错误情况，例如连接关闭或者其他错误，需要根据实际情况处理
-				fmt.Printf("ws: readLoop error, sid=%v, err=%v \n", sess.Sid, err)
+				//fmt.Printf("ws: readLoop error, sid=%v, err=%v \n", sess.Sid, err)
+				txtInfo := fmt.Sprintf("user(%d) session(%d) close here, because ws:readLoop() error, err=%v", sess.UserID, sess.Sid, err)
+				Globals.Logger.Debug(txtInfo)
 			}
 			return
 		}

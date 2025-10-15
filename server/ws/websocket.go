@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"log"
 	"net/http"
 	"strings"
 )
 
 func HandleWebSocket(c *gin.Context) {
 	var upgrader = websocket.Upgrader{
-		ReadBufferSize:  1024,
-		WriteBufferSize: 1024,
+		ReadBufferSize:  64 * 1024, // 64KB
+		WriteBufferSize: 64 * 1024,
 		CheckOrigin: func(r *http.Request) bool {
 			//fmt.Println("upgrade protocal to websocket", r.Header["User-Agent"])
 			return true
@@ -24,6 +25,12 @@ func HandleWebSocket(c *gin.Context) {
 		fmt.Println(err)
 		return
 	}
+
+	conn.SetReadLimit(200 * 1024 * 1024) // 200MB
+	conn.SetCloseHandler(func(code int, text string) error {
+		log.Printf("close from peer: %d %s", code, text)
+		return nil
+	})
 
 	codetype := c.Query("code")
 	fmt.Println("code:", codetype)

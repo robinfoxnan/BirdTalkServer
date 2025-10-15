@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"strings"
+	"time"
 )
 
 // 当前协议版本
@@ -92,6 +93,9 @@ func (g *GlobalVars) InitDb() error {
 		fmt.Println(err)
 		return err
 	}
+
+	// 2025-01-12 added by robin
+	g.scyllaCli.StartAutoReconnect(hosts, g.Config.ScyllaDb.User, g.Config.ScyllaDb.Pwd, 10*time.Second)
 
 	g.mongoCli, err = db.NewMongoDBExporter(g.Config.MongoDb.MongoHost, g.Config.MongoDb.DbName)
 	if err != nil {

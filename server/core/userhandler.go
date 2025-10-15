@@ -994,6 +994,8 @@ func SendBackUserOp(opCode pbmodel.UserOperationType, userInfo *pbmodel.UserInfo
 		},
 	}
 
+	txtInfo := fmt.Sprintf("user(%d) login ok", session.UserID)
+	Globals.Logger.Info(txtInfo)
 	Globals.Logger.Debug("user login ok", zap.Any("msg", msg))
 	session.SendMessage(msg)
 	return nil

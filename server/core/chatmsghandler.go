@@ -5,10 +5,90 @@ import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"fmt"
 	"go.uber.org/zap"
 	"strconv"
+	"strings"
 	"time"
+	"unicode"
 )
+
+// String 方法实现 fmt.Stringer 接口，用于格式化输出 MsgChat 结构体信息
+func msg2String(m *pbmodel.MsgChat) string {
+	if m == nil {
+		return "MsgChat(nil)"
+	}
+
+	// 构建字符串缓冲区，提高拼接效率
+	var buf strings.Builder
+
+	// 基础字段
+	buf.WriteString(fmt.Sprintf("MsgChat{msgId: %d, userId: %d, fromId: %d, toId: %d, tm: %d (time: %s), ",
+		m.MsgId,
+		m.UserId,
+		m.FromId,
+		m.ToId,
+		m.Tm,
+		time.Unix(m.Tm/1000, 0).Format("2006-01-02 15:04:05"), // 假设时间戳是毫秒级
+	))
+
+	// 设备和发送相关字段
+	buf.WriteString(fmt.Sprintf("devId: %q, sendId: %d, ", m.DevId, m.SendId))
+
+	// 枚举类型字段（假设这些枚举都实现了 String() 方法）
+	buf.WriteString(fmt.Sprintf("msgType: %s, ", m.MsgType))
+
+	// 消息内容（处理二进制数据）
+	if m.MsgType != pbmodel.ChatMsgType_VOICE {
+		dataStr := "[]byte"
+		if len(m.Data) > 0 {
+			// 尝试将 bytes 解析为字符串，否则显示长度
+			if str := string(m.Data); isPrintable(str) {
+				dataStr = fmt.Sprintf("%q", str)
+			} else {
+				dataStr = fmt.Sprintf("bytes(len=%d)", len(m.Data))
+			}
+		}
+		buf.WriteString(fmt.Sprintf("data: %s, ", dataStr))
+	}
+
+	// 优先级和引用消息
+	buf.WriteString(fmt.Sprintf("priority: %s, refMessageId: %d, ", m.Priority, m.RefMessageId))
+
+	// 状态相关字段
+	buf.WriteString(fmt.Sprintf("status: %s, sendReply: %d, recvReply: %d, readReply: %d, ",
+		m.Status, m.SendReply, m.RecvReply, m.ReadReply,
+	))
+
+	// 加密和聊天类型
+	buf.WriteString(fmt.Sprintf("encType: %s, chatType: %s, subMsgType: %d, keyPrint: %d, ",
+		m.EncType, m.ChatType, m.SubMsgType, m.KeyPrint,
+	))
+
+	// 处理 params 映射
+	buf.WriteString("params: {")
+	first := true
+	for k, v := range m.Params {
+		if !first {
+			buf.WriteString(", ")
+		}
+		buf.WriteString(fmt.Sprintf("%q: %q", k, v))
+		first = false
+	}
+	buf.WriteString("}}")
+
+	return buf.String()
+}
+
+// 辅助函数：判断字符串是否可打印
+func isPrintable(s string) bool {
+	for _, r := range s {
+		if !unicode.IsPrint(r) {
+			return false
+		}
+	}
+	return true
+}
 
 // 5 聊天的信息，这里有3类，给自己的，私聊一对一的，群聊的；
 func handleChatMsg(msg *pbmodel.Msg, session *Session) {
@@ -25,6 +105,10 @@ func handleChatMsg(msg *pbmodel.Msg, session *Session) {
 		onSelfChatMessage(msg, session)
 		return
 	}
+
+	// 单独的打印函数
+	txtInfo := fmt.Sprintf("receive chat msg(%d) from %d -> %d", msgChat.SendId, msgChat.FromId, msgChat.ToId)
+	Globals.Logger.Debug(txtInfo, zap.String("msg", msg2String(msgChat)))
 
 	// 私聊消息
 	if msgChat.ChatType == pbmodel.ChatType_ChatTypeP2P {
@@ -161,15 +245,16 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 // 应答保存完毕
 func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, session *Session) {
 
+	tm := utils.GetTimeStamp()
 	msgChatReply := pbmodel.MsgChatReply{
 		MsgId:    msgChat.MsgId,
 		SendId:   msgChat.SendId,
-		SendOk:   msgChat.Tm,
+		SendOk:   tm,
 		RecvOk:   0,
 		ReadOk:   0,
 		ExtraMsg: "save ok",
-		UserId:   session.UserID, //
-		FromId:   0,              // 从服务器处得到的应答
+		UserId:   session.UserID, // 给这个用户应答
+		FromId:   msgChat.ToId,   // 从服务器处得到的应答
 		Params:   nil,
 	}
 
@@ -183,7 +268,7 @@ func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, sess
 	msg := pbmodel.Msg{
 		Version:  int32(ProtocolVersion),
 		KeyPrint: 0,
-		Tm:       utils.GetTimeStamp(),
+		Tm:       tm,
 		MsgType:  pbmodel.ComMsgType_MsgTChatReply,
 		SubType:  0,
 		Message: &pbmodel.Msg_PlainMsg{
