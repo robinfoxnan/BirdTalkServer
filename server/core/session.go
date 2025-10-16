@@ -252,7 +252,8 @@ func (sess *Session) WriteLoop() {
 		// Break readLoop.
 		sess.ws.Close()
 		sess.cleanUp()
-		fmt.Println("write loop end here")
+		txt := fmt.Sprintf("user(%d) session(%d)", sess.UserID, sess.Sid)
+		Globals.Logger.Info(txt)
 	}()
 
 	for {
@@ -339,7 +340,7 @@ func (s *Session) cleanUp() {
 	if s.UserID != 0 {
 		user, b := Globals.uc.GetUser(s.UserID)
 		if b {
-			user.RemoveSessionID(s.UserID)
+			user.RemoveSessionID(s.Sid)
 		}
 		// 从redis中删除
 		Globals.redisCli.RemoveUserSessionOnServer(s.UserID, s.Sid)

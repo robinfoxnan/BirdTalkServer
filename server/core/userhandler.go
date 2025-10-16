@@ -819,7 +819,7 @@ func LoginWithPrint(session *Session, keyPrint int64, checkTokenData string, tm 
 	tmStr := strconv.FormatInt(tm, 10)
 	decryptedTm := string(tmData)
 
-	fmt.Printf("receive tm = %v \n", decryptedTm)
+	//fmt.Printf("receive tm = %v \n", decryptedTm)
 
 	if tmStr != decryptedTm {
 		Globals.Logger.Info("decrypt check data error: ", zap.Error(err))

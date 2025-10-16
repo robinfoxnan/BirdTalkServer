@@ -30,7 +30,9 @@ type GlobalVars struct {
 
 	emailWorkerManager *Manager[Task, *EmailWorker]
 
-	Logger    *zap.Logger
+	Logger   *zap.Logger
+	logLevel zap.AtomicLevel
+
 	Config    *LocalConfig
 	GeoHelper *GeoIPHelper
 }
@@ -43,7 +45,8 @@ func init() {
 	Globals.ss = NewSessionCache()
 	Globals.uc = model.NewUserCache()
 	Globals.grc = model.NewGroupCache()
-	Globals.Logger = utils.CreateLogger()
+	Globals.logLevel = zap.NewAtomicLevelAt(zap.DebugLevel)
+	Globals.Logger = utils.CreateLogger(&Globals.logLevel)
 	Globals.segment = utils.NewSegment()
 	Globals.GeoHelper = nil
 
@@ -57,6 +60,26 @@ func (g *GlobalVars) LoadConfig(fileName string) error {
 }
 
 func (g *GlobalVars) InitWithConfig() error {
+
+	switch g.Config.Server.LogLevel {
+	case "debug":
+		g.logLevel = zap.NewAtomicLevelAt(zap.DebugLevel)
+	case "info":
+		g.logLevel = zap.NewAtomicLevelAt(zap.InfoLevel)
+	case "warn":
+		g.logLevel = zap.NewAtomicLevelAt(zap.WarnLevel)
+	case "error":
+		g.logLevel = zap.NewAtomicLevelAt(zap.ErrorLevel)
+	case "fatal":
+		g.logLevel = zap.NewAtomicLevelAt(zap.FatalLevel)
+	case "panic":
+		g.logLevel = zap.NewAtomicLevelAt(zap.PanicLevel)
+	case "disabled":
+		g.logLevel = zap.NewAtomicLevelAt(zap.InfoLevel)
+	default:
+		g.logLevel = zap.NewAtomicLevelAt(zap.InfoLevel)
+	}
+
 	g.maxMessageSize = 10 * (1 << 20) // 10M
 	g.snow = utils.NewSnowflake(1, 1)
 	n := int64(g.Config.Email.Workers)

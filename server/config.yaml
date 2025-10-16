@@ -27,6 +27,7 @@ server:
     avatar_font: ./ttf/SourceHanSans-VF.ttf
     file_base_path: e:/upload
     geolite2_path: ./resource/GeoLite2-City.mmdb
+    log_level: debug
 
 
 email:

@@ -16,7 +16,8 @@ var Logger *zap.Logger = nil
 //}
 
 // 来源于链接  http://t.csdn.cn/rcSwT
-func CreateLogger() *zap.Logger {
+// error级别是肯定要输出，控制台和info文件的可以动态控制
+func CreateLogger(logLevel *zap.AtomicLevel) *zap.Logger {
 	var coreArr []zapcore.Core
 
 	//获取编码器
@@ -31,9 +32,8 @@ func CreateLogger() *zap.Logger {
 	highPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool { //error级别
 		return lev >= zap.ErrorLevel
 	})
-	lowPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool { //info和debug级别,debug级别是最低的
-		return lev < zap.ErrorLevel && lev >= zap.DebugLevel
-	})
+
+	out := colorable.NewColorableStdout()
 
 	//info文件writeSyncer
 	infoFileWriteSyncer := zapcore.AddSync(&lumberjack.Logger{
@@ -43,12 +43,7 @@ func CreateLogger() *zap.Logger {
 		MaxAge:     30,               //日志文件保留天数
 		Compress:   false,            //是否压缩处理
 	})
-
-	out := colorable.NewColorableStdout()
-
-	infoFileCore := zapcore.NewCore(encoder,
-		zapcore.NewMultiWriteSyncer(infoFileWriteSyncer, zapcore.AddSync(out)),
-		lowPriority) //第三个及之后的参数为写入文件的日志级别,ErrorLevel模式只记录error级别的日志
+	infoFileCore := zapcore.NewCore(encoder, zapcore.NewMultiWriteSyncer(infoFileWriteSyncer, zapcore.AddSync(out)), logLevel)
 
 	//error文件writeSyncer
 	errorFileWriteSyncer := zapcore.AddSync(&lumberjack.Logger{
@@ -58,13 +53,13 @@ func CreateLogger() *zap.Logger {
 		MaxAge:     30,                //日志文件保留天数
 		Compress:   false,             //是否压缩处理
 	})
-	errorFileCore := zapcore.NewCore(encoder,
-		zapcore.NewMultiWriteSyncer(errorFileWriteSyncer, zapcore.AddSync(out)),
-		highPriority) //第三个及之后的参数为写入文件的日志级别,ErrorLevel模式只记录error级别的日志
+	errorFileCore := zapcore.NewCore(encoder, zapcore.NewMultiWriteSyncer(errorFileWriteSyncer, zapcore.AddSync(out)), highPriority)
+	//第三个及之后的参数为写入文件的日志级别,ErrorLevel模式只记录error级别的日志
 
 	coreArr = append(coreArr, infoFileCore)
 	coreArr = append(coreArr, errorFileCore)
-	Logger = zap.New(zapcore.NewTee(coreArr...), zap.AddCaller()) //zap.AddCaller()为显示文件名和行号，可省略
+	Logger = zap.New(zapcore.NewTee(coreArr...), zap.AddCaller())
+	//zap.AddCaller()为显示文件名和行号，可省略
 
 	return Logger
 }

@@ -32,17 +32,19 @@ func trySendMsgToUser(uid int64, msg *pbmodel.Msg) {
 			if b && sess != nil {
 
 				// 打印函数
-				txtInfo := fmt.Sprintf("send to user(%d) %s", uid, msg.MsgType.String())
-				Globals.Logger.Info(txtInfo)
-				//Globals.Logger.Debug("send msg to user",
-				//	zap.Int64("user", uid),
-				//	zap.Any("msg", msg))
+				txtInfo := fmt.Sprintf("send to user(%d) sid(%d) %s", uid, sid, msg.MsgType.String())
+				Globals.Logger.Debug(txtInfo)
+				//Globals.Logger.Debug("send msg to user", zap.Int64("user", uid), zap.Any("msg", msg))
 
 				sess.SendMessage(msg)
-			} else {
-				txtInfo := fmt.Sprintf("can't find active session to user(%d)", uid)
+			} else if !b {
+				txtInfo := fmt.Sprintf("can't find active session to user(%d) sid(%d) %s", uid, sid, msg.MsgType.String())
+				Globals.Logger.Debug(txtInfo)
+			} else if sess == nil {
+				txtInfo := fmt.Sprintf("user(%d) sid(%d) session is nil %s", uid, sid, msg.MsgType.String())
 				Globals.Logger.Debug(txtInfo)
 			}
+
 		}
 
 	} else {
