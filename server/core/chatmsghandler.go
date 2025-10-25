@@ -95,7 +95,7 @@ func handleChatMsg(msg *pbmodel.Msg, session *Session) {
 	msgPlain := msg.GetPlainMsg()
 	msgChat := msgPlain.GetChatData()
 	if session.UserID != msgChat.FromId {
-		sendBackChatMsgReply(true, "from id is not same as session user id", msgChat, session)
+		sendBackChatMsgReply(false, "from id is not same as session user id", msgChat, session, 0)
 		return
 	}
 
@@ -148,12 +148,12 @@ func onSelfChatMessage(msg *pbmodel.Msg, session *Session) {
 	}
 	err := Globals.scyllaCli.SavePChatSelfData(&msgData)
 	if err != nil {
-		sendBackChatMsgReply(false, "save data err", msgChat, session)
+		sendBackChatMsgReply(false, "save data err", msgChat, session, 0)
 		return
 	}
 
 	trySendMsgToMe(msgChat.ToId, msg, session)
-	sendBackChatMsgReply(true, "ok", msgChat, session)
+	sendBackChatMsgReply(true, "send to self", msgChat, session, 0)
 }
 
 // 私聊
@@ -176,7 +176,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 
 		err := Globals.scyllaCli.SetPChatMsgDeleted(pk1, pk2, session.UserID, msgChat.ToId, msgChat.RefMessageId)
 		if err != nil {
-			sendBackChatMsgReply(false, "ref error", msgChat, session)
+			sendBackChatMsgReply(false, "ref error", msgChat, session, 0)
 			return
 		}
 	} else {
@@ -186,7 +186,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotFriend), "not friend", map[string]string{
 				"uid": strconv.FormatInt(fid, 64),
 			}, session)
-			sendBackChatMsgReply(false, "not friend", msgChat, session)
+			sendBackChatMsgReply(false, "not friend", msgChat, session, 0)
 			return
 		}
 
@@ -200,7 +200,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "not have chat permission", map[string]string{
 				"uid": strconv.FormatInt(fid, 64),
 			}, session)
-			sendBackChatMsgReply(false, "permission", msgChat, session)
+			sendBackChatMsgReply(false, "permission", msgChat, session, 0)
 			return
 		}
 	}
@@ -227,12 +227,13 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 
 	err := Globals.scyllaCli.SavePChatData(&msgData, pk2)
 	if err != nil {
-		sendBackChatMsgReply(false, "error when save data", msgChat, session)
+		sendBackChatMsgReply(false, "error when save data", msgChat, session, 0)
 		return
 	}
 
 	msgChat.Tm = tm
-	sendBackChatMsgReply(true, "save data ok", msgChat, session)
+	sendBackChatMsgReply(true, "save data ok", msgChat, session, 0)
+	Globals.Logger.Debug("send back reply 'save data ok'")
 
 	// 先放到队列中
 	tryPushToUserMsgCache(msgChat.ToId, msgChat.MsgId, msg)
@@ -243,19 +244,31 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 }
 
 // 应答保存完毕
-func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, session *Session) {
+func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, session *Session, gid int64) {
 
 	tm := utils.GetTimeStamp()
+	params := map[string]string{
+		"gid":    fmt.Sprintf("%d", gid),
+		"detail": detail,
+	}
+
+	var extraMsg string
+	if ok {
+		extraMsg = "ok"
+	} else {
+		extraMsg = "fail"
+	}
+
 	msgChatReply := pbmodel.MsgChatReply{
 		MsgId:    msgChat.MsgId,
 		SendId:   msgChat.SendId,
 		SendOk:   tm,
 		RecvOk:   0,
 		ReadOk:   0,
-		ExtraMsg: "save ok",
+		ExtraMsg: extraMsg,
 		UserId:   session.UserID, // 给这个用户应答
 		FromId:   msgChat.ToId,   // 从服务器处得到的应答
-		Params:   nil,
+		Params:   params,
 	}
 
 	msgPlain := pbmodel.MsgPlain{
@@ -285,14 +298,14 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	// 检查权限啊
 	group, err := findGroup(msgChat.ToId)
 	if group == nil {
-		sendBackChatMsgReply(false, "group id error", msgChat, session)
+		sendBackChatMsgReply(false, "group id error", msgChat, session, msgChat.ToId)
 		return
 	}
 
 	_, b := group.HasMember(session.UserID)
 	if !b {
 
-		sendBackChatMsgReply(false, "you are not a group member", msgChat, session)
+		sendBackChatMsgReply(false, "you are not a group member", msgChat, session, msgChat.ToId)
 		return
 	}
 
@@ -304,7 +317,7 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 
 		err = Globals.scyllaCli.SetGChatMsgDeleted(pk1, msgChat.ToId, msgChat.RefMessageId)
 		if err != nil {
-			sendBackChatMsgReply(false, "ref error", msgChat, session)
+			sendBackChatMsgReply(false, "ref error", msgChat, session, msgChat.ToId)
 			return
 		}
 	}
@@ -325,11 +338,11 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	}
 	err = Globals.scyllaCli.SaveGChatData(&msgData)
 	if err != nil {
-		sendBackChatMsgReply(false, "save data error", msgChat, session)
+		sendBackChatMsgReply(false, "save data error", msgChat, session, msgChat.ToId)
 		return
 	}
 
-	sendBackChatMsgReply(true, "ok", msgChat, session)
+	sendBackChatMsgReply(true, "ok", msgChat, session, msgChat.ToId)
 	sendToGroupMembersExceptMe(group.GroupId, msg, session)
 }
 
@@ -341,6 +354,10 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "reply is null", nil, session)
 		return
 	}
+	Globals.Logger.Debug("Recv User ChatMsgReply:", zap.Int64("from", replyMsg.FromId),
+		zap.Int64("to", replyMsg.UserId), zap.Any("msg", replyMsg))
+
+	replyMsg.Params["gid"] = "0"
 
 	pk1 := db.ComputePk(replyMsg.UserId)
 	pk2 := db.ComputePk(replyMsg.FromId)
@@ -358,7 +375,7 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 		err = Globals.scyllaCli.SetPChatReadReply(pk1, pk2, replyMsg.UserId, replyMsg.FromId,
 			replyMsg.MsgId, time.Now().UTC().UnixMilli())
 	} else {
-		return
+		Globals.Logger.Debug("Recv User ChatMsgReply:", zap.String("error", "recv and read time is 0"))
 	}
 
 	// 收到回执后，从发送列表中删除
@@ -366,6 +383,7 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 
 	// 没有找到合适的
 	if err != nil {
+		Globals.Logger.Error("Recv User ChatMsgReply:", zap.Error(err))
 		return
 	}
 
