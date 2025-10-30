@@ -5,6 +5,7 @@ import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"errors"
 	"fmt"
 	"go.uber.org/zap"
 	"strconv"
@@ -358,12 +359,21 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 		zap.Int64("to", replyMsg.UserId), zap.Any("msg", replyMsg))
 
 	replyMsg.Params["gid"] = "0"
+	batchIds, bOk := replyMsg.Params["batch"]
+	if bOk {
+		handleChatReplyMsgBatch(msg, session, batchIds)
+		return
+	}
 
 	pk1 := db.ComputePk(replyMsg.UserId)
 	pk2 := db.ComputePk(replyMsg.FromId)
 	var err error
 
 	user := session.GetUser()
+	if user == nil {
+		Globals.Logger.Error("user is nil, return here", zap.Int64("from", replyMsg.FromId))
+		return
+	}
 
 	if replyMsg.RecvOk > 0 && replyMsg.ReadOk > 0 {
 		err = Globals.scyllaCli.SetPChatRecvReadReply(pk1, pk2, replyMsg.UserId, replyMsg.FromId,
@@ -392,8 +402,80 @@ func handleChatReplyMsg(msg *pbmodel.Msg, session *Session) {
 
 }
 
+// SplitToInt64Array 将 "1, 2, 3, 4" 格式字符串转为 []int64
+// 若输入为空、格式错误（含非数字），返回错误信息
+func SplitToInt64Array(s string) ([]int64, error) {
+	// 1. 处理空输入
+	trimmed := strings.TrimSpace(s)
+	if trimmed == "" {
+		return nil, errors.New("输入字符串不能为空")
+	}
+
+	// 2. 分割字符串：处理逗号+任意空格（如 "1,2" "1,  2" 均兼容）
+	strSlice := strings.Split(trimmed, ",")
+	int64Slice := make([]int64, 0, len(strSlice)) // 预分配容量，提升性能
+
+	// 3. 遍历转换：逐个字符串转 int64（base=10，bitSize=64 对应 long）
+	for _, str := range strSlice {
+		str = strings.TrimSpace(str) // 去除每个元素的前后空格（如 " 3 " → "3"）
+		num, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			// 明确报错位置，便于调试（如第 2 个元素是 "a"）
+			//return nil, fmt.Errorf("第 %d 个元素格式错误：%s（需为整数）", i+1, str)
+		}
+		int64Slice = append(int64Slice, num)
+	}
+
+	return int64Slice, nil
+}
+
+// 批量处理
+func handleChatReplyMsgBatch(msg *pbmodel.Msg, session *Session, ids string) {
+	var err error
+	replyMsg := msg.GetPlainMsg().GetChatReply()
+
+	idLst, err := SplitToInt64Array(ids)
+	if err != nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "reply ids format err", nil, session)
+		return
+	}
+
+	pk1 := db.ComputePk(replyMsg.UserId)
+	pk2 := db.ComputePk(replyMsg.FromId)
+	user := session.GetUser()
+
+	for _, msgId := range idLst {
+
+		if replyMsg.RecvOk > 0 && replyMsg.ReadOk > 0 {
+			err = Globals.scyllaCli.SetPChatRecvReadReply(pk1, pk2, replyMsg.UserId, replyMsg.FromId,
+				msgId, time.Now().UTC().UnixMilli(), time.Now().UTC().UnixMilli())
+		} else if replyMsg.RecvOk > 0 {
+			err = Globals.scyllaCli.SetPChatRecvReply(pk1, pk2, replyMsg.UserId, replyMsg.FromId,
+				msgId, time.Now().UTC().UnixMilli())
+		} else if replyMsg.ReadOk > 0 {
+			err = Globals.scyllaCli.SetPChatReadReply(pk1, pk2, replyMsg.UserId, replyMsg.FromId,
+				msgId, time.Now().UTC().UnixMilli())
+		} else {
+			Globals.Logger.Debug("Recv User ChatMsgReply:", zap.String("error", "recv and read time is 0"))
+		}
+
+		// 收到回执后，从发送列表中删除
+		user.PopMsgInCache(msgId)
+
+		// 没有找到合适的
+		if err != nil {
+			Globals.Logger.Error("Recv User ChatMsgReply:", zap.Error(err))
+			return
+		}
+	}
+
+	// 转发消息
+	trySendMsgToUser(replyMsg.UserId, msg)
+}
+
 // 这里的查询数据，包括私聊和群聊
 func onQueryChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
+	Globals.Logger.Debug("onQueryChatData:", zap.String("queryMsg.QueryType", queryMsg.QueryType.String()), zap.Any("query", queryMsg.String()))
 	if queryMsg.ChatType == pbmodel.ChatType_ChatTypeP2P {
 		onQueryP2PChatData(queryMsg, session)
 	} else if queryMsg.ChatType == pbmodel.ChatType_ChatTypeGroup {
@@ -467,6 +549,8 @@ func onQueryP2PChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 			chatDataList[index] = &data
 		}
 	}
+
+	Globals.Logger.Debug("onQueryP2PChatData:", zap.Any("msg count:", len(chatDataList)))
 
 	chatDataRet := pbmodel.MsgQueryResult{
 		UserId:          session.UserID,

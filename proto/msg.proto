@@ -145,8 +145,9 @@ message MsgChatReply {
   string extraMsg = 6;
   int64 userId = 7 [jstype = JS_STRING];        // 应答应该发送给谁
   int64 fromId = 8 [jstype = JS_STRING];        // 从谁那的应答
-  map<string, string> params = 30;
+  map<string, string> params = 30;              // 私聊需要添加 "gid" :"0"
 }
+// 批量的应答，需要添加"batch" : "1,2,3,4" 这样的一组消息号
 
 // 查询的类型：聊天数据，回执,关键字搜索
 enum QueryDataType {

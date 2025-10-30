@@ -16,7 +16,6 @@ func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 	//if msg.MsgType != pbmodel.ComMsgType_MsgTUpload && msg.MsgType != pbmodel.ComMsgType_MsgTChatMsg {
 	//	fmt.Sprintf("recv msg from:%d %v  \n", session.UserID, msg)
 	//}
-
 	keyPrint := msg.GetKeyPrint() // 加密指纹，明文传输需要先检查类型是否正确
 	if keyPrint == 0 {
 		msgPlain := msg.GetPlainMsg()
@@ -165,6 +164,14 @@ func handleHeartMsg(msg *pbmodel.Msg, session *Session) {
 			zap.Int64("sid", session.Sid),
 			zap.Int64("uid", session.UserID))
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "heart msg ping is null", nil, session)
+		return
+	}
+
+	// 收到心跳，则应该更新活动状态
+	user := session.GetUser()
+	if user != nil {
+		user.UpdateActive()
+	} else {
 		return
 	}
 
