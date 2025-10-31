@@ -41,52 +41,66 @@ func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 
 	case pbmodel.ComMsgType_MsgTHello: // 用于握手的消息
 		handleHelloMsg(msg, session)
+
 	case pbmodel.ComMsgType_MsgTHeartBeat: // 用于保持连接的心跳消息
 		handleHeartMsg(msg, session)
+
 	case pbmodel.ComMsgType_MsgTError: // 用于传递错误信息的消息
 		handleErrorMsg(msg, session)
+
 	case pbmodel.ComMsgType_MsgTKeyExchange: // DH密钥交换的消息
 		handleKeyExchange(msg, session)
-	case pbmodel.ComMsgType_MsgTChatMsg:
+
+	case pbmodel.ComMsgType_MsgTChatMsg: // 聊天消息
 		handleChatMsg(msg, session)
-	case pbmodel.ComMsgType_MsgTChatReply:
+
+	case pbmodel.ComMsgType_MsgTChatReply: // 聊天消息应答
 		handleChatReplyMsg(msg, session)
-	case pbmodel.ComMsgType_MsgTQuery:
+
+	case pbmodel.ComMsgType_MsgTQuery: // 连接成功后，客户端需要同步消息
 		handleCommonQuery(msg, session)
+
 	case pbmodel.ComMsgType_MsgTQueryResult:
-		//fmt.Println("Receive error type of message ComMsgType_MsgTChatQueryResult:")
 		Globals.Logger.Info("Receive error type of message ComMsgType_MsgTChatQueryResult:",
 			zap.Int64("sid", session.Sid),
 			zap.Int64("uid", session.UserID))
+
 	case pbmodel.ComMsgType_MsgTUpload:
 		handleFileUpload(msg, session)
+
 	case pbmodel.ComMsgType_MsgTDownload: //下载文件的消息，文件操作分为带内和带外，这里是小文件可以这样操作
 		handleFileDownload(msg, session)
+
 	case pbmodel.ComMsgType_MsgTUploadReply:
-		//fmt.Println("Receive error type of messageComMsgType_MsgTUploadReply:")
 		Globals.Logger.Info("Receive error type of messageComMsgType_MsgTUploadReply:",
 			zap.Int64("sid", session.Sid),
 			zap.Int64("uid", session.UserID))
+
 	case pbmodel.ComMsgType_MsgTDownloadReply:
-		//fmt.Println("Receive error type of message ComMsgType_MsgTDownloadReply:")
 		Globals.Logger.Info("Receive error type of message ComMsgType_MsgTDownloadReply:",
 			zap.Int64("sid", session.Sid),
 			zap.Int64("uid", session.UserID))
+
 	case pbmodel.ComMsgType_MsgTUserOp: // 所有用户相关操作的消息
 		handleUserOp(msg, session)
+
 	case pbmodel.ComMsgType_MsgTUserOpRet:
-		//fmt.Println("Receive error type of message ComMsgType_MsgTUserOpRet:")
 		Globals.Logger.Info("Receive error type of message ComMsgType_MsgTUserOpRet:",
 			zap.Int64("sid", session.Sid),
 			zap.Int64("uid", session.UserID))
+
 	case pbmodel.ComMsgType_MsgTFriendOp:
 		handleFriendOp(msg, session)
+
 	case pbmodel.ComMsgType_MsgTFriendOpRet:
 		handleFriendOpRet(msg, session)
+
 	case pbmodel.ComMsgType_MsgTGroupOp: // 所有群组相关的操作
 		handleGroupOp(msg, session)
+
 	case pbmodel.ComMsgType_MsgTGroupOpRet:
 		handleGroupOpRet(msg, session)
+		
 	case pbmodel.ComMsgType_MsgTOther: // 转发给其他的扩展模块的
 		handleOther(msg, session)
 	}
@@ -168,12 +182,7 @@ func handleHeartMsg(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 收到心跳，则应该更新活动状态
-	user := session.GetUser()
-	if user != nil {
-		user.UpdateActive()
-	} else {
-		return
-	}
+	session.updateTTL()
 
 	tmStr := utils.TmToLocalString(ping.Tm)
 	//fmt.Printf("tm=%s, userid=%d \n", tmStr, ping.UserId)

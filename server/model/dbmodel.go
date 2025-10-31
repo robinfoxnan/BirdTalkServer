@@ -91,8 +91,8 @@ type GChatDataStore struct {
 // 群组操作相关的记录存储
 type CommonOpStore struct {
 	Pk   int16 `db:"pk"`
-	Uid1 int64 `db:"uid1"`
-	Uid2 int64 `db:"uid2"`
+	Uid1 int64 `db:"uid1"` // 操作的的对象
+	Uid2 int64 `db:"uid2"` // 操作的请求方
 	Gid  int64 `db:"gid"`
 	Id   int64 `db:"id"`
 	Usid int64 `db:"usid"`
@@ -113,6 +113,7 @@ const UserOpResultRefuse = 2
 const UserOpResultOk = 1
 
 const (
+	// 群组
 	CommonGroupOpCreate        = 1
 	CommonGroupOpDissolve      = 2
 	CommonGroupOpJoinRequest   = 3 // 写到群操作记录中
@@ -122,5 +123,7 @@ const (
 	CommonGroupOpSetInfo       = 7
 	CommonGroupOpTransferOwner = 8
 
-	CommonUserOpAddRequest = 101 // 写到个人的操作记录中
+	// 用户
+	CommonUserOpAddRequest    = 101 // 写到个人的操作记录中
+	CommonUserOpRemoveRequest = 102
 )

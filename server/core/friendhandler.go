@@ -20,7 +20,7 @@ func handleFriendOp(msg *pbmodel.Msg, session *Session) {
 		Globals.Logger.Debug("receive wrong friend op msg",
 			zap.Int64("sid", session.Sid),
 			zap.Int64("uid", session.UserID))
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "friend op  is null", nil, session)
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "friend op is null", nil, session)
 		return
 	}
 
@@ -38,22 +38,31 @@ func handleFriendOp(msg *pbmodel.Msg, session *Session) {
 	switch opCode {
 	case pbmodel.UserOperationType_FindUser:
 		handleFriendFind(msg, session)
+
 	case pbmodel.UserOperationType_AddFriend: // 交友模式下需要转发给好友
 		handleFriendAdd(msg, session)
-	case pbmodel.UserOperationType_ApproveFriend: // 用户应答同意或者拒绝
+
+	case pbmodel.UserOperationType_ApproveFriend: // 交友模式下，用户应答同意或者拒绝
 		handleFriendApprove(msg, session)
+
 	case pbmodel.UserOperationType_RemoveFriend:
 		handleFriendRemove(msg, session)
+
 	case pbmodel.UserOperationType_BlockFriend:
 		handleFriendBlock(msg, session)
+
 	case pbmodel.UserOperationType_UnBlockFriend:
 		handleFriendUnBlock(msg, session)
+
 	case pbmodel.UserOperationType_SetFriendPermission:
 		handleFriendPermission(msg, session)
+
 	case pbmodel.UserOperationType_SetFriendMemo:
 		handleFriendSetMemo(msg, session)
+
 	case pbmodel.UserOperationType_ListFriends:
 		handleFriendList(msg, session)
+
 	default:
 		Globals.Logger.Info("receive unknown friend op",
 			zap.Int64("sessionId", session.Sid),
@@ -190,7 +199,7 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "can't add your self", nil, session)
 		return
 	}
-	// 0.0 检测好友是否存在
+	// 0.0 检测好友信息
 	friendInfo, _, _ := findUserInfo(uid2)
 	if friendInfo == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "user not in db", nil, session)
@@ -202,6 +211,7 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	// 过滤掉敏感信息
 	filterUserInfo1(friendInfo, "")
 
 	// 0.1 如果已经是好友了，应该直接返回；这里主要是为了方式客户端的错误，防止攻击造成计数异常；
@@ -221,7 +231,7 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 		onAddFriendStage1(session.UserID, userInfo.UserId, friendInfo, userInfo, friendOpMsg, session)
 
 	} else {
-		// 社区模式，如果自己是对方的粉丝
+		// 社区模式，如果自己是对方的粉丝就是没有必要的重复操作，直接返回结果，避免攻击
 		bFan, _ := checkFriendIsFan(session.UserID, uid2)
 		if bFan {
 			user := session.GetUser()
@@ -233,6 +243,7 @@ func handleFriendAdd(msg *pbmodel.Msg, session *Session) {
 				session, friendOpMsg.SendId, friendOpMsg.MsgId)
 			return
 		}
+		// 和交友模式有相同的地方
 		onAddFriendOk(session.UserID, userInfo.UserId, friendInfo, userInfo, friendOpMsg, session)
 	}
 
@@ -333,6 +344,9 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 		}
 	}
 
+	// 保存数据库
+	saveOpFriendLog(uid1, uid2, friendOpMsg.SendId, friendOpMsg.MsgId, true, false)
+
 	// 应答删除完毕
 	sendBackFriendOpResult(pbmodel.UserOperationType_RemoveFriend,
 		"ok",
@@ -341,14 +355,16 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 		nil,
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 
-	// 无论哪种模式，双方都直接移除对方，应该通知对方
+	// 双方都直接移除对方，应该通知对方
 	//if Globals.Config.Server.FriendMode {
+	//}
+
+	// 无论哪种模式，应该通知对方, 这样才能更新通信簿
 	msgNotify := newFriendOpResultMsg(pbmodel.UserOperationType_RemoveFriend, "notice", meUser.GetUserInfo(),
 		nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
 
 	// 多终端登录时候，转发到所有的消息
 	trySendMsgToUser(uid2, msgNotify)
-	//}
 
 }
 
@@ -671,10 +687,11 @@ func handleFriendList(msg *pbmodel.Msg, session *Session) {
 
 }
 
-// 转发信息，这里主要是用于转发用户好友申请
-func sendForwardFriendOpReq(fid int64, params map[string]string, sendId, msgId int64, session *Session) {
+// 转发信息，这里主要是用于转发用户的关注与取关的操作，
+// 交友模式下，可能需要对方认可；如果直接添加了好友，则会抄送应答消息，分别是请求者，和被请求者
+func sendForwardFriendOpReq(fid int64, params map[string]string, sendId, msgId int64, bAdd bool, session *Session) {
 
-	saveAddFriendLog(session.UserID, fid, sendId, msgId, false)
+	saveOpFriendLog(session.UserID, fid, sendId, msgId, false, bAdd)
 	user := session.GetUser()
 
 	msgFriendOpReq := pbmodel.FriendOpReq{
@@ -753,12 +770,17 @@ func sendBackFriendOpResult(opCode pbmodel.UserOperationType, result string, use
 }
 
 // 保存加好友记录
-func saveAddFriendLog(uid1, uid2 int64, reqSendId, msgId int64, bFinish bool) error {
+// 在社区模式下，这里的添加好友就关注,删除就是取关
+func saveOpFriendLog(uid1, uid2 int64, reqSendId, msgId int64, bFinish bool, bAdd bool) error {
 	pk1 := db.ComputePk(uid1)
 
 	ret := 0
 	if bFinish {
 		ret = 1
+	}
+	cmd := int8(model.CommonUserOpAddRequest)
+	if !bAdd {
+		cmd = int8(model.CommonUserOpRemoveRequest)
 	}
 	OpRecord := &model.CommonOpStore{
 		Pk:   pk1,
@@ -772,7 +794,7 @@ func saveAddFriendLog(uid1, uid2 int64, reqSendId, msgId int64, bFinish bool) er
 		Tm2:  0,
 		Io:   0,
 		St:   0,
-		Cmd:  int8(model.CommonUserOpAddRequest),
+		Cmd:  cmd,
 		Ret:  int8(ret),
 		Mask: 0,
 		Ref:  0,
@@ -821,14 +843,14 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 	// 1) 查看对方设置的权限
 	params := friendInfo.GetParams()
 	if params == nil { // 如果没有设置附加信息，默认需要同意
-		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, session)
+		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, true, session)
 		return
 	}
 
 	friendAddMode, ok := params["friendaddmode"]
 	//"direct" | "require" | "reject" | "question"
 	if !ok {
-		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, session)
+		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, true, session)
 		return
 	}
 
@@ -836,9 +858,9 @@ func onAddFriendStage1(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo,
 	case "direct":
 		onAddFriendOkFriendMode(uid1, uid2, friendInfo, userInfo, friendOpMsg.SendId, friendOpMsg.MsgId)
 	case "require":
-		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, session)
+		sendForwardFriendOpReq(uid2, friendOpMsg.GetParams(), friendOpMsg.SendId, friendOpMsg.MsgId, true, session)
 	case "reject":
-		// 应答回执
+		// 应答回执, 拒绝任何人申请添加好友，只能自己加别人
 
 		sendBackFriendOpResult(pbmodel.UserOperationType_AddFriend,
 			"reject",
@@ -893,7 +915,7 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	var err error
 
 	// 1. 日志
-	err = saveAddFriendLog(uid1, uid2, friendOpMsg.SendId, friendOpMsg.MsgId, true)
+	err = saveOpFriendLog(uid1, uid2, friendOpMsg.SendId, friendOpMsg.MsgId, true, true)
 	if err != nil {
 		return err
 	}
@@ -974,7 +996,7 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	}
 
 	// 6. 如果对方在线，则需要通知对方有新粉丝
-	msg := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, "notify",
+	msg := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, "notice",
 		user.GetUserInfo(), nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
 	trySendMsgToUser(uid2, msg)
 
@@ -990,12 +1012,12 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	return err
 }
 
-// 对于交友模式，如果同意了，就是理解为互相关注
+// 对于交友模式，如果同意了，或者直接添加，就是理解为互相关注
 func onAddFriendOkFriendMode(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, sendId int64, msgId int64) error {
 	var err error
 
 	// 1. 日志
-	err = saveAddFriendLog(uid1, uid2, sendId, msgId, true)
+	err = saveOpFriendLog(uid1, uid2, sendId, msgId, true, true)
 	if err != nil {
 		return err
 	}

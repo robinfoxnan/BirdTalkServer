@@ -33,7 +33,10 @@ func (s *Snowflake) GenerateID() int64 {
 	currentTimestamp := s.timeGen()
 
 	if currentTimestamp < s.lastTimestamp {
-		fmt.Println("Clock moved backwards. Refusing to generate ID.")
+		delta := currentTimestamp - s.lastTimestamp + 1
+		fmt.Printf("Clock moved backwards. wait to %d ms to generate ID.\n", delta)
+		time.Sleep(time.Millisecond * time.Duration(delta))
+		currentTimestamp = s.timeGen()
 		return 0
 	}
 
