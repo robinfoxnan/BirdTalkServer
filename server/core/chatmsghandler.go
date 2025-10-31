@@ -185,7 +185,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 		bFun, _ := checkFriendIsFan(fid, session.UserID)
 		if !bFun {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotFriend), "not friend", map[string]string{
-				"uid": strconv.FormatInt(fid, 64),
+				"uid": strconv.FormatInt(fid, 10),
 			}, session)
 			sendBackChatMsgReply(false, "not friend", msgChat, session, 0)
 			return

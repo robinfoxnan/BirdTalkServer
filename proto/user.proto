@@ -70,7 +70,7 @@ message UserOpResult {
 // 好友操作请求消息
 message FriendOpReq {
   UserOperationType operation = 1;           // 操作类型，例如：申请好友、同意好友、删除好友、屏蔽好友
-  UserInfo user = 2;              // 涉及的用户信息，例如在申请好友时，表示被申请加为好友的用户
+  UserInfo user = 2;              // 涉及的用户信息，例如在申请好友时，表示被申请加为好友的用户, 查找好友的时候，这个是分页的起始号
   int64 sendId = 3;               // 用户发给服务器的时候带着，主要是有可能对方离线
   int64 msgId = 4;                // 转发给用户的时候才有
   map<string, string> params = 5;

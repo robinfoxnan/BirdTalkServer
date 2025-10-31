@@ -82,6 +82,28 @@ func (me *Scylla) InsertBlock(friend *model.BlockStore) error {
 	return nil
 }
 
+// 这里其实有个BUG，如果收到错误的信息，本来已经没有关注，或者不是好友了，计数器会错误，但是如果逻辑修正浪费资源
+/*
+builder := qb.Delete(FollowingTableName)
+builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
+builder.IfExists() // 关键：只有存在时才删除
+
+query := builder.Query(me.session)
+defer query.Release()
+
+var applied bool
+err := query.ScanCAS(&applied)
+if err != nil {
+    return err
+}
+
+if applied {
+    // 删除成功，原来存在
+} else {
+    // 目标行不存在
+}
+
+*/
 // 同时操作2个表
 func (me *Scylla) DeleteFollowing(pk1, pk2 int16, uid1, uid2 int64) error {
 	batch := me.session.Session.NewBatch(gocql.LoggedBatch)

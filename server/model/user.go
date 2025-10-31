@@ -645,6 +645,12 @@ func (u *User) SetIcon(str string) {
 	u.Icon = str
 }
 
+func (u *User) SetIntro(str string) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	u.Intro = str
+}
+
 // 更新信息后，设置基本信息
 func (u *User) SetBaseValue(userInfo *pbmodel.UserInfo) {
 	u.Mu.Lock()

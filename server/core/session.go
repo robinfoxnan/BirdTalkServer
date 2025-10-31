@@ -432,7 +432,20 @@ func (s *Session) updateTTL() {
 			user.UpdateActive()
 		}
 	}
+}
 
+// 登录成功后，根据IP计算地区
+func (s *Session) updateRegion(str string) {
+	if s.UserID != 0 && s.HasStatus(model.UserStatusOk) {
+		setData := make(map[string]interface{})
+		setData["region"] = str
+		Globals.redisCli.UpdateUserInfoPart(s.UserID, setData, nil)
+
+		user, ok := Globals.uc.GetUser(s.UserID)
+		if ok && user != nil {
+			user.SetRegion(str)
+		}
+	}
 }
 
 // 通知邮件错误

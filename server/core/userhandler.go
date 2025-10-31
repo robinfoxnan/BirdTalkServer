@@ -371,6 +371,10 @@ func mergeUserinfo(user *model.User, params map[string]string, session *Session)
 		case "phone":
 			hasPhone = true
 			session.SetKeyValue("changePhone", v)
+		case "intro":
+			setData["intro"] = v
+			setDataRedis["Intro"] = v
+			user.SetIntro(v)
 
 		default:
 			setData[key] = v
@@ -457,6 +461,10 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 		city, err := Globals.GeoHelper.GetCityByIP(session.RemoteAddr)
 		if err == nil {
 			setDataMongo["region"] = city.City
+			setDataRedis["region"] = city.City
+		} else {
+			setDataMongo["region"] = "-"
+			setDataRedis["region"] = "-"
 		}
 	}
 
@@ -881,6 +889,17 @@ func onLoginSuccess(session *Session, bSaveToken bool) {
 		return
 	}
 	session.updateTTL()
+
+	// 通过IP来检查用户地区
+	if session.RemoteAddr != "" {
+		fmt.Println("remote addr:", session.RemoteAddr)
+		city, err := Globals.GeoHelper.GetCityByIP(session.RemoteAddr)
+		if err == nil {
+			session.updateRegion(city.City)
+		} else {
+			session.updateRegion("-")
+		}
+	}
 
 	// 通知用户免登录
 	SendBackUserOp(pbmodel.UserOperationType_Login,

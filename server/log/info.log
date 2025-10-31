@@ -7173,3 +7173,986 @@
 2025-10-30T12:05:16.756+0800	[34mINFO[0m	core/session.go:256	user(10001) session(903856804923052032)
 2025-10-30T12:06:21.877+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903856739869396992  sendId:1106  recvOk:1761797171485  extraMsg:\"ok\"  userId:10006  fromId:10001  params:{key:\"gid\"  value:\"0\"}"}
 2025-10-30T12:06:21.911+0800	[34mINFO[0m	core/session.go:256	user(0) session(903857336324591616)
+2025-10-30T12:23:52.141+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-30T12:23:56.581+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"DJlDGvyp4SxPth7dF+IAHxKhxh2VI8GEX7wIGpw=\"}"}
+2025-10-30T12:23:56.657+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10006, "count": 0}
+2025-10-30T12:23:56.658+0800	[34mINFO[0m	core/userhandler.go:998	user(10006) login ok
+2025-10-30T12:23:56.658+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761798236658,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":1,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-30T12:23:56.801+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTFriendOpRet
+2025-10-30T12:23:56.845+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTFriendOpRet
+2025-10-30T12:24:04.932+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1107) from 10006 -> 10001	{"msg": "MsgChat{msgId: 903861795268202496, userId: 10006, fromId: 10006, toId: 10001, tm: 1761798243912 (time: 2025-10-30 12:24:03), devId: \"BEF2A06F75075BC9\", sendId: 1107, msgType: TEXT, data: \"吃了么？中午\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-30T12:24:04.988+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-10-30T12:24:04.989+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10001) active session  list is null 
+2025-10-30T12:24:05.973+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861759998300160, "uid": 10006, "tm": "2025-10-30 12:24:04"}
+2025-10-30T12:24:18.426+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"2FvaspigOCOLALugi+vGqFQfi5OfcJe0PukioP8=\"}"}
+2025-10-30T12:24:18.427+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-30T12:24:18.427+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761798258427,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-30T12:24:18.480+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903861851559956480) MsgTFriendOpRet
+2025-10-30T12:24:18.526+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903861851559956480) MsgTFriendOpRet
+2025-10-30T12:24:18.570+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:903856739869396992 chatType:ChatTypeP2P"}
+2025-10-30T12:24:18.604+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 2}
+2025-10-30T12:24:18.674+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903856739869396992 sendId:1106 recvOk:1761798258606 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:24:18.713+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:24:18.790+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761798258606 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:24:18.806+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:24:25.867+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903856739869396992 sendId:1106 recvOk:1761798265776 readOk:1761798265776 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:24:25.907+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:24:26.061+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761798265780 readOk:1761798265780 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:24:26.074+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:24:36.867+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861759998300160, "uid": 10006, "tm": "2025-10-30 12:24:35"}
+2025-10-30T12:24:48.728+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861851559956480, "uid": 10001, "tm": "2025-10-30 12:24:48"}
+2025-10-30T12:24:49.490+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(903861851559956480) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-30T12:24:49.492+0800	[34mINFO[0m	core/session.go:256	user(10001) session(903861851559956480)
+2025-10-30T12:24:51.202+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"MYf7aUWO0plzMtD+eYBamb2L8GSLH54NPSTj7Mc=\"}"}
+2025-10-30T12:24:51.204+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-30T12:24:51.204+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761798291204,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-30T12:24:51.258+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903861988847915008) MsgTFriendOpRet
+2025-10-30T12:24:51.306+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903861988847915008) MsgTFriendOpRet
+2025-10-30T12:24:51.387+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:903861795268202496 chatType:ChatTypeP2P"}
+2025-10-30T12:24:51.399+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 1}
+2025-10-30T12:24:51.438+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761798291390 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:24:51.463+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:24:53.874+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761798293791 readOk:1761798293791 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:24:53.902+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:25:16.878+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861759998300160, "uid": 10006, "tm": "2025-10-30 12:25:15"}
+2025-10-30T12:25:21.464+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861988847915008, "uid": 10001, "tm": "2025-10-30 12:25:21"}
+2025-10-30T12:25:29.040+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(903861988847915008) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-30T12:25:29.041+0800	[34mINFO[0m	core/session.go:256	user(10001) session(903861988847915008)
+2025-10-30T12:35:02.401+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861759998300160, "uid": 10006, "tm": "2025-10-30 12:35:01"}
+2025-10-30T12:44:35.028+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"erXgXwnlWbDVd1k8L3pLC/pTOXAdHNhUNLR6Meg=\"}"}
+2025-10-30T12:44:35.028+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-30T12:44:35.028+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761799475028,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-30T12:44:35.086+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903866954211790848) MsgTFriendOpRet
+2025-10-30T12:44:35.133+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903866954211790848) MsgTFriendOpRet
+2025-10-30T12:44:35.178+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:903861795268202496 chatType:ChatTypeP2P"}
+2025-10-30T12:44:35.194+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 1}
+2025-10-30T12:44:35.224+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761799475186 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:44:35.242+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:45:02.357+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(903866954211790848) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-30T12:45:02.361+0800	[34mINFO[0m	core/session.go:256	user(10001) session(903866954211790848)
+2025-10-30T12:45:05.339+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861759998300160, "uid": 10006, "tm": "2025-10-30 12:45:04"}
+2025-10-30T12:53:48.494+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"5nnU6l2cKnsN903Gebc4B8mHrKaBdDQk2tICSOA=\"}"}
+2025-10-30T12:53:48.494+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-30T12:53:48.495+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761800028494,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-30T12:53:48.605+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903869275507396608) MsgTFriendOpRet
+2025-10-30T12:53:48.672+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903869275507396608) MsgTFriendOpRet
+2025-10-30T12:53:48.687+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:903861795268202496 chatType:ChatTypeP2P"}
+2025-10-30T12:53:48.709+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 1}
+2025-10-30T12:53:48.740+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761800028701 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:53:48.771+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:53:56.820+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903861759998300160, "uid": 10006, "tm": "2025-10-30 12:53:55"}
+2025-10-30T12:54:10.985+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:903861795268202496 sendId:1107 recvOk:1761800050913 readOk:1761800050913 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2025-10-30T12:54:11.012+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(903861759998300160) MsgTChatReply
+2025-10-30T12:54:18.719+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903869275507396608, "uid": 10001, "tm": "2025-10-30 12:54:18"}
+2025-10-30T12:54:49.167+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903869275507396608, "uid": 10001, "tm": "2025-10-30 12:54:49"}
+2025-10-30T12:55:19.607+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903869275507396608, "uid": 10001, "tm": "2025-10-30 12:55:19"}
+2025-10-30T12:55:50.028+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903869275507396608, "uid": 10001, "tm": "2025-10-30 12:55:49"}
+2025-10-30T12:57:17.213+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903869275507396608, "uid": 10001, "tm": "2025-10-30 12:57:17"}
+2025-10-30T12:57:19.989+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(903869275507396608) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-30T12:57:19.991+0800	[34mINFO[0m	core/session.go:256	user(10001) session(903869275507396608)
+2025-10-30T12:57:21.267+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"BWXtZtMzOgkPLw4kA3Zrg4dVPk6sdHbtvk7CGZc=\"}"}
+2025-10-30T12:57:21.268+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-30T12:57:21.268+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761800241268,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-30T12:57:21.349+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903870167933652992) MsgTFriendOpRet
+2025-10-30T12:57:21.410+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(903870167933652992) MsgTFriendOpRet
+2025-10-30T12:57:21.437+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:903861795268202497 chatType:ChatTypeP2P"}
+2025-10-30T12:57:21.456+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-30T12:57:51.410+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 903870167933652992, "uid": 10001, "tm": "2025-10-30 12:57:51"}
+2025-10-30T12:57:57.813+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(903870167933652992) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-30T12:57:57.817+0800	[34mINFO[0m	core/session.go:256	user(10001) session(903870167933652992)
+2025-10-31T07:11:59.472+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-31T07:23:14.982+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"INti/z8G7EVEbyvM6/f9HthQAkuS3NU160MtYF0=\"}"}
+2025-10-31T07:23:15.063+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10006, "count": 0}
+2025-10-31T07:23:15.065+0800	[34mINFO[0m	core/userhandler.go:998	user(10006) login ok
+2025-10-31T07:23:15.066+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761866595065,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":1,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:23:15.140+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904148475837550592) MsgTFriendOpRet
+2025-10-31T07:23:15.188+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904148475837550592) MsgTFriendOpRet
+2025-10-31T07:23:17.790+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 07:23:16"}
+2025-10-31T07:24:03.365+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\""}
+2025-10-31T07:24:03.421+0800	[35mDEBUG[0m	core/commonhelper.go:43	decode public key from msg:	{"publicKey": "-----BEGIN PUBLIC KEY-----\nMFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEiJUSBUB5+Lyn6TqsiE4AsaGVo+lA6OuXB6XBcZivptppKVfpqGpTRVP85Xp/KkovNmdnKmhlPybbh0okpM1PtQ==\n-----END PUBLIC KEY-----", "session": 904148677596155904}
+2025-10-31T07:24:03.467+0800	[35mDEBUG[0m	core/commonhandler.go:286	key exchage stage3, check data ok!	{"tm": "1761866642488", "check tm": "1761866642488"}
+2025-10-31T07:24:03.529+0800	[35mDEBUG[0m	core/commonhandler.go:286	key exchage stage3, check data ok!	{"tm": "1761866642488", "check tm": "1761866642488"}
+2025-10-31T07:24:14.668+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 07:24:13"}
+2025-10-31T07:24:45.934+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:24:45.934+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761866685934,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":1,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo","params":{"pwd":"123456"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:25:04.316+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148677596155904, "uid": 10007, "tm": "2025-10-31 07:25:03"}
+2025-10-31T07:25:35.033+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148677596155904, "uid": 10007, "tm": "2025-10-31 07:25:34"}
+2025-10-31T07:26:05.699+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148677596155904, "uid": 10007, "tm": "2025-10-31 07:26:04"}
+2025-10-31T07:26:10.671+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904148677596155904) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:26:10.672+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904148677596155904)
+2025-10-31T07:26:14.811+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"b01oQcrdmnZ5063UDUVja/+RQiaHGE2WTNQXI7k=\"}"}
+2025-10-31T07:26:14.812+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:26:14.812+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761866774812,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:26:45.257+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904149229486870528, "uid": 10007, "tm": "2025-10-31 07:26:44"}
+2025-10-31T07:26:46.134+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904149229486870528) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:26:46.136+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904149229486870528)
+2025-10-31T07:28:23.634+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"Y0tpItqxId0jszJUyGkKEWCJgu58cub3lCQ+W9A=\"}"}
+2025-10-31T07:28:23.635+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:28:23.636+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761866903635,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:28:40.059+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904149768819838976) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:28:40.059+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904149768819838976)
+2025-10-31T07:29:03.237+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"+H+7F9/OjzNq/mO6mXj67YfpOKPls89BlEbbA4U=\"}"}
+2025-10-31T07:29:03.238+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:29:03.238+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761866943238,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:29:08.996+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904149935283376128) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:29:08.997+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904149935283376128)
+2025-10-31T07:29:31.083+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"gFPeVemF+Mc4/QHDyLdFnRsuSadXE3q960s+WLQ=\"}"}
+2025-10-31T07:29:31.084+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:29:31.084+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761866971084,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:29:55.435+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904150052153462784) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:29:55.436+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904150052153462784)
+2025-10-31T07:30:44.584+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 07:30:43"}
+2025-10-31T07:30:53.550+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"B28vF3pmEPqT4IweDaqdAGKWRzed/IAcFMKFL0M=\"}"}
+2025-10-31T07:30:53.551+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:30:53.551+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761867053551,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:31:10.684+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904150397785083904) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:31:10.684+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904150397785083904)
+2025-10-31T07:32:47.192+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"nFGxeLU4G44g/Nwtol542NSqjPgKVjQhTwtAjAc=\"}"}
+2025-10-31T07:32:47.193+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:32:47.194+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761867167193,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:33:44.877+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904150874664865792) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:46488: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T07:33:44.878+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904150874664865792)
+2025-10-31T07:40:10.931+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 07:40:09"}
+2025-10-31T07:47:46.704+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"dxf7yfthf3Qfl4AmBSLqhVAz8vGTwo7UnW9HaD4=\"}"}
+2025-10-31T07:47:46.705+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:47:46.705+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761868066705,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:48:24.095+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904154646900248576) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:46603: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T07:48:24.096+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904154646900248576)
+2025-10-31T07:48:50.358+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 07:48:49"}
+2025-10-31T07:51:10.920+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"apGSg1na7Yhw9iPKoV4zGI4OfYKGZfOWLrfrSuw=\"}"}
+2025-10-31T07:51:10.921+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:51:10.921+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761868270921,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:52:02.946+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904155503087718400) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:46607: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T07:52:02.947+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904155503087718400)
+2025-10-31T07:52:55.874+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"loZAgQPPRTA0a4G7V+bYp2FQowTxqeQmqjC6+uk=\"}"}
+2025-10-31T07:52:55.874+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:52:55.875+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761868375874,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:53:08.703+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904155944055869440) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:53:08.703+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904155944055869440)
+2025-10-31T07:54:12.855+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"kszkt4ogd/34q1plOayQ9IjU51qU8y/YOwX4qEk=\"}"}
+2025-10-31T07:54:12.856+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:54:12.857+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761868452856,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:54:28.024+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904156267021471744) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:54:28.025+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904156267021471744)
+2025-10-31T07:54:45.907+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"NPKFHFj4a6VdtgU0oN56rWxjRasyjXHO3WpcsOc=\"}"}
+2025-10-31T07:54:45.908+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T07:54:45.908+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761868485908,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T07:54:58.765+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904156405588692992) MsgTFriendOpRet
+2025-10-31T07:54:58.793+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904156405588692992) MsgTFriendOpRet
+2025-10-31T07:54:58.839+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T07:54:58.873+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T07:55:28.637+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904156405588692992, "uid": 10007, "tm": "2025-10-31 07:55:27"}
+2025-10-31T07:55:59.406+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904156405588692992, "uid": 10007, "tm": "2025-10-31 07:55:58"}
+2025-10-31T07:56:30.153+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904156405588692992, "uid": 10007, "tm": "2025-10-31 07:56:29"}
+2025-10-31T07:57:00.827+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904156405588692992, "uid": 10007, "tm": "2025-10-31 07:57:00"}
+2025-10-31T07:57:31.399+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904156405588692992, "uid": 10007, "tm": "2025-10-31 07:57:30"}
+2025-10-31T07:58:36.051+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904156405588692992) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T07:58:36.052+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904156405588692992)
+2025-10-31T07:59:10.048+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 07:58:54"}
+2025-10-31T08:05:55.121+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 08:05:54"}
+2025-10-31T08:08:09.403+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"c+Jp1QZMS/fbc+b8FBvFinBg+y5VV8cbSwpfdCw=\"}"}
+2025-10-31T08:08:09.405+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:08:09.405+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761869289405,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:08:09.511+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904159776588566528) MsgTFriendOpRet
+2025-10-31T08:08:09.575+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904159776588566528) MsgTFriendOpRet
+2025-10-31T08:08:09.606+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:08:09.613+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:08:27.626+0800	[35mDEBUG[0m	core/filemsghander.go:23	File Upload msg:	{"user id": 10007, "filename": "1761869304903.jpg", "hash": "25ca37dc0b230e4cb6b96aa120884138", "send id": 1021}
+2025-10-31T08:08:27.739+0800	[34mINFO[0m	core/userhandler.go:482	set user info	{"user id": 10007}
+2025-10-31T08:08:27.739+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:08:27.741+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761869307739,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":5,"result":"ok","status":"ok","users":[{"userId":10007,"userName":"yoyo","nickName":"yoyo","icon":"15mxs6lr6i4o5.jpg"}],"params":{"status":"ok"}}}}}}}
+2025-10-31T08:08:39.871+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904159776588566528, "uid": 10007, "tm": "2025-10-31 08:08:39"}
+2025-10-31T08:09:10.564+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904159776588566528, "uid": 10007, "tm": "2025-10-31 08:09:09"}
+2025-10-31T08:09:22.050+0800	[34mINFO[0m	core/userhandler.go:482	set user info	{"user id": 10007}
+2025-10-31T08:09:22.050+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:09:22.050+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761869362050,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":5,"result":"ok","status":"ok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"15mxs6lr6i4o5.jpg","params":{"intro":"这是一个测试的账号","wd":"-"}}],"params":{"status":"ok"}}}}}}}
+2025-10-31T08:09:41.270+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904159776588566528, "uid": 10007, "tm": "2025-10-31 08:09:40"}
+2025-10-31T08:09:44.157+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"o/xEYL2043g5mzSjLzfPmyAzyJI40cKSM3jcoK4=\"}"}
+2025-10-31T08:09:44.159+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-31T08:09:44.159+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761869384159,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:09:44.209+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904160174372163584) MsgTFriendOpRet
+2025-10-31T08:09:44.257+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904160174372163584) MsgTFriendOpRet
+2025-10-31T08:09:44.349+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:903861795268202497 chatType:ChatTypeP2P"}
+2025-10-31T08:09:44.362+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:09:58.570+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904159776588566528) MsgTFriendOpRet
+2025-10-31T08:10:11.907+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904159776588566528, "uid": 10007, "tm": "2025-10-31 08:10:11"}
+2025-10-31T08:10:14.377+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:10:13"}
+2025-10-31T08:10:28.255+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904159776588566528) MsgTFriendOpRet
+2025-10-31T08:10:37.220+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904159776588566528) MsgTFriendOpRet
+2025-10-31T08:10:42.519+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904159776588566528, "uid": 10007, "tm": "2025-10-31 08:10:41"}
+2025-10-31T08:10:44.835+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:10:44"}
+2025-10-31T08:10:55.968+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904159776588566528) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:10:55.969+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904159776588566528)
+2025-10-31T08:14:01.277+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 08:14:00"}
+2025-10-31T08:17:42.902+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"yPAoygBBlK17+Nsy4JUhdq4ELg3g0KlZ0U9Dc9I=\"}"}
+2025-10-31T08:17:42.903+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:17:42.904+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761869862903,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"15mxs6lr6i4o5.jpg","params":{"intro":"这是一个测试的账号","wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:17:43.028+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904162182013521920) MsgTFriendOpRet
+2025-10-31T08:17:43.077+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904162182013521920) MsgTFriendOpRet
+2025-10-31T08:17:43.107+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:17:43.122+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:18:01.170+0800	[35mDEBUG[0m	core/filemsghander.go:23	File Upload msg:	{"user id": 10007, "filename": "1761869877954.jpg", "hash": "79cc0c1e2cca229e53810f21c10788ec", "send id": 1041}
+2025-10-31T08:18:01.237+0800	[34mINFO[0m	core/userhandler.go:482	set user info	{"user id": 10007}
+2025-10-31T08:18:01.237+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:18:01.237+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761869881237,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":5,"result":"ok","status":"ok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","params":{"intro":"这是一个测试的账号","wd":"-"}}],"params":{"status":"ok"}}}}}}}
+2025-10-31T08:18:13.341+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904162182013521920, "uid": 10007, "tm": "2025-10-31 08:18:12"}
+2025-10-31T08:18:16.846+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:18:16"}
+2025-10-31T08:18:31.262+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904162182013521920) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:18:31.264+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904162182013521920)
+2025-10-31T08:18:47.242+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:18:46"}
+2025-10-31T08:20:42.887+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"wMrY5xHcxttaUBH1aFBacNUCX/VPF8OxQRgBGps=\"}"}
+2025-10-31T08:20:42.889+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:20:42.889+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761870042889,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","params":{"intro":"这是一个测试的账号","wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:20:42.943+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904162936971464704) MsgTFriendOpRet
+2025-10-31T08:20:43.009+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904162936971464704) MsgTFriendOpRet
+2025-10-31T08:20:43.049+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:20:43.072+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:21:13.442+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904162936971464704, "uid": 10007, "tm": "2025-10-31 08:21:12"}
+2025-10-31T08:21:19.804+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:21:19"}
+2025-10-31T08:21:40.290+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904162936971464704) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:21:40.290+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904162936971464704)
+2025-10-31T08:21:44.321+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"K2U3Gn84SUAVkkgwuDS52/0c3xa7++2iK7lYN0c=\"}"}
+2025-10-31T08:21:44.323+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:21:44.323+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761870104323,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","params":{"intro":"这是一个测试的账号","wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:21:44.479+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904163194006802432) MsgTFriendOpRet
+2025-10-31T08:21:44.552+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904163194006802432) MsgTFriendOpRet
+2025-10-31T08:21:44.577+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:21:44.592+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:22:34.612+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904163194006802432) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:46737: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T08:22:34.613+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904163194006802432)
+2025-10-31T08:23:11.261+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 08:23:10"}
+2025-10-31T08:23:56.867+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 08:23:55"}
+2025-10-31T08:27:13.330+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:27:12"}
+2025-10-31T08:27:43.659+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:27:43"}
+2025-10-31T08:29:39.944+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:29:39"}
+2025-10-31T08:32:50.318+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904148475837550592, "uid": 10006, "tm": "2025-10-31 08:32:49"}
+2025-10-31T08:37:59.373+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904160174372163584, "uid": 10001, "tm": "2025-10-31 08:37:58"}
+2025-10-31T08:42:37.188+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-31T08:42:42.611+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"RgfYeGSGhg9GaaaxuEGy1ZuBwZrLHxnvDwFfn1w=\"}"}
+2025-10-31T08:42:42.701+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10007, "count": 0}
+2025-10-31T08:42:42.701+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:42:42.701+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761871362701,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:42:42.775+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904168472202842112) MsgTFriendOpRet
+2025-10-31T08:42:42.824+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904168472202842112) MsgTFriendOpRet
+2025-10-31T08:42:42.861+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:42:42.892+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:43:13.182+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:43:11"}
+2025-10-31T08:43:44.006+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:43:42"}
+2025-10-31T08:44:14.762+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:44:13"}
+2025-10-31T08:44:45.423+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:44:44"}
+2025-10-31T08:45:16.162+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:45:14"}
+2025-10-31T08:45:46.796+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:45:45"}
+2025-10-31T08:46:17.492+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:46:16"}
+2025-10-31T08:46:48.170+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:46:46"}
+2025-10-31T08:47:18.822+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904168472202842112, "uid": 10007, "tm": "2025-10-31 08:47:17"}
+2025-10-31T08:47:25.266+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904168472202842112) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:47:25.267+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904168472202842112)
+2025-10-31T08:47:32.835+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"TZToxntwIzIL1izTUKqLLttQxgB6RCJlZLmbR4g=\"}"}
+2025-10-31T08:47:32.837+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:47:32.837+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761871652837,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:47:33.314+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904169689394057216) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:47:33.316+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904169689394057216)
+2025-10-31T08:49:57.121+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"jH5RDxThFR21wAmyGTiFP4nup1pfHVcf7y7h01k=\"}"}
+2025-10-31T08:49:57.122+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:49:57.122+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761871797122,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:49:57.229+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904170294573404160) MsgTFriendOpRet
+2025-10-31T08:49:57.278+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904170294573404160) MsgTFriendOpRet
+2025-10-31T08:49:57.326+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:49:57.344+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:50:10.191+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904170294573404160) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:50:10.191+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904170294573404160)
+2025-10-31T08:50:12.753+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"uzfZNh3Wb5ji2qhBm6Srz/Hzndup7Kd7AnFjMsY=\"}"}
+2025-10-31T08:50:12.796+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10001, "count": 0}
+2025-10-31T08:50:12.797+0800	[34mINFO[0m	core/userhandler.go:998	user(10001) login ok
+2025-10-31T08:50:12.797+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761871812797,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:50:12.864+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904170360923099136) MsgTFriendOpRet
+2025-10-31T08:50:12.920+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904170360923099136) MsgTFriendOpRet
+2025-10-31T08:50:53.941+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"2qRqm/cvrrVT6zEaxAhtPXqu2g1xokGf1kAGyAE=\"}"}
+2025-10-31T08:50:53.943+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:50:53.943+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761871853943,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:50:54.062+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904170533057335296) MsgTFriendOpRet
+2025-10-31T08:50:54.110+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904170533057335296) MsgTFriendOpRet
+2025-10-31T08:50:54.145+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:50:54.157+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:51:24.486+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:51:23"}
+2025-10-31T08:51:55.307+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:51:54"}
+2025-10-31T08:52:26.012+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:52:24"}
+2025-10-31T08:52:56.824+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:52:55"}
+2025-10-31T08:53:07.355+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"oG64D4tBkqzR+Zf6vmJdckaPn1BeUvOvvMpG1nw=\"}"}
+2025-10-31T08:53:07.357+0800	[34mINFO[0m	core/userhandler.go:998	user(10006) login ok
+2025-10-31T08:53:07.357+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761871987357,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":1,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:53:07.414+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904171093210828800) MsgTFriendOpRet
+2025-10-31T08:53:07.478+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904171093210828800) MsgTFriendOpRet
+2025-10-31T08:53:09.984+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904171093210828800, "uid": 10006, "tm": "2025-10-31 08:53:09"}
+2025-10-31T08:53:27.450+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:53:26"}
+2025-10-31T08:53:58.093+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:53:56"}
+2025-10-31T08:54:28.654+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:54:27"}
+2025-10-31T08:54:59.239+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170533057335296, "uid": 10007, "tm": "2025-10-31 08:54:57"}
+2025-10-31T08:55:09.594+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904170533057335296) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:55:09.594+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904170533057335296)
+2025-10-31T08:56:08.021+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170360923099136, "uid": 10001, "tm": "2025-10-31 08:55:52"}
+2025-10-31T08:58:06.906+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"klRZWREFJRMfJplbdW7riSMNTfKq6vzSPR6baG4=\"}"}
+2025-10-31T08:58:06.908+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T08:58:06.908+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761872286908,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T08:58:07.019+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172348729593856) MsgTFriendOpRet
+2025-10-31T08:58:07.066+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172348729593856) MsgTFriendOpRet
+2025-10-31T08:58:07.103+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T08:58:07.112+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T08:58:07.710+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904172348729593856) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T08:58:07.710+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904172348729593856)
+2025-10-31T09:00:10.010+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"jBnfPnCuOSgfwjq2sIMwFNKtH8CJLkXZkOe2uI0=\"}"}
+2025-10-31T09:00:10.010+0800	[34mINFO[0m	core/userhandler.go:998	user(10007) login ok
+2025-10-31T09:00:10.010+0800	[35mDEBUG[0m	core/userhandler.go:999	user login ok	{"msg": {"version":1,"tm":1761872410010,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号"}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:00:10.138+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172865279102976) MsgTFriendOpRet
+2025-10-31T09:00:10.170+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172865279102976) MsgTFriendOpRet
+2025-10-31T09:00:10.229+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:00:10.244+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:00:40.368+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904172865279102976, "uid": 10007, "tm": "2025-10-31 09:00:38"}
+2025-10-31T09:01:02.009+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172865279102976) MsgTFriendOpRet
+2025-10-31T09:01:04.247+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904171093210828800) MsgTFriendOpRet
+2025-10-31T09:01:04.248+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172865279102976) MsgTFriendOpRet
+2025-10-31T09:01:10.164+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172865279102976) MsgTFriendOpRet
+2025-10-31T09:01:11.086+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904172865279102976, "uid": 10007, "tm": "2025-10-31 09:01:09"}
+2025-10-31T09:01:11.410+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904170360923099136) MsgTFriendOpRet
+2025-10-31T09:01:11.410+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904172865279102976) MsgTFriendOpRet
+2025-10-31T09:01:37.045+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904172865279102976) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:01:37.046+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904172865279102976)
+2025-10-31T09:02:04.443+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904171093210828800, "uid": 10006, "tm": "2025-10-31 09:02:03"}
+2025-10-31T09:03:55.291+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904170360923099136, "uid": 10001, "tm": "2025-10-31 09:03:53"}
+2025-10-31T09:08:07.510+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-31T09:08:16.771+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"kGo9sw5jyUhjTwDxTBDhbpHFckygzXtJooZpCIM=\"}"}
+2025-10-31T09:08:16.865+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10007, "count": 0}
+2025-10-31T09:08:16.866+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:08:16.866+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761872896866,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":2}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:08:16.928+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904174906885935104) MsgTFriendOpRet
+2025-10-31T09:08:16.990+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904174906885935104) MsgTFriendOpRet
+2025-10-31T09:08:17.022+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:08:17.044+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:08:38.582+0800	[34mINFO[0m	core/userhandler.go:486	set user info	{"user id": 10007}
+2025-10-31T09:08:38.582+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:08:38.582+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761872918582,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":5,"result":"ok","status":"ok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"ok"}}}}}}}
+2025-10-31T09:08:47.288+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904174906885935104, "uid": 10007, "tm": "2025-10-31 09:08:45"}
+2025-10-31T09:08:51.961+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904174906885935104) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:08:51.962+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904174906885935104)
+2025-10-31T09:08:57.307+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"J3ZY/6wYOwKpHfwZlyAxLtrTM2VtszZpoyE/mg4=\"}"}
+2025-10-31T09:08:57.308+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:08:57.308+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761872937308,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:08:57.409+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904175076902047744) MsgTFriendOpRet
+2025-10-31T09:08:57.470+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904175076902047744) MsgTFriendOpRet
+2025-10-31T09:08:57.504+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:08:57.511+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:09:27.841+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175076902047744, "uid": 10007, "tm": "2025-10-31 09:09:26"}
+2025-10-31T09:09:58.624+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175076902047744, "uid": 10007, "tm": "2025-10-31 09:09:57"}
+2025-10-31T09:10:27.876+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904175076902047744) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:10:27.878+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904175076902047744)
+2025-10-31T09:10:31.717+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"wMvpqd8mJcdRsBW9UwPMT6YpHAIEYrBWrNPZ7OQ=\"}"}
+2025-10-31T09:10:31.718+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:10:31.719+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761873031718,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:10:54.184+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904175472202616832) MsgTFriendOpRet
+2025-10-31T09:10:54.215+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904175472202616832) MsgTFriendOpRet
+2025-10-31T09:10:54.231+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:10:54.238+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:11:24.259+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175472202616832, "uid": 10007, "tm": "2025-10-31 09:11:22"}
+2025-10-31T09:11:55.141+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175472202616832, "uid": 10007, "tm": "2025-10-31 09:11:53"}
+2025-10-31T09:12:05.128+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"AxFGmG5Lf1hhCn1rqPzlZnpnyrFrb+NYqjd7vDs=\"}"}
+2025-10-31T09:12:05.131+0800	[34mINFO[0m	core/userhandler.go:1002	user(10006) login ok
+2025-10-31T09:12:05.131+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761873125130,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:12:05.242+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904175865288593408) MsgTFriendOpRet
+2025-10-31T09:12:05.303+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904175865288593408) MsgTFriendOpRet
+2025-10-31T09:12:23.770+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"Z98bAgA2tZNtSV8H+T9zwtqs632GMMQMqvR98SY=\"}"}
+2025-10-31T09:12:23.771+0800	[34mINFO[0m	core/userhandler.go:1002	user(10001) login ok
+2025-10-31T09:12:23.772+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761873143771,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:12:23.889+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904175943298453504) MsgTFriendOpRet
+2025-10-31T09:12:23.935+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(904175943298453504) MsgTFriendOpRet
+2025-10-31T09:12:26.101+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175472202616832, "uid": 10007, "tm": "2025-10-31 09:12:24"}
+2025-10-31T09:12:53.362+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904175472202616832) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:12:53.363+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904175472202616832)
+2025-10-31T09:13:02.108+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"Xrb5/nazD5exR7Skg0Mmxz2kpQkMzqQiaDgZEK8=\"}"}
+2025-10-31T09:13:02.110+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:13:02.110+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761873182110,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:13:02.229+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904176103080464384) MsgTFriendOpRet
+2025-10-31T09:13:02.293+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904176103080464384) MsgTFriendOpRet
+2025-10-31T09:13:02.331+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:13:02.339+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:14:32.478+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176103080464384, "uid": 10007, "tm": "2025-10-31 09:14:31"}
+2025-10-31T09:14:37.243+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904176103080464384) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:14:37.243+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904176103080464384)
+2025-10-31T09:14:40.917+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"KIyg4YXeDubJHyUAiTClTs6moD2OhesnfpFIdEM=\"}"}
+2025-10-31T09:14:40.919+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:14:40.920+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761873280919,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:14:41.031+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904176518119428096) MsgTFriendOpRet
+2025-10-31T09:14:41.077+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904176518119428096) MsgTFriendOpRet
+2025-10-31T09:14:41.124+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:14:41.139+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:15:11.389+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:15:09"}
+2025-10-31T09:15:42.214+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:15:40"}
+2025-10-31T09:16:12.999+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:16:11"}
+2025-10-31T09:16:25.794+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 09:16:24"}
+2025-10-31T09:16:43.757+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:16:42"}
+2025-10-31T09:17:09.656+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:17:09"}
+2025-10-31T09:17:14.387+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:17:12"}
+2025-10-31T09:17:43.405+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 09:17:42"}
+2025-10-31T09:17:44.971+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:17:43"}
+2025-10-31T09:18:15.592+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:18:14"}
+2025-10-31T09:18:46.197+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:18:44"}
+2025-10-31T09:19:16.843+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:19:15"}
+2025-10-31T09:19:25.523+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 09:19:24"}
+2025-10-31T09:19:47.388+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:19:45"}
+2025-10-31T09:20:18.034+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:20:16"}
+2025-10-31T09:20:48.657+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:20:47"}
+2025-10-31T09:21:19.302+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:21:17"}
+2025-10-31T09:21:32.283+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:21:31"}
+2025-10-31T09:21:49.867+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:21:48"}
+2025-10-31T09:22:20.517+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:22:19"}
+2025-10-31T09:22:38.687+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:22:38"}
+2025-10-31T09:22:50.987+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:22:49"}
+2025-10-31T09:23:21.598+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:23:20"}
+2025-10-31T09:23:52.151+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:23:51"}
+2025-10-31T09:24:22.669+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:24:21"}
+2025-10-31T09:24:26.261+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:24:25"}
+2025-10-31T09:24:53.114+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:24:52"}
+2025-10-31T09:25:23.582+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904176518119428096, "uid": 10007, "tm": "2025-10-31 09:25:22"}
+2025-10-31T09:25:50.274+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904176518119428096) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:25:50.275+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904176518119428096)
+2025-10-31T09:25:57.361+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"QKQ47ycaBWtrfn99B8ZTAYrWVr5R0PT17oMfIGA=\"}"}
+2025-10-31T09:25:57.363+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:25:57.364+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761873957363,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:25:57.481+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179355318620160) MsgTFriendOpRet
+2025-10-31T09:25:57.518+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179355318620160) MsgTFriendOpRet
+2025-10-31T09:25:57.564+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:25:57.573+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:26:10.188+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179355318620160) MsgTFriendOpRet
+2025-10-31T09:26:12.989+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10002) active session  list is null 
+2025-10-31T09:26:12.990+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179355318620160) MsgTFriendOpRet
+2025-10-31T09:26:27.840+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904179355318620160, "uid": 10007, "tm": "2025-10-31 09:26:27"}
+2025-10-31T09:26:57.588+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904179355318620160) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:26:57.589+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904179355318620160)
+2025-10-31T09:27:01.173+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"2HPzeGCNzKExK0qTdZZ/CIscwiok95lM/vEeqmY=\"}"}
+2025-10-31T09:27:01.174+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:27:01.174+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761874021174,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:27:01.399+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179622340595712) MsgTFriendOpRet
+2025-10-31T09:27:01.445+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179622340595712) MsgTFriendOpRet
+2025-10-31T09:27:01.490+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:27:01.508+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:27:31.698+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904179622340595712, "uid": 10007, "tm": "2025-10-31 09:27:30"}
+2025-10-31T09:27:58.249+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904179622340595712) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:27:58.250+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904179622340595712)
+2025-10-31T09:28:06.855+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"Lz9JxlDX7GU7OEsGTspSYNTLfe3B0kk1r6mR0UI=\"}"}
+2025-10-31T09:28:06.856+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:28:06.857+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761874086856,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:28:07.027+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179897830871040) MsgTFriendOpRet
+2025-10-31T09:28:07.075+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179897830871040) MsgTFriendOpRet
+2025-10-31T09:28:07.114+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:28:07.135+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:28:23.839+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179897830871040) MsgTFriendOpRet
+2025-10-31T09:28:44.948+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904179897830871040, "uid": 10007, "tm": "2025-10-31 09:28:44"}
+2025-10-31T09:28:54.946+0800	[35mDEBUG[0m	core/msghelper.go:52	can't find user(10003) in cache!!
+2025-10-31T09:28:54.947+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179897830871040) MsgTFriendOpRet
+2025-10-31T09:29:05.437+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 09:29:04"}
+2025-10-31T09:29:31.951+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904179897830871040) MsgTFriendOpRet
+2025-10-31T09:29:35.017+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904179897830871040) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:29:35.018+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904179897830871040)
+2025-10-31T09:29:56.785+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"GJ0VadAyko5rogElp1anUedUerDq5DPdgFSzFAk=\"}"}
+2025-10-31T09:29:56.787+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:29:56.787+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761874196787,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":4,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:29:56.956+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904180358801657856) MsgTFriendOpRet
+2025-10-31T09:29:57.001+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904180358801657856) MsgTFriendOpRet
+2025-10-31T09:29:57.040+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:29:57.065+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:30:13.271+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904180358801657856) MsgTFriendOpRet
+2025-10-31T09:30:16.760+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10004) active session  list is null 
+2025-10-31T09:30:16.760+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904180358801657856) MsgTFriendOpRet
+2025-10-31T09:30:56.937+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904180358801657856, "uid": 10007, "tm": "2025-10-31 09:30:56"}
+2025-10-31T09:31:04.165+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904180358801657856) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:31:04.166+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904180358801657856)
+2025-10-31T09:31:07.723+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"5I6LFKQeHY8TQzChm0nCcGIsbm6Lf1kTPJBBFso=\"}"}
+2025-10-31T09:31:07.724+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:31:07.725+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761874267724,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":5,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:31:07.932+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904180656433664000) MsgTFriendOpRet
+2025-10-31T09:31:07.979+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904180656433664000) MsgTFriendOpRet
+2025-10-31T09:31:08.027+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:31:08.038+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:31:17.570+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904180656433664000) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:31:17.572+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904180656433664000)
+2025-10-31T09:33:04.871+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:33:04"}
+2025-10-31T09:38:02.533+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"M0wpueXDgJt0V4Mc4/7lgpdKSUfplqF/ZUKUEhQ=\"}"}
+2025-10-31T09:38:02.535+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:38:02.535+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761874682535,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":5,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:38:02.647+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904182396902051840) MsgTFriendOpRet
+2025-10-31T09:38:02.709+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904182396902051840) MsgTFriendOpRet
+2025-10-31T09:38:02.743+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:38:02.755+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:38:28.751+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904182396902051840) MsgTFriendOpRet
+2025-10-31T09:38:33.029+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904182396902051840, "uid": 10007, "tm": "2025-10-31 09:38:32"}
+2025-10-31T09:38:33.077+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904182396902051840) MsgTFriendOpRet
+2025-10-31T09:38:35.923+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904182396902051840) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T09:38:35.924+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904182396902051840)
+2025-10-31T09:38:45.473+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 09:38:44"}
+2025-10-31T09:39:48.446+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:39:48"}
+2025-10-31T09:46:04.331+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"XUfWlQSCPW4nVqkqYCGZVxIvi2zxvrKDUUXdCGA=\"}"}
+2025-10-31T09:46:04.332+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T09:46:04.333+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761875164332,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":5,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T09:46:04.445+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904184417717719040) MsgTFriendOpRet
+2025-10-31T09:46:04.505+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904184417717719040) MsgTFriendOpRet
+2025-10-31T09:46:04.536+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T09:46:04.552+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T09:46:29.924+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175943298453504, "uid": 10001, "tm": "2025-10-31 09:46:29"}
+2025-10-31T09:46:34.867+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:46:34"}
+2025-10-31T09:47:05.656+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:47:04"}
+2025-10-31T09:47:36.499+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:47:35"}
+2025-10-31T09:48:07.258+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:48:06"}
+2025-10-31T09:48:37.976+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:48:37"}
+2025-10-31T09:49:08.592+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:49:07"}
+2025-10-31T09:49:39.199+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:49:38"}
+2025-10-31T09:49:45.229+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 09:49:40"}
+2025-10-31T09:50:09.818+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:50:09"}
+2025-10-31T09:50:40.421+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:50:39"}
+2025-10-31T09:50:43.868+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(904175943298453504) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.31:39748: i/o timeout
+2025-10-31T09:50:43.868+0800	[34mINFO[0m	core/session.go:256	user(10001) session(904175943298453504)
+2025-10-31T09:51:11.021+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:51:10"}
+2025-10-31T09:51:41.636+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:51:40"}
+2025-10-31T09:52:12.268+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:52:11"}
+2025-10-31T09:52:42.918+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:52:42"}
+2025-10-31T09:53:13.540+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:53:12"}
+2025-10-31T09:53:44.144+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:53:43"}
+2025-10-31T09:54:14.683+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:54:13"}
+2025-10-31T09:54:45.249+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:54:44"}
+2025-10-31T09:55:15.837+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:55:15"}
+2025-10-31T09:55:46.382+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:55:45"}
+2025-10-31T09:56:16.913+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:56:16"}
+2025-10-31T09:56:47.406+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:56:46"}
+2025-10-31T09:57:17.873+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:57:17"}
+2025-10-31T09:57:48.382+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:57:47"}
+2025-10-31T09:58:18.903+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:58:18"}
+2025-10-31T09:58:49.412+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:58:48"}
+2025-10-31T09:59:19.869+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:59:19"}
+2025-10-31T09:59:50.354+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 09:59:49"}
+2025-10-31T10:00:00.661+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:00:00"}
+2025-10-31T10:00:20.845+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 10:00:20"}
+2025-10-31T10:00:51.353+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 10:00:50"}
+2025-10-31T10:01:21.848+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 10:01:21"}
+2025-10-31T10:01:52.364+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 10:01:51"}
+2025-10-31T10:02:22.872+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904184417717719040, "uid": 10007, "tm": "2025-10-31 10:02:22"}
+2025-10-31T10:02:33.001+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904184417717719040) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:02:33.002+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904184417717719040)
+2025-10-31T10:08:17.361+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:08:16"}
+2025-10-31T10:08:47.800+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:08:47"}
+2025-10-31T10:09:18.206+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:09:17"}
+2025-10-31T10:09:49.085+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:09:48"}
+2025-10-31T10:10:19.915+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:10:19"}
+2025-10-31T10:10:39.906+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"hBzCEWe9albBjTJS/Qqw0tWTRqGVN7U077wIHcM=\"}"}
+2025-10-31T10:10:39.909+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:10:39.910+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761876639909,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":5,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:10:40.031+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904190606761398272) MsgTFriendOpRet
+2025-10-31T10:10:40.095+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904190606761398272) MsgTFriendOpRet
+2025-10-31T10:10:40.116+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:10:40.137+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:10:50.803+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:10:50"}
+2025-10-31T10:11:10.385+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:11:09"}
+2025-10-31T10:11:41.112+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:11:40"}
+2025-10-31T10:12:11.783+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:12:11"}
+2025-10-31T10:12:42.325+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:12:41"}
+2025-10-31T10:13:12.817+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:13:12"}
+2025-10-31T10:13:43.372+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:13:42"}
+2025-10-31T10:14:13.919+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:14:13"}
+2025-10-31T10:14:44.438+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:14:43"}
+2025-10-31T10:15:05.430+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:15:04"}
+2025-10-31T10:15:14.946+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:15:14"}
+2025-10-31T10:15:45.454+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:15:44"}
+2025-10-31T10:16:15.998+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:16:15"}
+2025-10-31T10:16:41.068+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:16:40"}
+2025-10-31T10:16:46.581+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:16:45"}
+2025-10-31T10:17:17.113+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:17:16"}
+2025-10-31T10:17:47.601+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:17:46"}
+2025-10-31T10:18:18.143+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:18:17"}
+2025-10-31T10:18:48.634+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:18:47"}
+2025-10-31T10:19:19.174+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:19:18"}
+2025-10-31T10:19:49.676+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:19:48"}
+2025-10-31T10:20:20.176+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:20:19"}
+2025-10-31T10:20:50.623+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904190606761398272, "uid": 10007, "tm": "2025-10-31 10:20:49"}
+2025-10-31T10:21:15.229+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904190606761398272) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:21:15.231+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904190606761398272)
+2025-10-31T10:21:22.321+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"IF+OhjIvmTAfeb81xZD+DtOTKlmRE5J3mGuqdY4=\"}"}
+2025-10-31T10:21:22.324+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:21:22.325+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761877282324,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":5,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:21:22.471+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193301215842304) MsgTFriendOpRet
+2025-10-31T10:21:22.516+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193301215842304) MsgTFriendOpRet
+2025-10-31T10:21:22.523+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:21:22.561+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:21:34.666+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193301215842304) MsgTFriendOpRet
+2025-10-31T10:21:37.217+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193301215842304) MsgTFriendOpRet
+2025-10-31T10:21:39.148+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193301215842304) MsgTFriendOpRet
+2025-10-31T10:21:41.755+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904193301215842304) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:21:41.756+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904193301215842304)
+2025-10-31T10:21:44.770+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"B4Fdk87p4UNjh1Mo90G7b5yQIgk8+kEI/Y8KAHQ=\"}"}
+2025-10-31T10:21:44.771+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:21:44.771+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761877304771,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":2,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:21:44.873+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193395377967104) MsgTFriendOpRet
+2025-10-31T10:21:44.921+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193395377967104) MsgTFriendOpRet
+2025-10-31T10:21:44.966+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:21:44.984+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:22:15.220+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:22:14"}
+2025-10-31T10:22:45.958+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:22:45"}
+2025-10-31T10:23:10.901+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:23:10"}
+2025-10-31T10:23:16.647+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:23:16"}
+2025-10-31T10:23:47.312+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:23:46"}
+2025-10-31T10:24:17.879+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:24:17"}
+2025-10-31T10:24:48.452+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:24:47"}
+2025-10-31T10:25:19.026+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:25:18"}
+2025-10-31T10:25:49.604+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:25:48"}
+2025-10-31T10:26:20.170+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:26:19"}
+2025-10-31T10:26:50.797+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:26:50"}
+2025-10-31T10:27:21.372+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:27:20"}
+2025-10-31T10:27:51.943+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:27:51"}
+2025-10-31T10:28:22.522+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:28:21"}
+2025-10-31T10:28:53.055+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:28:52"}
+2025-10-31T10:29:23.592+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:29:22"}
+2025-10-31T10:29:54.162+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:29:53"}
+2025-10-31T10:30:24.723+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:30:24"}
+2025-10-31T10:30:55.230+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:30:54"}
+2025-10-31T10:31:25.713+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:31:25"}
+2025-10-31T10:31:56.167+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:31:55"}
+2025-10-31T10:32:04.837+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:32:04"}
+2025-10-31T10:32:26.673+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:32:26"}
+2025-10-31T10:32:57.204+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:32:56"}
+2025-10-31T10:33:27.718+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:33:27"}
+2025-10-31T10:33:58.205+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:33:57"}
+2025-10-31T10:34:28.676+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:34:28"}
+2025-10-31T10:34:59.156+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:34:58"}
+2025-10-31T10:35:29.615+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:35:28"}
+2025-10-31T10:36:00.081+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:35:59"}
+2025-10-31T10:36:30.596+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:36:29"}
+2025-10-31T10:37:01.083+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:37:00"}
+2025-10-31T10:37:31.595+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:37:30"}
+2025-10-31T10:38:02.116+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:38:01"}
+2025-10-31T10:38:32.660+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:38:32"}
+2025-10-31T10:39:03.166+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:39:02"}
+2025-10-31T10:39:33.664+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:39:33"}
+2025-10-31T10:39:46.192+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:39:45"}
+2025-10-31T10:40:04.181+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:40:03"}
+2025-10-31T10:40:34.675+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:40:34"}
+2025-10-31T10:41:05.147+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:41:04"}
+2025-10-31T10:41:35.635+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:41:35"}
+2025-10-31T10:42:06.125+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:42:05"}
+2025-10-31T10:42:36.631+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:42:36"}
+2025-10-31T10:43:07.112+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:43:06"}
+2025-10-31T10:43:37.579+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:43:36"}
+2025-10-31T10:44:08.058+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:44:07"}
+2025-10-31T10:44:38.570+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:44:37"}
+2025-10-31T10:45:09.083+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:45:08"}
+2025-10-31T10:45:39.537+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:45:38"}
+2025-10-31T10:46:10.003+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:46:09"}
+2025-10-31T10:46:15.666+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193395377967104) MsgTFriendOpRet
+2025-10-31T10:46:17.429+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904175865288593408) MsgTFriendOpRet
+2025-10-31T10:46:17.429+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193395377967104) MsgTFriendOpRet
+2025-10-31T10:46:40.533+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:46:39"}
+2025-10-31T10:47:11.008+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:47:10"}
+2025-10-31T10:47:41.480+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:47:40"}
+2025-10-31T10:48:11.986+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:48:11"}
+2025-10-31T10:48:13.536+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:48:12"}
+2025-10-31T10:48:28.720+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904175865288593408) MsgTFriendOpRet
+2025-10-31T10:48:30.624+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904193395377967104) MsgTFriendOpRet
+2025-10-31T10:48:30.625+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904175865288593408) MsgTFriendOpRet
+2025-10-31T10:48:42.423+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904193395377967104, "uid": 10007, "tm": "2025-10-31 10:48:41"}
+2025-10-31T10:48:44.385+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:48:43"}
+2025-10-31T10:48:54.474+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904193395377967104) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:48:54.475+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904193395377967104)
+2025-10-31T10:48:58.414+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"wi/I7wO9ELhxsDjaALOSa7cyk7YBewAMxqhFWHs=\"}"}
+2025-10-31T10:48:58.416+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:48:58.416+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761878938416,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"fans":1,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:48:58.495+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904200247402696704) MsgTFriendOpRet
+2025-10-31T10:48:58.542+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904200247402696704) MsgTFriendOpRet
+2025-10-31T10:48:58.571+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:48:58.588+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:49:15.467+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:49:14"}
+2025-10-31T10:49:28.985+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904200247402696704, "uid": 10007, "tm": "2025-10-31 10:49:28"}
+2025-10-31T10:49:59.789+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904200247402696704, "uid": 10007, "tm": "2025-10-31 10:49:59"}
+2025-10-31T10:50:30.508+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904200247402696704, "uid": 10007, "tm": "2025-10-31 10:50:29"}
+2025-10-31T10:51:01.120+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904200247402696704, "uid": 10007, "tm": "2025-10-31 10:51:00"}
+2025-10-31T10:51:17.790+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904200247402696704) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:51:17.791+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904200247402696704)
+2025-10-31T10:51:21.344+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"NK0mv8B+IrZd3z+/RD8kXLKyINRlzFRheZv4nLU=\"}"}
+2025-10-31T10:51:21.346+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:51:21.346+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879081346,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"fans":1,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:51:21.502+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904200846257033216) MsgTFriendOpRet
+2025-10-31T10:51:21.549+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904200846257033216) MsgTFriendOpRet
+2025-10-31T10:51:21.614+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:51:21.624+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:51:46.775+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904200846257033216) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:51:46.776+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904200846257033216)
+2025-10-31T10:52:45.850+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"smdkEvxUtpvXXiMnqqg8CizkrNb2XrXQCDvDgEw=\"}"}
+2025-10-31T10:52:45.851+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:52:45.851+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879165851,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"fans":1,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:52:46.042+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904201201254535168) MsgTFriendOpRet
+2025-10-31T10:52:46.056+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904201201254535168) MsgTFriendOpRet
+2025-10-31T10:52:46.061+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:52:46.071+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:52:53.428+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904201201254535168) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:52:53.430+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904201201254535168)
+2025-10-31T10:53:05.975+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:53:05"}
+2025-10-31T10:54:45.617+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"RzImmtIglZKK3QBiEF9qkOTreWuLyZd1fx8HNDU=\"}"}
+2025-10-31T10:54:45.620+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T10:54:45.621+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879285620,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"fans":1,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:54:45.781+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904201703677628416) MsgTFriendOpRet
+2025-10-31T10:54:45.795+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904201703677628416) MsgTFriendOpRet
+2025-10-31T10:54:45.820+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T10:54:45.843+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:54:54.325+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904201703677628416) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:54:54.325+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904201703677628416)
+2025-10-31T10:56:59.139+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:56:58"}
+2025-10-31T10:57:29.995+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904175865288593408, "uid": 10006, "tm": "2025-10-31 10:57:29"}
+2025-10-31T10:57:43.417+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(904175865288593408) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:57:43.418+0800	[34mINFO[0m	core/session.go:256	user(10006) session(904175865288593408)
+2025-10-31T10:57:57.584+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"rtyBawWAhU0M7ZlsIXD9fx/zCHcvblOavmXO53M=\"}"}
+2025-10-31T10:57:57.586+0800	[34mINFO[0m	core/userhandler.go:1002	user(10006) login ok
+2025-10-31T10:57:57.586+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879477586,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T10:57:57.707+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904202508677812224) MsgTFriendOpRet
+2025-10-31T10:57:57.754+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904202508677812224) MsgTFriendOpRet
+2025-10-31T10:57:57.987+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:903861795268202497 chatType:ChatTypeP2P"}
+2025-10-31T10:57:57.998+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T10:58:28.052+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904202508677812224, "uid": 10006, "tm": "2025-10-31 10:58:27"}
+2025-10-31T10:58:59.151+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904202508677812224, "uid": 10006, "tm": "2025-10-31 10:58:58"}
+2025-10-31T10:59:09.008+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(904202508677812224) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T10:59:09.009+0800	[34mINFO[0m	core/session.go:256	user(10006) session(904202508677812224)
+2025-10-31T11:01:09.510+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"GMVErYSgPPXtR6yEqV3N6oKEmbIzxpIZ4/Rts5A=\"}"}
+2025-10-31T11:01:09.512+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T11:01:09.512+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879669512,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风，","follows":3,"fans":1,"params":{"wd":"-"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T11:01:09.621+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904203313774465024) MsgTFriendOpRet
+2025-10-31T11:01:09.684+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904203313774465024) MsgTFriendOpRet
+2025-10-31T11:01:09.713+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:1 chatType:ChatTypeP2P"}
+2025-10-31T11:01:09.730+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T11:01:18.061+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1061) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904203350562705408, userId: 10007, fromId: 10007, toId: 10006, tm: 1761879677311 (time: 2025-10-31 11:01:17), devId: \"49D204D9C06B1CE8\", sendId: 1061, msgType: TEXT, data: \"测试\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T11:01:18.119+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-10-31T11:01:18.120+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2025-10-31T11:01:25.488+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"FNKoZecItzOazX/x6zhO/dpXmOm22TTZ5I3zT9k=\"}"}
+2025-10-31T11:01:25.490+0800	[34mINFO[0m	core/userhandler.go:1002	user(10006) login ok
+2025-10-31T11:01:25.490+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879685490,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T11:01:25.561+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904203381256622080) MsgTFriendOpRet
+2025-10-31T11:01:25.607+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904203381256622080) MsgTFriendOpRet
+2025-10-31T11:01:25.690+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:903861795268202497 chatType:ChatTypeP2P"}
+2025-10-31T11:01:25.714+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 1}
+2025-10-31T11:01:25.741+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:904203350562705408 sendId:1061 recvOk:1761879685121 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-10-31T11:01:25.773+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904203313774465024) MsgTChatReply
+2025-10-31T11:01:40.161+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203313774465024, "uid": 10007, "tm": "2025-10-31 11:01:39"}
+2025-10-31T11:01:49.119+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:904203350562705408 sendId:1061 recvOk:1761879708479 readOk:1761879708479 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-10-31T11:01:49.171+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904203313774465024) MsgTChatReply
+2025-10-31T11:01:56.334+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203381256622080, "uid": 10006, "tm": "2025-10-31 11:01:55"}
+2025-10-31T11:02:11.235+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203313774465024, "uid": 10007, "tm": "2025-10-31 11:02:10"}
+2025-10-31T11:02:27.567+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203381256622080, "uid": 10006, "tm": "2025-10-31 11:02:26"}
+2025-10-31T11:02:42.117+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203313774465024, "uid": 10007, "tm": "2025-10-31 11:02:41"}
+2025-10-31T11:02:58.902+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203381256622080, "uid": 10006, "tm": "2025-10-31 11:02:58"}
+2025-10-31T11:03:07.714+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(904203381256622080) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T11:03:07.715+0800	[34mINFO[0m	core/session.go:256	user(10006) session(904203381256622080)
+2025-10-31T11:03:14.239+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"oZPGNlbeibMFDMVpKR67M/WmbprbWgE7lUgV6BE=\"}"}
+2025-10-31T11:03:14.239+0800	[34mINFO[0m	core/userhandler.go:1002	user(10006) login ok
+2025-10-31T11:03:14.239+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761879794239,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T11:03:14.357+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904203836883865600) MsgTFriendOpRet
+2025-10-31T11:03:14.403+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904203836883865600) MsgTFriendOpRet
+2025-10-31T11:03:14.613+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:904203350562705409 chatType:ChatTypeP2P"}
+2025-10-31T11:03:14.636+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T11:03:44.903+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203836883865600, "uid": 10006, "tm": "2025-10-31 11:03:44"}
+2025-10-31T11:03:54.388+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(904203836883865600) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T11:03:54.388+0800	[34mINFO[0m	core/session.go:256	user(10006) session(904203836883865600)
+2025-10-31T11:07:16.225+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"vRMthhfviICKKGijcZbR5qhJOegha+X4XpuFXnI=\"}"}
+2025-10-31T11:07:16.225+0800	[34mINFO[0m	core/userhandler.go:1002	user(10006) login ok
+2025-10-31T11:07:16.226+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761880036225,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T11:07:16.331+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904204851104321536) MsgTFriendOpRet
+2025-10-31T11:07:16.377+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904204851104321536) MsgTFriendOpRet
+2025-10-31T11:07:16.831+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:904203350562705409 chatType:ChatTypeP2P"}
+2025-10-31T11:07:16.855+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T11:07:39.110+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(904204851104321536) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T11:07:39.112+0800	[34mINFO[0m	core/session.go:256	user(10006) session(904204851104321536)
+2025-10-31T11:09:50.019+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203313774465024, "uid": 10007, "tm": "2025-10-31 11:09:49"}
+2025-10-31T11:18:45.264+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203313774465024, "uid": 10007, "tm": "2025-10-31 11:18:44"}
+2025-10-31T11:26:25.472+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904203313774465024, "uid": 10007, "tm": "2025-10-31 11:26:24"}
+2025-10-31T11:57:11.096+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-31T11:57:59.513+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:1271890416231516115  params:{key:\"checkTokenData\"  value:\"zmnocArrio/e5BtPF9pw0BwyB3ndiBjJnc8U3pc=\"}"}
+2025-10-31T11:57:59.590+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10007, "count": 0}
+2025-10-31T11:57:59.590+0800	[34mINFO[0m	core/userhandler.go:1002	user(10007) login ok
+2025-10-31T11:57:59.590+0800	[35mDEBUG[0m	core/userhandler.go:1003	user login ok	{"msg": {"version":1,"tm":1761883079590,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3,"fans":1}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T11:57:59.743+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904217616984444928) MsgTFriendOpRet
+2025-10-31T11:57:59.804+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904217616984444928) MsgTFriendOpRet
+2025-10-31T12:03:02.290+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904217616984444928, "uid": 10007, "tm": "2025-10-31 12:03:00"}
+2025-10-31T12:10:22.989+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904217616984444928, "uid": 10007, "tm": "2025-10-31 12:10:21"}
+2025-10-31T12:19:00.546+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904217616984444928, "uid": 10007, "tm": "2025-10-31 12:18:59"}
+2025-10-31T12:28:25.061+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904217616984444928, "uid": 10007, "tm": "2025-10-31 12:28:24"}
+2025-10-31T12:33:09.904+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-31T12:33:52.624+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"pviuWyn8yYb4AsODVzsKe+sG5VKTK20sH7pjWpA=\"}"}
+2025-10-31T12:33:52.722+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10006, "count": 0}
+2025-10-31T12:33:52.726+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-10-31T12:33:52.727+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885232726,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:33:52.892+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904226646545010688) MsgTFriendOpRet
+2025-10-31T12:33:52.938+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904226646545010688) MsgTFriendOpRet
+2025-10-31T12:33:53.223+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:904203350562705409 chatType:ChatTypeP2P"}
+2025-10-31T12:33:53.249+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T12:34:06.368+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904226646545010688) MsgTFriendOpRet
+2025-10-31T12:34:06.368+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10007) active session  list is null 
+2025-10-31T12:34:23.070+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904226646545010688, "uid": 10006, "tm": "2025-10-31 12:34:21"}
+2025-10-31T12:34:30.768+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(904226646545010688) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T12:34:30.769+0800	[34mINFO[0m	core/session.go:256	user(10006) session(904226646545010688)
+2025-10-31T12:35:57.567+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"BvKHrG4UunZe7wo9QqcaDYBIealy/RW+BeI9Qxw=\"}"}
+2025-10-31T12:35:57.569+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-10-31T12:35:57.569+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885357569,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:35:57.661+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904227170409385984) MsgTFriendOpRet
+2025-10-31T12:35:57.721+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904227170409385984) MsgTFriendOpRet
+2025-10-31T12:35:58.226+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:904203350562705409 chatType:ChatTypeP2P"}
+2025-10-31T12:35:58.241+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T12:36:12.046+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1121) from 10006 -> 10007	{"msg": "MsgChat{msgId: 904227232866766848, userId: 10006, fromId: 10006, toId: 10007, tm: 1761885370891 (time: 2025-10-31 12:36:10), devId: \"BEF2A06F75075BC9\", sendId: 1121, msgType: TEXT, data: \"你好\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T12:36:12.101+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-10-31T12:36:12.101+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10007) active session  list is null 
+2025-10-31T12:36:20.669+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"YBoL4HxNVRFSg5/5in4i4u/AQKWghDjJesarG0Q=\"}"}
+2025-10-31T12:36:20.670+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T12:36:20.670+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885380670,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:36:20.744+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904227268858089472) MsgTFriendOpRet
+2025-10-31T12:36:20.783+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904227268858089472) MsgTFriendOpRet
+2025-10-31T12:36:26.444+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904227268858089472) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T12:36:26.445+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904227268858089472)
+2025-10-31T12:36:27.995+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904227170409385984, "uid": 10006, "tm": "2025-10-31 12:36:26"}
+2025-10-31T12:36:35.693+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"k2ZNmd7SCJC8XS9RB8JEsGrZaEZ81mxliQwW/g4=\"}"}
+2025-10-31T12:36:35.695+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T12:36:35.695+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885395695,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:36:35.809+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904227330577272832) MsgTFriendOpRet
+2025-10-31T12:36:35.871+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904227330577272832) MsgTFriendOpRet
+2025-10-31T12:36:35.899+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904203350562705409 chatType:ChatTypeP2P"}
+2025-10-31T12:36:35.918+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 1}
+2025-10-31T12:36:35.953+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10007, "to": 10006, "msg": "msgId:904227232866766848 sendId:1121 recvOk:1761885395151 extraMsg:\"ok\" userId:10006 fromId:10007 params:{key:\"gid\" value:\"0\"}"}
+2025-10-31T12:36:35.982+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904227170409385984) MsgTChatReply
+2025-10-31T12:36:59.202+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904227170409385984, "uid": 10006, "tm": "2025-10-31 12:36:58"}
+2025-10-31T12:37:04.327+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904227330577272832) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T12:37:04.327+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904227330577272832)
+2025-10-31T12:37:08.264+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"D2YAsOOFpV7yyS/D4EIabPE0yQlh1+up+n2Tkos=\"}"}
+2025-10-31T12:37:08.265+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T12:37:08.265+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885428265,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:37:08.481+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904227467068313600) MsgTFriendOpRet
+2025-10-31T12:37:08.528+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904227467068313600) MsgTFriendOpRet
+2025-10-31T12:37:08.570+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904227232866766849 chatType:ChatTypeP2P"}
+2025-10-31T12:37:08.592+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T12:37:38.706+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904227467068313600, "uid": 10007, "tm": "2025-10-31 12:37:37"}
+2025-10-31T12:37:52.196+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1081) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904227652930506752, userId: 10007, fromId: 10007, toId: 10006, tm: 1761885471371 (time: 2025-10-31 12:37:51), devId: \"49D204D9C06B1CE8\", sendId: 1081, msgType: TEXT, data: \"测试\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T12:37:52.197+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904227467068313600)
+2025-10-31T12:41:49.685+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-10-31T12:41:54.257+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"cBDFD7wPRi6ELRNZu4RLJ9zLhS+CZTfes4Ewnho=\"}"}
+2025-10-31T12:41:54.359+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10007, "count": 0}
+2025-10-31T12:41:54.369+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T12:41:54.369+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885714369,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:41:54.484+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904228667910131712) MsgTFriendOpRet
+2025-10-31T12:41:54.526+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904228667910131712) MsgTFriendOpRet
+2025-10-31T12:42:09.888+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904228667910131712, "uid": 10007, "tm": "2025-10-31 12:42:09"}
+2025-10-31T12:42:10.657+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1082) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904228736994512896, userId: 10007, fromId: 10007, toId: 10006, tm: 1761885729819 (time: 2025-10-31 12:42:09), devId: \"49D204D9C06B1CE8\", sendId: 1082, msgType: TEXT, data: \"你好\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T12:42:10.688+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T12:42:32.810+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1082) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904228829910929408, userId: 10007, fromId: 10007, toId: 10006, tm: 1761885751991 (time: 2025-10-31 12:42:31), devId: \"49D204D9C06B1CE8\", sendId: 1082, msgType: TEXT, data: \"你好\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T12:42:32.810+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T12:42:38.060+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904228667910131712) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:47355: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T12:42:38.062+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904228667910131712)
+2025-10-31T12:43:13.602+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"Qg2blTC7EYNTdUu2iGNyHuTkobPuFpAutQs3yzQ=\"}"}
+2025-10-31T12:43:13.604+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-10-31T12:43:13.604+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761885793604,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T12:43:13.670+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904229000702988288) MsgTFriendOpRet
+2025-10-31T12:43:13.715+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904229000702988288) MsgTFriendOpRet
+2025-10-31T12:45:49.166+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904229000702988288, "uid": 10006, "tm": "2025-10-31 12:45:47"}
+2025-10-31T12:51:53.568+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904229000702988288, "uid": 10006, "tm": "2025-10-31 12:51:52"}
+2025-10-31T12:53:33.944+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904229000702988288, "uid": 10006, "tm": "2025-10-31 12:53:32"}
+2025-10-31T12:59:34.004+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904229000702988288, "uid": 10006, "tm": "2025-10-31 12:59:32"}
+2025-10-31T13:01:44.145+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"8RpILhNJrywydtSbqinOAsI+ujjWb7cgl6OgybE=\"}"}
+2025-10-31T13:01:44.146+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:01:44.147+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761886904146,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:01:44.269+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904233658179784704) MsgTFriendOpRet
+2025-10-31T13:01:44.322+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904233658179784704) MsgTFriendOpRet
+2025-10-31T13:01:44.359+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904227232866766849 chatType:ChatTypeP2P"}
+2025-10-31T13:01:44.393+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:02:03.531+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1101) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904233740270702592, userId: 10007, fromId: 10007, toId: 10006, tm: 1761886922167 (time: 2025-10-31 13:02:02), devId: \"49D204D9C06B1CE8\", sendId: 1101, msgType: TEXT, data: \"啦啦啦\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:02:03.532+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:02:08.943+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10007, "to": 10006, "msg": "msgId:904227232866766848 sendId:1121 recvOk:1761886927622 readOk:1761886927622 extraMsg:\"ok\" userId:10006 fromId:10007 params:{key:\"gid\" value:\"0\"}"}
+2025-10-31T13:02:08.981+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(904229000702988288) MsgTChatReply
+2025-10-31T13:02:14.603+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904233658179784704, "uid": 10007, "tm": "2025-10-31 13:02:13"}
+2025-10-31T13:02:40.056+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904233658179784704) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:02:40.057+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904233658179784704)
+2025-10-31T13:04:09.188+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"2NdRA4QxiPmXEntCNr6AP514MvJG+bA36r0Ougg=\"}"}
+2025-10-31T13:04:09.190+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:04:09.190+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887049190,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:04:09.303+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904234266559385600) MsgTFriendOpRet
+2025-10-31T13:04:09.366+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904234266559385600) MsgTFriendOpRet
+2025-10-31T13:04:09.402+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904233740270702593 chatType:ChatTypeP2P"}
+2025-10-31T13:04:09.413+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:04:39.706+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904234266559385600, "uid": 10007, "tm": "2025-10-31 13:04:38"}
+2025-10-31T13:05:10.509+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904234266559385600, "uid": 10007, "tm": "2025-10-31 13:05:09"}
+2025-10-31T13:05:41.234+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904234266559385600, "uid": 10007, "tm": "2025-10-31 13:05:39"}
+2025-10-31T13:05:46.139+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904234266559385600) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:05:46.140+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904234266559385600)
+2025-10-31T13:05:52.947+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"a1gO/kN7/IgnPe+3Fhyzon1/bZAUpDwUpFYMvZE=\"}"}
+2025-10-31T13:05:52.952+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:05:52.952+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887152952,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:05:53.064+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904234701638733824) MsgTFriendOpRet
+2025-10-31T13:05:53.109+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904234701638733824) MsgTFriendOpRet
+2025-10-31T13:05:53.153+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904233740270702593 chatType:ChatTypeP2P"}
+2025-10-31T13:05:53.172+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:06:05.385+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904234701638733824) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:06:05.386+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904234701638733824)
+2025-10-31T13:06:28.884+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904229000702988288, "uid": 10006, "tm": "2025-10-31 13:06:13"}
+2025-10-31T13:06:35.819+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"0VfLbhoHkemjvggnySyP3r2KiNs41HeaajCOT7w=\"}"}
+2025-10-31T13:06:35.820+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:06:35.833+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887195820,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:06:36.045+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904234880903286784) MsgTFriendOpRet
+2025-10-31T13:06:36.092+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904234880903286784) MsgTFriendOpRet
+2025-10-31T13:06:36.131+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904233740270702593 chatType:ChatTypeP2P"}
+2025-10-31T13:06:36.150+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:06:48.958+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1121) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904234937438310400, userId: 10007, fromId: 10007, toId: 10006, tm: 1761887207590 (time: 2025-10-31 13:06:47), devId: \"49D204D9C06B1CE8\", sendId: 1121, msgType: TEXT, data: \"测试一下\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:06:48.959+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:07:04.891+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904234880903286784) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:47400: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T13:07:04.891+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904234880903286784)
+2025-10-31T13:07:20.902+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"mhk98NjMDJs4GXJYPpOFRWHW5oauLqormQ0aSlw=\"}"}
+2025-10-31T13:07:20.904+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:07:20.904+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887240904,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:07:21.011+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904235070498410496) MsgTFriendOpRet
+2025-10-31T13:07:21.074+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904235070498410496) MsgTFriendOpRet
+2025-10-31T13:07:21.104+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904233740270702593 chatType:ChatTypeP2P"}
+2025-10-31T13:07:21.120+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:07:30.970+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1121) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904235113649410048, userId: 10007, fromId: 10007, toId: 10006, tm: 1761887249620 (time: 2025-10-31 13:07:29), devId: \"49D204D9C06B1CE8\", sendId: 1121, msgType: TEXT, data: \"测试一下\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:07:30.971+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:07:31.319+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1141) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904235115113222144, userId: 10007, fromId: 10007, toId: 10006, tm: 1761887250004 (time: 2025-10-31 13:07:30), devId: \"49D204D9C06B1CE8\", sendId: 1141, msgType: TEXT, data: \"你好\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:07:31.320+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:07:43.598+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904235070498410496) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:07:43.598+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904235070498410496)
+2025-10-31T13:13:18.866+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"5itBMy7i7rSP7OJ+MRIcnXU9k7yT4nEOH1B7FHQ=\"}"}
+2025-10-31T13:13:18.867+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:13:18.867+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887598867,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:13:18.975+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904236571685949440) MsgTFriendOpRet
+2025-10-31T13:13:19.025+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904236571685949440) MsgTFriendOpRet
+2025-10-31T13:13:19.066+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904235115113222145 chatType:ChatTypeP2P"}
+2025-10-31T13:13:19.073+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:13:28.200+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1161) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904236611980627968, userId: 10007, fromId: 10007, toId: 10006, tm: 1761887606844 (time: 2025-10-31 13:13:26), devId: \"49D204D9C06B1CE8\", sendId: 1161, msgType: TEXT, data: \"发一个\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:13:28.201+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:13:37.231+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904236571685949440) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:13:37.232+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904236571685949440)
+2025-10-31T13:13:42.173+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"tcfXr0TTQ4JymVIw0DOHVsGAL9hjalHOw3C/dKw=\"}"}
+2025-10-31T13:13:42.174+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:13:42.174+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887622174,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:13:42.311+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904236668901527552) MsgTFriendOpRet
+2025-10-31T13:13:42.351+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904236668901527552) MsgTFriendOpRet
+2025-10-31T13:13:42.387+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904236611980627969 chatType:ChatTypeP2P"}
+2025-10-31T13:13:42.410+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:13:52.649+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1181) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904236714527166464, userId: 10007, fromId: 10007, toId: 10006, tm: 1761887631297 (time: 2025-10-31 13:13:51), devId: \"49D204D9C06B1CE8\", sendId: 1181, msgType: TEXT, data: \"发一个\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:13:52.650+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:14:10.806+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904236668901527552) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:47424: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-10-31T13:14:10.808+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904236668901527552)
+2025-10-31T13:14:33.964+0800	[35mDEBUG[0m	core/commonhandler.go:180	receive heart beat	{"sid": 904229000702988288, "uid": 10006, "tm": "2025-10-31 13:14:32"}
+2025-10-31T13:15:28.323+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"rEV81CjQEMVTiIniKJmUAGCMk3SgnKlL6YeB7Yo=\"}"}
+2025-10-31T13:15:28.325+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:15:28.325+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887728325,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:15:28.439+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904237114592464896) MsgTFriendOpRet
+2025-10-31T13:15:28.486+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904237114592464896) MsgTFriendOpRet
+2025-10-31T13:15:28.534+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904236714527166465 chatType:ChatTypeP2P"}
+2025-10-31T13:15:28.546+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:15:30.939+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904237114592464896) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:15:30.940+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904237114592464896)
+2025-10-31T13:15:32.362+0800	[35mDEBUG[0m	core/commonhandler.go:140	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"eWxkf5c7PbJaNPfzEBnxXTfmWSqrtsP/JTTYea4=\"}"}
+2025-10-31T13:15:32.364+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-10-31T13:15:32.364+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1761887732364,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"这是一个测试的账号","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-10-31T13:15:32.460+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904237131814277120) MsgTFriendOpRet
+2025-10-31T13:15:32.521+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(904237131814277120) MsgTFriendOpRet
+2025-10-31T13:15:32.559+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:904236714527166465 chatType:ChatTypeP2P"}
+2025-10-31T13:15:32.567+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-10-31T13:15:41.556+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1201) from 10007 -> 10006	{"msg": "MsgChat{msgId: 904237171316232192, userId: 10007, fromId: 10007, toId: 10006, tm: 1761887740212 (time: 2025-10-31 13:15:40), devId: \"49D204D9C06B1CE8\", sendId: 1201, msgType: TEXT, data: \"测试\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-10-31T13:15:41.557+0800	[31mERROR[0m	core/commonmsggen.go:38	not friend	{"user id": 10007, "err code": 21}
+2025-10-31T13:15:49.690+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(904237131814277120) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-10-31T13:15:49.691+0800	[34mINFO[0m	core/session.go:256	user(10007) session(904237131814277120)

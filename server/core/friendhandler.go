@@ -341,14 +341,14 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 		nil,
 		session, friendOpMsg.SendId, friendOpMsg.MsgId)
 
-	// 交友模式，双方都直接移除对方，应该通知对方
-	if Globals.Config.Server.FriendMode {
-		msgNotify := newFriendOpResultMsg(pbmodel.UserOperationType_RemoveFriend, "notice", meUser.GetUserInfo(),
-			nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
+	// 无论哪种模式，双方都直接移除对方，应该通知对方
+	//if Globals.Config.Server.FriendMode {
+	msgNotify := newFriendOpResultMsg(pbmodel.UserOperationType_RemoveFriend, "notice", meUser.GetUserInfo(),
+		nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
 
-		// 多终端登录时候，转发到所有的消息
-		trySendMsgToUser(uid2, msgNotify)
-	}
+	// 多终端登录时候，转发到所有的消息
+	trySendMsgToUser(uid2, msgNotify)
+	//}
 
 }
 
