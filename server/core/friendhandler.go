@@ -306,9 +306,11 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 	pk2 := db.ComputePk(userInfo.UserId)
 	uid1 := session.UserID
 
+	// 数据库中删除双向好友
 	Globals.scyllaCli.DeleteFollowing(pk1, pk2, uid1, uid2)
+	Globals.scyllaCli.DeleteMutual(pk1, pk2, uid1, uid2)
 
-	// 更新redis
+	// 更新redis好友字段
 	Globals.redisCli.RemoveUserFollowing(uid1, []int64{uid2})
 	Globals.redisCli.RemoveUserFans(uid2, []int64{uid1})
 
@@ -318,7 +320,7 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 
 		Globals.redisCli.RemoveUserFollowing(uid2, []int64{uid1})
 		Globals.redisCli.RemoveUserFans(uid1, []int64{uid2})
-		// 计数
+		// 这里统计对各个缓存计算计数
 		decUserFollowsFriendMode(uid1, uid2)
 	} else {
 		decUserFollowsAndFans(uid1, uid2)
@@ -668,11 +670,22 @@ func handleFriendList(msg *pbmodel.Msg, session *Session) {
 	pk := db.ComputePk(session.UserID)
 	var lst []model.FriendStore
 	var err error
-	if strings.ToLower(mode) == "fans" {
-		lst, err = Globals.scyllaCli.FindFans(pk, session.UserID, fromId, db.MaxFriendCacheSize)
-
+	mode1 := strings.ToLower(mode)
+	if mode1 == "fans" {
+		lst, err = Globals.scyllaCli.FindFans(pk, session.UserID, fromId, db.MaxFriendBatchSize)
+		if lst != nil && len(lst) > 0 {
+			Globals.redisCli.SetUserFans(session.UserID, lst)
+		}
+	} else if mode1 == "follows" {
+		lst, err = Globals.scyllaCli.FindFollowing(pk, session.UserID, fromId, db.MaxFriendBatchSize)
+		if lst != nil && len(lst) > 0 {
+			Globals.redisCli.SetUserFollowing(session.UserID, lst)
+		}
 	} else {
-		lst, err = Globals.scyllaCli.FindFollowing(pk, session.UserID, fromId, db.MaxFriendCacheSize)
+		lst, err = Globals.scyllaCli.FindMutual(pk, session.UserID, fromId, db.MaxFriendBatchSize)
+		if lst != nil && len(lst) > 0 {
+			Globals.redisCli.SetUserMutual(session.UserID, lst)
+		}
 	}
 
 	if err != nil {
@@ -680,6 +693,9 @@ func handleFriendList(msg *pbmodel.Msg, session *Session) {
 	}
 	flst := FriendStore2UserInfo(lst)
 	filterUserInfo(flst, "")
+
+	Globals.Logger.Debug("handleFriendList()", zap.Int64("uid", session.UserID),
+		zap.String("mode", mode), zap.Any("friends", flst))
 
 	sendBackFriendOpResult(pbmodel.UserOperationType_ListFriends,
 		"ok",
@@ -953,11 +969,13 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	}
 
 	fan := model.FriendStore{
-		Pk:   db.ComputePk(uid2),
-		Uid1: uid2,
-		Uid2: uid1,
-		Tm:   time.Now().UTC().UnixMilli(),
-		Nick: name,
+		Pk:    db.ComputePk(uid2),
+		Uid1:  uid2,
+		Uid2:  uid1,
+		Tm:    time.Now().UTC().UnixMilli(),
+		Nick:  name,
+		Label: "",
+		Perm:  0,
 	}
 
 	// 2. 保存到scyllaDb中
@@ -967,7 +985,15 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 		return err
 	}
 
-	// 应该补充，计算好友的个数和粉丝的个数
+	// 2025-11-05 双向好友，如果UID2已经是这个用户的粉丝，那么这里就是互粉
+	bFan, _ := checkFriendIsFan(uid2, uid1)
+	if bFan {
+		pk1 := db.ComputePk(uid1)
+		pk2 := db.ComputePk(uid2)
+		err = Globals.scyllaCli.InsertMutual(pk1, pk2, &friend)
+	}
+
+	// 这里对redis  mongodb都做了计数的加减
 	incUserFollowsAndFans(uid1, uid2)
 
 	// 3.关注信息同步到redis
@@ -993,9 +1019,11 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	}
 
 	// 5 是否同步到对方的内存
-	friendUser, b := Globals.uc.GetUser(uid2)
+	friendUser, b, _ := findUser(uid2)
 	if b && friendUser != nil {
 		friendUser.SetFan(uid1, true)
+	} else {
+		Globals.Logger.Error("onAddFriendOk()->findUser() ", zap.Int64("friend is null", uid2))
 	}
 
 	// 6. 如果对方在线，则需要通知对方有新粉丝

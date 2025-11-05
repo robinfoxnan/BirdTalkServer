@@ -438,7 +438,7 @@ func (s *Session) updateTTL() {
 func (s *Session) updateRegion(str string) {
 	if s.UserID != 0 && s.HasStatus(model.UserStatusOk) {
 		setData := make(map[string]interface{})
-		setData["region"] = str
+		setData["Region"] = str
 		Globals.redisCli.UpdateUserInfoPart(s.UserID, setData, nil)
 
 		user, ok := Globals.uc.GetUser(s.UserID)

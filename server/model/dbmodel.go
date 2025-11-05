@@ -3,11 +3,13 @@ package model
 // 下面2个结构对应数据库中结构
 // 关注和粉丝的表一样，没有权限一项
 type FriendStore struct {
-	Pk   int16
-	Uid1 int64
-	Uid2 int64
-	Tm   int64
-	Nick string
+	Pk    int16
+	Uid1  int64
+	Uid2  int64
+	Tm    int64
+	Nick  string
+	Label string
+	Perm  int32
 }
 
 type BlockStore struct {

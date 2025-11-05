@@ -192,6 +192,18 @@ const cqlCreateTableBlock = `CREATE TABLE IF NOT EXISTS chatuser.block (
 			PRIMARY KEY (pk, uid1, uid2)
 		)`
 
+// 2025-11-05 add
+const cqlCreateTableMutual = `CREATE TABLE IF NOT EXISTS chatuser.friends (
+			pk smallint,
+			uid1 bigint,
+			uid2 bigint,
+			tm bigint,
+			nick text,
+			label text,
+			perm int,
+			PRIMARY KEY (pk, uid1, uid2)
+		)`
+
 const cqlCreateTableGroupMem = `CREATE TABLE IF NOT EXISTS chatgroup.members (
 			pk smallint,
 			role smallint,
@@ -290,6 +302,7 @@ const cqlCreateTableGroupOp = `CREATE TABLE IF NOT EXISTS  chatuserop.groupop (
 const FollowingTableName = "chatuser.following"
 const FansTableName = "chatuser.fans"
 const BlockTableName = "chatuser.block"
+const MutualFriendTableName = "chatuser.friends"
 
 // 群组关系
 const GroupMemberTableName = "chatgroup.members"
@@ -306,7 +319,7 @@ const UserOpTableName = "chatuserop.userop"
 const GroupOpTableName = "chatuserop.groupop"
 
 var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData, cqlCreateKeySpaceChatUserOp,
-	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock,
+	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock, cqlCreateTableMutual,
 	cqlCreateTableGroupMem, cqlCreateTableUinG,
 	cqlCreateTablePChat, cqlCreateTableGChat,
 	cqlCreateTableUserOp, cqlCreateTableGroupOp,
@@ -314,6 +327,7 @@ var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup
 
 func (me *Scylla) Init() error {
 	for _, cql := range initCqlList {
+		//fmt.Println(cql)
 		err := me.Exec(cql)
 		if err != nil {
 			return err

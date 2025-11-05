@@ -21,6 +21,83 @@ var metaBlock = table.Metadata{
 	SortKey: []string{"uid1", "uid2"},
 }
 
+// 2025-11-05 add
+func (me *Scylla) InsertMutual(pk1 int16, pk2 int16, friend *model.FriendStore) error {
+	// 创建 Batch
+	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
+	batch.Cons = gocql.LocalOne
+
+	columns := []string{"pk", "uid1", "uid2", "tm", "nick", "label", "perm"}
+	insertFriendsQry := qb.Insert(MutualFriendTableName).Columns(columns...).Query(me.session).Consistency(gocql.One)
+	defer insertFriendsQry.Release()
+	batch.Query(insertFriendsQry.Statement(), pk1, friend.Uid1, friend.Uid2, friend.Tm, friend.Nick, "", 0)
+
+	batch.Query(insertFriendsQry.Statement(), pk2, friend.Uid2, friend.Uid1, friend.Tm, friend.Nick, "", 0)
+
+	if err := me.session.ExecuteBatch(batch); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *Scylla) DeleteMutual(pk1 int16, pk2 int16, uid1 int64, uid2 int64) error {
+	// 创建 Batch
+	batch := me.session.Session.NewBatch(gocql.LoggedBatch)
+	batch.Cons = gocql.LocalOne
+	// 取消关注
+	builder1 := qb.Delete(MutualFriendTableName)
+
+	builder1.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
+
+	query1 := builder1.Query(me.session)
+	defer query1.Release()
+	query1.Consistency(gocql.One)
+	batch.Query(query1.Statement(), pk1, uid1, uid2)
+
+	// 取消粉丝
+	builder2 := qb.Delete(MutualFriendTableName)
+	builder2.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"))
+
+	query2 := builder2.Query(me.session)
+	defer query2.Release()
+	query2.Consistency(gocql.One)
+	batch.Query(query2.Statement(), pk2, uid2, uid1)
+
+	if err := me.session.ExecuteBatch(batch); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (me *Scylla) FindMutual(pk int16, uid1, from int64, pageSize uint) ([]model.FriendStore, error) {
+
+	columns := []string{"pk", "uid1", "uid2", "tm", "nick", "label", "perm"}
+	builder := qb.Select(MutualFriendTableName).Columns(columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Gt("uid2"))
+
+	builder.OrderBy("uid1", qb.ASC)
+	builder.OrderBy("uid2", qb.ASC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid1, from)
+
+	var friendList []model.FriendStore
+
+	err := q.Select(&friendList)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return friendList, nil
+}
+
 // 重复的数据会覆盖，而不是简单的报错
 func (me *Scylla) InsertFollowing(friend *model.FriendStore, fan *model.FriendStore) error {
 
@@ -285,15 +362,19 @@ func (me *Scylla) FindBlocks(pk, uid1, from int64, pageSize uint) ([]model.Block
 	return friendList, nil
 }
 
-func (me *Scylla) CountFollowing(pk, uid1 int64) (int64, error) {
+func (me *Scylla) CountFollowing(pk int16, uid1 int64) (int64, error) {
 	return me.CountFriendStore(pk, uid1, FollowingTableName)
 }
 
-func (me *Scylla) CountFans(pk, uid1 int64) (int64, error) {
+func (me *Scylla) CountFans(pk int16, uid1 int64) (int64, error) {
 	return me.CountFriendStore(pk, uid1, FansTableName)
 }
 
-func (me *Scylla) CountFriendStore(pk, uid1 int64, table string) (int64, error) {
+func (me *Scylla) CountFriends(pk int16, uid1 int64) (int64, error) {
+	return me.CountFriendStore(pk, uid1, MutualFriendTableName)
+}
+
+func (me *Scylla) CountFriendStore(pk int16, uid1 int64, table string) (int64, error) {
 	builder := qb.Select(table)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"))
 	builder.Count("uid1")

@@ -372,8 +372,13 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 		user = Globals.uc.SetOrUpdateUser(sess.UserID, loadedUser) // 插入或者合并
 	}
 
-	//numFollow := 0
-	//numFans := 0
+	// 从数据库计算当前的好友个数, 这个数据并不计算在MONGO中
+	pk := db.ComputePk(sess.UserID)
+	numFollow, _ := Globals.scyllaCli.CountFans(pk, sess.UserID)
+	numFans, _ := Globals.scyllaCli.CountFollowing(pk, sess.UserID)
+	numFriends, _ := Globals.scyllaCli.CountFriends(pk, sess.UserID)
+	Globals.redisCli.SetUserFriendNum(sess.UserID, numFollow, numFans, numFriends)
+
 	if (mask & model.UserLoadStatusFans) > 0 {
 		fList, err := Globals.scyllaCli.FindFans(db.ComputePk(sess.UserID), sess.UserID, 0, db.MaxFriendCacheSize)
 		if err != nil {
@@ -393,16 +398,6 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 
 		Globals.redisCli.SetUserFollowing(sess.UserID, fList) // 同步到redis
 	}
-
-	// 改为记录在用户的mongo中
-	// 如果加载全了，则同步到缓存，入股不全就不同步了，
-	//if numFollow < db.MaxFriendCacheSize && numFans < db.MaxFriendCacheSize {
-	//	Globals.redisCli.SetUserFriendNum(sess.UserID, int64(numFollow), int64(numFans))
-	//	user.NumFans = int64(numFans)
-	//	user.NumFollow = int64(numFollow)
-	//} else {
-	//	user.NumFollow, user.NumFans, _ = Globals.redisCli.GetUserFriendNum(sess.UserID)
-	//}
 
 	if (mask & model.UserLoadStatusPermission) > 0 {
 		count := 0

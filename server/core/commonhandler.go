@@ -100,7 +100,7 @@ func HandleCommonMsg(msg *pbmodel.Msg, session *Session) error {
 
 	case pbmodel.ComMsgType_MsgTGroupOpRet:
 		handleGroupOpRet(msg, session)
-		
+
 	case pbmodel.ComMsgType_MsgTOther: // 转发给其他的扩展模块的
 		handleOther(msg, session)
 	}
@@ -184,12 +184,12 @@ func handleHeartMsg(msg *pbmodel.Msg, session *Session) {
 	// 收到心跳，则应该更新活动状态
 	session.updateTTL()
 
-	tmStr := utils.TmToLocalString(ping.Tm)
-	//fmt.Printf("tm=%s, userid=%d \n", tmStr, ping.UserId)
-	Globals.Logger.Debug("receive heart beat",
-		zap.Int64("sid", session.Sid),
-		zap.Int64("uid", session.UserID),
-		zap.String("tm", tmStr))
+	//tmStr := utils.TmToLocalString(ping.Tm)
+	
+	//Globals.Logger.Debug("receive heart beat",
+	//	zap.Int64("sid", session.Sid),
+	//	zap.Int64("uid", session.UserID),
+	//	zap.String("tm", tmStr))
 
 	sendBackHeartMsg(session)
 }

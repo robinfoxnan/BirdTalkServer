@@ -8603,3 +8603,480 @@
 2025-11-05T14:52:21.250+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906070341892313088, "uid": 10007, "tm": "2025-11-05 14:52:20"}
 2025-11-05T14:52:51.862+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906070341892313088, "uid": 10007, "tm": "2025-11-05 14:52:50"}
 2025-11-05T14:53:05.654+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906070787562278912, "uid": 10006, "tm": "2025-11-05 14:53:04"}
+2025-11-05T16:03:10.441+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T16:03:16.646+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"lbCcgCAj1y0xPTrCI1l99kSOYQevkLia0LM8+hQ=\"}"}
+2025-11-05T16:03:16.728+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10007, "count": 0}
+2025-11-05T16:03:16.733+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T16:03:16.733+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762329796733,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3,"fans":1}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T16:03:16.934+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906091284492587008) MsgTFriendOpRet
+2025-11-05T16:03:16.954+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906091284492587008) MsgTFriendOpRet
+2025-11-05T16:03:39.809+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:03:40"}
+2025-11-05T16:04:10.562+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:04:11"}
+2025-11-05T16:04:41.328+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:04:41"}
+2025-11-05T16:05:11.912+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:05:12"}
+2025-11-05T16:05:42.662+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:05:43"}
+2025-11-05T16:06:13.402+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:06:13"}
+2025-11-05T16:06:40.821+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"YJYKkAQFIyesCdlETBPblLZiHHhNm+kVnN0mUxw=\"}"}
+2025-11-05T16:06:40.825+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-11-05T16:06:40.825+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762330000825,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":3,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T16:06:40.931+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTFriendOpRet
+2025-11-05T16:06:40.992+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTFriendOpRet
+2025-11-05T16:06:44.187+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:06:44"}
+2025-11-05T16:07:14.749+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906091284492587008, "uid": 10007, "tm": "2025-11-05 16:07:15"}
+2025-11-05T16:07:44.408+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(906091284492587008) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-11-05T16:07:44.409+0800	[34mINFO[0m	core/session.go:256	user(10007) session(906091284492587008)
+2025-11-05T16:07:56.500+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"brVV7iC0dlOnsMQ9IRrCVsuREbK4gXmwyySQMnQ=\"}"}
+2025-11-05T16:07:56.500+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T16:07:56.500+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762330076500,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3,"fans":1}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T16:07:56.723+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906092456867663872) MsgTFriendOpRet
+2025-11-05T16:07:56.788+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906092456867663872) MsgTFriendOpRet
+2025-11-05T16:07:56.838+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:906072719597113345 chatType:ChatTypeP2P"}
+2025-11-05T16:07:56.865+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T16:08:26.893+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092456867663872, "uid": 10007, "tm": "2025-11-05 16:08:27"}
+2025-11-05T16:08:57.899+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092456867663872, "uid": 10007, "tm": "2025-11-05 16:08:58"}
+2025-11-05T16:09:35.442+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1241) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906092873529823232, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330175897 (time: 2025-11-05 16:09:35), devId: \"49D204D9C06B1CE8\", sendId: 1241, msgType: TEXT, data: \"测试\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:09:35.497+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:09:35.497+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:09:35.643+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906092873529823232 sendId:1241 recvOk:1762330176193 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:09:35.691+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906092456867663872) MsgTChatReply
+2025-11-05T16:10:23.905+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(906092456867663872) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:49050: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-11-05T16:10:23.906+0800	[34mINFO[0m	core/session.go:256	user(10007) session(906092456867663872)
+2025-11-05T16:10:40.758+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:10:41"}
+2025-11-05T16:13:52.924+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"an0jzlHsHuHuFbdafLH9hUePwPLDZQ3Q9GMMRm8=\"}"}
+2025-11-05T16:13:52.927+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T16:13:52.928+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762330432927,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3,"fans":1}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T16:13:53.087+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906093951566614528) MsgTFriendOpRet
+2025-11-05T16:13:53.181+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906093951566614528) MsgTFriendOpRet
+2025-11-05T16:13:53.188+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:906092873529823233 chatType:ChatTypeP2P"}
+2025-11-05T16:13:53.212+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T16:14:10.430+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1261) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906094026917285888, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330450885 (time: 2025-11-05 16:14:10), devId: \"49D204D9C06B1CE8\", sendId: 1261, msgType: TEXT, data: \"把你\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:14:10.439+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:14:10.439+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:14:10.654+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094026917285888 sendId:1261 recvOk:1762330451161 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:14:10.680+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906093951566614528) MsgTChatReply
+2025-11-05T16:14:35.388+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906093951566614528, "uid": 10007, "tm": "2025-11-05 16:14:35"}
+2025-11-05T16:14:37.160+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:14:37"}
+2025-11-05T16:14:45.478+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1262) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906094173919252480, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330485971 (time: 2025-11-05 16:14:45), devId: \"49D204D9C06B1CE8\", sendId: 1262, msgType: TEXT, data: \"1\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:14:45.508+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:14:45.509+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:14:45.626+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094173919252480 sendId:1262 recvOk:1762330486170 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:14:45.646+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906093951566614528) MsgTChatReply
+2025-11-05T16:15:08.139+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:15:08"}
+2025-11-05T16:15:18.238+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906093951566614528, "uid": 10007, "tm": "2025-11-05 16:15:18"}
+2025-11-05T16:15:25.236+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1263) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906094340676390912, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330525713 (time: 2025-11-05 16:15:25), devId: \"49D204D9C06B1CE8\", sendId: 1263, msgType: TEXT, data: \"2\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:15:25.261+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:15:25.262+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:15:25.366+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094340676390912 sendId:1263 recvOk:1762330525899 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:15:25.375+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906093951566614528) MsgTChatReply
+2025-11-05T16:15:34.832+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1264) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906094380924932096, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330535320 (time: 2025-11-05 16:15:35), devId: \"49D204D9C06B1CE8\", sendId: 1264, msgType: TEXT, data: \"3\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:15:34.867+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:15:34.869+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:15:35.135+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094380924932096 sendId:1264 recvOk:1762330535650 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:15:35.167+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906093951566614528) MsgTChatReply
+2025-11-05T16:15:48.997+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906093951566614528, "uid": 10007, "tm": "2025-11-05 16:15:49"}
+2025-11-05T16:15:54.981+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:15:55"}
+2025-11-05T16:16:19.782+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906093951566614528, "uid": 10007, "tm": "2025-11-05 16:16:20"}
+2025-11-05T16:16:26.037+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:16:26"}
+2025-11-05T16:16:48.516+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(906093951566614528) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-11-05T16:16:48.517+0800	[34mINFO[0m	core/session.go:256	user(10007) session(906093951566614528)
+2025-11-05T16:17:35.735+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:17:36"}
+2025-11-05T16:18:49.249+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"KdUppRNgqh6uEMp7HKL3RXuj92o8Y8tCTFFGBZ8=\"}"}
+2025-11-05T16:18:49.252+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T16:18:49.252+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762330729252,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3,"fans":1}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T16:18:49.372+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTFriendOpRet
+2025-11-05T16:18:49.440+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTFriendOpRet
+2025-11-05T16:18:49.474+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10007 bigId:9223372036854775807 littleId:906094380924932097 chatType:ChatTypeP2P"}
+2025-11-05T16:18:49.519+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T16:19:11.756+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1281) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906095290757550080, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330752222 (time: 2025-11-05 16:19:12), devId: \"49D204D9C06B1CE8\", sendId: 1281, msgType: TEXT, data: \"4\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:19:11.769+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:19:11.769+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:19:12.006+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906095290757550080 sendId:1281 recvOk:1762330752512 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.018+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.437+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906071246310084608 sendId:1224 recvOk:1762330752955 readOk:1762330752955 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.470+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.508+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906072719597113344 sendId:1225 recvOk:1762330752964 readOk:1762330752964 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.536+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.583+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906092873529823232 sendId:1241 recvOk:1762330752968 readOk:1762330752968 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.609+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.632+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094026917285888 sendId:1261 recvOk:1762330752970 readOk:1762330752970 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.654+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.679+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094173919252480 sendId:1262 recvOk:1762330752971 readOk:1762330752971 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.689+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.725+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094340676390912 sendId:1263 recvOk:1762330752972 readOk:1762330752972 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.748+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:12.772+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906094380924932096 sendId:1264 recvOk:1762330752972 readOk:1762330752972 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:12.792+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:15.621+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1282) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906095306981117952, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330756116 (time: 2025-11-05 16:19:16), devId: \"49D204D9C06B1CE8\", sendId: 1282, msgType: TEXT, data: \"5\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:19:15.630+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:19:15.631+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:19:15.861+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906095306981117952 sendId:1282 recvOk:1762330756370 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:15.884+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:19.664+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:19:20"}
+2025-11-05T16:19:27.363+0800	[35mDEBUG[0m	core/filemsghander.go:23	File Upload msg:	{"user id": 10007, "filename": "d4paY3qHEGvVXEnv8ljzcoPQpkV3WY.jpg", "hash": "3a8dce6f4589d602024447fbf60dfb16", "send id": 1283}
+2025-11-05T16:19:27.600+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1283) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906095357224685568, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330768080 (time: 2025-11-05 16:19:28), devId: \"49D204D9C06B1CE8\", sendId: 1283, msgType: IMAGE, data: \"{\\\"ent\\\":[{\\\"data\\\":{\\\"ref\\\":\\\"https://192.168.1.2:7817/filestore/1jxltpmcpf7e.jpg\\\",\\\"mime\\\":\\\"image/jpeg\\\",\\\"width\\\":0,\\\"local\\\":\\\"https://192.168.1.2:7817/filestore/1jxltpmcpf7e.jpg\\\",\\\"height\\\":0},\\\"tp\\\":\\\"IM\\\"}],\\\"fmt\\\":[{\\\"at\\\":0,\\\"key\\\":0,\\\"len\\\":1,\\\"tp\\\":null}],\\\"txt\\\":\\\" \\\"}\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:19:27.624+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:19:27.625+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:19:27.841+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906095357224685568 sendId:1283 recvOk:1762330768344 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:27.860+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:36.033+0800	[35mDEBUG[0m	core/filemsghander.go:23	File Upload msg:	{"user id": 10007, "filename": "1761869304903.jpg", "hash": "25ca37dc0b230e4cb6b96aa120884138", "send id": 1284}
+2025-11-05T16:19:36.183+0800	[35mDEBUG[0m	core/chatmsghandler.go:112	receive chat msg(1284) from 10007 -> 10006	{"msg": "MsgChat{msgId: 906095393224396800, userId: 10007, fromId: 10007, toId: 10006, tm: 1762330776660 (time: 2025-11-05 16:19:36), devId: \"49D204D9C06B1CE8\", sendId: 1284, msgType: FILE, data: \"{\\\"ent\\\":[{\\\"data\\\":{\\\"fid\\\":10007,\\\"cur\\\":0,\\\"ref\\\":\\\"https://192.168.1.2:7817/filestore/15mxs6lr6i4o5.jpg\\\",\\\"size\\\":44613,\\\"mime\\\":\\\"image/jpeg\\\",\\\"name\\\":\\\"1761869304903.jpg\\\",\\\"msgid\\\":1284},\\\"tp\\\":\\\"EX\\\"}],\\\"fmt\\\":[{\\\"at\\\":-1,\\\"key\\\":0,\\\"len\\\":1,\\\"tp\\\":null}]}\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2025-11-05T16:19:36.199+0800	[35mDEBUG[0m	core/chatmsghandler.go:237	send back reply 'save data ok'
+2025-11-05T16:19:36.199+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906092140109631488) MsgTChatMsg
+2025-11-05T16:19:36.430+0800	[35mDEBUG[0m	core/chatmsghandler.go:358	Recv User ChatMsgReply:	{"from": 10006, "to": 10007, "msg": "msgId:906095393224396800 sendId:1284 recvOk:1762330776940 extraMsg:\"ok\" userId:10007 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2025-11-05T16:19:36.443+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906095195261636608) MsgTChatReply
+2025-11-05T16:19:50.320+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:19:50"}
+2025-11-05T16:20:21.062+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:20:21"}
+2025-11-05T16:20:51.781+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:20:52"}
+2025-11-05T16:20:53.460+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:20:53"}
+2025-11-05T16:21:22.374+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:21:22"}
+2025-11-05T16:21:24.265+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:21:24"}
+2025-11-05T16:21:52.932+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:21:53"}
+2025-11-05T16:22:12.896+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:22:13"}
+2025-11-05T16:22:23.454+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:22:23"}
+2025-11-05T16:22:54.003+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:22:54"}
+2025-11-05T16:23:24.545+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:23:25"}
+2025-11-05T16:23:55.153+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:23:55"}
+2025-11-05T16:24:25.702+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:24:26"}
+2025-11-05T16:24:56.224+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:24:56"}
+2025-11-05T16:25:26.739+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:25:27"}
+2025-11-05T16:25:57.305+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:25:57"}
+2025-11-05T16:26:27.859+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:26:28"}
+2025-11-05T16:26:58.413+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:26:58"}
+2025-11-05T16:27:23.346+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:27:23"}
+2025-11-05T16:27:28.918+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:27:29"}
+2025-11-05T16:27:59.498+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:27:59"}
+2025-11-05T16:28:29.981+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:28:30"}
+2025-11-05T16:29:00.515+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:29:00"}
+2025-11-05T16:29:30.998+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:29:31"}
+2025-11-05T16:29:52.662+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:29:53"}
+2025-11-05T16:30:01.482+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:30:01"}
+2025-11-05T16:30:31.959+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:30:32"}
+2025-11-05T16:31:02.511+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:31:02"}
+2025-11-05T16:31:32.984+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:31:33"}
+2025-11-05T16:32:03.486+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:32:03"}
+2025-11-05T16:32:33.999+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:32:34"}
+2025-11-05T16:33:04.496+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:33:04"}
+2025-11-05T16:33:17.743+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:33:16"}
+2025-11-05T16:33:34.990+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:33:35"}
+2025-11-05T16:34:05.449+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:34:05"}
+2025-11-05T16:34:35.916+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:34:36"}
+2025-11-05T16:35:06.383+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:35:06"}
+2025-11-05T16:35:36.854+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:35:37"}
+2025-11-05T16:36:07.349+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:36:07"}
+2025-11-05T16:36:37.819+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:36:38"}
+2025-11-05T16:37:01.482+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:37:01"}
+2025-11-05T16:37:08.300+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:37:08"}
+2025-11-05T16:37:38.748+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:37:38"}
+2025-11-05T16:38:09.210+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:38:09"}
+2025-11-05T16:38:39.627+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:38:39"}
+2025-11-05T16:39:10.103+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:39:10"}
+2025-11-05T16:39:40.613+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:39:40"}
+2025-11-05T16:40:11.093+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:40:11"}
+2025-11-05T16:40:41.540+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:40:41"}
+2025-11-05T16:41:12.037+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:41:12"}
+2025-11-05T16:41:42.510+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:41:42"}
+2025-11-05T16:41:49.968+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:41:50"}
+2025-11-05T16:42:13.008+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:42:13"}
+2025-11-05T16:42:43.456+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:42:43"}
+2025-11-05T16:43:13.925+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:43:14"}
+2025-11-05T16:43:44.397+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:43:44"}
+2025-11-05T16:44:14.864+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:44:15"}
+2025-11-05T16:44:45.367+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:44:45"}
+2025-11-05T16:45:15.821+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:45:16"}
+2025-11-05T16:45:46.281+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:45:46"}
+2025-11-05T16:46:16.775+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:46:17"}
+2025-11-05T16:46:36.085+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906092140109631488, "uid": 10006, "tm": "2025-11-05 16:46:36"}
+2025-11-05T16:46:47.279+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:46:47"}
+2025-11-05T16:47:17.777+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:47:18"}
+2025-11-05T16:47:48.262+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:47:48"}
+2025-11-05T16:48:18.753+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:48:18"}
+2025-11-05T16:48:49.219+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:48:49"}
+2025-11-05T16:49:19.723+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:49:19"}
+2025-11-05T16:49:50.298+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:49:50"}
+2025-11-05T16:50:20.764+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906095195261636608, "uid": 10007, "tm": "2025-11-05 16:50:20"}
+2025-11-05T18:23:58.055+0800	[35mDEBUG[0m	core/session.go:382	user(10007) session(906095195261636608) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.25:49131: i/o timeout
+2025-11-05T18:23:58.055+0800	[35mDEBUG[0m	core/session.go:382	user(10006) session(906092140109631488) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.14:44857: i/o timeout
+2025-11-05T18:23:58.510+0800	[34mINFO[0m	core/session.go:256	user(10006) session(906092140109631488)
+2025-11-05T18:23:58.511+0800	[34mINFO[0m	core/session.go:256	user(10007) session(906095195261636608)
+2025-11-05T20:31:01.739+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T20:35:33.046+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"HzopSTBdDcp2dFePKp2AUyXeR3l/ejrRMu6nJzY=\"}"}
+2025-11-05T20:35:33.120+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10007, "count": 0}
+2025-11-05T20:35:33.130+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T20:35:33.130+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762346133130,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3,"fans":1}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T20:35:33.322+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10007, "mode": "follows", "friends": [{"userId":10001,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"nickName":"robin fox","email":"*","phone":"*"}]}
+2025-11-05T20:35:33.322+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906159804077182976) MsgTFriendOpRet
+2025-11-05T20:35:33.343+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10007, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T20:35:33.343+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906159804077182976) MsgTFriendOpRet
+2025-11-05T20:36:27.684+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"ouSYqxHVsz9H5ACGbz/Grn0YnrmBsBIJUuKku6k=\"}"}
+2025-11-05T20:36:27.686+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T20:36:27.687+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762346187686,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T20:36:27.749+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"nickName":"John","email":"*","phone":"*"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T20:36:27.750+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906160033442697216) MsgTFriendOpRet
+2025-11-05T20:36:27.791+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T20:36:27.792+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906160033442697216) MsgTFriendOpRet
+2025-11-05T20:36:27.840+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:906072675405926401 chatType:ChatTypeP2P"}
+2025-11-05T20:36:27.880+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T20:36:33.819+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"UlH1ROL41hMoqGnNUIIaUXtVFxc3ptmBiT3pqVo=\"}"}
+2025-11-05T20:36:33.820+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-11-05T20:36:33.821+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762346193820,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":3,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T20:36:33.884+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T20:36:33.885+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906160059174752256) MsgTFriendOpRet
+2025-11-05T20:36:33.932+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T20:36:33.933+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906160059174752256) MsgTFriendOpRet
+2025-11-05T20:36:48.610+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906160059174752256, "uid": 10006, "tm": "2025-11-05 20:36:48"}
+2025-11-05T20:36:49.976+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906160033442697216) MsgTFriendOpRet
+2025-11-05T20:36:49.976+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906160059174752256) MsgTFriendOpRet
+2025-11-05T20:36:55.972+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906160059174752256) MsgTFriendOpRet
+2025-11-05T20:36:55.972+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906160033442697216) MsgTFriendOpRet
+2025-11-05T20:36:57.971+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906160033442697216, "uid": 10001, "tm": "2025-11-05 20:36:58"}
+2025-11-05T20:36:59.473+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906160059174752256) MsgTFriendOpRet
+2025-11-05T20:36:59.473+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906159804077182976) MsgTFriendOpRet
+2025-11-05T20:47:22.382+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T20:47:34.577+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"iHLQpE2ahsHtZOaLxXPOQXNEcF7pz3qrCliZwyA=\"}"}
+2025-11-05T20:47:34.669+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10001, "count": 0}
+2025-11-05T20:47:34.679+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T20:47:34.679+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762346854679,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":4,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T20:47:34.724+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"nickName":"John","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"}]}
+2025-11-05T20:47:34.725+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906162830426902528) MsgTFriendOpRet
+2025-11-05T20:47:34.788+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2025-11-05T20:47:34.788+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906162830426902528) MsgTFriendOpRet
+2025-11-05T20:47:34.866+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:906072675405926401 chatType:ChatTypeP2P"}
+2025-11-05T20:47:34.895+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T20:48:04.704+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906162830426902528, "uid": 10001, "tm": "2025-11-05 20:48:04"}
+2025-11-05T20:48:12.999+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906162830426902528) MsgTFriendOpRet
+2025-11-05T20:48:14.879+0800	[34mINFO[0m	core/session.go:256	user(10001) session(906162830426902528)
+2025-11-05T20:59:02.896+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T20:59:04.183+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"9wDr+zDcLNBv69/COmU/uehChoYd5/IVkKHbZLc=\"}"}
+2025-11-05T20:59:04.264+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10001, "count": 0}
+2025-11-05T20:59:04.265+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T20:59:04.265+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762347544265,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T20:59:04.389+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"nickName":"John","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"nickName":"robin fox","email":"*","phone":"*"}]}
+2025-11-05T20:59:04.390+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165722873466880) MsgTFriendOpRet
+2025-11-05T20:59:04.453+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2025-11-05T20:59:04.453+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165722873466880) MsgTFriendOpRet
+2025-11-05T20:59:14.511+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906165722873466880, "uid": 10001, "tm": "2025-11-05 20:59:14"}
+2025-11-05T20:59:26.182+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165722873466880) MsgTFriendOpRet
+2025-11-05T20:59:35.999+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"iXMPihL/j9rlF736jq++hMghP3ytNL7WayHiydM=\"}"}
+2025-11-05T20:59:36.005+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T20:59:36.006+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762347576005,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":1,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T20:59:36.099+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"userName":"robin","nickName":"John","email":"*","phone":"*","gender":"male","age":30,"region":"US","icon":"avatar.jpg"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T20:59:36.100+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165722873466880) MsgTFriendOpRet
+2025-11-05T20:59:36.101+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T20:59:36.108+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(906165722873466880) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.31:47562: wsarecv: An existing connection was forcibly closed by the remote host.
+2025-11-05T20:59:36.109+0800	[34mINFO[0m	core/session.go:256	user(10001) session(906165722873466880)
+2025-11-05T20:59:36.146+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T20:59:36.146+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T20:59:36.215+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:906072675405926401 chatType:ChatTypeP2P"}
+2025-11-05T20:59:36.252+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T20:59:45.229+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T21:00:02.212+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T21:00:02.212+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2025-11-05T21:00:06.334+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906165856327831552, "uid": 10001, "tm": "2025-11-05 21:00:06"}
+2025-11-05T21:00:12.570+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T21:00:14.077+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2025-11-05T21:00:14.078+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T21:00:24.874+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"pj9h4U4rbX3e+/EGh1a1C9YZBAFK5rNFgjiIdp0=\"}"}
+2025-11-05T21:00:24.877+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-11-05T21:00:24.877+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762347624877,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":1,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:00:24.934+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"}]}
+2025-11-05T21:00:24.935+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906166061261524992) MsgTFriendOpRet
+2025-11-05T21:00:24.995+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T21:00:24.995+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906166061261524992) MsgTFriendOpRet
+2025-11-05T21:00:25.127+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10006 bigId:9223372036854775807 littleId:906095393224396801 chatType:ChatTypeP2P"}
+2025-11-05T21:00:25.149+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T21:00:35.748+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906166061261524992) MsgTFriendOpRet
+2025-11-05T21:00:36.841+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906165856327831552, "uid": 10001, "tm": "2025-11-05 21:00:37"}
+2025-11-05T21:00:37.311+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906165856327831552) MsgTFriendOpRet
+2025-11-05T21:00:37.311+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906166061261524992) MsgTFriendOpRet
+2025-11-05T21:00:55.497+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166061261524992, "uid": 10006, "tm": "2025-11-05 21:00:54"}
+2025-11-05T21:01:07.356+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906165856327831552, "uid": 10001, "tm": "2025-11-05 21:01:07"}
+2025-11-05T21:01:26.813+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166061261524992, "uid": 10006, "tm": "2025-11-05 21:01:26"}
+2025-11-05T21:01:42.380+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"fdbAmoRb/IExjrBqUjTNV6U5dOYfXmawvCV68ck=\"}"}
+2025-11-05T21:01:42.381+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T21:01:42.381+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762347702381,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:01:42.445+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10007, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T21:01:42.445+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906166386609491968) MsgTFriendOpRet
+2025-11-05T21:01:42.493+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10007, "mode": "fans", "friends": null}
+2025-11-05T21:01:42.495+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906166386609491968) MsgTFriendOpRet
+2025-11-05T21:01:58.132+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166061261524992, "uid": 10006, "tm": "2025-11-05 21:01:57"}
+2025-11-05T21:02:10.743+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906165856327831552, "uid": 10001, "tm": "2025-11-05 21:02:10"}
+2025-11-05T21:02:36.238+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(906165856327831552) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-11-05T21:02:36.239+0800	[34mINFO[0m	core/session.go:256	user(10001) session(906165856327831552)
+2025-11-05T21:02:37.702+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"ody5TF3xnE5xfhw9PGPjGOjQ/LbQ3l9D2ckpVN4=\"}"}
+2025-11-05T21:02:37.710+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T21:02:37.712+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762347757710,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:02:37.751+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"userName":"robin","nickName":"John","email":"*","phone":"*","gender":"male","age":30,"region":"US","icon":"avatar.jpg"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T21:02:37.751+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906166618512560128) MsgTFriendOpRet
+2025-11-05T21:02:37.809+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T21:02:37.811+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906166618512560128) MsgTFriendOpRet
+2025-11-05T21:02:37.860+0800	[31mERROR[0m	core/friendhandler.go:682	handleFriendList() query scylladb error	{"error": "unconfigured table friends"}
+2025-11-05T21:02:37.861+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "friends", "friends": null}
+2025-11-05T21:02:37.862+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906166618512560128) MsgTFriendOpRet
+2025-11-05T21:02:37.893+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:906072675405926401 chatType:ChatTypeP2P"}
+2025-11-05T21:02:37.903+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T21:03:07.900+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:03:08"}
+2025-11-05T21:03:38.398+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:03:38"}
+2025-11-05T21:04:08.812+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:04:08"}
+2025-11-05T21:04:39.227+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:04:39"}
+2025-11-05T21:05:09.638+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:05:09"}
+2025-11-05T21:05:39.894+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:05:40"}
+2025-11-05T21:06:10.255+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:06:10"}
+2025-11-05T21:06:17.950+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166386609491968, "uid": 10007, "tm": "2025-11-05 21:06:11"}
+2025-11-05T21:06:35.860+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166061261524992, "uid": 10006, "tm": "2025-11-05 21:06:35"}
+2025-11-05T21:06:40.672+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906166618512560128, "uid": 10001, "tm": "2025-11-05 21:06:40"}
+2025-11-05T21:09:10.709+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T21:09:19.508+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"ofQmDqqWofzdmnEq0T4FDGXAuOaVHRPYlRr/Jzo=\"}"}
+2025-11-05T21:09:19.599+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10001, "count": 0}
+2025-11-05T21:09:19.600+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T21:09:19.600+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762348159600,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:09:19.741+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"nickName":"John","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"nickName":"robin fox","email":"*","phone":"*"}]}
+2025-11-05T21:09:19.741+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906168303955873792) MsgTFriendOpRet
+2025-11-05T21:09:19.784+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2025-11-05T21:09:19.785+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906168303955873792) MsgTFriendOpRet
+2025-11-05T21:09:19.830+0800	[31mERROR[0m	core/friendhandler.go:682	handleFriendList() query scylladb error	{"error": "unconfigured table friends"}
+2025-11-05T21:09:19.831+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "friends", "friends": null}
+2025-11-05T21:09:19.831+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906168303955873792) MsgTFriendOpRet
+2025-11-05T21:09:30.857+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906168303955873792, "uid": 10001, "tm": "2025-11-05 21:09:31"}
+2025-11-05T21:10:13.087+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T21:12:15.763+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T21:12:46.998+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T21:12:55.505+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"/sZROB071ppPk7iEy3ttDbhagJCwf8jqiIpijXg=\"}"}
+2025-11-05T21:12:55.607+0800	[35mDEBUG[0m	core/commonhelper.go:426	Load user permission list	{"user": 10001, "count": 0}
+2025-11-05T21:12:55.616+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T21:12:55.617+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762348375616,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:12:55.748+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"nickName":"John","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"nickName":"robin fox","email":"*","phone":"*"}]}
+2025-11-05T21:12:55.749+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169209795514368) MsgTFriendOpRet
+2025-11-05T21:12:55.776+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2025-11-05T21:12:55.777+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169209795514368) MsgTFriendOpRet
+2025-11-05T21:12:55.837+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "friends", "friends": null}
+2025-11-05T21:12:55.839+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169209795514368) MsgTFriendOpRet
+2025-11-05T21:13:17.047+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169209795514368) MsgTFriendOpRet
+2025-11-05T21:13:17.048+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2025-11-05T21:13:21.060+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169209795514368, "uid": 10001, "tm": "2025-11-05 21:13:21"}
+2025-11-05T21:13:26.281+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169209795514368) MsgTFriendOpRet
+2025-11-05T21:13:27.714+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2025-11-05T21:13:27.716+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169209795514368) MsgTFriendOpRet
+2025-11-05T21:13:39.649+0800	[35mDEBUG[0m	core/session.go:382	user(10001) session(906169209795514368) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2025-11-05T21:13:39.649+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"DgG2JEXA13K584N5BOSZc60JZIA6X9YjsSAOXig=\"}"}
+2025-11-05T21:13:39.650+0800	[34mINFO[0m	core/session.go:256	user(10001) session(906169209795514368)
+2025-11-05T21:13:39.651+0800	[34mINFO[0m	core/userhandler.go:1017	user(10001) login ok
+2025-11-05T21:13:39.651+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762348419651,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:13:39.717+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"userName":"robin","nickName":"John","email":"*","phone":"*","gender":"male","age":30,"region":"US","icon":"avatar.jpg"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T21:13:39.717+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169394911121408) MsgTFriendOpRet
+2025-11-05T21:13:39.764+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T21:13:39.764+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169394911121408) MsgTFriendOpRet
+2025-11-05T21:13:39.811+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10001, "mode": "friends", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T21:13:39.811+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906169394911121408) MsgTFriendOpRet
+2025-11-05T21:13:39.857+0800	[35mDEBUG[0m	core/chatmsghandler.go:478	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "userId:10001 bigId:9223372036854775807 littleId:906072675405926401 chatType:ChatTypeP2P"}
+2025-11-05T21:13:39.903+0800	[35mDEBUG[0m	core/chatmsghandler.go:553	onQueryP2PChatData:	{"msg count:": 0}
+2025-11-05T21:14:09.803+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:14:09"}
+2025-11-05T21:14:40.216+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:14:40"}
+2025-11-05T21:14:40.343+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:1271890416231516115 params:{key:\"checkTokenData\" value:\"QljOYlPO2tfkC1+COeLcTE3Srr4kjW3y4gn11BA=\"}"}
+2025-11-05T21:14:40.344+0800	[34mINFO[0m	core/userhandler.go:1017	user(10007) login ok
+2025-11-05T21:14:40.344+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762348480344,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:14:40.536+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10007, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T21:14:40.537+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906169649455042560) MsgTFriendOpRet
+2025-11-05T21:14:40.568+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10007, "mode": "fans", "friends": null}
+2025-11-05T21:14:40.569+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906169649455042560) MsgTFriendOpRet
+2025-11-05T21:15:10.630+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:15:10"}
+2025-11-05T21:15:41.043+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:15:41"}
+2025-11-05T21:16:11.324+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:16:11"}
+2025-11-05T21:16:38.054+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"KNk5Ucl8H9n05U0QYGGR7egogb7fUaz/Kv3IiJE=\"}"}
+2025-11-05T21:16:38.058+0800	[34mINFO[0m	core/userhandler.go:1017	user(10006) login ok
+2025-11-05T21:16:38.058+0800	[35mDEBUG[0m	core/userhandler.go:1018	user login ok	{"msg": {"version":1,"tm":1762348598058,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T21:16:38.124+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"}]}
+2025-11-05T21:16:38.124+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906170143393058816) MsgTFriendOpRet
+2025-11-05T21:16:38.170+0800	[35mDEBUG[0m	core/friendhandler.go:687	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T21:16:38.171+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906170143393058816) MsgTFriendOpRet
+2025-11-05T21:16:41.665+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:16:41"}
+2025-11-05T21:17:11.975+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:17:12"}
+2025-11-05T21:17:42.274+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:17:42"}
+2025-11-05T21:18:12.599+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:18:12"}
+2025-11-05T21:18:43.009+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:18:43"}
+2025-11-05T21:19:13.262+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:19:13"}
+2025-11-05T21:19:43.734+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:19:43"}
+2025-11-05T21:20:14.144+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:20:14"}
+2025-11-05T21:20:44.558+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:20:44"}
+2025-11-05T21:21:14.872+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:21:15"}
+2025-11-05T21:21:45.368+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:21:45"}
+2025-11-05T21:22:16.010+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:22:16"}
+2025-11-05T21:22:38.635+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:22:37"}
+2025-11-05T21:22:46.520+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:22:46"}
+2025-11-05T21:23:17.137+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:23:17"}
+2025-11-05T21:23:47.553+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:23:47"}
+2025-11-05T21:24:10.796+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 21:24:10"}
+2025-11-05T21:24:17.965+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:24:18"}
+2025-11-05T21:24:48.273+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:24:48"}
+2025-11-05T21:25:18.686+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:25:18"}
+2025-11-05T21:25:48.998+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:25:49"}
+2025-11-05T21:26:19.340+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:26:19"}
+2025-11-05T21:26:49.704+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:26:49"}
+2025-11-05T21:27:41.566+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:27:41"}
+2025-11-05T21:27:58.214+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:27:57"}
+2025-11-05T21:28:11.908+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:28:12"}
+2025-11-05T21:30:23.399+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:30:23"}
+2025-11-05T21:30:53.753+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:30:53"}
+2025-11-05T21:33:33.742+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:33:33"}
+2025-11-05T21:33:55.556+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:33:55"}
+2025-11-05T21:36:02.403+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 21:36:02"}
+2025-11-05T21:38:23.236+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:38:22"}
+2025-11-05T21:39:15.457+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:39:15"}
+2025-11-05T21:44:33.461+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:44:32"}
+2025-11-05T21:46:48.469+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:46:48"}
+2025-11-05T21:46:55.803+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 21:46:46"}
+2025-11-05T21:49:13.319+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:49:07"}
+2025-11-05T21:53:20.559+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:53:20"}
+2025-11-05T21:55:33.993+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:55:33"}
+2025-11-05T21:57:42.242+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 21:57:42"}
+2025-11-05T21:59:07.141+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 21:58:57"}
+2025-11-05T21:59:19.819+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 21:59:20"}
+2025-11-05T22:00:21.450+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 22:00:21"}
+2025-11-05T22:03:26.725+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:03:26"}
+2025-11-05T22:06:15.595+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:06:15"}
+2025-11-05T22:06:39.465+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:06:38"}
+2025-11-05T22:10:38.866+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 22:10:38"}
+2025-11-05T22:13:20.292+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:13:20"}
+2025-11-05T22:13:53.783+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:13:53"}
+2025-11-05T22:19:33.924+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:19:33"}
+2025-11-05T22:22:00.050+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:21:55"}
+2025-11-05T22:22:40.720+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 22:22:36"}
+2025-11-05T22:26:33.883+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:26:33"}
+2025-11-05T22:30:00.886+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:30:01"}
+2025-11-05T22:30:45.469+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:30:45"}
+2025-11-05T22:31:15.840+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:31:16"}
+2025-11-05T22:31:46.204+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:31:46"}
+2025-11-05T22:32:53.670+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:32:53"}
+2025-11-05T22:33:36.198+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169649455042560, "uid": 10007, "tm": "2025-11-05 22:33:35"}
+2025-11-05T22:35:09.566+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:35:09"}
+2025-11-05T22:38:33.827+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:38:33"}
+2025-11-05T22:40:23.169+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906169394911121408, "uid": 10001, "tm": "2025-11-05 22:40:23"}
+2025-11-05T22:45:38.438+0800	[35mDEBUG[0m	core/commonhandler.go:189	receive heart beat	{"sid": 906170143393058816, "uid": 10006, "tm": "2025-11-05 22:45:37"}
+2025-11-05T22:46:40.592+0800	[34mINFO[0m	server/main.go:88	server started here...
+2025-11-05T22:46:49.723+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:4516930846336681555  params:{key:\"checkTokenData\"  value:\"pXSgD1mw1uXATTyMkTEU2+k+BEC/GNLViDUnscI=\"}"}
+2025-11-05T22:46:49.913+0800	[35mDEBUG[0m	core/commonhelper.go:421	Load user permission list	{"user": 10001, "count": 0}
+2025-11-05T22:46:49.914+0800	[34mINFO[0m	core/userhandler.go:1023	user(10001) login ok
+2025-11-05T22:46:49.915+0800	[35mDEBUG[0m	core/userhandler.go:1024	user login ok	{"msg": {"version":1,"tm":1762354009914,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":5,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T22:46:50.149+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":1,"nickName":"John","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"nickName":"robin fox","email":"*","phone":"*"}]}
+2025-11-05T22:46:50.150+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906192841334722560) MsgTFriendOpRet
+2025-11-05T22:46:50.193+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2025-11-05T22:46:50.193+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906192841334722560) MsgTFriendOpRet
+2025-11-05T22:46:50.237+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "friends", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T22:46:50.237+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906192841334722560) MsgTFriendOpRet
+2025-11-05T22:54:47.686+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"49D204D9C06B1CE8\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:1271890416231516115  params:{key:\"checkTokenData\"  value:\"XchoBaP/2MCPq/sGrZ+Ueme5405Lk4tRPFIiXws=\"}"}
+2025-11-05T22:54:47.687+0800	[34mINFO[0m	core/userhandler.go:1023	user(10007) login ok
+2025-11-05T22:54:47.687+0800	[35mDEBUG[0m	core/userhandler.go:1024	user login ok	{"msg": {"version":1,"tm":1762354487687,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10007,"userName":"user10007","nickName":"yoyo","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风","follows":3,"params":{"nfans":"","nfollows":""}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T22:54:47.741+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10007, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"}]}
+2025-11-05T22:54:47.742+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906194846249783296) MsgTFriendOpRet
+2025-11-05T22:54:47.803+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10007, "mode": "fans", "friends": null}
+2025-11-05T22:54:47.803+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906194846249783296) MsgTFriendOpRet
+2025-11-05T22:55:11.182+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906194846249783296) MsgTFriendOpRet
+2025-11-05T22:55:25.771+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906192841334722560) MsgTFriendOpRet
+2025-11-05T22:55:27.157+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10007) sid(906194846249783296) MsgTFriendOpRet
+2025-11-05T22:55:27.157+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(906192841334722560) MsgTFriendOpRet
+2025-11-05T22:56:35.738+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:-5357504718274850190  params:{key:\"checkTokenData\"  value:\"QLeTiQ3vdpvgdtkRWpHNi7Gch49yw9ychl5Eq4M=\"}"}
+2025-11-05T22:56:35.739+0800	[34mINFO[0m	core/userhandler.go:1023	user(10006) login ok
+2025-11-05T22:56:35.740+0800	[35mDEBUG[0m	core/userhandler.go:1024	user login ok	{"msg": {"version":1,"tm":1762354595739,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":2,"fans":2,"params":{"email":"checked","nfans":"","nfollows":"","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2025-11-05T22:56:35.850+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"}]}
+2025-11-05T22:56:35.851+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906195299515633664) MsgTFriendOpRet
+2025-11-05T22:56:35.909+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2025-11-05T22:56:35.910+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(906195299515633664) MsgTFriendOpRet

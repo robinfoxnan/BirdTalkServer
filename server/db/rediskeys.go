@@ -12,9 +12,11 @@ const BirdServerNewsId = "birds_nid"
 const BirdServerCommentId = "birds_cid"
 
 // 用户相关
-const BirdServerUserPrefix = "bsui_%d"      // 用户基础信息以及动态信息 hash
-const BirdServerUFolPrefix = "bsufo_%d"     // 关注表 set
-const BirdServerUFanPrefix = "bsufa_%d"     // 粉丝表 set
+const BirdServerUserPrefix = "bsui_%d"  // 用户基础信息以及动态信息 hash
+const BirdServerUFolPrefix = "bsufo_%d" // 关注表 set
+const BirdServerUFanPrefix = "bsufa_%d" // 粉丝表 set
+const BirdServerUMutPrefix = "bsumu_%d" // 粉丝表 set
+
 const BirdServerUBloPrefix = "bsufb_%d"     // 拉黑表 hash表
 const BirdServerUserInGPrefix = "bsuing_%d" // 用户所属群的集合
 const BirdServerTokenPrefix = "bsut_%d"     // 秘钥的keyPrint
@@ -32,7 +34,7 @@ const BirdServerGroupMsgCache = "bsgmsg_%d"     //群组数据缓存，如果100
 const BirdServerClusterPrefix = "bscs_%d"      // 集群每个服务器状态hash
 const BirdServerCluSerStaPrefix = "bscs_state" // 集群信息hash表
 
-const MaxFriendBatchSize = 512  // 最大的批处理的个数
+const MaxFriendBatchSize = 100  // 最大的批处理的个数
 const MaxFriendCacheSize = 1024 // 缓存中粉丝之类的最大数量
 
 // TODO: 此广播功能不能使用集群，需要更改
@@ -119,6 +121,11 @@ func GetUserInfoKey(id int64) string {
 //go:inline
 func GetUserFollowingKey(id int64) string {
 	return fmt.Sprintf(BirdServerUFolPrefix, id)
+}
+
+//go:inline
+func GetUserMutualFriendsKey(id int64) string {
+	return fmt.Sprintf(BirdServerUMutPrefix, id)
 }
 
 // 粉丝表 set

@@ -116,6 +116,7 @@ func (g *GlobalVars) InitDb() error {
 		fmt.Println(err)
 		return err
 	}
+	g.scyllaCli.Init()
 
 	// 2025-01-12 added by robin
 	g.scyllaCli.StartAutoReconnect(hosts, g.Config.ScyllaDb.User, g.Config.ScyllaDb.Pwd, 10*time.Second)

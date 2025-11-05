@@ -98,6 +98,11 @@ func (cli *RedisClient) SetUserFollowing(uid int64, friends []model.FriendStore)
 	return cli.setFriendsStores(keyName, friends)
 }
 
+func (cli *RedisClient) SetUserMutual(uid int64, friends []model.FriendStore) error {
+	keyName := GetUserMutualFriendsKey(uid)
+	return cli.setFriendsStores(keyName, friends)
+}
+
 func (cli *RedisClient) SetUserFollowingNick(uid, fid int64, nick string) error {
 	keyName := GetUserFollowingKey(uid)
 	field := strconv.FormatInt(fid, 10)
@@ -442,28 +447,30 @@ func (cli *RedisClient) GetUserSessionOnServer(uid int64) (map[int64]int32, erro
 }
 
 // 设置好友的关注和粉丝的个数，永久有效，用户注册时候就加载
-func (cli *RedisClient) SetUserFriendNum(uid, numFollow, numFans int64) error {
+func (cli *RedisClient) SetUserFriendNum(uid, numFollow, numFans, numFriends int64) error {
 
 	key := GetUserFriendNumKey(uid)
 	// 使用管道
 	pipe := cli.Cmd.Pipeline()
 
-	pipe.HSet(key, "follow", numFollow)
+	pipe.HSet(key, "follows", numFollow)
 	pipe.HSet(key, "fans", numFans)
+	pipe.HSet(key, "friends", numFriends)
 	// 执行管道操作
 	_, err := pipe.Exec()
 	return err
 }
 
-func (cli *RedisClient) GetUserFriendNum(uid int64) (int64, int64, error) {
+func (cli *RedisClient) GetUserFriendNum(uid int64) (int64, int64, int64, error) {
 	key := GetUserFriendNumKey(uid)
 	mapRet, err := cli.Cmd.HGetAll(key).Result()
 	if err != nil {
-		return 0, 0, err
+		return 0, 0, 0, err
 	}
 	numFollow := int64(0)
 	numFans := int64(0)
-	str, ok := mapRet["follow"]
+	numFriends := int64(0)
+	str, ok := mapRet["follows"]
 	if ok {
 		numFollow, err = strconv.ParseInt(str, 10, 64)
 	}
@@ -473,17 +480,40 @@ func (cli *RedisClient) GetUserFriendNum(uid int64) (int64, int64, error) {
 		numFans, err = strconv.ParseInt(str, 10, 64)
 	}
 
-	return numFollow, numFans, err
+	str, ok = mapRet["friends"]
+	if ok {
+		numFriends, err = strconv.ParseInt(str, 10, 64)
+	}
+
+	return numFollow, numFans, numFriends, err
 }
 
 // 不增加的就设置为0
 func (cli *RedisClient) AddUserFriendNum(uid, numFollow, numFans int64) error {
 	key := GetUserFriendNumKey(uid)
 	if numFollow > 0 {
-		return cli.Cmd.HIncrBy(key, "follow", numFollow).Err()
+		return cli.Cmd.HIncrBy(key, "follows", numFollow).Err()
 	}
 	if numFans > 0 {
 		return cli.Cmd.HIncrBy(key, "fans", numFollow).Err()
 	}
 	return nil
+}
+
+// 单独的增加或者减少，可以设置1或者-1
+func (cli *RedisClient) AddUserFollowsNum(uid, num int64) error {
+	key := GetUserFriendNumKey(uid)
+
+	return cli.Cmd.HIncrBy(key, "follows", num).Err()
+}
+
+func (cli *RedisClient) AddUserFansNum(uid, num int64) error {
+	key := GetUserFriendNumKey(uid)
+	return cli.Cmd.HIncrBy(key, "fans", num).Err()
+
+}
+
+func (cli *RedisClient) AddUserFriendsNum(uid, num int64) error {
+	key := GetUserFriendNumKey(uid)
+	return cli.Cmd.HIncrBy(key, "friends", num).Err()
 }

@@ -461,10 +461,10 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 		city, err := Globals.GeoHelper.GetCityByIP(session.RemoteAddr)
 		if err == nil {
 			setDataMongo["region"] = city.City
-			setDataRedis["region"] = city.City
+			setDataRedis["Region"] = city.City
 		} else {
 			setDataMongo["region"] = "-"
-			setDataRedis["region"] = "-"
+			setDataRedis["Region"] = "-"
 		}
 	}
 
@@ -901,9 +901,15 @@ func onLoginSuccess(session *Session, bSaveToken bool) {
 		}
 	}
 
+	uinfo := session.GetUser().GetUserInfo()
+	if uinfo.Params == nil {
+		uinfo.Params = map[string]string{}
+	}
+	uinfo.Params["nfans"] = ""
+	uinfo.Params["nfollows"] = ""
 	// 通知用户免登录
 	SendBackUserOp(pbmodel.UserOperationType_Login,
-		session.GetUser().GetUserInfo(),
+		uinfo,
 		true, "loginok", session)
 	session.SetStatus(model.UserStatusOk)
 }
