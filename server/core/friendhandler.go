@@ -342,6 +342,7 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 		if Globals.Config.Server.FriendMode {
 			// todo: 通知对方服务器更新
 		}
+		return
 	}
 
 	// 保存数据库
@@ -360,8 +361,10 @@ func handleFriendRemove(msg *pbmodel.Msg, session *Session) {
 	//}
 
 	// 无论哪种模式，应该通知对方, 这样才能更新通信簿
+	userList := make([]*pbmodel.UserInfo, 0)
+	userList = append(userList, friendUser.GetUserInfo())
 	msgNotify := newFriendOpResultMsg(pbmodel.UserOperationType_RemoveFriend, "notice", meUser.GetUserInfo(),
-		nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
+		userList, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
 
 	// 多终端登录时候，转发到所有的消息
 	trySendMsgToUser(uid2, msgNotify)
@@ -996,8 +999,10 @@ func onAddFriendOk(uid1, uid2 int64, friendInfo, userInfo *pbmodel.UserInfo, fri
 	}
 
 	// 6. 如果对方在线，则需要通知对方有新粉丝
+	userList := make([]*pbmodel.UserInfo, 0)
+	userList = append(userList, friendUser.GetUserInfo())
 	msg := newFriendOpResultMsg(pbmodel.UserOperationType_AddFriend, "notice",
-		user.GetUserInfo(), nil, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
+		user.GetUserInfo(), userList, nil, friendOpMsg.SendId, friendOpMsg.MsgId)
 	trySendMsgToUser(uid2, msg)
 
 	// 应答回执
