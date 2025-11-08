@@ -2,6 +2,7 @@ package main
 
 import (
 	"birdtalk/server/core"
+	"birdtalk/server/debugapi"
 	"birdtalk/server/handler"
 	"birdtalk/server/ws"
 	"crypto/tls"
@@ -68,6 +69,9 @@ func startServer() {
 	router.GET("/", Index)
 	router.GET("/ws", ws.HandleWebSocket)
 	router.GET("/filestore/:filename", handler.FileDownloadExHandler)
+
+	// 调试模式下使用，
+	router.GET("/debug", debugapi.DebugHandler)
 
 	fmt.Println("Server is running on port ...")
 	//err := router.Run(":80")

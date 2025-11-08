@@ -240,6 +240,17 @@ const cqlCreateTablePChat = `CREATE TABLE IF NOT EXISTS  chatdata.pchat (
 			PRIMARY KEY (pk, uid1, id)
 		)`
 
+// robin add 2025-11-07
+const cqlCreateTablePChatTopic = `CREATE MATERIALIZED VIEW IF NOT EXISTS chatdata.pchat_topic AS
+		SELECT pk, uid1, uid2, id, usid, tm, tm1, tm2, io, st, ct, mt, draf, pr, ref
+		FROM chatdata.pchat
+		WHERE pk IS NOT NULL
+		  AND uid1 IS NOT NULL
+		  AND uid2 IS NOT NULL
+		  AND id IS NOT NULL
+		PRIMARY KEY ((pk, uid1, uid2), id)
+		WITH CLUSTERING ORDER BY (id DESC)`
+
 const cqlCreateTableGChat = `CREATE TABLE IF NOT EXISTS  chatdata.gchat (
 			pk smallint,
 			gid bigint,
@@ -311,6 +322,7 @@ const UserInGroupTableName = "chatgroup.uing"
 // 聊天消息
 const PrivateChatTableName = "chatdata.pchat"
 const GroupChatTableName = "chatdata.gchat"
+const PrivateChatViewName = "chatdata.pchat_topic"
 
 // 好友申请，群申请记录
 const UserOpTableName = "chatuserop.userop"
@@ -321,7 +333,7 @@ const GroupOpTableName = "chatuserop.groupop"
 var initCqlList = []string{cqlCreateKeySpaceChatUser, cqlCreateKeySpaceChatGroup, cqlCreateKeySpaceChatData, cqlCreateKeySpaceChatUserOp,
 	cqlCreateTableFollow, cqlCreateTableFans, cqlCreateTableBlock, cqlCreateTableMutual,
 	cqlCreateTableGroupMem, cqlCreateTableUinG,
-	cqlCreateTablePChat, cqlCreateTableGChat,
+	cqlCreateTablePChat, cqlCreateTableGChat, cqlCreateTablePChatTopic,
 	cqlCreateTableUserOp, cqlCreateTableGroupOp,
 }
 

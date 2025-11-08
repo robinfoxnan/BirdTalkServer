@@ -46,3 +46,13 @@ func (uc *UserCache) SetOrUpdateUser(uid int64, user *User) *User {
 func (uc *UserCache) RemoveUser(uid int64) {
 	uc.userMap.Remove(uid)
 }
+
+func (c *UserCache) GetAllUsers() []*User {
+	users := make([]*User, 0)
+
+	c.userMap.IterCb(func(_ int64, user *User) {
+		users = append(users, user)
+	})
+
+	return users
+}

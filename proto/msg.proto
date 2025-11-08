@@ -167,7 +167,7 @@ enum SynType {
 // 可能会答应一组消息，也可能应答一组应答，还可能是搜索结果
 // 目前数据库还不能支持复杂的关键字搜索；
 message MsgQuery{
-    int64 userId = 1 [jstype = JS_STRING];               // 用户ID
+    int64 userId = 1 [jstype = JS_STRING];               // 好友的ID，用户的ID从会话就可以知道
     int64 groupId = 2 [jstype = JS_STRING];              // 如果查询私聊的消息不填，如果是查群聊就填写群聊的号码
     int64 bigId = 3 [jstype = JS_STRING];                // 这里是消息的范围
     int64 littleId = 4 [jstype = JS_STRING];             // 消息范围

@@ -585,3 +585,82 @@ func (me *MongoDBExporter) FindGroupByKeyword(key string, bFilter bool) ([]*pbmo
 
 	return groups, nil
 }
+
+// 2025-11-08 for debug
+func (me *MongoDBExporter) LoadPbUsersFromId(startId int64, limit int64) ([]*pbmodel.UserInfo, error) {
+	collection := me.db.Collection(UserTableName)
+
+	// 构建查询条件：userid >= startId
+	filter := bson.M{
+		"userid": bson.M{"$gte": startId},
+	}
+
+	// 设置查询选项
+	opts := options.Find().
+		SetSort(bson.D{{Key: "userid", Value: 1}}). // 按 userid 升序排序
+		SetLimit(limit)                             // 限制返回数量
+
+	// 执行查询
+	cursor, err := collection.Find(context.Background(), filter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var users []*pbmodel.UserInfo
+	for cursor.Next(context.Background()) {
+		var user pbmodel.UserInfo
+		if err := cursor.Decode(&user); err != nil {
+			fmt.Println("decode error:", err)
+			continue
+		}
+		users = append(users, &user)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+func (me *MongoDBExporter) LoadUsersFromId(startId int64, limit int64) ([]*model.User, error) {
+	collection := me.db.Collection(UserTableName)
+
+	// 查询条件
+	filter := bson.M{
+		"userid": bson.M{"$gte": startId},
+	}
+
+	// 排序 + 限制
+	opts := options.Find().
+		SetSort(bson.D{{Key: "userid", Value: 1}}).
+		SetLimit(limit)
+
+	// 执行查询
+	cursor, err := collection.Find(context.Background(), filter, opts)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var users []*model.User
+
+	for cursor.Next(context.Background()) {
+		var info pbmodel.UserInfo
+		if err := cursor.Decode(&info); err != nil {
+			fmt.Println("decode userinfo error:", err)
+			continue
+		}
+
+		// 创建内存 User 对象
+		u := model.NewUserFromInfo(&info)
+		users = append(users, u)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

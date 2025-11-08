@@ -78,10 +78,13 @@ const UserLoadStatusAll = UserLoadStatusInfo | UserLoadStatusPermission | UserLo
 
 // 内存缓存使用的用户模型
 type User struct {
-	pbmodel.UserInfo
-	SessionId []int64 // 多用户会话ID
-	Status    uint32
-	MaskLoad  uint32 // 目前的加载状态
+	pbmodel.UserInfo `json:"UserInfo"`
+	SessionId        []int64 // 多用户会话ID
+	Status           uint32
+
+	// 目前的加载状态
+	MaskLoad uint32 `json:"-"` // 序列化时忽略
+
 	//ParamsList map[string]string // 某些状态下的附加信息都放在这里，比如验证码
 
 	Block      map[int64]uint32 // 权限控制列表，高位是对方给自己的权限，低16位是自己向对方的权限
@@ -92,10 +95,11 @@ type User struct {
 
 	LastActiveTm int64
 
-	MsgCache *orderedmap.OrderedMap // 发给这个用户的消息都需要缓存，等待回执到达服务器
+	MsgCache *orderedmap.OrderedMap `json:"-"` // 序列化时忽略
+	// 发给这个用户的消息都需要缓存，等待回执到达服务器
 	// 对于用户来说，这是一个收队列，但是当多个终端登录时候，保证有一个终端肯定收到了。
 
-	Mu sync.Mutex
+	Mu sync.Mutex `json:"-"` // 序列化时忽略
 }
 
 // New 函数用于创建一个 User 实例

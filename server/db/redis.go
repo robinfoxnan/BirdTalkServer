@@ -1,11 +1,14 @@
 package db
 
 import (
+	"birdtalk/server/model"
+	"birdtalk/server/pbmodel"
 	"context"
 	"errors"
 	"fmt"
 	"github.com/go-redis/redis"
 	"net"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -609,4 +612,184 @@ func (cli *RedisClient) UpdateHashFieldIfExist(key, field, v string) (bool, erro
 		return false, err
 	}
 	return result == 1, nil
+}
+
+// 2025-11-08 使用脚本从数据库中返回若干个用户
+func (cli *RedisClient) GetUsersMapByRange(prefix string, startID int64, limit int) (map[string]map[string]string, error) {
+	script := `
+local prefix = ARGV[1]
+local start_id = tonumber(ARGV[2])
+local limit = tonumber(ARGV[3])
+local result = {}
+
+local count = 0
+local i = 0
+
+while i < limit do
+    local key = prefix .. tostring(start_id + i)
+    if redis.call('EXISTS', key) == 1 then
+        local fields = redis.call('HGETALL', key)
+        table.insert(result, key)
+        for _, v in ipairs(fields) do
+            table.insert(result, v)
+        end
+        count = count + 1
+    end
+    i = i + 1
+end
+
+return result
+`
+
+	res, err := cli.Cmd.Eval(script, []string{}, prefix, fmt.Sprintf("%d", startID), fmt.Sprintf("%d", limit)).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	resultMap := make(map[string]map[string]string)
+	arr, ok := res.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("unexpected redis result type")
+	}
+
+	var currentKey string
+	for _, v := range arr {
+		strVal := fmt.Sprintf("%v", v)
+		// 如果是以 bsui_ 开头的 key
+		if strings.HasPrefix(strVal, prefix) {
+			currentKey = strVal
+			resultMap[currentKey] = make(map[string]string)
+		} else if currentKey != "" {
+			// 奇偶配对成 field -> value
+			fieldCount := len(resultMap[currentKey])
+			if fieldCount%2 == 0 {
+				// 第一个是field
+				resultMap[currentKey]["__last_field__"] = strVal
+			} else {
+				lastField := resultMap[currentKey]["__last_field__"]
+				resultMap[currentKey][lastField] = strVal
+				delete(resultMap[currentKey], "__last_field__")
+			}
+		}
+	}
+
+	return resultMap, nil
+}
+
+// 字段赋值的辅助函数
+func assignUserInfoField(info *pbmodel.UserInfo, field string, value string) {
+	rv := reflect.ValueOf(info).Elem()
+	f := rv.FieldByName(field)
+	if !f.IsValid() || !f.CanSet() {
+		return
+	}
+
+	switch f.Kind() {
+	case reflect.String:
+		f.SetString(value)
+	case reflect.Int32:
+		if v, err := strconv.ParseInt(value, 10, 32); err == nil {
+			f.SetInt(v)
+		}
+	case reflect.Int64:
+		if v, err := strconv.ParseInt(value, 10, 64); err == nil {
+			f.SetInt(v)
+		}
+	}
+}
+
+func (cli *RedisClient) GetUsersByRange(prefix string, startID int64, limit int) ([]*model.User, error) {
+	script := `
+local prefix = ARGV[1]
+local start_id = tonumber(ARGV[2])
+local limit = tonumber(ARGV[3])
+local result = {}
+
+local count = 0
+local i = 0
+
+while i < limit do
+    local key = prefix .. tostring(start_id + i)
+    if redis.call('EXISTS', key) == 1 then
+        local fields = redis.call('HGETALL', key)
+        table.insert(result, key)
+        for _, v in ipairs(fields) do
+            table.insert(result, v)
+        end
+        count = count + 1
+    end
+    i = i + 1
+end
+
+return result
+`
+
+	// 调用 Redis
+	res, err := cli.Cmd.Eval(script, []string{}, prefix, fmt.Sprintf("%d", startID), fmt.Sprintf("%d", limit)).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	arr, ok := res.([]interface{})
+	if !ok {
+		return nil, fmt.Errorf("unexpected redis result type")
+	}
+
+	var users []*model.User
+	var currentUser *model.User
+	var lastField string
+
+	for _, v := range arr {
+		strVal := fmt.Sprintf("%v", v)
+
+		// 检测是否是新用户key
+		if strings.HasPrefix(strVal, prefix) {
+			// 上一个用户完成
+			if currentUser != nil {
+				users = append(users, currentUser)
+			}
+
+			// 创建新的User对象
+			currentUser = model.NewUser()
+			continue
+		}
+
+		// 奇偶交替成 field/value
+		if lastField == "" {
+			lastField = strVal
+			continue
+		}
+
+		// 处理 field -> value
+		field := lastField
+		value := strVal
+		lastField = ""
+
+		if currentUser == nil {
+			continue
+		}
+
+		switch {
+		// 嵌套 map：Params
+		case strings.HasPrefix(field, "Param."):
+			key := strings.TrimPrefix(field, "Param.")
+			currentUser.UserInfo.Params[key] = value
+
+		// 嵌套 map：Privacy
+		case strings.HasPrefix(field, "Privacy."):
+			key := strings.TrimPrefix(field, "Privacy.")
+			currentUser.UserInfo.Privacy[key] = value
+
+		// 普通字段 -> 反射匹配 pbmodel.UserInfo
+		default:
+			assignUserInfoField(&currentUser.UserInfo, field, value)
+		}
+	}
+
+	// 加入最后一个
+	if currentUser != nil {
+		users = append(users, currentUser)
+	}
+
+	return users, nil
 }

@@ -14,6 +14,9 @@ import (
 	"unicode"
 )
 
+// 加载的消息的默认查询数量
+const BATCH_LOAD_SIZE = 100
+
 // String 方法实现 fmt.Stringer 接口，用于格式化输出 MsgChat 结构体信息
 func msg2String(m *pbmodel.MsgChat) string {
 	if m == nil {
@@ -492,13 +495,27 @@ func onQueryP2PChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 		queryMsg.BigId = Globals.snow.GenerateID()
 	}
 
+	fid := queryMsg.UserId
 	switch queryMsg.SynType {
 	case pbmodel.SynType_SynTypeForward:
-		lst, err = Globals.scyllaCli.FindPChatMsgForward(pk, session.UserID, queryMsg.LittleId, 100)
+		if fid == 0 || fid == session.UserID {
+			lst, err = Globals.scyllaCli.FindPChatMsgForward(pk, session.UserID, queryMsg.LittleId, BATCH_LOAD_SIZE)
+		} else {
+			lst, err = Globals.scyllaCli.FindPChatMsgForwardTopic(pk, session.UserID, fid, queryMsg.LittleId, BATCH_LOAD_SIZE)
+		}
+
 	case pbmodel.SynType_SynTypeBackward:
-		lst, err = Globals.scyllaCli.FindPChatMsgBackwardFrom(pk, session.UserID, queryMsg.BigId, 100)
+		if fid == 0 || fid == session.UserID {
+			lst, err = Globals.scyllaCli.FindPChatMsgBackward(pk, session.UserID, queryMsg.BigId, BATCH_LOAD_SIZE)
+		} else {
+			lst, err = Globals.scyllaCli.FindPChatMsgBackwardTopic(pk, session.UserID, fid, queryMsg.BigId, BATCH_LOAD_SIZE)
+		}
 	case pbmodel.SynType_SynTypeBetween:
-		lst, err = Globals.scyllaCli.FindPChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, 100)
+		if fid == 0 || fid == session.UserID {
+			lst, err = Globals.scyllaCli.FindPChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, BATCH_LOAD_SIZE)
+		} else {
+			lst, err = Globals.scyllaCli.FindPChatMsgForwardBetweenTopic(pk, session.UserID, fid, queryMsg.LittleId, queryMsg.BigId, BATCH_LOAD_SIZE)
+		}
 	}
 	if err != nil {
 		Globals.Logger.Error("find p2p chat msg error", zap.Error(err))
@@ -553,7 +570,7 @@ func onQueryP2PChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 	Globals.Logger.Debug("onQueryP2PChatData:", zap.Any("msg count:", len(chatDataList)))
 
 	chatDataRet := pbmodel.MsgQueryResult{
-		UserId:          session.UserID,
+		UserId:          fid,
 		GroupId:         0,
 		BigId:           bigId,
 		LittleId:        littleId,
@@ -651,11 +668,11 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 	var err error
 	switch queryMsg.SynType {
 	case pbmodel.SynType_SynTypeForward:
-		lst, err = Globals.scyllaCli.FindGChatMsgForward(pk, group.GroupId, queryMsg.LittleId, 100)
+		lst, err = Globals.scyllaCli.FindGChatMsgForward(pk, group.GroupId, queryMsg.LittleId, BATCH_LOAD_SIZE)
 	case pbmodel.SynType_SynTypeBackward:
-		lst, err = Globals.scyllaCli.FindGChatMsgBackwardFrom(pk, group.GroupId, queryMsg.BigId, 100)
+		lst, err = Globals.scyllaCli.FindGChatMsgBackwardFrom(pk, group.GroupId, queryMsg.BigId, BATCH_LOAD_SIZE)
 	case pbmodel.SynType_SynTypeBetween:
-		lst, err = Globals.scyllaCli.FindGChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, 100)
+		lst, err = Globals.scyllaCli.FindGChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, BATCH_LOAD_SIZE)
 	}
 	if err != nil {
 		Globals.Logger.Error("find p2p chat msg error", zap.Error(err))
@@ -740,11 +757,11 @@ func onQueryChatReply(queryMsg *pbmodel.MsgQuery, session *Session) {
 	var err error
 	switch queryMsg.SynType {
 	case pbmodel.SynType_SynTypeForward:
-		lst, err = Globals.scyllaCli.FindPChatMsgForward(pk, session.UserID, queryMsg.LittleId, 100)
+		lst, err = Globals.scyllaCli.FindPChatMsgForward(pk, session.UserID, queryMsg.LittleId, BATCH_LOAD_SIZE)
 	case pbmodel.SynType_SynTypeBackward:
-		lst, err = Globals.scyllaCli.FindPChatMsgBackwardFrom(pk, session.UserID, queryMsg.BigId, 100)
+		lst, err = Globals.scyllaCli.FindPChatMsgBackward(pk, session.UserID, queryMsg.BigId, BATCH_LOAD_SIZE)
 	case pbmodel.SynType_SynTypeBetween:
-		lst, err = Globals.scyllaCli.FindPChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, 100)
+		lst, err = Globals.scyllaCli.FindPChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, BATCH_LOAD_SIZE)
 	}
 	if err != nil {
 		Globals.Logger.Error("find p2p chat msg error", zap.Error(err))

@@ -232,6 +232,7 @@ func (me *Scylla) FindPChatMsgForward(pk int16, uid, littleId int64, pageSize ui
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))
 
+	// 如果你只排序 id，会报错或者被忽略，因为排序的逻辑是按聚簇键顺序 (uid1, id)
 	builder.OrderBy("uid1", qb.ASC)
 	builder.OrderBy("id", qb.ASC)
 
@@ -242,8 +243,33 @@ func (me *Scylla) FindPChatMsgForward(pk int16, uid, littleId int64, pageSize ui
 	defer q.Release()
 
 	q.Consistency(gocql.One)
-
 	q.Bind(pk, uid, littleId)
+
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+func (me *Scylla) FindPChatMsgForwardTopic(pk int16, uid, fid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
+
+	builder := qb.Select(PrivateChatViewName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"), qb.GtOrEq("id"))
+	builder.OrderBy("id", qb.ASC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, fid, littleId)
 
 	var lst []model.PChatDataStore
 
@@ -271,11 +297,35 @@ func (me *Scylla) FindPChatMsgForwardBetween(pk int16, uid, littleId, bigId int6
 	defer q.Release()
 
 	q.Consistency(gocql.One)
-
 	q.Bind(pk, uid, littleId, bigId)
 
 	var lst []model.PChatDataStore
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
 
+func (me *Scylla) FindPChatMsgForwardBetweenTopic(pk int16, uid, fid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+
+	builder := qb.Select(PrivateChatViewName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"), qb.GtOrEq("id"), qb.LtOrEq("id"))
+
+	//builder.OrderBy("uid1", qb.ASC)
+	builder.OrderBy("id", qb.ASC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+	q.Bind(pk, uid, fid, littleId, bigId)
+
+	var lst []model.PChatDataStore
 	err := q.Select(&lst)
 	if err != nil {
 		fmt.Println(err)
@@ -285,34 +335,7 @@ func (me *Scylla) FindPChatMsgForwardBetween(pk int16, uid, littleId, bigId int6
 }
 
 // 从最新的数据向前倒序查若干条
-func (me *Scylla) FindPChatMsgBackward(pk, uid, pageSize uint) ([]model.PChatDataStore, error) {
-	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"))
-
-	builder.OrderBy("uid1", qb.DESC)
-	builder.OrderBy("id", qb.DESC)
-
-	//builder.AllowFiltering()
-	builder.Limit(pageSize)
-
-	q := builder.Query(me.session)
-	defer q.Release()
-
-	q.Consistency(gocql.One)
-
-	q.Bind(pk, uid)
-	var lst []model.PChatDataStore
-
-	err := q.Select(&lst)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	return lst, nil
-}
-
-// 从某一点开始向之前的历史数据反向查找,即 所有小于bigId 的
-func (me *Scylla) FindPChatMsgBackwardFrom(pk int16, uid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+func (me *Scylla) FindPChatMsgBackward(pk int16, uid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
 	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"))
 
@@ -328,7 +351,6 @@ func (me *Scylla) FindPChatMsgBackwardFrom(pk int16, uid, bigId int64, pageSize 
 	q.Consistency(gocql.One)
 
 	q.Bind(pk, uid, bigId)
-
 	var lst []model.PChatDataStore
 
 	err := q.Select(&lst)
@@ -338,62 +360,115 @@ func (me *Scylla) FindPChatMsgBackwardFrom(pk int16, uid, bigId int64, pageSize 
 	}
 	return lst, nil
 }
+
+func (me *Scylla) FindPChatMsgBackwardTopic(pk int16, uid, fid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+	builder := qb.Select(PrivateChatViewName).Columns(metaPrivateChatData.Columns...)
+	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.Eq("uid2"), qb.LtOrEq("id"))
+
+	builder.OrderBy("id", qb.DESC)
+
+	//builder.AllowFiltering()
+	builder.Limit(pageSize)
+
+	q := builder.Query(me.session)
+	defer q.Release()
+
+	q.Consistency(gocql.One)
+
+	q.Bind(pk, uid, fid, bigId)
+	var lst []model.PChatDataStore
+
+	err := q.Select(&lst)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	return lst, nil
+}
+
+// 从某一点开始向之前的历史数据反向查找,即 所有小于bigId 的
+//func (me *Scylla) FindPChatMsgBackwardFrom(pk int16, uid, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+//	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+//	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"))
+//
+//	builder.OrderBy("uid1", qb.DESC)
+//	builder.OrderBy("id", qb.DESC)
+//
+//	//builder.AllowFiltering()
+//	builder.Limit(pageSize)
+//
+//	q := builder.Query(me.session)
+//	defer q.Release()
+//
+//	q.Consistency(gocql.One)
+//
+//	q.Bind(pk, uid, bigId)
+//
+//	var lst []model.PChatDataStore
+//
+//	err := q.Select(&lst)
+//	if err != nil {
+//		fmt.Println(err)
+//		return nil, err
+//	}
+//	return lst, nil
+//}
 
 // 从当前最新开始向之前的历史数据反向查找，即 所有大于littlId 的
-func (me *Scylla) FindPChatMsgBackwardTo(pk, uid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
-	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))
-
-	builder.OrderBy("uid1", qb.DESC)
-	builder.OrderBy("id", qb.DESC)
-
-	//builder.AllowFiltering()
-	builder.Limit(pageSize)
-
-	q := builder.Query(me.session)
-	defer q.Release()
-
-	q.Consistency(gocql.One)
-
-	q.Bind(pk, uid, littleId)
-
-	var lst []model.PChatDataStore
-
-	err := q.Select(&lst)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	return lst, nil
-}
+//func (me *Scylla) FindPChatMsgBackwardTo(pk, uid, littleId int64, pageSize uint) ([]model.PChatDataStore, error) {
+//	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+//	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.GtOrEq("id"))
+//
+//	builder.OrderBy("uid1", qb.DESC)
+//	builder.OrderBy("id", qb.DESC)
+//
+//	//builder.AllowFiltering()
+//	builder.Limit(pageSize)
+//
+//	q := builder.Query(me.session)
+//	defer q.Release()
+//
+//	q.Consistency(gocql.One)
+//
+//	q.Bind(pk, uid, littleId)
+//
+//	var lst []model.PChatDataStore
+//
+//	err := q.Select(&lst)
+//	if err != nil {
+//		fmt.Println(err)
+//		return nil, err
+//	}
+//	return lst, nil
+//}
 
 // 向之前的历史数据反向查找
-func (me *Scylla) FindPChatMsgBackwardBetween(pk int16, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
-	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
-	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"), qb.GtOrEq("id"))
-
-	builder.OrderBy("uid1", qb.DESC)
-	builder.OrderBy("id", qb.DESC)
-
-	//builder.AllowFiltering()
-	builder.Limit(pageSize)
-
-	q := builder.Query(me.session)
-	defer q.Release()
-
-	q.Consistency(gocql.One)
-
-	q.Bind(pk, uid, bigId, littleId)
-
-	var lst []model.PChatDataStore
-
-	err := q.Select(&lst)
-	if err != nil {
-		fmt.Println(err)
-		return nil, err
-	}
-	return lst, nil
-}
+//func (me *Scylla) FindPChatMsgBackwardBetween(pk int16, uid, littleId, bigId int64, pageSize uint) ([]model.PChatDataStore, error) {
+//	builder := qb.Select(PrivateChatTableName).Columns(metaPrivateChatData.Columns...)
+//	builder.Where(qb.Eq("pk"), qb.Eq("uid1"), qb.LtOrEq("id"), qb.GtOrEq("id"))
+//
+//	builder.OrderBy("uid1", qb.DESC)
+//	builder.OrderBy("id", qb.DESC)
+//
+//	//builder.AllowFiltering()
+//	builder.Limit(pageSize)
+//
+//	q := builder.Query(me.session)
+//	defer q.Release()
+//
+//	q.Consistency(gocql.One)
+//
+//	q.Bind(pk, uid, bigId, littleId)
+//
+//	var lst []model.PChatDataStore
+//
+//	err := q.Select(&lst)
+//	if err != nil {
+//		fmt.Println(err)
+//		return nil, err
+//	}
+//	return lst, nil
+//}
 
 // //////////////////////////////////////////////////////////////////////////////////////////
 // 写1次，
