@@ -21,7 +21,11 @@ func handleFileUpload(msg *pbmodel.Msg, session *Session) {
 	uploadMsg := msg.GetPlainMsg().GetUploadReq()
 
 	Globals.Logger.Debug("File Upload msg:", zap.Int64("user id", session.UserID),
-		zap.String("filename", uploadMsg.FileName), zap.String("hash", uploadMsg.HashCode), zap.Int64("send id", uploadMsg.SendId))
+		zap.String("filename", uploadMsg.FileName),
+		zap.String("hash", uploadMsg.HashCode),
+		zap.Int64("send id", uploadMsg.SendId),
+		zap.Int32("chunk index", uploadMsg.ChunkIndex),
+		zap.Int32("chunk count", uploadMsg.ChunkCount))
 
 	if uploadMsg == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "upload request is null", nil, session)
@@ -273,6 +277,8 @@ func onHandleUploadTrunkFirst(uploadMsg *pbmodel.MsgUploadReq, session *Session)
 
 				msgRet := createUpLoadRetMsg(fileStore.UniqName, uploadMsg, "sameok", "find same one")
 				session.SendMessage(msgRet)
+				Globals.Logger.Debug("find same file", zap.String("uniq_name", fileStore.UniqName),
+					zap.String("file name", fileStore.FileName), zap.String("hash", hashStr), zap.Strings("tags", fileInfo.Tags))
 				return
 			} else {
 				Globals.Logger.Fatal("file hashcode same ,size not same")

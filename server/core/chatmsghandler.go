@@ -103,7 +103,16 @@ func handleChatMsg(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	msgChat.MsgId = Globals.snow.GenerateID()
+	// 这里的修复，客户端的错误，收到了发送回执后，使用通用ID重发，造成重发同一个消息
+	// 如果msgid 与sendid不同，那么说明已经获取了正确的序号，这里应该是重复的消息
+	if msgChat.MsgId != msgChat.SendId {
+		sendBackChatMsgReply(false, "msgId is not same as sendId", msgChat, session, 0)
+		Globals.Logger.Error("msgId is not same as sendId", zap.Int64("sendId", msgChat.SendId), zap.Int64("msgId", msgChat.MsgId))
+		return
+	} else {
+		msgChat.MsgId = Globals.snow.GenerateID()
+	}
+
 	// 发给自己的消息
 	if msgChat.FromId == msgChat.ToId {
 		onSelfChatMessage(msg, session)
