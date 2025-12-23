@@ -4,6 +4,7 @@ import (
 	"birdtalk/server/db"
 	"birdtalk/server/model"
 	"birdtalk/server/utils"
+	"encoding/hex"
 	"fmt"
 	"go.uber.org/zap"
 	"strings"
@@ -61,6 +62,11 @@ func (g *GlobalVars) LoadConfig(fileName string) error {
 
 func (g *GlobalVars) InitWithConfig() error {
 
+	key, err := hex.DecodeString(g.Config.Server.TokenHex)
+	if err != nil {
+		panic(err)
+	}
+	g.Config.Server.TokenKey = key
 	switch g.Config.Server.LogLevel {
 	case "debug":
 		g.logLevel = zap.NewAtomicLevelAt(zap.DebugLevel)
@@ -88,7 +94,7 @@ func (g *GlobalVars) InitWithConfig() error {
 	}
 	g.emailWorkerManager = NewEmailWorkerManager(n)
 
-	err := utils.InitFont(Globals.Config.Server.AvatarFont)
+	err = utils.InitFont(Globals.Config.Server.AvatarFont)
 	if err != nil {
 		Globals.Logger.Error("load font error", zap.Error(err))
 	}
@@ -127,4 +133,9 @@ func (g *GlobalVars) InitDb() error {
 		return err
 	}
 	return nil
+}
+
+// 通过指纹来查看用户的基本信息
+func LoadUserByKeyPrint(keyPrint int64) (int64, *utils.KeyExchange, error) {
+	return Globals.redisCli.LoadToken(keyPrint)
 }

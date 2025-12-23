@@ -53,6 +53,8 @@ type ServerConf struct {
 	FileBasePath string `yaml:"file_base_path"`
 	GeoLite2Path string `yaml:"geolite2_path"` // ip 数据库
 	LogLevel     string `yaml:"log_level"`
+	TokenHex     string `yaml:"token_key"`
+	TokenKey     []byte `yaml:"-"` // 不序列化/反序列化
 }
 
 type LocalConfig struct {

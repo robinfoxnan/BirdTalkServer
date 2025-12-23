@@ -79,7 +79,10 @@ func (me *MongoDBExporter) FindFileByHashCode(hashcode string) (*model.FileInfo,
 
 	// 按照 tm 倒序排列
 	// 设置排序选项
-	findOptions := options.Find().SetLimit(1).SetMaxTime(time.Second * 10)
+	findOptions := options.Find().
+		SetSort(bson.D{{"tm", -1}}).
+		SetLimit(1).
+		SetMaxTime(time.Second * 10)
 
 	// 执行查询并排序
 	cursor, err := collection.Find(context.Background(), filter, findOptions)

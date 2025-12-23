@@ -28,6 +28,7 @@ server:
     file_base_path: e:/upload
     geolite2_path: ./resource/GeoLite2-City.mmdb
     log_level: debug
+    token_key: 278b3e9f1c18f488314c7991e163c8bac880d5f09f4a15dc7589823dc6b43264
 
 
 email:

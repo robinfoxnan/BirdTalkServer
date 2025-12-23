@@ -69,6 +69,7 @@ func startServer() {
 	router.GET("/", Index)
 	router.GET("/ws", ws.HandleWebSocket)
 	router.GET("/filestore/:filename", handler.FileDownloadExHandler)
+	router.GET("/filestore/download", handler.FileDownloadExHandler1)
 
 	// 调试模式下使用，
 	router.GET("/debug", debugapi.DebugHandler)

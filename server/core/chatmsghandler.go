@@ -241,6 +241,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 	err := Globals.scyllaCli.SavePChatData(&msgData, pk2)
 	if err != nil {
 		sendBackChatMsgReply(false, "error when save data", msgChat, session, 0)
+		Globals.Logger.Error("save to db err: ", zap.String(`error`, err.Error()), zap.Int("draf len", len(msgChat.Data)))
 		return
 	}
 
