@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
+	"unicode"
 )
 
 // GetAbsolutePath 获取相对路径的绝对路径
@@ -35,6 +37,31 @@ func GetAbsolutePath(relativePath string) (string, error) {
 	return absPath, nil
 }
 
+func splitDatePrefix(s string) (prefix *string, rest string) {
+	if len(s) > 9 {
+		allDigits := true
+		for _, c := range s[:8] {
+			if !unicode.IsDigit(c) {
+				allDigits = false
+				break
+			}
+		}
+		if allDigits && s[8] == '_' {
+			p := s[:8]
+			return &p, s[9:]
+		}
+	}
+	return nil, s
+}
+
+func splitAtUnderscore(s string) (prefix string, rest string) {
+	parts := strings.SplitN(s, "_", 2)
+	if len(parts) == 2 {
+		return parts[0], parts[1]
+	}
+	return "", s
+}
+
 // 雪花算法一般不会出现小于4字节，雪花算法按照36进制序列化，
 // 文件名取前2个为1级目录，那么就是1600个目录，二级也是2个字符，所以2级就是100万个目录；
 func fileNameExt2FilePath(base, mainName, extName string, bCreate bool) (string, error) {
@@ -49,7 +76,14 @@ func fileNameExt2FilePath(base, mainName, extName string, bCreate bool) (string,
 		base = filepath.Join(currentDir, "web/filestore")
 	}
 
-	if len(mainName) < 4 {
+	// 20251227_
+	datePart := ""
+	charPart := mainName
+	if len(mainName) > 9 {
+		datePart, charPart = splitAtUnderscore(mainName)
+	}
+
+	if len(charPart) < 4 {
 		newPath := filepath.Join(base, "less4")
 		// 创建目录, 下载时候不需要只需要检查是否存在
 		if bCreate {
@@ -66,7 +100,13 @@ func fileNameExt2FilePath(base, mainName, extName string, bCreate bool) (string,
 	firstTwoBytes := mainName[:2]
 	nextTwoBytes := mainName[2:4]
 
-	newPath := filepath.Join(base, firstTwoBytes, nextTwoBytes)
+	newPath := ""
+	if datePart == "" {
+		newPath = filepath.Join(base, firstTwoBytes, nextTwoBytes)
+	} else {
+		newPath = filepath.Join(base, datePart, firstTwoBytes, nextTwoBytes)
+	}
+
 	// 创建目录, 下载时候不需要只需要检查是否存在
 	if bCreate {
 		err := os.MkdirAll(newPath, os.ModePerm)

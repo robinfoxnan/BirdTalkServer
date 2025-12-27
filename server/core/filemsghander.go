@@ -15,6 +15,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 func handleFileUpload(msg *pbmodel.Msg, session *Session) {
@@ -218,7 +219,10 @@ func getUUIDFileName(fileName string, fileHash string) (string, error) {
 
 	idName := strconv.FormatUint(id, 36)
 
-	return idName + ext, err
+	// 20251227 加一级时间目录，可以防止冲突，也方便删除过期文件
+	dateStr := time.Now().Format("20060102")
+
+	return dateStr + "_" + idName + ext, err
 }
 
 func sendBackFileUploadErr(uniqName string, uploadMsg *pbmodel.MsgUploadReq, result string, detail string, session *Session) {
