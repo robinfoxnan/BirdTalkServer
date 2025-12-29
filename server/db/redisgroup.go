@@ -26,6 +26,25 @@ func (cli *RedisClient) SetGroupInfoPart(gid int64, field, value string) error {
 	return err
 }
 
+// 查询某个群的信息
+func (cli *RedisClient) GetGroupInfo(grp *pbmodel.GroupInfo) error {
+	keyName := GetGroupInfoKey(grp.GroupId)
+	data, err := cli.Cmd.HGetAll(keyName).Result()
+	if err != nil {
+		//fmt.Println(err)
+		return err
+	}
+	//fmt.Println("from redis get the map = ", data)
+	if data == nil || len(data) == 0 {
+		return errors.New("GetGroupInfo find data in redis return null")
+	}
+	err = utils.FromMapString(data, grp)
+
+	//fmt.Println(user)
+	return err
+}
+
+// 查询某个群的信息
 func (cli *RedisClient) GetGroupInfoById(gid int64) (*pbmodel.GroupInfo, error) {
 	keyName := GetGroupInfoKey(gid)
 	data, err := cli.Cmd.HGetAll(keyName).Result()
@@ -35,7 +54,7 @@ func (cli *RedisClient) GetGroupInfoById(gid int64) (*pbmodel.GroupInfo, error) 
 	}
 	//fmt.Println("from redis get the map = ", data)
 	if data == nil || len(data) == 0 {
-		return nil, nil
+		return nil, errors.New("GetGroupInfo find data in redis return null")
 	}
 
 	group := pbmodel.GroupInfo{}

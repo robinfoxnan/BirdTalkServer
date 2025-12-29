@@ -34,8 +34,9 @@ type GlobalVars struct {
 	Logger   *zap.Logger
 	logLevel zap.AtomicLevel
 
-	Config    *LocalConfig
-	GeoHelper *GeoIPHelper
+	Config      *LocalConfig
+	GeoHelper   *GeoIPHelper
+	maxPageSize uint
 }
 
 var Globals GlobalVars
@@ -50,6 +51,7 @@ func init() {
 	Globals.Logger = utils.CreateLogger(&Globals.logLevel)
 	Globals.segment = utils.NewSegment()
 	Globals.GeoHelper = nil
+	Globals.maxPageSize = 100
 
 }
 

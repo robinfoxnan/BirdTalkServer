@@ -424,7 +424,11 @@ func (u *User) SetInGroup(gList []int64) {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()
 
-	u.Groups = make(map[int64]bool)
+	// 备注，这里没有错误，直接覆盖所有的
+	if len(gList) == 0 {
+		u.Groups = make(map[int64]bool)
+	}
+
 	for _, k := range gList {
 		u.Groups[k] = true
 	}
@@ -435,6 +439,40 @@ func (u *User) SetLeaveGroup(gid int64) {
 	defer u.Mu.Unlock()
 
 	u.Groups[gid] = false
+}
+
+func (u *User) SetJoinGroup(gid int64) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	if len(u.Groups) == 0 {
+		u.Groups = make(map[int64]bool)
+	}
+	u.Groups[gid] = true
+}
+
+func (u *User) GetInGroups(from int64, max uint) []int64 {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	if len(u.Groups) == 0 {
+		return nil
+	}
+
+	// 设置长度0和最大容量，
+	gids := make([]int64, 0, len(u.Groups))
+	n := uint(0)
+	for gid, ok := range u.Groups {
+		if ok {
+			if gid > from {
+				gids = append(gids, gid)
+			}
+			if n >= max {
+				break
+			}
+			n += 1
+		}
+	}
+	return gids
 }
 
 // 从redis查询的权限列表一次性添加到内存

@@ -330,7 +330,7 @@ func (cli *RedisClient) GetUserInGroupCount(uid int64) (int64, error) {
 	return cli.GetSetLen(keyUserInG)
 }
 
-// 直接返回所有的群组
+// 直接返回用户所在的所有的群组
 func (cli *RedisClient) GetUserInGroupAll(uid int64) ([]int64, error) {
 	keyUserInG := GetUseringKey(uid)
 	return cli.GetIntSet(keyUserInG)

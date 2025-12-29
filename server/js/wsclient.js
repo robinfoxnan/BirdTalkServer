@@ -1674,12 +1674,12 @@ class WsClient {
         const params = group.getParamsMap();
         params.set("icon", icon);
         params.set("brief", brief);
-        params.set("jointype", "any")
-        // params.set("jointype", "admin")
+        params.set("jointype", "direct")
+        // params.set("jointype", "auth")
         // params.set("jointype", "invite")
         // params.set("jointype", "question")
 
-        //params["jointype"] = "any" | "invite" | "admin" | "question"
+        //params["jointype"] = "direct" | "invite" | "auth" | "question"
 
 
 

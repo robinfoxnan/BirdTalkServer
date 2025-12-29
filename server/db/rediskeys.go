@@ -95,15 +95,15 @@ func (cli *RedisClient) GetNextUserId() (int64, error) {
 }
 
 func (cli *RedisClient) GetNextGroupId() (int64, error) {
-	return cli.GetNextKeyId(BirdServerNewsId)
+	return cli.GetNextKeyId(BirdServerGroupId)
 }
 
 func (cli *RedisClient) GetNextNewsId() (int64, error) {
-	return cli.GetNextKeyId(BirdServerCommentId)
+	return cli.GetNextKeyId(BirdServerNewsId)
 }
 
 func (cli *RedisClient) GetNextCommentId() (int64, error) {
-	return cli.GetNextKeyId(BirdServerGroupId)
+	return cli.GetNextKeyId(BirdServerCommentId)
 }
 
 /////////////////////////////////////////////////////////////////////////

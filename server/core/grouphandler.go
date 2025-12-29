@@ -119,6 +119,13 @@ func handleGroupOpRet(msg *pbmodel.Msg, session *Session) {
 }
 
 // 创建群
+// .name = "ddd"
+// .groupType = "chat" | "channel" | "map"
+// .tags = []
+// params[visibility"]:  "public" | "private"
+// params["brief"]: 简介
+// params["icon"]: ""
+// params["jointype"] = "direct" | "invite" | "auth" | "question"
 func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 	groupOpMsg := msg.GetPlainMsg().GetGroupOp()
 	groupInfo := groupOpMsg.GetGroup()
@@ -131,12 +138,10 @@ func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 		groupInfo.GroupType = "chat"
 	} else {
 		str := strings.ToLower(groupInfo.GroupType)
-		if str != "chat" && str != "channel" {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "groupInfo.groupType is wrong, must be chat or channel",
-				map[string]string{
-					"groupinfo.grouptype": str,
-				}, session)
-			return
+		if str != "chat" && str != "channel" && str != "map" {
+			groupInfo.GroupType = "chat"
+		} else {
+			groupInfo.GroupType = str
 		}
 	}
 
@@ -162,9 +167,19 @@ func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 			params["brief"] = ""
 		}
 
-		v, ok = params["brief"]
+		v, ok = params["icon"]
 		if !ok {
-			params["brief"] = ""
+			params["icon"] = ""
+		}
+
+		v, ok = params["jointype"]
+		if ok {
+			temp := strings.ToLower(v)
+			if temp != "direct" && temp != "invite" && temp != "auth" && temp != "question" {
+				params["jointype"] = "direct"
+			}
+		} else {
+			params["jointype"] = "direct"
 		}
 
 	} else {
@@ -172,6 +187,7 @@ func handleGroupCreateOp(msg *pbmodel.Msg, session *Session) {
 			"visibility": "public",
 			"brief":      "",
 			"icon":       "",
+			"jointype":   "direct",
 		}
 		groupInfo.Params = params
 	}
@@ -1372,56 +1388,14 @@ func handleListMemberInG(msg *pbmodel.Msg, session *Session) {
 		"ok",
 		"find user in group", session)
 
-	bHas, _ := Globals.redisCli.HasUserInGroup(session.UserID)
-	if bHas {
-		gidLst, _ := Globals.redisCli.GetUserInGroupAll(session.UserID)
-		if gidLst != nil && len(gidLst) > 0 {
-			msgRet.GetPlainMsg().GetGroupOpRet().Groups = intList2GroupList(gidLst)
-		}
+	ginfoList, _ := LoadUserInGroupList(session.UserID, fromId)
 
-		session.SendMessage(msgRet)
-		return
-	}
-
-	// 从数据库查询
-	pk := db.ComputePk(session.UserID)
-	lst, _ := Globals.scyllaCli.FindUserInGroups(pk, session.UserID, fromId, 100)
-
-	if lst != nil && len(lst) > 0 {
-		msgRet.GetPlainMsg().GetGroupOpRet().Groups = gStoreList2GroupList(lst)
+	if ginfoList != nil && len(ginfoList) > 0 {
+		msgRet.GetPlainMsg().GetGroupOpRet().Groups = ginfoList
 	}
 
 	session.SendMessage(msgRet)
 
-}
-func intList2GroupList(lst []int64) []*pbmodel.GroupInfo {
-	if lst == nil || len(lst) == 0 {
-		return nil
-	}
-
-	ret := make([]*pbmodel.GroupInfo, len(lst))
-	for index, item := range lst {
-		ret[index] = &pbmodel.GroupInfo{
-			GroupId: item,
-		}
-	}
-
-	return ret
-}
-
-func gStoreList2GroupList(lst []model.UserInGStore) []*pbmodel.GroupInfo {
-	if lst == nil || len(lst) == 0 {
-		return nil
-	}
-
-	ret := make([]*pbmodel.GroupInfo, len(lst))
-	for index, item := range lst {
-		ret[index] = &pbmodel.GroupInfo{
-			GroupId: item.Gid,
-		}
-	}
-
-	return ret
 }
 
 // 保存新建立的群的基础信息
