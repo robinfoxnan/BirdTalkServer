@@ -120,7 +120,7 @@ func handleChatMsg(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 单独的打印函数
-	txtInfo := fmt.Sprintf("receive chat msg(%d) from %d -> %d", msgChat.SendId, msgChat.FromId, msgChat.ToId)
+	txtInfo := fmt.Sprintf("receive chat msg(%d) from %d -> %d, type:%v", msgChat.SendId, msgChat.FromId, msgChat.ToId, msgChat.ChatType)
 	Globals.Logger.Debug(txtInfo, zap.String("msg", msg2String(msgChat)))
 
 	// 私聊消息
@@ -261,6 +261,7 @@ func onP2pChatMessage(msg *pbmodel.Msg, session *Session) {
 func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, session *Session, gid int64) {
 
 	tm := utils.GetTimeStamp()
+	// 私聊这里是0，群聊这里是组ID
 	params := map[string]string{
 		"gid":    fmt.Sprintf("%d", gid),
 		"detail": detail,
@@ -312,14 +313,15 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	// 检查权限啊
 	group, err := findGroup(msgChat.ToId)
 	if group == nil {
+		Globals.Logger.Debug("send back reply 'group id error'" + fmt.Sprintf("%d", msgChat.ToId))
 		sendBackChatMsgReply(false, "group id error", msgChat, session, msgChat.ToId)
 		return
 	}
 
 	_, b := group.HasMember(session.UserID)
 	if !b {
-
-		sendBackChatMsgReply(false, "you are not a group member", msgChat, session, msgChat.ToId)
+		Globals.Logger.Debug("send back reply 'you are not a group member'" + fmt.Sprintf("gid=%d, uid=%d", msgChat.ToId, msgChat.FromId))
+		sendBackChatMsgReply(false, "you are not a group member ", msgChat, session, msgChat.ToId)
 		return
 	}
 
@@ -357,6 +359,7 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	}
 
 	sendBackChatMsgReply(true, "ok", msgChat, session, msgChat.ToId)
+	Globals.Logger.Debug("send back reply ok " + fmt.Sprintf("gid=%d, uid=%d", msgChat.ToId, msgChat.FromId))
 	sendToGroupMembersExceptMe(group.GroupId, msg, session)
 }
 

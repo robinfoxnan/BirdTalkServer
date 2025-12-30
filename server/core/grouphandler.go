@@ -1224,7 +1224,8 @@ func handleGroupSearch(msg *pbmodel.Msg, session *Session) {
 				"not find id", session)
 
 		} else {
-			if group.IsPrivate() {
+			// 普通用户不让查询私有群
+			if group.IsPrivate() && !session.GetUser().IsSystemUser() {
 				msgRet = createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearch,
 					nil,
 					nil,
@@ -1486,75 +1487,6 @@ func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 		},
 	}
 	return &msg
-}
-
-// 加载群的用户信息; 群的数量为2000上限，所以这里直接从数据库加载所有群用户，放到redis中
-func loadGroupMembers(group *model.Group) {
-	// 从redis中查找，如果找到了，
-	lst, err := Globals.redisCli.GetGroupMembers(group.GroupId)
-	if lst != nil && len(lst) > 0 {
-		group.SetMembers(lst)
-		return
-	}
-
-	// 从数据库中加载
-	memlist, err := Globals.scyllaCli.FindGroupMembers(db.ComputePk(group.GroupId), group.GroupId, 0, 2000)
-	if err != nil {
-		Globals.Logger.Fatal("loadGroupMembers db error", zap.Error(err))
-		return
-	}
-
-	// 同步到redis
-	err = Globals.redisCli.SetGroupMembers(group.GroupId, memlist)
-	// 如果错了，大不了下次再加载
-
-	// 同步到内存在中
-	if memlist != nil && len(memlist) > 0 {
-		group.SetMembers(memlist)
-	}
-
-}
-
-// 从数据库中加载Group基础信息
-func findGroup(gid int64) (*model.Group, error) {
-	group, ok := Globals.grc.GetGroup(gid)
-	if ok && group != nil {
-		return group, nil
-	}
-
-	// 从redis中查找群
-	groupInfo, err := Globals.redisCli.GetGroupInfoById(gid)
-	if groupInfo != nil {
-		group = model.NewGroupFromInfo(groupInfo)
-		Globals.grc.InsertGroup(gid, group)
-
-		loadGroupMembers(group)
-		return group, nil
-	}
-
-	lst, err := Globals.mongoCli.FindGroupById(gid)
-	if lst == nil || len(lst) == 0 {
-		Globals.Logger.Error("findGroup() ->FindGroupById() err", zap.Int64("gid", gid), zap.Error(err))
-		return nil, err
-	}
-
-	if len(lst) > 1 {
-		Globals.Logger.Error("find more than one group by id", zap.Int64("gid", gid))
-		return nil, errors.New("find more than one group by id")
-	}
-
-	groupInfo = &lst[0]
-
-	// 保存到当前的群基础信息到redis中
-	Globals.redisCli.SetGroupInfo(groupInfo)
-
-	// 保存到内存
-	group = model.NewGroupFromInfo(groupInfo)
-	Globals.grc.InsertGroup(gid, group)
-	loadGroupMembers(group)
-
-	return group, nil
-
 }
 
 // 加入一个群，成功了，

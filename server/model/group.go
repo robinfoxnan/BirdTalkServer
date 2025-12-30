@@ -159,6 +159,7 @@ func (g *Group) HasMember(uid int64) (string, bool) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 	m, ok := g.Members[uid]
+
 	if ok {
 		return m.Nick, true
 	}
