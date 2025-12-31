@@ -5,18 +5,98 @@ import (
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
 	"errors"
+	"fmt"
 	"go.uber.org/zap"
+	"sort"
 )
 
 // 这个文件主要是处理三级缓存相关的逻辑
+// 当内存没有数据时候，群在加载时候就初始化了成员列表，
 
-// 加载群的用户信息; 群的数量为2000上限，所以这里直接从数据库加载所有群用户，放到redis中
+// 从内存或者redis数据库找群成员
+func findGroupMembersFromId(group *model.Group, fromId int64, pageSize int) []*pbmodel.GroupMember {
+	members := group.GetRawMembers()
+
+	// 2. 自定义比较函数：按 ID 升序排列
+	sort.Slice(members, func(i, j int) bool {
+		// 返回 true 表示 groups[i] 应该排在 groups[j] 前面
+		iId := int64(0)
+		if members[i].U != nil {
+			iId = members[i].U.UserId
+		}
+		jId := int64(0)
+		if members[j].U != nil {
+			jId = members[j].U.UserId
+		}
+		return iId < jId
+	})
+
+	// 3. 遍历输出排序后的结果
+	for _, m := range members {
+		if m.U != nil {
+			Globals.Logger.Debug(fmt.Sprintf("ID: %d, Name: %s\n", m.U.UserId, m.Nick))
+		} else {
+			Globals.Logger.Debug(fmt.Sprintf("ID: %d, Name: %s\n", 0, m.Nick))
+		}
+	}
+
+	// 格式转换
+	sz := pageSize
+	if len(members) < pageSize {
+		sz = len(members)
+	}
+	groupMembers := make([]*pbmodel.GroupMember, 0, sz)
+	count := int(0)
+	for _, m := range members {
+		if (m.U == nil) || (m.U.UserId < fromId) {
+			continue
+		}
+
+		data := &pbmodel.GroupMember{
+			UserId:  m.U.UserId,
+			Nick:    m.Nick,
+			Icon:    m.U.Icon,
+			Role:    group.GetMemberRoleString(m.U.UserId),
+			GroupId: 0,
+			Params:  nil,
+		}
+		groupMembers = append(groupMembers, data)
+		count++
+		if count >= pageSize {
+			break
+		}
+
+	}
+	return groupMembers
+}
+
+// 根据数据库或者redis中记录的群用户列表，查找用户信息
+// 这里保证不为空
+func getUsersFromMemberStores(lst []model.GroupMemberStore) []*model.User {
+	users := make([]*model.User, len(lst))
+	for i, m := range lst {
+		u, _, err := findUser(m.Uid)
+		if err != nil {
+			Globals.Logger.Error("getUsersFromMemberStores() load user but nil", zap.Error(err), zap.Int64("uid", m.Uid))
+			users[i] = model.NewUser()
+			users[i].UserId = m.Uid
+			users[i].NickName = m.Nick
+		} else {
+			users[i] = u
+		}
+
+	}
+	return users
+}
+
+// 当群内没有成员信息时候，加载群的用户信息; 群的数量为2000上限，所以这里直接从数据库加载所有群用户，放到redis中
 func loadGroupMembers(group *model.Group) {
 	// 从redis中查找，如果找到了，
 	lst, err := Globals.redisCli.GetGroupMembers(group.GroupId)
 	if lst != nil && len(lst) > 0 {
 		Globals.Logger.Debug("find group members in redis", zap.Int64("group_id", group.GroupId), zap.Any("lst", lst))
-		group.SetMembers(lst)
+		users := getUsersFromMemberStores(lst)
+		group.SetMembers(lst, users)
 		return
 	}
 
@@ -34,13 +114,14 @@ func loadGroupMembers(group *model.Group) {
 
 	// 同步到内存在中
 	if memlist != nil && len(memlist) > 0 {
-		group.SetMembers(memlist)
+		users := getUsersFromMemberStores(lst)
+		group.SetMembers(memlist, users)
 	}
 
 }
 
 // 从数据库中加载Group基础信息
-func findGroup(gid int64) (*model.Group, error) {
+func findGroupAndLoad(gid int64) (*model.Group, error) {
 	group, ok := Globals.grc.GetGroup(gid)
 	if ok && group != nil {
 		// 这里需要检查用户是否为空，如果是空，则应该加载，因为还没有初始化
@@ -56,8 +137,9 @@ func findGroup(gid int64) (*model.Group, error) {
 	if groupInfo != nil {
 		Globals.Logger.Debug("find group in redis", zap.Int64("group_id", gid))
 		group = model.NewGroupFromInfo(groupInfo)
-		Globals.grc.InsertGroup(gid, group)
 		loadGroupMembers(group)
+
+		Globals.grc.InsertGroup(gid, group)
 
 		return group, nil
 	}
@@ -82,8 +164,8 @@ func findGroup(gid int64) (*model.Group, error) {
 
 	// 保存到内存
 	group = model.NewGroupFromInfo(groupInfo)
-	Globals.grc.InsertGroup(gid, group)
 	loadGroupMembers(group)
+	Globals.grc.InsertGroup(gid, group)
 
 	return group, nil
 
@@ -144,8 +226,8 @@ func intList2GroupList(lst []int64) []*pbmodel.GroupInfo {
 
 	ret := make([]*pbmodel.GroupInfo, len(lst))
 	for index, item := range lst {
-		g, _ := LoadGroupInfoByGId(item)
-		ret[index] = g
+		g, _ := findGroupAndLoad(item)
+		ret[index] = g.GetGroupInfo()
 	}
 
 	return ret
@@ -159,43 +241,9 @@ func gStoreList2GroupList(lst []model.UserInGStore) []*pbmodel.GroupInfo {
 
 	ret := make([]*pbmodel.GroupInfo, len(lst))
 	for index, item := range lst {
-		g, _ := LoadGroupInfoByGId(item.Gid)
-		ret[index] = g
+		g, _ := findGroupAndLoad(item.Gid)
+		ret[index] = g.GetGroupInfo()
 	}
 
 	return ret
-}
-
-// 尝试逐级的加载群组信息
-func LoadGroupInfoByGId(gid int64) (*pbmodel.GroupInfo, error) {
-	// 尝试内存加载
-	group, ok := Globals.grc.GetGroup(gid)
-	if ok {
-		Globals.Logger.Debug("LoadGroupInfoById ok from memory", zap.Int64("gid", gid))
-		return group.GetGroupInfo(), nil
-	}
-
-	// 尝试redis加载
-	g, err := Globals.redisCli.GetGroupInfoById(gid)
-	if err == nil && g != nil {
-		group = model.NewGroupFromInfo(g)
-		Globals.grc.InsertGroup(gid, group)
-		Globals.Logger.Debug("LoadGroupInfoById ok from redis", zap.Int64("gid", gid))
-		return g, nil
-	}
-	// 尝试mongodb加载
-	gl, err := Globals.mongoCli.FindGroupById(gid)
-	if err == nil && gl != nil && len(gl) > 0 {
-		Globals.Logger.Debug("LoadGroupInfoById ok from mongodb", zap.Int64("gid", gid))
-		group = model.NewGroupFromInfo(g)
-		Globals.grc.InsertGroup(gid, group)
-		Globals.redisCli.SetGroupInfo(g)
-		return g, nil
-	}
-
-	g = &pbmodel.GroupInfo{
-		GroupId: gid}
-	Globals.Logger.Error("LoadGroupInfoById error, can't find in mongodb", zap.Int64("gid", gid))
-
-	return g, nil
 }

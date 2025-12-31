@@ -16,14 +16,8 @@ import (
 
 // go get go.mongodb.org/mongo-driver
 const UserTableName = "users"
-const UserTableIndex = "userid"
 const GroupTableName = "groups"
-const GroupTableIndex = "groupid"
 const FileTableName = "files"
-
-// 内部使用
-var userTableSearchFields = []string{"username", "email", "phone"}
-var fileTableSearchFields = []string{"hashcode", "gid", "tm", "tags"}
 
 // MongoDBExporter 结构体
 type MongoDBExporter struct {
@@ -101,62 +95,86 @@ func printTm(tm1, tm2 int64) {
 	fmt.Printf("%s---> %s  \n", t1.Format(layout), t2.Format(layout))
 }
 
+// TODO: 把所有需要查询过滤掉属性都放在一列中，用一个seartch_tags字段，这样快一些：
+// 假设有百万级群表：
+//查询方式								数据量		索引命中					备注
+//------------------------------------------------------------------------------------------
+//单条件 + 分页							1M			走复合索引				返回前100条，毫秒级
+//$or 两个复合索引 + 分页groupid>fromId	1M			两个索引扫描 + 合并		返回100条，ms → 数十ms
+//$or + 非索引条件						1M			两个索引扫描 + 内存过滤		可能上百 ms
+
+var userTableSearchFields = []string{"username", "email", "phone"}
+var fileTableSearchFields = []string{"hashcode", "gid", "tm", "tags"}
+
 // init 初始化业务相关的部分
 func (me *MongoDBExporter) Init() error {
-	// 在此进行初始化操作，如果有需要的话
-	err := me.CreateIndex(UserTableName, UserTableIndex)
-	err = me.CreateIndexes(UserTableName, userTableSearchFields)
+	// 用户表，四个索引
+	err := me.CreateIndexUnique(UserTableName, "userid", true)
+	err = me.CreateIndexes(UserTableName, []string{"nickname", "userid"})
+	err = me.CreateIndexes(UserTableName, []string{"email", "userid"})
+	err = me.CreateIndexes(UserTableName, []string{"phone", "userid"})
 
-	err = me.CreateIndex(GroupTableName, GroupTableIndex)
+	// 1️⃣ groupid 唯一索引（必须最先）
+	err = me.CreateIndexUnique(GroupTableName, "groupid", true)
 
-	err = me.CreateIndexes(FileTableName, fileTableSearchFields)
-	return err
-}
+	// 2️⃣ 搜索 + 游标分页索引
+	err = me.CreateIndexes(GroupTableName, []string{"groupname", "groupid"})
+	err = me.CreateIndexes(GroupTableName, []string{"tags", "groupid"})
 
-func (me *MongoDBExporter) CreateIndexes(tableName string, indexFields []string) error {
-	collection := me.db.Collection(tableName)
-
-	// 构建索引键的映射
-	keys := bson.D{}
-	for _, field := range indexFields {
-		keys = append(keys, primitive.E{Key: field, Value: 1})
-	}
-
-	// 创建索引模型
-	index := mongo.IndexModel{
-		Keys: keys,
-	}
-
-	// 创建索引
-	_, err := collection.Indexes().CreateOne(context.Background(), index)
+	// 文件查找
+	err = me.CreateIndexUnique(FileTableName, "hashcode", false)
 	return err
 }
 
 // //////////////////////////////////////////////////////////////////////
-func (me *MongoDBExporter) CreateIndex(tableName, fieldName string) error {
+func (me *MongoDBExporter) CreateIndexes(tableName string, indexFields []string) error {
 	collection := me.db.Collection(tableName)
-	// 创建唯一索引
-	indexOptions := options.Index().SetUnique(true)
-	index := mongo.IndexModel{
-		Keys:    bson.M{fieldName: 1}, // 设置 userName 字段为唯一索引
-		Options: indexOptions,
-	}
-	_, err := collection.Indexes().CreateOne(context.Background(), index)
-	// 检查错误类型
-	if err != nil {
-		// 检查是否是索引重复错误，MongoDB 7.0.3 Community版本没有遇到
-		if mongo.IsDuplicateKeyError(err) {
-			e := fmt.Errorf("unique index on field '%s' already exists", fieldName)
-			fmt.Println(e)
-			return nil
-		}
-		// 处理其他类型的错误
-		return err
+
+	keys := bson.D{}
+	for _, field := range indexFields {
+		keys = append(keys, primitive.E{
+			Key:   field,
+			Value: 1,
+		})
 	}
 
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	index := mongo.IndexModel{
+		Keys: keys,
+		Options: options.Index().
+			SetName(strings.Join(indexFields, "_") + "_idx"),
+	}
+
+	_, err := collection.Indexes().CreateOne(ctx, index)
 	return err
 }
 
+func (me *MongoDBExporter) CreateIndexUnique(tableName, fieldName string, bUnique bool) error {
+	collection := me.db.Collection(tableName)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	indexOpts := options.Index().
+		SetName(fieldName + "_idx") // 可以根据 bUnique 加后缀
+
+	if bUnique {
+		indexOpts.SetUnique(true)
+		indexOpts.SetName(fieldName + "_unique_idx")
+	}
+
+	index := mongo.IndexModel{
+		Keys:    bson.D{{Key: fieldName, Value: 1}},
+		Options: indexOpts,
+	}
+
+	_, err := collection.Indexes().CreateOne(ctx, index)
+	return err
+}
+
+// //////////////////////////////////////////////////////////////////////
 // 创建一个新的用户，如果ID重复则失败
 func (me *MongoDBExporter) CreateNewUser(u *pbmodel.UserInfo) error {
 	// 选择要保存数据的数据库和集合
@@ -176,73 +194,64 @@ func (me *MongoDBExporter) CreateNewUser(u *pbmodel.UserInfo) error {
 // 查找用户，
 func (me *MongoDBExporter) FindUserById(id int64) ([]*pbmodel.UserInfo, error) {
 
-	return me.FindUserByField("userid", id)
+	return me.FindUserByField("userid", id, 0, 1)
 }
 
 // 这个字段没有设置唯一索引，出于性能考虑，在更改名字的时候可以检测是否唯一，
-func (me *MongoDBExporter) FindUserByName(keyword string) ([]*pbmodel.UserInfo, error) {
-	return me.FindUserByField("username", keyword)
+func (me *MongoDBExporter) FindUserByName(keyword string, fromId int64, pageSize int64) ([]*pbmodel.UserInfo, error) {
+	return me.FindUserByField("username", keyword, fromId, pageSize)
 }
 
-func (me *MongoDBExporter) FindUserByNick(keyword string) ([]*pbmodel.UserInfo, error) {
-	return me.FindUserByField("nickname", keyword)
+func (me *MongoDBExporter) FindUserByNick(keyword string, fromId int64, pageSize int64) ([]*pbmodel.UserInfo, error) {
+	return me.FindUserByField("nickname", keyword, fromId, pageSize)
 }
 
-func (me *MongoDBExporter) FindUserByEmail(keyword string) ([]*pbmodel.UserInfo, error) {
-	return me.FindUserByField("email", keyword)
+func (me *MongoDBExporter) FindUserByEmail(keyword string, fromId int64, pageSize int64) ([]*pbmodel.UserInfo, error) {
+	return me.FindUserByField("email", keyword, fromId, pageSize)
 }
 
-func (me *MongoDBExporter) FindUserByPhone(keyword string) ([]*pbmodel.UserInfo, error) {
-	return me.FindUserByField("phone", keyword)
+func (me *MongoDBExporter) FindUserByPhone(keyword string, fromId int64, pageSize int64) ([]*pbmodel.UserInfo, error) {
+	return me.FindUserByField("phone", keyword, fromId, pageSize)
 }
 
-func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([]*pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}, fromId, pageSize int64) ([]*pbmodel.UserInfo, error) {
 	collection := me.db.Collection(UserTableName)
 
-	//var filter bson.M
-	//switch keyword.(type) {
-	//case int64:
-	//	// 如果关键字是 int64 类型，则直接返回
-	//	i := keyword.(int64)
-	//	// 构建查询条件
-	//	filter = bson.M{field: i}
-	//case string:
-	//	str := keyword.(string)
-	//	filter = bson.M{field: str}
-	//default:
-	//	return nil, errors.New("keyword type err")
-	//}
+	// 只允许三个字段之一
+	if field != "username" && field != "email" && field != "phone" {
+		return nil, fmt.Errorf("unsupported search field: %s", field)
+	}
 
-	filter := bson.M{field: keyword}
+	// 构建查询条件：指定字段 = keyword + userid 游标分页
+	filter := bson.M{
+		"$and": []bson.M{
+			{field: keyword},
+			{"userid": bson.M{"$gt": fromId}},
+		},
+	}
 
-	// 执行查询
-	cursor, err := collection.Find(context.Background(), filter)
+	// 查询选项：按 userid 升序 + 限制数量
+	findOptions := options.Find().
+		SetSort(bson.D{{Key: "userid", Value: 1}}).
+		SetLimit(pageSize)
+
+	cursor, err := collection.Find(context.Background(), filter, findOptions)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(context.Background())
 
 	var users []*pbmodel.UserInfo
-	//if err = cursor.All(context.Background(), &users); err != nil {
-	//	return nil, err
-	//}
-	count := 0
 	for cursor.Next(context.Background()) {
 		var user pbmodel.UserInfo
-		if err = cursor.Decode(&user); err != nil {
+		if err := cursor.Decode(&user); err != nil {
 			fmt.Println(err)
 			continue
 		}
 		users = append(users, &user)
-		count++
-
-		// 检查结果数量是否达到限制
-		if count >= limit {
-			break
-		}
 	}
 
-	if count == 0 {
+	if len(users) == 0 {
 		return nil, nil
 	}
 
@@ -250,55 +259,46 @@ func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}) ([
 }
 
 // 根据用户名、邮件或手机号进行搜索
-func (me *MongoDBExporter) FindUserByKeyword(keyword string) ([]*pbmodel.UserInfo, error) {
+func (me *MongoDBExporter) FindUserByKeyword(keyword string, fromId int64, pageSize int64) ([]*pbmodel.UserInfo, error) {
 	collection := me.db.Collection(UserTableName)
 
 	// 构建查询条件
-	// 构建正则表达式查询条件
-	//regexName := primitive.Regex{Pattern: keyword, Options: "i"} // "i" 表示不区分大小写
-	// 构建正则表达式查询条件
-	//regexMail := primitive.Regex{Pattern: "^" + keyword, Options: "i"} // "i" 表示不区分大小写
 	filter := bson.M{
-		"$or": []bson.M{
-			//{"username": bson.M{"$regex": regexName}},
-			//{"email": bson.M{"$regex": regexMail}},
-			{"username": keyword},
-			{"email": keyword},
-			{"phone": keyword},
+		"$and": []bson.M{
+			{"userid": bson.M{"$gt": fromId}}, // 游标分页
+			{
+				"$or": []bson.M{
+					{"username": keyword},
+					{"email": keyword},
+					{"phone": keyword},
+				},
+			},
 		},
 	}
 
-	// 执行查询
-	cursor, err := collection.Find(context.Background(), filter)
+	// 查询选项：按 userid 升序 + 限制数量
+	findOptions := options.Find().
+		SetSort(bson.D{{Key: "userid", Value: 1}}).
+		SetLimit(pageSize)
+
+	cursor, err := collection.Find(context.Background(), filter, findOptions)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(context.Background())
 
 	var users []*pbmodel.UserInfo
-	//if err := cursor.All(context.Background(), &users); err != nil {
-	//	return nil, err
-	//}
-
-	count := 0
 	for cursor.Next(context.Background()) {
 		var user pbmodel.UserInfo
-		if err = cursor.Decode(&user); err != nil {
+		if err := cursor.Decode(&user); err != nil {
 			continue
 		}
 		users = append(users, &user)
-		count++
-
-		// 检查结果数量是否达到限制
-		if count >= limit {
-			break
-		}
 	}
 
-	if count == 0 {
+	if len(users) == 0 {
 		return nil, nil
 	}
-
 	return users, nil
 }
 
@@ -526,61 +526,65 @@ func (me *MongoDBExporter) FindGroupById(id int64) ([]pbmodel.GroupInfo, error) 
 }
 
 // 通过名字或者TAG字段来查找
-const limit = 100
 
-func (me *MongoDBExporter) FindGroupByKeyword(key string, bFilter bool) ([]*pbmodel.GroupInfo, error) {
+// 备注
+// 错误的做法：{ groupid: 1, groupname: 1 }
+// 顺序反了，搜索用不上
+// db.group.createIndex({
+// groupname: 1,
+// groupid: 1
+// })
+//
+// db.group.createIndex({
+// tags: 1,
+// groupid: 1
+// })
+// MongoDB 在遇到 $or 时：
+// 每个 $or 分支单独走索引
+// 然后 merge 结果
+// ⚠️ 一个索引不能同时服务两个 $or 分支
+func (me *MongoDBExporter) FindGroupByKeyword(key string, fromId int64, bFilter bool, pageSize int64) ([]*pbmodel.GroupInfo, error) {
+
 	collection := me.db.Collection(GroupTableName)
 
-	// 构建查询条件，不区分大小写了，影响性能，精确查找
-	// bson.M{"$regex": key, "$options": "i"}
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 
 	filter := bson.M{
 		"$or": []bson.M{
-			bson.M{"groupname": key}, // 精确匹配 groupname
-			bson.M{"tags": key},      // 精确匹配 tags
+			{"groupname": key},
+			{"tags": key}, // tags 为数组时是 OK 的
 		},
-		"$and": []bson.M{
-			bson.M{"params.visibility": bson.M{"$ne": "private"}}, // 未设置为pri 私有
-		},
+		"groupid": bson.M{"$gt": fromId},
 	}
 
-	// 执行查询
-	cursor, err := collection.Find(context.Background(), filter)
+	if bFilter {
+		filter["params.visibility"] = bson.M{"$ne": "private"}
+	}
+
+	opts := options.Find().
+		SetSort(bson.M{"groupid": 1}). // 升序
+		SetLimit(pageSize).
+		SetMaxTime(10 * time.Second)
+
+	cursor, err := collection.Find(ctx, filter, opts)
 	if err != nil {
 		return nil, err
 	}
-	defer cursor.Close(context.Background())
+	defer cursor.Close(ctx)
 
-	cursor.SetMaxTime(time.Second * 10)
-	var groups []*pbmodel.GroupInfo
-	//if err = cursor.All(context.Background(), &groups); err != nil {
-	//	return nil, err
-	//}
+	groups := make([]*pbmodel.GroupInfo, 0)
 
-	count := 0
-	for cursor.Next(context.Background()) {
+	for cursor.Next(ctx) {
 		var group pbmodel.GroupInfo
-		if err = cursor.Decode(&group); err != nil {
-			fmt.Println(err)
+		if err := cursor.Decode(&group); err != nil {
 			continue
 		}
-		// 过滤掉私有的
-		if bFilter {
-			if model.CheckGroupInfoIsPrivate(&group) {
-				continue
-			}
-		}
 		groups = append(groups, &group)
-		count++
-
-		// 检查结果数量是否达到限制
-		if count >= limit {
-			break
-		}
 	}
 
-	if groups == nil || len(groups) == 0 {
-		return nil, nil
+	if err := cursor.Err(); err != nil {
+		return nil, err
 	}
 
 	return groups, nil

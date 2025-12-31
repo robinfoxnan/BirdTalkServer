@@ -341,6 +341,8 @@ func (s *Session) cleanUp() {
 		user, b := Globals.uc.GetUser(s.UserID)
 		if b {
 			user.RemoveSessionID(s.Sid)
+			// 检查是否下线
+			setUserOnline(user, false)
 		}
 		// 从redis中删除
 		Globals.redisCli.RemoveUserSessionOnServer(s.UserID, s.Sid)

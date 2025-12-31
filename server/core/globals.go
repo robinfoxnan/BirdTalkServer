@@ -134,6 +134,8 @@ func (g *GlobalVars) InitDb() error {
 		fmt.Println(err)
 		return err
 	}
+	// 初始化mongoDb的索引，这里很关键
+	g.mongoCli.Init()
 	return nil
 }
 

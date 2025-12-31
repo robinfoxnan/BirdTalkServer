@@ -237,7 +237,7 @@ func onQueryGroupOp(queryMsg *pbmodel.MsgQuery, session *Session) {
 	var lst []model.CommonOpStore
 
 	groupId := queryMsg.GetGroupId()
-	group, err := findGroup(groupId)
+	group, err := findGroupAndLoad(groupId)
 	if group == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "query message, group id is not correct", nil, session)
 		return

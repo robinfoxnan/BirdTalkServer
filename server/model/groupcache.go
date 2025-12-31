@@ -15,7 +15,8 @@ func (cache *GroupCache) GetGroup(id int64) (*Group, bool) {
 	return cache.groupMap.Get(id)
 }
 
-// 更新时候的回调函数，如果未设置，则
+// 更新时候的回调函数，
+// 这一唯一被调用的可能性就是，服务中没有这个group, 多个用户的操作同时引发了加载操作，
 func updateInsertGroup(exist bool, oldGroup *Group, newGroup *Group) *Group {
 	if exist == false {
 		return newGroup

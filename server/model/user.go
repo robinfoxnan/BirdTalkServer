@@ -425,20 +425,13 @@ func (u *User) SetInGroup(gList []int64) {
 	defer u.Mu.Unlock()
 
 	// 备注，这里没有错误，直接覆盖所有的
-	if len(gList) == 0 {
+	if len(u.Groups) == 0 {
 		u.Groups = make(map[int64]bool)
 	}
 
 	for _, k := range gList {
 		u.Groups[k] = true
 	}
-}
-
-func (u *User) SetLeaveGroup(gid int64) {
-	u.Mu.Lock()
-	defer u.Mu.Unlock()
-
-	u.Groups[gid] = false
 }
 
 func (u *User) SetJoinGroup(gid int64) {
@@ -448,6 +441,13 @@ func (u *User) SetJoinGroup(gid int64) {
 		u.Groups = make(map[int64]bool)
 	}
 	u.Groups[gid] = true
+}
+
+func (u *User) SetLeaveGroup(gid int64) {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+
+	u.Groups[gid] = false
 }
 
 func (u *User) GetInGroups(from int64, max uint) []int64 {
@@ -612,6 +612,33 @@ func (u *User) DelFan(fid int64) int {
 	delete(u.Fans, fid)
 	return len(u.Fans)
 
+}
+
+func Intersection(a, b map[int64]bool) []int64 {
+	// 选择较小的 map 来遍历
+	var small, big map[int64]bool
+	if len(a) <= len(b) {
+		small, big = a, b
+	} else {
+		small, big = b, a
+	}
+
+	// 存放交集
+	result := make([]int64, 0, len(small))
+
+	for k := range small {
+		if big[k] {
+			result = append(result, k)
+		}
+	}
+	return result
+}
+
+// 计算交集
+func (u *User) GetMutualFriends() []int64 {
+	u.Mu.Lock()
+	defer u.Mu.Unlock()
+	return Intersection(u.Following, u.Fans)
 }
 
 //func (u *User) SetExtraKeyValue(key, value string) {

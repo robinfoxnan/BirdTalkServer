@@ -3,6 +3,7 @@ package model
 import (
 	"birdtalk/server/pbmodel"
 	"birdtalk/server/utils"
+	"errors"
 	"fmt"
 	"go.uber.org/zap"
 	"strings"
@@ -21,7 +22,9 @@ const (
 )
 
 type GroupMember struct {
-	Nick string
+	Nick string // 这个是群内的昵称，可以改的，所以与User信息不冗余
+	//Uid  int64
+	U *User
 }
 
 type Group struct {
@@ -75,7 +78,22 @@ func (g *Group) IsPrivate() bool {
 }
 
 func (g *Group) MergeGroup(other *Group) {
+	// 锁定当前 g，防止合并过程中被其他 goroutine 修改
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
 
+	// 锁定 other，防止合并过程中被其他 goroutine 修改
+	other.Mu.Lock()
+	defer other.Mu.Unlock()
+
+	g.GroupInfo = other.GroupInfo
+
+	g.Owner = other.Owner
+	g.Admins = other.Admins
+	g.Members = other.Members
+
+	g.IsDeleted = other.IsDeleted
+	g.LastActiveTm = other.LastActiveTm
 }
 
 func (g *Group) MergeGroupInfo(info *pbmodel.GroupInfo) {
@@ -133,12 +151,12 @@ func NewGroupFromInfo(info *pbmodel.GroupInfo) *Group {
 	}
 }
 
-func (g *Group) SetOwner(uid int64, nick string) {
+func (g *Group) SetOwner(uid int64, nick string, user *User) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
 	g.Owner = uid
-	g.Members[uid] = &GroupMember{Nick: nick}
+	g.Members[uid] = &GroupMember{Nick: nick, U: user}
 }
 
 func (g *Group) AddAdmin(uid int64) {
@@ -155,40 +173,48 @@ func (g *Group) RemoveAdmin(uid int64) {
 	delete(g.Admins, uid)
 }
 
-func (g *Group) HasMember(uid int64) (string, bool) {
+func (g *Group) HasMember(uid int64) (string, *User, bool) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 	m, ok := g.Members[uid]
 
 	if ok {
-		return m.Nick, true
+		return m.Nick, m.U, true
 	}
-	return "", false
+	return "", nil, false
 }
 
 // 从数据库，或者从redis得到的成员列表
-func (g *Group) SetMembers(lst []GroupMemberStore) {
+func (g *Group) SetMembers(lst []GroupMemberStore, userList []*User) error {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
-	for _, mem := range lst {
-		data := &GroupMember{Nick: mem.Nick}
+	if (len(lst) != len(userList)) || (len(lst) != 0) {
+		return errors.New("Group.SetMembers() len not same")
+	}
+
+	for index, mem := range lst {
+		data := &GroupMember{Nick: mem.Nick, U: userList[index]}
 		g.Members[mem.Uid] = data
+
 		if mem.Role == RoleGroupOwner {
 			g.Owner = mem.Uid
 		} else if mem.Role == RoleGroupAdmin {
 			g.Admins[mem.Uid] = data
 		}
 	}
+
+	return nil
 }
 
-func (g *Group) AddMember(uid int64, nick string) {
+func (g *Group) AddMember(uid int64, nick string, user *User) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
 	member := &GroupMember{
 		//Uid:  uid,
 		Nick: nick,
+		U:    user,
 	}
 
 	g.Members[uid] = member
@@ -234,6 +260,21 @@ func (g *Group) GetMembers() []int64 {
 
 	return members
 
+}
+
+// 返回群成员的指针数组，这里做排序
+func (g *Group) GetRawMembers() []*GroupMember {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	// 1. 提取所有 Group 值到切片
+	members := make([]*GroupMember, len(g.Members))
+	index := 0
+	for _, v := range g.Members {
+		members[index] = v
+		index++
+	}
+
+	return members
 }
 
 func (g *Group) IsOwner(uid int64) bool {
@@ -291,6 +332,25 @@ func (g *Group) GetMemberRole(uid int64) (int, bool) {
 		return RoleGroupMember, true
 	}
 	return 0, false
+}
+
+func (g *Group) GetMemberRoleString(uid int64) string {
+	g.Mu.Lock()
+	defer g.Mu.Unlock()
+	if uid == g.Owner {
+		return "ou"
+	}
+
+	_, ok := g.Admins[uid]
+	if ok {
+		return "au"
+	}
+
+	_, ok = g.Members[uid]
+	if ok {
+		return "u"
+	}
+	return "-"
 }
 
 // 设置活跃的最后时间

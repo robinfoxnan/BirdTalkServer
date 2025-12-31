@@ -147,14 +147,14 @@ func handleFriendFind(msg *pbmodel.Msg, session *Session) {
 		id, _ := strconv.ParseInt(value, 10, 64)
 		userList, err = findUserMongoRedis(id)
 	case "name":
-		userList, err = Globals.mongoCli.FindUserByName(value)
+		userList, err = Globals.mongoCli.FindUserByName(value, 0, int64(Globals.maxPageSize))
 		if err != nil || userList == nil || len(userList) == 0 {
-			userList, err = Globals.mongoCli.FindUserByNick(value)
+			userList, err = Globals.mongoCli.FindUserByNick(value, 0, int64(Globals.maxPageSize))
 		}
 	case "email":
-		userList, err = Globals.mongoCli.FindUserByEmail(value)
+		userList, err = Globals.mongoCli.FindUserByEmail(value, 0, int64(Globals.maxPageSize))
 	case "phone":
-		userList, err = Globals.mongoCli.FindUserByPhone(value)
+		userList, err = Globals.mongoCli.FindUserByPhone(value, 0, int64(Globals.maxPageSize))
 	default:
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 			"search friend mode is not supported",

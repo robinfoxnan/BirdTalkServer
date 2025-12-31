@@ -311,14 +311,14 @@ func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	msgPlain := msg.GetPlainMsg()
 	msgChat := msgPlain.GetChatData()
 	// 检查权限啊
-	group, err := findGroup(msgChat.ToId)
+	group, err := findGroupAndLoad(msgChat.ToId)
 	if group == nil {
 		Globals.Logger.Debug("send back reply 'group id error'" + fmt.Sprintf("%d", msgChat.ToId))
 		sendBackChatMsgReply(false, "group id error", msgChat, session, msgChat.ToId)
 		return
 	}
 
-	_, b := group.HasMember(session.UserID)
+	_, _, b := group.HasMember(session.UserID)
 	if !b {
 		Globals.Logger.Debug("send back reply 'you are not a group member'" + fmt.Sprintf("gid=%d, uid=%d", msgChat.ToId, msgChat.FromId))
 		sendBackChatMsgReply(false, "you are not a group member ", msgChat, session, msgChat.ToId)
@@ -659,13 +659,13 @@ func sendErrQueryChatDataResult(detail string, queryMsg *pbmodel.MsgQuery, sessi
 
 // 查询群聊
 func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
-	group, _ := findGroup(queryMsg.GroupId)
+	group, _ := findGroupAndLoad(queryMsg.GroupId)
 	if group == nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group id is not correct", nil, session)
 		return
 	}
 
-	_, bMember := group.HasMember(session.UserID)
+	_, _, bMember := group.HasMember(session.UserID)
 	if !bMember {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "not a member", nil, session)
 		sendErrQueryChatDataResult("not member of group", queryMsg, session)

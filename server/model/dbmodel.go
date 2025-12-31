@@ -30,13 +30,13 @@ type GroupMemberStore struct {
 func (gms *GroupMemberStore) GetRoleStr() string {
 	switch gms.Role {
 	case RoleGroupOwner:
-		return "owner"
+		return "ou"
 	case RoleGroupAdmin:
-		return "admin"
+		return "au"
 	case RoleGroupMemberRead:
-		return "readonly"
+		return "r"
 	default:
-		return "normal"
+		return "u"
 	}
 
 }

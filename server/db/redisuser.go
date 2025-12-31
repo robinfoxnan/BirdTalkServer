@@ -354,7 +354,7 @@ func (cli *RedisClient) SetUserJoinGroup(uid, gid int64, nick string) error {
 	tx := cli.Cmd.TxPipeline()
 	// 清空集合
 	tx.SAdd(keyUserInG, gid)
-	tx.Expire(keyUserInG, DefaultUserTTL) // 如果不登录，7天后消失
+	//tx.Expire(keyUserInG, DefaultUserTTL) // 如果不登录，7天后消失
 	//tx.SAdd(keyGroupMem, uid)
 	tx.HSet(keyGroupMem, idStr, nick)
 	// 执行事务

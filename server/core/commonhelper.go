@@ -470,74 +470,12 @@ func findUserMongoRedis(uid int64) ([]*pbmodel.UserInfo, error) {
 		return []*pbmodel.UserInfo{&user.UserInfo}, nil
 	}
 
-	userInfo, err := LoadUserByFriend(uid)
+	userInfo, _, err := findUserInfo(uid)
 	if userInfo != nil {
 		return []*pbmodel.UserInfo{userInfo}, nil
 	} else {
 		return []*pbmodel.UserInfo{}, err
 	}
-}
-
-// 后面会有各种地方需要找到好友的信息
-// 这个函数会造成加载内存
-func findUser(uid int64) (*model.User, bool, error) {
-	user, ok := Globals.uc.GetUser(uid)
-	if ok && user != nil {
-		return user, true, nil
-	}
-
-	userInfo, err := LoadUserByFriend(uid)
-	if userInfo != nil {
-		user = model.NewUserFromInfo(userInfo)
-		Globals.uc.SetOrUpdateUser(uid, user)
-		return user, false, nil
-	} else {
-		return nil, false, err
-	}
-}
-
-// 这个函数不会加载内存
-func findUserInfo(uid int64) (*pbmodel.UserInfo, bool, error) {
-	user, ok := Globals.uc.GetUser(uid)
-	if ok && user != nil {
-		return &user.UserInfo, true, nil
-	}
-
-	userInfo, err := LoadUserByFriend(uid)
-	if userInfo != nil {
-		return userInfo, false, nil
-	} else {
-		return nil, false, err
-	}
-}
-
-// 由其他人搜索才造成的加载redis, 基本信息，并且只加载一条fid的权限
-// 至于uid是否关注了fid, 则从fid的粉丝表中加载；
-func LoadUserByFriend(fid int64) (*pbmodel.UserInfo, error) {
-
-	// 1 查看是否有基本的信息
-	userInfo, err := Globals.redisCli.FindUserById(fid)
-	if userInfo != nil {
-		return userInfo, nil
-	}
-
-	// 基础信息
-	userInfos, err := Globals.mongoCli.FindUserById(fid)
-	if err != nil {
-		return nil, err
-	}
-	if len(userInfos) > 1 {
-		Globals.Logger.Error("loadUserFromDb() load user err, find count of user", zap.Int("userCount", len(userInfos)))
-		return nil, errors.New("load user count is not 1")
-	}
-
-	if len(userInfos) == 0 {
-		return nil, errors.New("no user in db")
-	}
-	userInfo = userInfos[0]
-	Globals.redisCli.SetUserInfo(userInfo) // 同步到redis
-
-	return userInfo, nil
 }
 
 // 先检查内存是否有，然后检查redis中是否有

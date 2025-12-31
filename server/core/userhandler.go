@@ -138,7 +138,7 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 
 	if regMode == 2 {
 		// 先检查邮箱是否合法
-		lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
+		lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email, 0, int64(Globals.maxPageSize))
 		if lst != nil && len(lst) > 0 {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 				"email is already used by user",
@@ -163,7 +163,7 @@ func handleUserRegister(msg *pbmodel.Msg, session *Session) {
 	} else {
 		// 如果设置了邮件，也需要检查，防止乱设置
 		if len(userInfo.Email) > 0 {
-			lst, _ := Globals.mongoCli.FindUserByEmail(userInfo.Email)
+			lst, _ := Globals.mongoCli.FindUserByEmail(userInfo.Email, 0, int64(Globals.maxPageSize))
 			if lst != nil && len(lst) > 0 {
 				sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 					"email is already used by user",
@@ -435,7 +435,7 @@ func handleUserInfo(msg *pbmodel.Msg, session *Session) {
 		}
 
 		// 先检查邮箱是否合法
-		lst, _ := Globals.mongoCli.FindUserByEmail(emailAddr)
+		lst, _ := Globals.mongoCli.FindUserByEmail(emailAddr, 0, int64(Globals.maxPageSize))
 		if lst != nil && len(lst) > 0 {
 			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 				"email is already used by user",
@@ -654,7 +654,7 @@ func handleUserLogin(msg *pbmodel.Msg, session *Session) {
 
 	// 处理填写的邮件名
 	if loginMode == 2 {
-		lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email)
+		lst, err := Globals.mongoCli.FindUserByEmail(userInfo.Email, 0, int64(Globals.maxPageSize))
 		if err != nil || len(lst) < 1 {
 			//sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent),
 			//	"email is not correct, can't find a user using it",
@@ -912,6 +912,7 @@ func onLoginSuccess(session *Session, bSaveToken bool) {
 		uinfo,
 		true, "loginok", session)
 	session.SetStatus(model.UserStatusOk)
+	setUserOnline(session.GetUser(), true)
 }
 
 // 验证码对了才保存到数据库

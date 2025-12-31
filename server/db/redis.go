@@ -504,6 +504,38 @@ func (cli *RedisClient) GetHashMap(key string) (map[string]string, error) {
 	return cmd.Result()
 }
 
+// 2025-12-30 add
+// HGetAllSafe：分批获取大哈希，最终返回完整 map
+func (cli *RedisClient) HGetAllSafe(ctx context.Context, key string, batchSize int64) (map[string]string, error) {
+	result := make(map[string]string)
+	var cursor uint64 = 0
+
+	for {
+		// HScan 返回一个 map[string]string 和新的 cursor
+		scanResult, newCursor, err := cli.Cmd.HScan(key, cursor, "*", batchSize).Result()
+		if err != nil {
+			return nil, err
+		}
+
+		// scanResult 是 []string，奇数位 key，偶数位 value
+		for i := 0; i < len(scanResult); i += 2 {
+			k := scanResult[i]
+			v := ""
+			if i+1 < len(scanResult) {
+				v = scanResult[i+1]
+			}
+			result[k] = v
+		}
+
+		cursor = newCursor
+		if cursor == 0 {
+			break
+		}
+	}
+
+	return result, nil
+}
+
 // 测试和网上说的一致，少于512条数据，不会发生分页
 func (cli *RedisClient) ScanHashKeys(key string, cursor uint64, pageSize int64) (uint64, map[string]string, error) {
 	result := make(map[string]string)
