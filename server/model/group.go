@@ -155,6 +155,10 @@ func (g *Group) SetOwner(uid int64, nick string, user *User) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
+	if len(g.Members) == 0 {
+		g.Members = make(map[int64]*GroupMember)
+	}
+
 	g.Owner = uid
 	g.Members[uid] = &GroupMember{Nick: nick, U: user}
 }
@@ -163,6 +167,10 @@ func (g *Group) AddAdmin(uid int64) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
+	if len(g.Admins) == 0 {
+		g.Admins = make(map[int64]*GroupMember)
+	}
+
 	g.Admins[uid] = g.Members[uid]
 }
 
@@ -170,12 +178,21 @@ func (g *Group) RemoveAdmin(uid int64) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
+	if len(g.Admins) == 0 {
+		g.Admins = make(map[int64]*GroupMember)
+	}
+
 	delete(g.Admins, uid)
 }
 
 func (g *Group) HasMember(uid int64) (string, *User, bool) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
+
+	if g.Members == nil {
+		g.Members = make(map[int64]*GroupMember)
+	}
+
 	m, ok := g.Members[uid]
 
 	if ok {
@@ -189,8 +206,17 @@ func (g *Group) SetMembers(lst []GroupMemberStore, userList []*User) error {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
-	if (len(lst) != len(userList)) || (len(lst) != 0) {
+	if len(lst) != len(userList) {
 		return errors.New("Group.SetMembers() len not same")
+	}
+
+	// 注意创建
+	if g.Members == nil {
+		g.Members = make(map[int64]*GroupMember)
+	}
+
+	if g.Admins == nil {
+		g.Admins = make(map[int64]*GroupMember)
 	}
 
 	for index, mem := range lst {
@@ -210,6 +236,10 @@ func (g *Group) SetMembers(lst []GroupMemberStore, userList []*User) error {
 func (g *Group) AddMember(uid int64, nick string, user *User) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
+
+	if g.Members == nil {
+		g.Members = make(map[int64]*GroupMember)
+	}
 
 	member := &GroupMember{
 		//Uid:  uid,
@@ -303,6 +333,12 @@ func (g *Group) SetMemberNick(uid int64, nick string) {
 	g.Mu.Lock()
 	defer g.Mu.Unlock()
 
+	if g.Members == nil {
+		g.Members = make(map[int64]*GroupMember)
+	}
+	if g.Admins == nil {
+		g.Admins = make(map[int64]*GroupMember)
+	}
 	data, ok := g.Members[uid]
 	if ok {
 		data.Nick = nick

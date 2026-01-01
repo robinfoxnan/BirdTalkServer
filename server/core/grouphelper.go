@@ -31,12 +31,13 @@ func findGroupMembersFromId(group *model.Group, fromId int64, pageSize int) []*p
 		return iId < jId
 	})
 
+	Globals.Logger.Debug("findGroupMembersFromId() ", zap.Int64("groupId", group.GroupId))
 	// 3. 遍历输出排序后的结果
-	for _, m := range members {
+	for i, m := range members {
 		if m.U != nil {
-			Globals.Logger.Debug(fmt.Sprintf("ID: %d, Name: %s\n", m.U.UserId, m.Nick))
+			Globals.Logger.Debug(fmt.Sprintf("gid=%d, index=%d, ID: %d, Name: %s\n", group.GroupId, i, m.U.UserId, m.Nick))
 		} else {
-			Globals.Logger.Debug(fmt.Sprintf("ID: %d, Name: %s\n", 0, m.Nick))
+			Globals.Logger.Debug(fmt.Sprintf("gid=%d, index=%d, ID: %d, Name: %s\n", group.GroupId, i, 0, m.Nick))
 		}
 	}
 
@@ -94,20 +95,24 @@ func loadGroupMembers(group *model.Group) {
 	// 从redis中查找，如果找到了，
 	lst, err := Globals.redisCli.GetGroupMembers(group.GroupId)
 	if lst != nil && len(lst) > 0 {
-		Globals.Logger.Debug("find group members in redis", zap.Int64("group_id", group.GroupId), zap.Any("lst", lst))
+		Globals.Logger.Debug("loadGroupMembers() find group members in redis", zap.Int64("group_id", group.GroupId), zap.Any("lst", lst))
 		users := getUsersFromMemberStores(lst)
-		group.SetMembers(lst, users)
+		err = group.SetMembers(lst, users)
+		if err != nil {
+			Globals.Logger.Error("loadGroupMembers() set group members error", zap.Error(err))
+		}
+		Globals.Logger.Debug("loadGroupMembers() re-print group member in memory", zap.Int64("group_id", group.GroupId), zap.Any("group", group.Members))
 		return
 	}
 
 	// 从数据库中加载
 	memlist, err := Globals.scyllaCli.FindGroupMembers(db.ComputePk(group.GroupId), group.GroupId, 0, 2000)
 	if err != nil {
-		Globals.Logger.Fatal("loadGroupMembers db error", zap.Error(err))
+		Globals.Logger.Fatal("loadGroupMembers() db error", zap.Error(err))
 		return
 	}
 
-	Globals.Logger.Debug("find group members in scyllaDb", zap.Int64("group_id", group.GroupId), zap.Any("lst", memlist))
+	Globals.Logger.Debug("loadGroupMembers() find group members in scyllaDb", zap.Int64("group_id", group.GroupId), zap.Any("lst", memlist))
 	// 同步到redis
 	err = Globals.redisCli.SetGroupMembers(group.GroupId, memlist)
 	// 如果错了，大不了下次再加载
@@ -126,7 +131,7 @@ func findGroupAndLoad(gid int64) (*model.Group, error) {
 	if ok && group != nil {
 		// 这里需要检查用户是否为空，如果是空，则应该加载，因为还没有初始化
 		if len(group.Members) == 0 {
-			Globals.Logger.Debug("find group in memory", zap.Int64("group_id", gid))
+			Globals.Logger.Debug("find group in memory, but need ->loadGroupMembers()", zap.Int64("group_id", gid))
 			loadGroupMembers(group)
 		}
 		return group, nil

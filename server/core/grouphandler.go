@@ -251,9 +251,13 @@ func handleGroupDissolveOp(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 解散群： 在基础信息中设置标记
-	_, err := Globals.mongoCli.UpdateGroupInfoPart(groupInfo.GroupId, map[string]interface{}{"params.status": "deleted"}, nil)
+	param := make(map[string]interface{})
+	param["params.visibility"] = "private" // 这个标记是防止再被搜到
+	param["params.status"] = "deleted"
+	_, err := Globals.mongoCli.UpdateGroupInfoPart(groupInfo.GroupId, param, nil)
 	if err != nil {
-
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "save db error", nil, session)
+		return
 	}
 	err = Globals.redisCli.SetGroupInfoPart(groupInfo.GroupId, "Params.status", "deleted")
 	group.SetDeleted()
