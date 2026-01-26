@@ -444,19 +444,14 @@ func loadUserFromDb(sess *Session, mask uint32) error {
 // 这里既然登录了，加载的东西相对比较全
 func LoadUserLogin(session *Session) error {
 	// 如果内存里有，就不用继续了
-	user, ok := Globals.uc.GetUser(session.UserID)
-	if ok {
+	user, _, err := findUser(session.UserID)
+	if err == nil && user != nil {
 		user.AddSessionID(session.Sid)
-		return nil
-	}
-	user, mask, err := tryLoadUserFromRedis(session)
-	fmt.Println("tryLoadUserFromRedis() mask=", mask)
-	if err != nil {
-		//
 	}
 
-	if mask > 0 {
-		err = loadUserFromDb(session, mask)
+	for i, id := range user.SessionId {
+		txtInfo := fmt.Sprintf("user(%d) active session_%d = %d", user.UserId, i, id)
+		Globals.Logger.Debug(txtInfo)
 	}
 
 	return err

@@ -495,7 +495,7 @@ func (u *User) AddPermissionFromDb(perList []BlockStore) {
 	}
 }
 
-// 添加会话ID
+// 添加会话ID，返回长度
 func (u *User) AddSessionID(newSid int64) int {
 	u.Mu.Lock()
 	defer u.Mu.Unlock()

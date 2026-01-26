@@ -146,6 +146,7 @@ func loadUserByFriend(fid int64) (*pbmodel.UserInfo, error) {
 	// 基础信息
 	userInfos, err := Globals.mongoCli.FindUserById(fid)
 	if err != nil {
+		Globals.Logger.Error("loadUserByFriend()", zap.Error(err))
 		return nil, err
 	}
 	if len(userInfos) > 1 {

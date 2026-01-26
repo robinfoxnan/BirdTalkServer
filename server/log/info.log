@@ -135,3 +135,607 @@
 2026-01-01T21:35:17.634+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
 2026-01-01T21:35:17.634+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
 
+2026-01-26T12:05:39.025+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T12:09:58.049+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"IzthaO/C5x6C3EJ1bAiprXDK+TI4h6USc4pHrfA=\"}"}
+2026-01-26T12:09:58.052+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10001, "err code": 9}
+2026-01-26T12:10:27.084+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"/pCTL/Hqak1CUkw/ZMH/miMHkrzHC+sUwH0p430=\"}"}
+2026-01-26T12:10:27.087+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10006, "err code": 9}
+2026-01-26T12:10:51.121+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T12:10:55.019+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"kbdb3jLSW8LNLAUfUlWhnEPIYVC2clMuRHHmzjA=\"}"}
+2026-01-26T12:10:55.021+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10006, "err code": 9}
+2026-01-26T12:10:55.180+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"jF4+Sxp6/D/fAgd7aTWs99etyn+xcwHn0vi/nQI=\"}"}
+2026-01-26T12:10:55.187+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10001, "err code": 9}
+2026-01-26T12:11:05.177+0800	[35mDEBUG[0m	core/session.go:384	user(10006) session(935748614121197568) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T12:11:05.179+0800	[34mINFO[0m	core/session.go:256	user(10006) session(935748614121197568)
+2026-01-26T12:11:15.793+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935748614851006464) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.31:41972: wsarecv: An existing connection was forcibly closed by the remote host.
+2026-01-26T12:11:15.794+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935748614851006464)
+2026-01-26T12:28:28.495+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:04:49.760+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:04:54.535+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"gp3XH6x4HXwYL//niEV5bQa32Ji0NZDdly3ydIQ=\"}"}
+2026-01-26T13:04:54.536+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10006, "err code": 9}
+2026-01-26T13:05:13.239+0800	[35mDEBUG[0m	core/session.go:384	user(10006) session(935762201497702400) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T13:05:13.240+0800	[34mINFO[0m	core/session.go:256	user(10006) session(935762201497702400)
+2026-01-26T13:06:07.496+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:06:14.219+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:-5357504718274850190  params:{key:\"checkTokenData\"  value:\"0bPkQLYBQAEKmyf127sf8GBAsgoAji6+mAENMZU=\"}"}
+2026-01-26T13:07:13.466+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10006, "err code": 9}
+2026-01-26T13:07:38.124+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:07:39.907+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:-5357504718274850190  params:{key:\"checkTokenData\"  value:\"0jdMoM/wTKQ1OWR3nisLsuwv97Ubf2Flm10zeRA=\"}"}
+2026-01-26T13:08:26.133+0800	[35mDEBUG[0m	core/commonmsggen.go:38	onLoginSuccess() load user meet error	{"user id": 10006, "err code": 9}
+2026-01-26T13:14:15.347+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:14:29.597+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:-5357504718274850190  params:{key:\"checkTokenData\"  value:\"RZeZgFvLetNrJCZsS39xAmTUDIQvVT4BoT36ww4=\"}"}
+2026-01-26T13:14:29.623+0800	[34mINFO[0m	core/userhandler.go:1024	user(10006) login ok
+2026-01-26T13:14:29.624+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769404469623,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":3,"fans":2,"params":{"email":"checked","nfans":"","nfollows":"","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:14:29.716+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2026-01-26T13:14:29.716+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2026-01-26T13:14:29.766+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:14:29.767+0800	[35mDEBUG[0m	core/msghelper.go:26	user(10006) active session  list is null 
+2026-01-26T13:14:30.078+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807  littleId:924891924932988929  chatType:ChatTypeP2P"}
+2026-01-26T13:14:30.097+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:20:23.897+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:20:26.939+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\"  version:\"1.0\"  platform:\"Xiaomi\"  stage:\"clienthello\"  keyPrint:-5357504718274850190  params:{key:\"checkTokenData\"  value:\"AGPO3kKtMruVeXSPU+SfKkx0tfwVd8f+dLrb7ww=\"}"}
+2026-01-26T13:20:26.940+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(935766112161894400) active session  has 
+2026-01-26T13:20:26.941+0800	[34mINFO[0m	core/userhandler.go:1024	user(10006) login ok
+2026-01-26T13:20:26.942+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769404826941,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":3,"fans":2,"params":{"email":"checked","nfans":"","nfollows":"","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:20:26.999+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2026-01-26T13:20:27.000+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766112161894400) MsgTFriendOpRet
+2026-01-26T13:20:27.053+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:20:27.054+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766112161894400) MsgTFriendOpRet
+2026-01-26T13:20:27.090+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807  littleId:924891924932988929  chatType:ChatTypeP2P"}
+2026-01-26T13:20:27.105+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:21:59.066+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:22:04.910+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"LNG0PByR1LJ8oDs1iauwn1XY7QHrqeR9/I6GLIk=\"}"}
+2026-01-26T13:22:04.912+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10006) active session_0 has 935766523065274368
+2026-01-26T13:22:04.913+0800	[34mINFO[0m	core/userhandler.go:1024	user(10006) login ok
+2026-01-26T13:22:04.913+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769404924913,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":3,"fans":2,"params":{"email":"checked","nfans":"","nfollows":"","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:22:04.981+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2026-01-26T13:22:04.982+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTFriendOpRet
+2026-01-26T13:22:05.023+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:22:05.024+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTFriendOpRet
+2026-01-26T13:22:05.326+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:924891924932988929 chatType:ChatTypeP2P"}
+2026-01-26T13:22:05.344+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:24:17.931+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"LmyYkGtwpzIx+lTVcgQKWCqGIipz1dK//DJ9HWE=\"}"}
+2026-01-26T13:24:17.932+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935767081176141824
+2026-01-26T13:24:17.932+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T13:24:17.932+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769405057932,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:24:17.996+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:24:17.996+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935767081176141824) MsgTFriendOpRet
+2026-01-26T13:24:18.046+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:24:18.046+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935767081176141824) MsgTFriendOpRet
+2026-01-26T13:24:18.103+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10001}
+2026-01-26T13:24:18.104+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10001, "lst": [{"Pk":10001,"Role":1,"Gid":10001,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:24:18.105+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10001, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935767081176141824],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769404924981}}}}
+2026-01-26T13:24:18.105+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10002}
+2026-01-26T13:24:18.106+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10002, "lst": [{"Pk":10002,"Role":1,"Gid":10002,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:24:18.106+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10002, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935767081176141824],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769404924981}}}}
+2026-01-26T13:24:18.106+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10003}
+2026-01-26T13:24:18.106+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10003, "lst": [{"Pk":10003,"Role":1,"Gid":10003,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:24:18.106+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10003, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935767081176141824],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769404924981}}}}
+2026-01-26T13:24:18.107+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10004}
+2026-01-26T13:24:18.107+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10004, "lst": [{"Pk":10004,"Role":1,"Gid":10004,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:24:18.107+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10004, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935767081176141824],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769404924981}}}}
+2026-01-26T13:24:18.285+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:926831014800658433 chatType:ChatTypeP2P"}
+2026-01-26T13:24:18.292+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:24:18.334+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T13:24:18.336+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:24:18.386+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T13:24:18.387+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:24:18.434+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T13:24:18.434+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:24:18.490+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T13:24:18.490+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:25:49.334+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(1501) from 10006 -> 10001, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935767464795574272, userId: 10006, fromId: 10006, toId: 10001, tm: 1769405147496 (time: 2026-01-26 13:25:47), devId: \"BEF2A06F75075BC9\", sendId: 1501, msgType: TEXT, data: \"1\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:25:49.354+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:25:49.354+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935767081176141824) MsgTChatMsg
+2026-01-26T13:25:49.515+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:935767464795574272 sendId:1501 recvOk:1769405148550 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:25:49.532+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatReply
+2026-01-26T13:25:52.290+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:924890028969168896 sendId:2186 recvOk:1769405150441 readOk:1769405150441 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:25:52.313+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935767081176141824) MsgTChatReply
+2026-01-26T13:25:52.335+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:924891924932988928 sendId:2201 recvOk:1769405150445 readOk:1769405150445 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:25:52.346+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935767081176141824) MsgTChatReply
+2026-01-26T13:26:23.421+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(1502) from 10006 -> 10001, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935767607796174848, userId: 10006, fromId: 10006, toId: 10001, tm: 1769405181612 (time: 2026-01-26 13:26:21), devId: \"BEF2A06F75075BC9\", sendId: 1502, msgType: TEXT, data: \"10\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:26:23.429+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:26:23.429+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935767081176141824) MsgTChatMsg
+2026-01-26T13:26:23.592+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:935767607796174848 sendId:1502 recvOk:1769405182640 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:26:23.612+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatReply
+2026-01-26T13:26:53.412+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935767081176141824) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T13:26:53.413+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935767081176141824)
+2026-01-26T13:31:32.697+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"vt1OE26jPrdjMhcqbH+zQEg1ILAcqU90oCpHzzE=\"}"}
+2026-01-26T13:31:32.701+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935768903068553216
+2026-01-26T13:31:32.701+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T13:31:32.702+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769405492701,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:31:33.249+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:31:33.250+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTFriendOpRet
+2026-01-26T13:31:33.289+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:31:33.289+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTFriendOpRet
+2026-01-26T13:31:33.339+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T13:31:34.560+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935767607796174849 chatType:ChatTypeP2P"}
+2026-01-26T13:31:34.568+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:31:34.804+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T13:31:34.805+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:31:34.844+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T13:31:34.845+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:31:34.897+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T13:31:34.898+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:31:34.948+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T13:31:34.948+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:32:43.098+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3626) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769200281128960, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405559187 (time: 2026-01-26 13:32:39), devId: \"47FCC883FB83DD2D\", sendId: 3626, msgType: TEXT, data: \"1\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:32:43.116+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:32:43.117+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:32:43.340+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769200281128960 sendId:3626 recvOk:1769405561497 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:32:43.352+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:33:32.257+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3627) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769406468919296, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405610067 (time: 2026-01-26 13:33:30), devId: \"47FCC883FB83DD2D\", sendId: 3627, msgType: TEXT, data: \"2\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:33:32.264+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:33:32.264+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:33:32.378+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769406468919296 sendId:3627 recvOk:1769405610555 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:33:32.389+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:33:40.375+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(1503) from 10006 -> 10001, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769440514084864, userId: 10006, fromId: 10006, toId: 10001, tm: 1769405618559 (time: 2026-01-26 13:33:38), devId: \"BEF2A06F75075BC9\", sendId: 1503, msgType: TEXT, data: \"3\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:33:40.384+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:33:40.385+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatMsg
+2026-01-26T13:33:40.626+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:935769440514084864 sendId:1503 recvOk:1769405619626 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:33:40.638+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatReply
+2026-01-26T13:33:43.360+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769200281128960 sendId:3626 recvOk:1769405621537 readOk:1769405621537 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:33:43.372+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:33:43.413+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769406468919296 sendId:3627 recvOk:1769405621540 readOk:1769405621540 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:33:43.422+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:33:57.476+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3628) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769512240877568, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405628700 (time: 2026-01-26 13:33:48), devId: \"47FCC883FB83DD2D\", sendId: 3628, msgType: TEXT, data: \"4\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:33:57.484+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:33:57.484+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:33:57.597+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769512240877568 sendId:3628 recvOk:1769405635742 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:33:57.606+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:34:03.974+0800	[35mDEBUG[0m	core/filemsghander.go:24	File Upload msg:	{"user id": 10001, "filename": "IMG_20260124_143730.jpg", "hash": "027014ffb93fa448a715510770670079", "send id": 3629, "chunk index": 0, "chunk count": 1}
+2026-01-26T13:34:04.019+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:935767464795574272 sendId:1501 recvOk:1769405643068 readOk:1769405643068 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:34:04.028+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatReply
+2026-01-26T13:34:04.071+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:935767607796174848 sendId:1502 recvOk:1769405643072 readOk:1769405643072 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:34:04.081+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatReply
+2026-01-26T13:34:04.154+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10001, "to": 10006, "msg": "msgId:935769440514084864 sendId:1503 recvOk:1769405643075 readOk:1769405643075 extraMsg:\"ok\" userId:10006 fromId:10001 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:34:04.167+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatReply
+2026-01-26T13:34:04.340+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3629) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769541034774528, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405643396 (time: 2026-01-26 13:34:03), devId: \"47FCC883FB83DD2D\", sendId: 3629, msgType: IMAGE, data: \"{\\\"ent\\\":[{\\\"data\\\":{\\\"ref\\\":\\\"20260126_13rnseiewhv5u.jpg\\\",\\\"mime\\\":\\\"image/jpeg\\\",\\\"width\\\":0,\\\"name\\\":\\\"IMG_20260124_143730.jpg\\\",\\\"height\\\":0},\\\"tp\\\":\\\"IM\\\"}],\\\"fmt\\\":[{\\\"at\\\":0,\\\"key\\\":0,\\\"len\\\":1,\\\"tp\\\":null}],\\\"txt\\\":\\\" \\\"}\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:34:04.352+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:34:04.352+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:34:04.370+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769541034774528 sendId:3629 recvOk:1769405642568 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:34:04.381+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:34:04.713+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_13rnseiewhv5u.jpg"}
+2026-01-26T13:34:10.347+0800	[35mDEBUG[0m	core/filemsghander.go:24	File Upload msg:	{"user id": 10001, "filename": "IMG_20260124_143141.jpg", "hash": "18b3a0160e47a327b7ce5c8ef73b86e5", "send id": 3630, "chunk index": 0, "chunk count": 1}
+2026-01-26T13:34:10.604+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3630) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769567307894784, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405649633 (time: 2026-01-26 13:34:09), devId: \"47FCC883FB83DD2D\", sendId: 3630, msgType: IMAGE, data: \"{\\\"ent\\\":[{\\\"data\\\":{\\\"ref\\\":\\\"20260126_lp7c2jsjifq0.jpg\\\",\\\"mime\\\":\\\"image/jpeg\\\",\\\"width\\\":0,\\\"name\\\":\\\"IMG_20260124_143141.jpg\\\",\\\"height\\\":0},\\\"tp\\\":\\\"IM\\\"}],\\\"fmt\\\":[{\\\"at\\\":0,\\\"key\\\":0,\\\"len\\\":1,\\\"tp\\\":null}],\\\"txt\\\":\\\" \\\"}\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:34:10.610+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:34:10.610+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:34:10.699+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769567307894784 sendId:3630 recvOk:1769405648852 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:34:10.710+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:34:10.955+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_lp7c2jsjifq0.jpg"}
+2026-01-26T13:34:18.646+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_lp7c2jsjifq0.jpg"}
+2026-01-26T13:34:43.981+0800	[35mDEBUG[0m	core/filemsghander.go:24	File Upload msg:	{"user id": 10001, "filename": "_U9IhDHFHB5qyg", "hash": "fbe33a3fbd6c32b75a4fdd55d0600e34", "send id": 3631, "chunk index": 0, "chunk count": 1}
+2026-01-26T13:34:44.265+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3631) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935769708492361728, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405683300 (time: 2026-01-26 13:34:43), devId: \"47FCC883FB83DD2D\", sendId: 3631, msgType: VOICE, priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:34:44.272+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:34:44.273+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:34:44.392+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935769708492361728 sendId:3631 recvOk:1769405682547 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:34:44.404+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:34:46.803+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_2sajpb9bgpxx7"}
+2026-01-26T13:34:52.244+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_2sajpb9bgpxx7"}
+2026-01-26T13:37:15.247+0800	[35mDEBUG[0m	core/filemsghander.go:24	File Upload msg:	{"user id": 10001, "filename": "aBYee6hQPY5nVQ", "hash": "710e066fc5174253b3d99e1da21d7050", "send id": 3632, "chunk index": 0, "chunk count": 1}
+2026-01-26T13:37:15.541+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3632) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935770342989893632, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405834538 (time: 2026-01-26 13:37:14), devId: \"47FCC883FB83DD2D\", sendId: 3632, msgType: VOICE, priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:37:15.556+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:37:15.556+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:37:15.715+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935770342989893632 sendId:3632 recvOk:1769405834494 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:37:15.724+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:37:20.398+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_19kwc296iyvld"}
+2026-01-26T13:37:40.759+0800	[35mDEBUG[0m	core/filemsghander.go:24	File Upload msg:	{"user id": 10001, "filename": "Camera_xhs_1767710027621.mp4", "hash": "23863f5ab2d02566d0d0945af833c2c9", "send id": 3633, "chunk index": 0, "chunk count": 1}
+2026-01-26T13:37:40.924+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3633) from 10001 -> 10006, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935770449449717760, userId: 10001, fromId: 10001, toId: 10006, tm: 1769405859980 (time: 2026-01-26 13:37:39), devId: \"47FCC883FB83DD2D\", sendId: 3633, msgType: FILE, data: \"{\\\"ent\\\":[{\\\"data\\\":{\\\"fid\\\":10001,\\\"cur\\\":0,\\\"ref\\\":\\\"20260126_1jx6m3eeexvz7.mp4\\\",\\\"size\\\":839377,\\\"mime\\\":\\\"video/mp4\\\",\\\"name\\\":\\\"Camera_xhs_1767710027621.mp4\\\",\\\"msgid\\\":3633},\\\"tp\\\":\\\"EX\\\"}],\\\"fmt\\\":[{\\\"at\\\":-1,\\\"key\\\":0,\\\"len\\\":1,\\\"tp\\\":null}]}\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T13:37:40.932+0800	[35mDEBUG[0m	core/chatmsghandler.go:250	send back reply 'save data ok'
+2026-01-26T13:37:40.932+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935766523065274368) MsgTChatMsg
+2026-01-26T13:37:41.030+0800	[35mDEBUG[0m	core/chatmsghandler.go:374	Recv User ChatMsgReply:	{"from": 10006, "to": 10001, "msg": "msgId:935770449449717760 sendId:3633 recvOk:1769405859768 extraMsg:\"ok\" userId:10001 fromId:10006 params:{key:\"gid\" value:\"0\"}"}
+2026-01-26T13:37:41.041+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935768903068553216) MsgTChatReply
+2026-01-26T13:37:44.309+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_1jx6m3eeexvz7.mp4"}
+2026-01-26T13:37:56.294+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "20260126_1jx6m3eeexvz7.mp4"}
+2026-01-26T13:42:25.462+0800	[34mINFO[0m	server/main.go:93	server started here...
+2026-01-26T13:42:26.006+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"avhO0GzJy9I6+dv5HC0hmvOj0OGCZBkmNbin+5I=\"}"}
+2026-01-26T13:42:26.008+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935771644687945728
+2026-01-26T13:42:26.008+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T13:42:26.009+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769406146008,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:42:26.141+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"nickName":"robin","email":"*","phone":"*"},{"userId":10004,"nickName":"飞鸟真人","email":"*","phone":"*"},{"userId":10005,"nickName":"robin","email":"*","phone":"*"},{"userId":10006,"nickName":"robin fox","email":"*","phone":"*"},{"userId":10007,"nickName":"yoyo","email":"*","phone":"*"}]}
+2026-01-26T13:42:26.142+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935771644687945728) MsgTFriendOpRet
+2026-01-26T13:42:26.239+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:42:26.240+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935771644687945728) MsgTFriendOpRet
+2026-01-26T13:42:26.247+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T13:42:26.248+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10001}
+2026-01-26T13:42:26.248+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10001, "lst": [{"Pk":10001,"Role":1,"Gid":10001,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:42:26.249+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10001, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935771644687945728],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769406146008}}}}
+2026-01-26T13:42:26.249+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10002}
+2026-01-26T13:42:26.249+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10002, "lst": [{"Pk":10002,"Role":1,"Gid":10002,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:42:26.250+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10002, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935771644687945728],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769406146008}}}}
+2026-01-26T13:42:26.250+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10003}
+2026-01-26T13:42:26.251+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10003, "lst": [{"Pk":10003,"Role":1,"Gid":10003,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:42:26.251+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10003, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935771644687945728],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769406146008}}}}
+2026-01-26T13:42:26.251+0800	[35mDEBUG[0m	core/grouphelper.go:143	find group in redis	{"group_id": 10004}
+2026-01-26T13:42:26.251+0800	[35mDEBUG[0m	core/grouphelper.go:98	loadGroupMembers() find group members in redis	{"group_id": 10004, "lst": [{"Pk":10004,"Role":1,"Gid":10004,"Uid":10001,"Tm":0,"Nick":"飞鸟真人"}]}
+2026-01-26T13:42:26.251+0800	[35mDEBUG[0m	core/grouphelper.go:104	loadGroupMembers() re-print group member in memory	{"group_id": 10004, "group": {"10001":{"Nick":"飞鸟真人","U":{"UserInfo":{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}},"SessionId":[935771644687945728],"Status":0,"Block":{},"Following":{},"Fans":{},"Groups":{"10001":true,"10002":true,"10003":true,"10004":true},"SessionDis":{},"LastActiveTm":1769406146008}}}}
+2026-01-26T13:42:26.326+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T13:42:26.342+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:42:26.437+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T13:42:26.437+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:42:26.488+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T13:42:26.488+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:42:26.556+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T13:42:26.556+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:42:26.636+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T13:42:26.637+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T13:42:29.366+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"BEF2A06F75075BC9\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:-5357504718274850190 params:{key:\"checkTokenData\" value:\"QIs8zxMgxQ7bugqNCZk32+JszpGylZo+QcfLnrI=\"}"}
+2026-01-26T13:42:29.367+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10006) active session_0 has 935771658982133760
+2026-01-26T13:42:29.367+0800	[34mINFO[0m	core/userhandler.go:1024	user(10006) login ok
+2026-01-26T13:42:29.367+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769406149367,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"robin-fox@sohu.com","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6","follows":3,"fans":2,"params":{"email":"checked","nfans":"","nfollows":"","title":"setting"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T13:42:29.435+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "follows", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:42:29.436+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935771658982133760) MsgTFriendOpRet
+2026-01-26T13:42:29.492+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10006, "mode": "fans", "friends": [{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T13:42:29.493+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10006) sid(935771658982133760) MsgTFriendOpRet
+2026-01-26T13:42:29.537+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T13:42:29.547+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T13:44:19.817+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935771644687945728) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T13:44:19.818+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935771644687945728)
+2026-01-26T14:00:43.801+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"WAYL3ybQ9LvywrGHNCZTaPryfOc2cEzn+kaGmvQ=\"}"}
+2026-01-26T14:00:43.802+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935776249215848448
+2026-01-26T14:00:43.803+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:00:43.803+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769407243803,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:00:43.909+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:00:43.909+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935776249215848448) MsgTFriendOpRet
+2026-01-26T14:00:43.953+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:00:43.954+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935776249215848448) MsgTFriendOpRet
+2026-01-26T14:00:44.003+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:00:44.090+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:00:44.098+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:00:44.209+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:00:44.211+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:00:44.249+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:00:44.249+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:00:44.294+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:00:44.294+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:00:44.343+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:00:44.344+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:01:01.328+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935776249215848448) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:01:01.330+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935776249215848448)
+2026-01-26T14:03:57.270+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"cwDCRGxqZFVxKc/uv8wfZSBI/s+dRafnNB9P2as=\"}"}
+2026-01-26T14:03:57.272+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935777060704620544
+2026-01-26T14:03:57.274+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:03:57.274+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769407437274,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:03:57.376+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:03:57.377+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777060704620544) MsgTFriendOpRet
+2026-01-26T14:03:57.421+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:03:57.422+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777060704620544) MsgTFriendOpRet
+2026-01-26T14:03:57.465+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:03:57.563+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:03:57.570+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:03:57.686+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:03:57.687+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:03:57.717+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:03:57.720+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:03:57.763+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:03:57.763+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:03:57.813+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:03:57.814+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:04:02.061+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935777060704620544) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:04:02.062+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935777060704620544)
+2026-01-26T14:04:04.261+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"xFat+eMwHWvosOeH6lyVL7m3PyGTHPjeyk+z3lU=\"}"}
+2026-01-26T14:04:04.263+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935777090068942848
+2026-01-26T14:04:04.263+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:04:04.263+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769407444263,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:04:04.309+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:04:04.310+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777090068942848) MsgTFriendOpRet
+2026-01-26T14:04:04.356+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:04:04.356+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777090068942848) MsgTFriendOpRet
+2026-01-26T14:04:04.402+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:04:04.556+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:04:04.567+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:04:04.649+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:04:04.650+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:04:04.699+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:04:04.700+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:04:04.755+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:04:04.755+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:04:04.800+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:04:04.801+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:04:47.059+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935777090068942848) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:04:47.059+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935777090068942848)
+2026-01-26T14:05:40.826+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"odqyh50W/6R5ESQ+M1nTq93REVmxtK77s17JSoQ=\"}"}
+2026-01-26T14:05:40.827+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935777495028994048
+2026-01-26T14:05:40.828+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:05:40.829+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769407540828,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:05:40.871+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:05:40.872+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777495028994048) MsgTFriendOpRet
+2026-01-26T14:05:40.923+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:05:40.923+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777495028994048) MsgTFriendOpRet
+2026-01-26T14:05:40.969+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:05:41.174+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:05:41.182+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:05:41.217+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:05:41.218+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:05:41.269+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:05:41.270+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:05:41.320+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:05:41.320+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:05:41.370+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:05:41.371+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:05:52.678+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935777495028994048) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:05:52.680+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935777495028994048)
+2026-01-26T14:07:17.842+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"xckQgJTg6e5EvV58fGNobfiZWux8dTH9AtX5QTg=\"}"}
+2026-01-26T14:07:17.842+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935777901821956096
+2026-01-26T14:07:17.843+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:07:17.843+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769407637843,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:07:17.950+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:07:17.950+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777901821956096) MsgTFriendOpRet
+2026-01-26T14:07:17.984+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:07:17.984+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935777901821956096) MsgTFriendOpRet
+2026-01-26T14:07:18.027+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:07:18.139+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:07:18.145+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:07:18.177+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:07:18.178+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:07:18.227+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:07:18.228+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:07:18.278+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:07:18.278+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:07:18.328+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:07:18.328+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:08:02.824+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3726) from 10001 -> 10003, type:ChatTypeGroup	{"msg": "MsgChat{msgId: 935778091047981056, userId: 10001, fromId: 10001, toId: 10003, tm: 1769407681835 (time: 2026-01-26 14:08:01), devId: \"47FCC883FB83DD2D\", sendId: 3726, msgType: TEXT, data: \"11\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeGroup, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T14:08:02.842+0800	[35mDEBUG[0m	core/chatmsghandler.go:362	send back reply ok gid=10003, uid=10001
+2026-01-26T14:14:45.549+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935777901821956096) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:14:45.549+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935777901821956096)
+2026-01-26T14:14:46.882+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"cWpi6zvCDon6UI34/bVyvXn/Hus8o2BlDXaDAG0=\"}"}
+2026-01-26T14:14:46.883+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935779785324498944
+2026-01-26T14:14:46.883+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:14:46.883+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408086883,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:14:46.927+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:14:46.927+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935779785324498944) MsgTFriendOpRet
+2026-01-26T14:14:46.976+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:14:46.976+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935779785324498944) MsgTFriendOpRet
+2026-01-26T14:14:47.020+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:14:47.209+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:14:47.224+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:14:47.234+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:14:47.234+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:14:47.276+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:14:47.276+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:14:47.325+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:14:47.325+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:14:47.374+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:14:47.375+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:15:34.977+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935779785324498944) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:15:34.979+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935779785324498944)
+2026-01-26T14:16:23.432+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"/lPWQPz+neSESQwRBnZKtzAPmQPQ1itnxb6CTPk=\"}"}
+2026-01-26T14:16:23.434+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935780189982560256
+2026-01-26T14:16:23.434+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:16:23.434+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408183434,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:16:23.540+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:16:23.541+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935780189982560256) MsgTFriendOpRet
+2026-01-26T14:16:23.582+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:16:23.582+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935780189982560256) MsgTFriendOpRet
+2026-01-26T14:16:23.621+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:16:23.773+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:16:23.780+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:16:23.822+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:16:23.823+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:16:23.873+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:16:23.873+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:16:23.924+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:16:23.925+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:16:23.974+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:16:23.975+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:18:40.283+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935780189982560256) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:18:40.284+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935780189982560256)
+2026-01-26T14:18:42.380+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"qN0TYMjD1/uC3FuibpyOODX/D2Kt3rHqKgZZpbk=\"}"}
+2026-01-26T14:18:42.381+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935780773116645376
+2026-01-26T14:18:42.381+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:18:42.381+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408322381,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:18:42.422+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:18:42.422+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935780773116645376) MsgTFriendOpRet
+2026-01-26T14:18:42.471+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:18:42.472+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935780773116645376) MsgTFriendOpRet
+2026-01-26T14:18:42.522+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:18:42.666+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:18:42.671+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:18:42.777+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:18:42.780+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:18:42.816+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:18:42.816+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:18:42.866+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:18:42.866+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:18:42.918+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:18:42.918+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:19:10.813+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935780773116645376) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:19:10.815+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935780773116645376)
+2026-01-26T14:20:10.894+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"c7ZhnrOWUTc8rDRB1ANhJnc7fEZtW4AI1qCtoSE=\"}"}
+2026-01-26T14:20:10.895+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935781144593567744
+2026-01-26T14:20:10.896+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:20:10.896+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408410896,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:20:10.953+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:20:10.954+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935781144593567744) MsgTFriendOpRet
+2026-01-26T14:20:11.004+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:20:11.004+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935781144593567744) MsgTFriendOpRet
+2026-01-26T14:20:11.045+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:20:11.098+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935770449449717761 chatType:ChatTypeP2P"}
+2026-01-26T14:20:11.104+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:20:11.148+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:20:11.148+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:20:11.200+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:20:11.200+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:20:11.249+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:20:11.249+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:20:11.301+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:20:11.301+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:20:42.916+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3806) from 10001 -> 10002, type:ChatTypeP2P	{"msg": "MsgChat{msgId: 935781279113285632, userId: 10001, fromId: 10001, toId: 10002, tm: 1769408441967 (time: 2026-01-26 14:20:41), devId: \"47FCC883FB83DD2D\", sendId: 3806, msgType: TEXT, data: \"1\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeP2P, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T14:20:42.945+0800	[35mDEBUG[0m	core/commonmsggen.go:38	not friend	{"user id": 10001, "err code": 21}
+2026-01-26T14:22:27.488+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935781144593567744) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:22:27.491+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935781144593567744)
+2026-01-26T14:23:07.167+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"IZ8kJwmSCwKtLTdP2bAmm4lkwmbbBguuspQhF3o=\"}"}
+2026-01-26T14:23:07.168+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935781881901879296
+2026-01-26T14:23:07.169+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:23:07.170+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408587169,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:23:07.601+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:23:07.601+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935781881901879296) MsgTFriendOpRet
+2026-01-26T14:23:07.649+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:23:07.649+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935781881901879296) MsgTFriendOpRet
+2026-01-26T14:23:07.697+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:23:08.921+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935781279113285633 chatType:ChatTypeP2P"}
+2026-01-26T14:23:08.929+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:23:09.162+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:23:09.162+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:23:09.202+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:23:09.202+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:23:09.252+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:23:09.253+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:23:09.305+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:23:09.306+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:23:49.372+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935781881901879296) close here, because ws:readLoop() error, err=read tcp 192.168.1.2:7817->192.168.1.31:43824: wsarecv: An existing connection was forcibly closed by the remote host.
+2026-01-26T14:23:49.373+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935781881901879296)
+2026-01-26T14:25:08.375+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"YhLSHuBJc4rlvcJQ3adiPgbB8og4NS0SJSqssvg=\"}"}
+2026-01-26T14:25:08.375+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935782392076046336
+2026-01-26T14:25:08.375+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:25:08.375+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408708375,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:25:08.418+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:25:08.418+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935782392076046336) MsgTFriendOpRet
+2026-01-26T14:25:08.476+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:25:08.476+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935782392076046336) MsgTFriendOpRet
+2026-01-26T14:25:08.512+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:25:08.664+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935781279113285633 chatType:ChatTypeP2P"}
+2026-01-26T14:25:08.672+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:25:08.712+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:25:08.713+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:25:08.766+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:25:08.767+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:25:08.823+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:25:08.824+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:25:08.887+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:25:08.887+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:25:21.396+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935782392076046336) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:25:21.397+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935782392076046336)
+2026-01-26T14:27:41.769+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"QrCazfoF665k/NeWZJirujwOOrYYh3lfIIkLGfY=\"}"}
+2026-01-26T14:27:41.770+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935783035415171072
+2026-01-26T14:27:41.770+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:27:41.770+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408861770,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:27:41.808+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:27:41.809+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935783035415171072) MsgTFriendOpRet
+2026-01-26T14:27:41.860+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:27:41.860+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935783035415171072) MsgTFriendOpRet
+2026-01-26T14:27:41.903+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:27:42.058+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935781279113285633 chatType:ChatTypeP2P"}
+2026-01-26T14:27:42.065+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:27:42.167+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:27:42.167+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:27:42.205+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:27:42.206+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:27:42.257+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:27:42.257+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:27:42.308+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:27:42.308+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:28:24.322+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935783035415171072) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:28:24.323+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935783035415171072)
+2026-01-26T14:28:25.187+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"NsWIA+FcmX70r6cs66F4IGJ0R3i383/ymA387pg=\"}"}
+2026-01-26T14:28:25.187+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935783217531850752
+2026-01-26T14:28:25.187+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:28:25.187+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769408905187,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:28:25.277+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:28:25.278+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935783217531850752) MsgTFriendOpRet
+2026-01-26T14:28:25.320+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:28:25.320+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935783217531850752) MsgTFriendOpRet
+2026-01-26T14:28:25.361+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:28:25.474+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935781279113285633 chatType:ChatTypeP2P"}
+2026-01-26T14:28:25.482+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:28:25.512+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:28:25.513+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:28:25.565+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:28:25.565+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:28:25.614+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:28:25.614+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:28:25.666+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:28:25.667+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:28:27.124+0800	[35mDEBUG[0m	handler/filedownload.go:150	download?	{"filename": "system.png"}
+2026-01-26T14:29:09.164+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935783217531850752) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:29:09.167+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935783217531850752)
+2026-01-26T14:31:35.341+0800	[35mDEBUG[0m	core/commonhandler.go:154	handle client hello msg	{"msg": "clientId:\"47FCC883FB83DD2D\" version:\"1.0\" platform:\"Xiaomi\" stage:\"clienthello\" keyPrint:4516930846336681555 params:{key:\"checkTokenData\" value:\"hamHDevzQNZ3eSz7QJuafdRaYvDQfbc+7bW9cJg=\"}"}
+2026-01-26T14:31:35.341+0800	[35mDEBUG[0m	core/commonhelper.go:454	user(10001) active session_0 has 935784015082950656
+2026-01-26T14:31:35.341+0800	[34mINFO[0m	core/userhandler.go:1024	user(10001) login ok
+2026-01-26T14:31:35.341+0800	[35mDEBUG[0m	core/userhandler.go:1025	user login ok	{"msg": {"version":1,"tm":1769409095341,"msgType":32,"Message":{"PlainMsg":{"Message":{"UserOpRet":{"operation":7,"result":"ok","status":"loginok","users":[{"userId":10001,"userName":"user10001","nickName":"飞鸟真人","email":"390017268@qq.com","gender":"男","age":25,"icon":"52kd4rkimehj.jpg","intro":"无所住而生其心","follows":6,"fans":2,"params":{"nfans":"","nfollows":"","title":"先生"}}],"params":{"status":"loginok"}}}}}}}
+2026-01-26T14:31:35.381+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "follows", "friends": [{"userId":10002,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10004,"userName":"daisy","nickName":"飞鸟真人","email":"*","phone":"*","gender":"男","age":35,"region":"北京","icon":"飞鸟真人","intro":"我是一个爱运动的博主>_<..."},{"userId":10005,"userName":"robin","nickName":"robin","email":"*","phone":"*"},{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:31:35.381+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935784015082950656) MsgTFriendOpRet
+2026-01-26T14:31:35.432+0800	[35mDEBUG[0m	core/friendhandler.go:697	handleFriendList()	{"uid": 10001, "mode": "fans", "friends": [{"userId":10006,"userName":"user10006","nickName":"robin fox","email":"*","phone":"*","gender":"男","age":25,"icon":"8w4to2b2sp7e.jpg","intro":"测试用户，小米6"},{"userId":10007,"userName":"user10007","nickName":"yoyo","email":"*","phone":"*","gender":"女","age":20,"icon":"2ekmo7ba7u9vd.jpg","intro":"小楼昨夜又东风"}]}
+2026-01-26T14:31:35.432+0800	[35mDEBUG[0m	core/msghelper.go:36	send to user(10001) sid(935784015082950656) MsgTFriendOpRet
+2026-01-26T14:31:35.476+0800	[35mDEBUG[0m	core/grouphelper.go:195	LoadUserInGroupList from redis	{"uid": 10001, "gid": [10001, 10002, 10003, 10004]}
+2026-01-26T14:31:35.634+0800	[35mDEBUG[0m	core/chatmsghandler.go:494	onQueryChatData:	{"queryMsg.QueryType": "QueryDataTypeChatData", "query": "bigId:9223372036854775807 littleId:935781279113285633 chatType:ChatTypeP2P"}
+2026-01-26T14:31:35.658+0800	[35mDEBUG[0m	core/chatmsghandler.go:583	onQueryP2PChatData:	{"msg count:": 0}
+2026-01-26T14:31:35.681+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10001}
+2026-01-26T14:31:35.681+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10001, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:31:35.728+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10002}
+2026-01-26T14:31:35.730+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10002, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:31:35.780+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10003}
+2026-01-26T14:31:35.781+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10003, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:31:35.831+0800	[35mDEBUG[0m	core/grouphelper.go:34	findGroupMembersFromId() 	{"groupId": 10004}
+2026-01-26T14:31:35.831+0800	[35mDEBUG[0m	core/grouphelper.go:38	gid=10004, index=0, ID: 10001, Name: 飞鸟真人
+
+2026-01-26T14:33:42.341+0800	[35mDEBUG[0m	core/chatmsghandler.go:124	receive chat msg(3906) from 10001 -> 10003, type:ChatTypeGroup	{"msg": "MsgChat{msgId: 935784548258680832, userId: 10001, fromId: 10001, toId: 10003, tm: 1769409221407 (time: 2026-01-26 14:33:41), devId: \"47FCC883FB83DD2D\", sendId: 3906, msgType: TEXT, data: \"12\", priority: LOW, refMessageId: 0, status: SENDING, sendReply: 0, recvReply: 0, readReply: 0, encType: PLAIN, chatType: ChatTypeGroup, subMsgType: 0, keyPrint: 0, params: {}}"}
+2026-01-26T14:33:42.348+0800	[35mDEBUG[0m	core/chatmsghandler.go:362	send back reply ok gid=10003, uid=10001
+2026-01-26T14:34:47.789+0800	[35mDEBUG[0m	core/session.go:384	user(10001) session(935784015082950656) close here, because ws:readLoop() error, err=websocket: close 1006 (abnormal closure): unexpected EOF
+2026-01-26T14:34:47.790+0800	[34mINFO[0m	core/session.go:256	user(10001) session(935784015082950656)

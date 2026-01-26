@@ -218,7 +218,7 @@ func (me *MongoDBExporter) FindUserByField(field string, keyword interface{}, fr
 	collection := me.db.Collection(UserTableName)
 
 	// 只允许三个字段之一
-	if field != "username" && field != "email" && field != "phone" {
+	if field != "userid" && field != "nickname" && field != "username" && field != "email" && field != "phone" {
 		return nil, fmt.Errorf("unsupported search field: %s", field)
 	}
 
