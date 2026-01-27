@@ -658,7 +658,7 @@ func handleGroupJoinReq(msg *pbmodel.Msg, session *Session) {
 		return
 	case "question":
 		onJoinGroupNeedQuestion(group, msg, session)
-	case "admin": // 管理员审核
+	case "auth": // 管理员审核
 		onJoinGroupNeedAdmin(group, msg, session)
 		break
 	default: // ""  | "any"
@@ -1313,7 +1313,7 @@ func handleGroupSearchMember(msg *pbmodel.Msg, session *Session) {
 	members := findGroupMembersFromId(group, fromId, int(Globals.maxPageSize))
 	// 某个UID之后就没有了，
 
-	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupJoinAnswer,
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupSearchMember,
 		groupInfo,
 		nil,
 		members,
@@ -1321,6 +1321,8 @@ func handleGroupSearchMember(msg *pbmodel.Msg, session *Session) {
 		msgOp.MsgId,
 		"ok",
 		"find some", session)
+
+	Globals.Logger.Debug("handleGroupSearchMember", zap.Any("msgRet", msgRet))
 
 	session.SendMessage(msgRet)
 
@@ -1540,7 +1542,7 @@ func onJoinGroupNeedQuestion(group *model.Group, msg *pbmodel.Msg, session *Sess
 	question := group.GetParamByKey("joinquestion")
 	answer := group.GetParamByKey("joinanswer")
 
-	if question == "" || answer == "" {
+	if answer == "" {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "group question or answer is null", nil, session)
 		return errors.New("no answer in msg")
 	}

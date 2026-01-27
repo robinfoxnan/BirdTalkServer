@@ -621,6 +621,7 @@ func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
 	}
 	retLst := make([]*pbmodel.UserInfo, len(lst))
 	for index, f := range lst {
+		u, _, _ := findUserInfo(f.Uid2)
 		data := pbmodel.UserInfo{
 			UserId:   f.Uid2,
 			UserName: "",
@@ -632,6 +633,15 @@ func FriendStore2UserInfo(lst []model.FriendStore) []*pbmodel.UserInfo {
 			Region:   "",
 			Icon:     "",
 			Params:   nil,
+		}
+		if u != nil {
+			data.Icon = u.Icon
+			data.UserName = u.UserName
+			data.Gender = u.Gender
+			data.Age = u.Age
+			data.Region = u.Region
+			data.Params = u.Params
+			data.Intro = u.Intro
 		}
 		retLst[index] = &data
 	}

@@ -114,7 +114,8 @@ func handleChatMsg(msg *pbmodel.Msg, session *Session) {
 	}
 
 	// 发给自己的消息
-	if msgChat.FromId == msgChat.ToId {
+	// 2026-01-27 修正
+	if msgChat.ChatType == pbmodel.ChatType_ChatTypeP2P && msgChat.FromId == msgChat.ToId {
 		onSelfChatMessage(msg, session)
 		return
 	}
@@ -310,6 +311,8 @@ func sendBackChatMsgReply(ok bool, detail string, msgChat *pbmodel.MsgChat, sess
 func onGroupChatMessage(msg *pbmodel.Msg, session *Session) {
 	msgPlain := msg.GetPlainMsg()
 	msgChat := msgPlain.GetChatData()
+
+	Globals.Logger.Debug("onGroupChatMessage", zap.Any("msg", msg))
 	// 检查权限啊
 	group, err := findGroupAndLoad(msgChat.ToId)
 	if group == nil {

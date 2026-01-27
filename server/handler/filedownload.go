@@ -113,10 +113,13 @@ func FileDownloadExHandler1(c *gin.Context) {
 	// 使用用户的密钥
 	expireTm, filename, err := core.DecryptFileToken(keyEx.SharedKey, token)
 	if err != nil {
+		core.Globals.Logger.Debug("download?", zap.String("error", "decrypt file token failed"))
 		c.String(http.StatusNotFound, "decrypt file token failed")
 		//print(err.Error())
 		return
 	}
+
+	core.Globals.Logger.Debug("download?", zap.String("filename", filename))
 
 	// 校验时间戳是否过期
 	if time.Now().Unix() > expireTm {
@@ -126,11 +129,13 @@ func FileDownloadExHandler1(c *gin.Context) {
 		t := time.Unix(expireTm, 0) // 秒级时间戳转换
 		core.Globals.Logger.Debug("download?", zap.String("filename", filename),
 			zap.String("expire", t.Format("2006-01-02 15:04:05")))
+
 		return
 	}
 
 	if filename == "" {
-		c.String(400, "filename not found")
+		c.String(http.StatusNotFound, "filename not found")
+		core.Globals.Logger.Debug("download?", zap.String("404", "filename not found"))
 		return
 	}
 
@@ -147,7 +152,6 @@ func FileDownloadExHandler1(c *gin.Context) {
 		c.String(http.StatusNotFound, "File not found")
 		return
 	}
-	core.Globals.Logger.Debug("download?", zap.String("filename", filename))
 
 	// 提供文件下载
 	c.File(filePath)
