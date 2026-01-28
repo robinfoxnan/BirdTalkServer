@@ -367,6 +367,8 @@ func handleGroupSetBasicInfo(msg *pbmodel.Msg, session *Session) {
 		"ok",
 		"", session)
 
+	Globals.Logger.Debug("group set info ok", zap.Any("msg", msgRet))
+
 	// 通知所有用户
 	notifyGroupMembers(groupInfo.GroupId, msgRet)
 
