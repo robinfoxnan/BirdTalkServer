@@ -731,7 +731,7 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 
 	chatDataRet := pbmodel.MsgQueryResult{
 		UserId:          session.UserID,
-		GroupId:         0,
+		GroupId:         group.GroupId,
 		BigId:           bigId,
 		LittleId:        littleId,
 		SynType:         queryMsg.SynType,
