@@ -4,10 +4,12 @@ import (
 	"birdtalk/server/db"
 	"birdtalk/server/model"
 	"birdtalk/server/pbmodel"
+	"birdtalk/server/utils"
 	"errors"
 	"fmt"
 	"go.uber.org/zap"
 	"sort"
+	"time"
 )
 
 // 这个文件主要是处理三级缓存相关的逻辑
@@ -251,4 +253,55 @@ func gStoreList2GroupList(lst []model.UserInGStore) []*pbmodel.GroupInfo {
 	}
 
 	return ret
+}
+
+// 针对每条群组的操作都需要保存记录
+func saveGroupOpRecord(gid int64, fromUid int64, toUid int64, msgId int64, sendId int64, op pbmodel.GroupOperationType, draf []byte) error {
+	record := model.CommonOpStore{
+		Pk:   db.ComputePk(gid),
+		Uid1: fromUid,
+		Uid2: toUid,
+		Gid:  gid,
+		Id:   msgId,
+		Usid: sendId,
+		Tm:   utils.GetTimeStamp(),
+		Tm1:  0,
+		Tm2:  0,
+		Io:   1,
+		St:   0,
+		Cmd:  int8(op.Number()), // 使用下面 的枚举
+		Ret:  0,                 // 2=拒绝， 1=同意
+		Mask: 0,                 // 权限操作的掩码
+		Ref:  0,                 // 引用
+		Draf: draf,
+	}
+
+	return Globals.scyllaCli.SaveGroupOp(&record)
+
+}
+
+func saveGroupOpUserOpRecord(gid int64, fromUid int64, toUid int64, msgId int64, sendId int64, op pbmodel.GroupOperationType, draf []byte) error {
+	record := model.CommonOpStore{
+		Pk:   db.ComputePk(toUid),
+		Uid1: fromUid,
+		Uid2: toUid,
+		Gid:  gid,
+		Id:   msgId,
+		Usid: sendId,
+		Tm:   time.Now().UnixMilli(),
+		Tm1:  0,
+		Tm2:  0,
+		Io:   0,
+		St:   0,
+		Cmd:  model.CommonGroupOpInviteRequest,
+		Ret:  0,
+		Mask: 0,
+		Ref:  0,
+		Draf: nil,
+	}
+	// todo: save the draft
+	pk2 := db.ComputePk(toUid)
+	err := Globals.scyllaCli.SaveUserOp(&record, pk2)
+
+	return err
 }

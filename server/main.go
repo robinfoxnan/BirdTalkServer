@@ -17,6 +17,10 @@ func Index(c *gin.Context) {
 	c.HTML(200, "index.html", nil)
 }
 
+func Welcome(c *gin.Context) {
+	c.HTML(200, "welcome.html", nil)
+}
+
 // mapHTMLFiles 将指定目录下的所有HTML文件映射为主文件名的路由
 func mapHTMLFiles(router *gin.Engine, dir string) {
 	// 获取目录下的所有HTML文件
@@ -67,6 +71,7 @@ func startServer() {
 
 	router.GET("/index", Index)
 	router.GET("/", Index)
+	router.GET("/welcome", Welcome)
 	router.GET("/ws", ws.HandleWebSocket)
 	router.GET("/filestore/:filename", handler.FileDownloadExHandler)
 	router.GET("/filestore/download", handler.FileDownloadExHandler1)

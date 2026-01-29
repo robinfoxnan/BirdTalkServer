@@ -762,6 +762,7 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 		},
 	}
 	session.SendMessage(&msg)
+	//Globals.Logger.Debug("send query group msg", zap.Int64("gid", group.GroupId), zap.Any("msg", msgPlain))
 
 }
 

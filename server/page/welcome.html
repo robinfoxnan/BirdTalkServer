@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 适配移动端，禁止缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>欢迎使用鸣聊软件</title>
+    <style>
+        /* 全局样式重置，消除默认边距和间距 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+
+        /* 页面主体：全屏居中，浅灰背景，弹性布局 */
+        body {
+            background-color: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 欢迎卡片：白色背景，圆角，阴影，最大宽度限制 */
+        .welcome-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        /* 软件logo/图标占位（可替换为真实图片） */
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            background-color: #409eff;
+            border-radius: 20px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 32px;
+        }
+
+        /* 主标题样式 */
+        .welcome-title {
+            font-size: 28px;
+            color: #333333;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        /* 副标题/简介样式 */
+        .welcome-desc {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* 核心特点列表 - 左对齐版 */
+        .feature-list {
+            list-style: none;
+            margin-bottom: 36px;
+            padding-left: 0; /* 清除ul默认左内边距，关键1 */
+            text-align: left; /* 列表整体左对齐，关键2 */
+        }
+
+        .feature-list li {
+            font-size: 14px;
+            color: #555555;
+            margin: 10px 0; /* 上下间距保留，取消左右间距 */
+            display: flex;
+            align-items: center;
+            /* 移除原有justify-content: center; 关键3，取消内容居中 */
+            gap: 8px; /* 替代原有的margin-right，图标与文字间距更规范 */
+        }
+
+        /* 特点前的小图标 - 样式保留，仅微调间距（可选） */
+        .feature-list li::before {
+            content: "✓";
+            color: #67c23a;
+            font-weight: bold;
+            /* 移除原有margin-right: 8px; 改用gap统一控制间距 */
+            flex-shrink: 0; /* 防止图标被挤压，可选优化 */
+        }
+
+        /* 进入软件按钮 */
+        .enter-btn {
+            display: inline-block;
+            background-color: #409eff;
+            color: #ffffff;
+            padding: 12px 40px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* 按钮hover/点击效果 */
+        .enter-btn:hover {
+            background-color: #337ecc;
+        }
+
+        /* 底部版权/版本信息 */
+        .footer-info {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+<div class="welcome-card">
+    <!-- 软件图标：可替换为 <img src="你的图标路径.png" alt="软件图标" class="app-icon"> -->
+    <div class="app-icon">📱</div>
+    <!-- 主标题：修改为你的软件名称 -->
+    <h1 class="welcome-title">欢迎使用 鸣聊 软件</h1>
+    <!-- 软件简介：修改为你的软件核心描述 -->
+    <p class="welcome-desc">
+        这是一款开源的即时通信SDK，为您提供优质的使用体验，
+        极简操作，功能强大，助力你的工作与生活！
+    </p>
+    <!-- 核心特点：修改为你的软件3-4个核心优势 -->
+    <ul class="feature-list">
+        <li>SDK界面简洁，新用户操作简单易上手</li>
+        <li>SDK封装完善，二次开发便捷</li>
+        <li>SDK与后端使用websocket加密通信</li>
+        <li>SDK使用DF密钥交换认证，免登录</li>
+        <li>SDK支持文本、图片、语音、附件形式消息</li>
+        <li>支持私聊和群聊</li>
+        <li>群聊加入方式支持管理员审核以及回答问题审核</li>
+        <li>私密聊天用邀请方式加入，防止误入</li>
+        <li>后端服务为单程序，部署容易</li>
+        <li>后端设计支持多终端登录</li>
+        <li>后端使用scyllaDb、mongoDb、Redis存储数据，易扩展</li>
+    </ul>
+    <!-- 进入软件按钮：可修改href为软件功能页面链接，若为本地页面可设为 href="main.html" -->
+
+    <!-- 底部信息：修改为你的软件版本/版权信息 -->
+    <div class="footer-info">鸣聊 软件 v1.0.0 © 2025 版权所有</div>
+</div>
+</body>
+</html>
+
