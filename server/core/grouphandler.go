@@ -47,7 +47,7 @@ func handleGroupOp(msg *pbmodel.Msg, session *Session) {
 		handleGroupKickOut(msg, session)
 		break
 	case pbmodel.GroupOperationType_GroupInviteRequest: // 5邀请
-		handleInviteSomeone(msg, session)
+		handleInviteSomeoneDirect(msg, session)
 		break
 	case pbmodel.GroupOperationType_GroupInviteAnswer: // 6邀请的应答
 		handleInviteAnswer(msg, session)
@@ -502,6 +502,91 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 }
 
 // 5. 邀请某人
+// 2026-1-30 这里简化一下，直接拉人进去，和微信一样
+func handleInviteSomeoneDirect(msg *pbmodel.Msg, session *Session) {
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	groupInfo := msgOp.GetGroup()
+	if groupInfo == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group invite request operation group info is null", nil, session)
+		return
+	}
+
+	group, _ := findGroupAndLoad(groupInfo.GroupId)
+	if group == nil {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group invite request group info id is wrong", nil, session)
+		return
+	}
+
+	// 私密群只有管理员可以拉人
+	isPrivate := group.IsPrivate()
+	if isPrivate {
+		isAdmin := group.IsAdmin(session.UserID)
+		if !isAdmin {
+			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTNotPermission), "you are not the admin of the private group", nil, session)
+			return
+		}
+	}
+
+	memList := msgOp.GetMembers()
+	if memList == nil || len(memList) < 1 {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must give out the invitee in members", nil, session)
+		return
+	}
+
+	user := session.GetUser()
+	reqMem := msgOp.GetReqMem()
+	if reqMem == nil {
+		reqMem = &pbmodel.GroupMember{
+			UserId:  session.UserID,
+			Nick:    user.NickName,
+			Icon:    user.Icon,
+			Role:    "",
+			GroupId: groupInfo.GroupId,
+			Params:  nil,
+		}
+	}
+	// 重新设置，为了转发
+	if msgOp.ReqMem == nil {
+		msgOp.ReqMem = reqMem
+	}
+
+	// 核心：先判断Params是否为nil，为nil则初始化构造map
+	if msgOp.Params == nil {
+		msgOp.Params = make(map[string]string) // 初始化空map（分配底层内存）
+	}
+
+	for _, mem := range memList {
+		// 用户不存在就不能继续操作，否则后续的用户注册进来会造成脏数据
+		memUser, _, _ := findUser(mem.UserId)
+		if memUser == nil {
+			continue
+		}
+		// 生成验证码
+		onJoinGroupOk(memUser, group, msg, session, "invite ok")
+
+		// 保存邀请到个人记录
+		//saveGroupOpUserOpRecord(group.GroupId, session.UserID, memUser.UserId, msgOp.MsgId, msgOp.SendId,
+		//	pbmodel.GroupOperationType_GroupInviteRequest, nil)
+
+		// 保存到群组记录
+		saveGroupOpRecord(group.GroupId, session.UserID, memUser.UserId, msgOp.MsgId, msgOp.SendId,
+			pbmodel.GroupOperationType_GroupInviteRequest, nil)
+
+	}
+
+	// 答复发出邀请的用户
+	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupInviteRequest,
+		group.GetGroupInfo(),
+		reqMem,
+		memList,
+		msgOp.SendId,
+		msgOp.MsgId,
+		"invite ok",
+		"group invitation", session)
+	trySendMsgToUser(session.UserID, msgRet)
+
+}
+
 func handleInviteSomeone(msg *pbmodel.Msg, session *Session) {
 	msgOp := msg.GetPlainMsg().GetGroupOp()
 	groupInfo := msgOp.GetGroup()
@@ -1660,7 +1745,7 @@ func onJoinGroupNeedAdmin(group *model.Group, msg *pbmodel.Msg, session *Session
 		// 保存到个人记录中
 		err := saveGroupOpUserOpRecord(group.GroupId, session.UserID, admin, groupOpMsg.MsgId,
 			groupOpMsg.SendId, model.CommonGroupOpJoinRequest, []byte(info))
-		
+
 		if err != nil {
 			Globals.Logger.Fatal("onJoinGroupNeedAdmin()-> saveGroupOpUserOpRecord() err", zap.Error(err))
 			return errors.New("can't record to user op records")
