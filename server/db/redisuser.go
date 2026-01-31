@@ -345,7 +345,7 @@ func (cli *RedisClient) GetUserInGroupPage(uid, offset, pageSize int64) (uint64,
 // 用户加入群组，处理2处
 // 1） 用户参加的群列表
 // 2) 群全员用户的hash表
-func (cli *RedisClient) SetUserJoinGroup(uid, gid int64, nick string) error {
+func (cli *RedisClient) SetUserJoinGroup(uid, gid int64, role int, nick string) error {
 
 	keyUserInG := GetUseringKey(uid)
 	keyGroupMem := GetGroupAllMembersKey(gid)
@@ -356,7 +356,13 @@ func (cli *RedisClient) SetUserJoinGroup(uid, gid int64, nick string) error {
 	tx.SAdd(keyUserInG, gid)
 	//tx.Expire(keyUserInG, DefaultUserTTL) // 如果不登录，7天后消失
 	//tx.SAdd(keyGroupMem, uid)
-	tx.HSet(keyGroupMem, idStr, nick)
+	data := nick
+	if (role & model.RoleGroupOwner) > 0 {
+		data = "#|" + nick
+	} else if (role & model.RoleGroupAdmin) > 0 {
+		data = "*|" + nick
+	}
+	tx.HSet(keyGroupMem, idStr, data)
 	// 执行事务
 	_, err := tx.Exec()
 

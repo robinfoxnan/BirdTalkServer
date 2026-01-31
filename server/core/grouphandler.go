@@ -414,41 +414,42 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	opMsg := msg.GetPlainMsg().GetGroupOp()
-	uid := int64(0)
-	str := "0"
-	if opMsg.Params != nil {
-		str, ok := opMsg.Params["uid"]
-		if !ok || str == "" {
-			sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation, params.uid is wrong", nil, session)
-			return
-		}
-	}
-
-	uid, err := strconv.ParseInt(str, 10, 64)
-	if err != nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group kick operation, params.uid is not an id", nil, session)
+	msgOp := msg.GetPlainMsg().GetGroupOp()
+	memList := msgOp.GetMembers()
+	if memList == nil || len(memList) < 1 {
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "must give out the users in members", nil, session)
 		return
 	}
 
-	// 同时操作2个表
-	Globals.scyllaCli.DeleteGroupMember(db.ComputePk(groupInfo.GroupId), db.ComputePk(uid), groupInfo.GroupId, uid)
+	// 逐个删除
+	for _, mem := range memList {
+		uid := mem.UserId
+		memUser, _, _ := findUser(uid)
+		if memUser == nil {
+			continue
+		}
 
-	// 从成员表中删除
-	// 标记用户的所属群
-	Globals.redisCli.SetUserLeaveGroup(uid, groupInfo.GroupId)
+		// 同时操作2个表
+		Globals.scyllaCli.DeleteGroupMember(db.ComputePk(groupInfo.GroupId), db.ComputePk(uid), groupInfo.GroupId, uid)
 
-	// 从分布表中删除
-	index := int64(Globals.Config.Server.HostIndex)
-	Globals.redisCli.RemoveActiveGroupMembersLua(groupInfo.GroupId, index, []int64{uid})
+		// 从成员表中删除
+		// 标记用户的所属群
+		Globals.redisCli.SetUserLeaveGroup(uid, groupInfo.GroupId)
 
-	// 内存中删除成员
-	group.RemoveMember(uid)
+		// 从redis分布表中删除
+		index := int64(Globals.Config.Server.HostIndex)
+		Globals.redisCli.RemoveActiveGroupMembersLua(groupInfo.GroupId, index, []int64{uid})
 
-	// 内存中，用户退出组，
-	user, _ := Globals.uc.GetUser(uid)
-	if user != nil {
-		user.SetLeaveGroup(groupInfo.GroupId)
+		// 内存中删除成员
+		group.RemoveMember(uid)
+
+		// 内存中，用户退出组，
+		memUser.SetLeaveGroup(groupInfo.GroupId)
+
+		// 保存踢人记录
+		saveGroupOpRecord(group.GroupId, session.UserID, uid, msgOp.MsgId, msgOp.SendId,
+			pbmodel.GroupOperationType_GroupKickMember, []byte("kick ok"))
+
 	}
 
 	// 通知所有的用户
@@ -456,30 +457,18 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 	if reqMem == nil {
 		reqMem = &pbmodel.GroupMember{
 			UserId:  session.UserID,
-			Nick:    "",
-			Icon:    "",
-			Role:    "",
+			Nick:    session.GetUser().NickName,
+			Icon:    session.GetUser().Icon,
+			Role:    "au",
 			GroupId: groupInfo.GroupId,
 			Params:  nil,
 		}
 	}
 
-	kickMember := &pbmodel.GroupMember{
-		UserId:  uid,
-		Nick:    "",
-		Icon:    "",
-		Role:    "",
-		GroupId: groupInfo.GroupId,
-		Params:  nil,
-	}
-
-	msgOp := msg.GetPlainMsg().GetGroupOp()
 	msgRet := createGroupOpRetMsg(pbmodel.GroupOperationType_GroupKickMember,
 		group.GetGroupInfo(),
 		reqMem,
-		[]*pbmodel.GroupMember{
-			kickMember,
-		},
+		memList,
 		msgOp.SendId,
 		msgOp.MsgId,
 		"ok",
@@ -494,10 +483,6 @@ func handleGroupKickOut(msg *pbmodel.Msg, session *Session) {
 	if Globals.Config.Server.ClusterMode {
 
 	}
-
-	// 保存踢人记录
-	saveGroupOpRecord(group.GroupId, session.UserID, uid, msgOp.MsgId, msgOp.SendId,
-		pbmodel.GroupOperationType_GroupKickMember, nil)
 
 }
 
@@ -533,20 +518,23 @@ func handleInviteSomeoneDirect(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
+	// 这里是填充邀请者的信息
 	user := session.GetUser()
+	role := group.GetMemberRoleString(user.UserId)
 	reqMem := msgOp.GetReqMem()
 	if reqMem == nil {
 		reqMem = &pbmodel.GroupMember{
 			UserId:  session.UserID,
 			Nick:    user.NickName,
 			Icon:    user.Icon,
-			Role:    "",
+			Role:    role,
 			GroupId: groupInfo.GroupId,
 			Params:  nil,
 		}
 	}
 	// 重新设置，为了转发
 	if msgOp.ReqMem == nil {
+
 		msgOp.ReqMem = reqMem
 	}
 
@@ -555,13 +543,14 @@ func handleInviteSomeoneDirect(msg *pbmodel.Msg, session *Session) {
 		msgOp.Params = make(map[string]string) // 初始化空map（分配底层内存）
 	}
 
+	// 针对申请中的每个人，逐个加入到群中
 	for _, mem := range memList {
 		// 用户不存在就不能继续操作，否则后续的用户注册进来会造成脏数据
 		memUser, _, _ := findUser(mem.UserId)
 		if memUser == nil {
 			continue
 		}
-		// 生成验证码
+
 		onJoinGroupOk(memUser, group, msg, session, "invite ok")
 
 		// 保存邀请到个人记录
@@ -570,8 +559,7 @@ func handleInviteSomeoneDirect(msg *pbmodel.Msg, session *Session) {
 
 		// 保存到群组记录
 		saveGroupOpRecord(group.GroupId, session.UserID, memUser.UserId, msgOp.MsgId, msgOp.SendId,
-			pbmodel.GroupOperationType_GroupInviteRequest, nil)
-
+			pbmodel.GroupOperationType_GroupInviteRequest, []byte("invite ok"))
 	}
 
 	// 答复发出邀请的用户
@@ -947,13 +935,13 @@ func handleGroupSetSomeoneAsAdmin(msg *pbmodel.Msg, session *Session) {
 	msgOp := msg.GetPlainMsg().GetGroupOp()
 	groupInfo := msgOp.GetGroup()
 	if groupInfo == nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request operation group info is null", nil, session)
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group add admins request operation group info is null", nil, session)
 		return
 	}
 
 	group, _ := findGroupAndLoad(groupInfo.GroupId)
 	if group == nil {
-		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group join request group info id is wrong", nil, session)
+		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTMsgContent), "group add admins request group info id is wrong", nil, session)
 		return
 	}
 
@@ -970,14 +958,15 @@ func handleGroupSetSomeoneAsAdmin(msg *pbmodel.Msg, session *Session) {
 			continue
 		}
 		// 更新数据库
-		err := Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), groupInfo.GroupId, mem.UserId, model.RoleGroupAdmin|model.RoleGroupMember)
+		err := Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), groupInfo.GroupId, mem.UserId,
+			model.RoleGroupAdmin|model.RoleGroupMember)
 		if err != nil {
 
 		}
 		// 更新redis
 		data := model.GroupMemberStore{
 			Uid:  mem.UserId,
-			Role: model.RoleGroupAdmin,
+			Role: model.RoleGroupAdmin | model.RoleGroupMember,
 			Nick: nick,
 		}
 		Globals.redisCli.SetGroupMembers(groupInfo.GroupId, []model.GroupMemberStore{data})
@@ -994,9 +983,9 @@ func handleGroupSetSomeoneAsAdmin(msg *pbmodel.Msg, session *Session) {
 	if reqMem == nil {
 		reqMem = &pbmodel.GroupMember{
 			UserId:  session.UserID,
-			Nick:    "",
-			Icon:    "",
-			Role:    "",
+			Nick:    session.GetUser().NickName,
+			Icon:    session.GetUser().Icon,
+			Role:    "ou",
 			GroupId: 0,
 			Params:  nil,
 		}
@@ -1146,7 +1135,8 @@ func handleGroupTransferOwner(msg *pbmodel.Msg, session *Session) {
 		return
 	}
 
-	err = Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), group.GroupId, mem.UserId, model.RoleGroupOwner|model.RoleGroupMember)
+	err = Globals.scyllaCli.SetGroupMemberRole(db.ComputePk(groupInfo.GroupId), group.GroupId, mem.UserId,
+		model.RoleGroupOwner|model.RoleGroupMember|model.RoleGroupAdmin)
 	if err != nil {
 		sendBackErrorMsg(int(pbmodel.ErrorMsgType_ErrTServerInside), "set new owner, db error", nil, session)
 		return
@@ -1155,7 +1145,7 @@ func handleGroupTransferOwner(msg *pbmodel.Msg, session *Session) {
 	// 更新redis
 	memStore := model.GroupMemberStore{
 		Pk:   0,
-		Role: int16(model.RoleGroupOwner | model.RoleGroupMember),
+		Role: int16(model.RoleGroupOwner | model.RoleGroupMember | model.RoleGroupAdmin),
 		Gid:  groupInfo.GroupId,
 		Uid:  mem.UserId,
 		Tm:   utils.GetTimeStamp(),
@@ -1527,7 +1517,7 @@ func saveNewGroup(groupInfo *pbmodel.GroupInfo, session *Session) (*model.Group,
 		Gid:  groupInfo.GroupId,
 		Uid:  user.UserId,
 		Tm:   utils.GetTimeStamp(),
-		Role: model.RoleGroupOwner,
+		Role: model.RoleGroupOwner | model.RoleGroupAdmin | model.RoleGroupMember,
 		Nick: nick,
 	}
 
@@ -1546,7 +1536,7 @@ func saveNewGroup(groupInfo *pbmodel.GroupInfo, session *Session) (*model.Group,
 	Globals.redisCli.SetGroupInfo(groupInfo)
 
 	// 2.2redis中
-	Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, "#|"+user.GetNickName())
+	Globals.redisCli.SetUserJoinGroup(session.UserID, groupInfo.GroupId, model.RoleGroupOwner, user.GetNickName())
 
 	// 1.3 & 2.3 将群信息添加到内存
 	g := model.NewGroupFromInfo(groupInfo)
@@ -1599,7 +1589,7 @@ func createGroupOpRetMsg(opCode pbmodel.GroupOperationType,
 	return &msg
 }
 
-// 加入一个群，成功了，
+// 加入一个群，成功了，这里是设置了user被加入了群
 func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, session *Session, fromWays string) {
 	// 保存成员信息
 	msgOp := msg.GetPlainMsg().GetGroupOp()
@@ -1608,18 +1598,19 @@ func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, sessi
 		nick = user.GetNickName()
 	}
 
+	// 2026-01-31 修正
 	mem := model.GroupMemberStore{
 		Pk:   db.ComputePk(group.GroupId),
 		Gid:  group.GroupId,
-		Uid:  session.UserID,
+		Uid:  user.UserId,
 		Tm:   utils.GetTimeStamp(),
 		Role: model.RoleGroupMember,
 		Nick: nick,
 	}
 
 	item := model.UserInGStore{
-		Pk:  db.ComputePk(session.UserID),
-		Uid: session.UserID,
+		Pk:  db.ComputePk(user.UserId),
+		Uid: user.UserId,
 		Gid: group.GroupId,
 	}
 	// 数据库中加入成员，同时， 保存成员所属的群
@@ -1629,7 +1620,8 @@ func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, sessi
 	}
 
 	// redis的群所有成员
-	err = Globals.redisCli.SetUserJoinGroup(session.UserID, group.GroupId, nick)
+	err = Globals.redisCli.SetUserJoinGroup(user.UserId, group.GroupId, model.RoleGroupMember, nick)
+
 	if err != nil {
 		Globals.Logger.Fatal("SetUserJoinGroup() err", zap.Error(err))
 	}
@@ -1645,10 +1637,10 @@ func onJoinGroupOk(user *model.User, group *model.Group, msg *pbmodel.Msg, sessi
 	user.SetInGroup([]int64{group.GroupId})
 
 	addedMember := &pbmodel.GroupMember{
-		UserId:  session.UserID,
+		UserId:  user.UserId,
 		Nick:    nick,
 		Icon:    user.Icon,
-		Role:    "",
+		Role:    "u",
 		GroupId: group.GroupId,
 		Params:  nil,
 	}

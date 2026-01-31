@@ -92,7 +92,7 @@ func saveUserJoinGroup(user *model.User, group *model.Group) error {
 
 	// 2)redis, 用户所在群
 	// 这里做2个动作，2.1 群里有用户 2.2 用户所在群列表
-	err = Globals.redisCli.SetUserJoinGroup(user.UserId, group.GroupId, user.NickName)
+	err = Globals.redisCli.SetUserJoinGroup(user.UserId, group.GroupId, model.RoleGroupMember, user.NickName)
 	if err != nil {
 		// 这里不用返回，因为下次反正会同步数据
 		Globals.Logger.Error("")
