@@ -869,6 +869,8 @@ func handleGroupMemberQuit(msg *pbmodel.Msg, session *Session) {
 	}
 
 	uid := session.UserID
+	Globals.Logger.Debug("user quit group", zap.String("user", session.GetUser().NickName), zap.Int64("uid", uid),
+		zap.Int64("groupId", groupInfo.GroupId))
 	// 同时操作2个表
 	Globals.scyllaCli.DeleteGroupMember(db.ComputePk(groupInfo.GroupId), db.ComputePk(uid), groupInfo.GroupId, uid)
 
@@ -894,9 +896,9 @@ func handleGroupMemberQuit(msg *pbmodel.Msg, session *Session) {
 	if reqMem == nil {
 		reqMem = &pbmodel.GroupMember{
 			UserId:  session.UserID,
-			Nick:    "",
-			Icon:    "",
-			Role:    "",
+			Nick:    session.GetUser().NickName,
+			Icon:    session.GetUser().Icon,
+			Role:    "u",
 			GroupId: groupInfo.GroupId,
 			Params:  nil,
 		}
