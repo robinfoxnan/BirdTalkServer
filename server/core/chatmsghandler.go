@@ -688,7 +688,7 @@ func onQueryGroupChatData(queryMsg *pbmodel.MsgQuery, session *Session) {
 	case pbmodel.SynType_SynTypeBackward:
 		lst, err = Globals.scyllaCli.FindGChatMsgBackwardFrom(pk, group.GroupId, queryMsg.BigId, BATCH_LOAD_SIZE)
 	case pbmodel.SynType_SynTypeBetween:
-		lst, err = Globals.scyllaCli.FindGChatMsgForwardBetween(pk, session.UserID, queryMsg.LittleId, queryMsg.BigId, BATCH_LOAD_SIZE)
+		lst, err = Globals.scyllaCli.FindGChatMsgBackwardBetween(pk, group.GroupId, queryMsg.LittleId, queryMsg.BigId, BATCH_LOAD_SIZE)
 	}
 	if err != nil {
 		Globals.Logger.Error("find p2p chat msg error", zap.Error(err))

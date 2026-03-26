@@ -617,7 +617,7 @@ func (me *Scylla) FindGChatMsgBackwardTo(pk, gid, littleId int64, pageSize uint)
 }
 
 // 倒序，从bigId 向littleId方向去查找，限定一定的个数，如果无法覆盖边界，再来一次
-func (me *Scylla) FindGChatMsgBackwardBetween(pk, gid, littleId, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
+func (me *Scylla) FindGChatMsgBackwardBetween(pk int16, gid, littleId, bigId int64, pageSize uint) ([]model.GChatDataStore, error) {
 	builder := qb.Select(GroupChatTableName).Columns(metaGroupChatData.Columns...)
 	builder.Where(qb.Eq("pk"), qb.Eq("gid"), qb.LtOrEq("id"), qb.GtOrEq("id"))
 
