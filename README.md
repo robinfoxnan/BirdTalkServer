@@ -38,6 +38,10 @@ E-MAIL: 390017268@QQ.COM
 
 安装文档：[中文安装文档](doc/install_ch.md)
 
+[安卓代码仓库]: https://github.com/robinfoxnan/BirdTalkClientAndroid
+
+[服务端代码仓库]: https://github.com/robinfoxnan/BirdTalkServer
+
 合作联系 QQ&WX: 390017268 
 
 
